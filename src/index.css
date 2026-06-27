@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Sora:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 220 25% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 10%;
+    --primary: 220 70% 15%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 25% 10%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 10% 50%;
+    --accent: 220 14% 93%;
+    --accent-foreground: 220 25% 10%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 14% 91%;
+    --input: 220 14% 91%;
+    --ring: 220 70% 15%;
+    --radius: 0.625rem;
+
+    --color-primary: #0A0F1A;
+    --color-secondary: #1A6B4A;
+    --color-sage: #1A6B4A;
+    --color-success: #1A6B4A;
+    --color-metric: #1A6B4A;
+    --color-bg-alt: #F7F7F5;
+    --color-bg-alt2: #F0F4F0;
+
+    --font-heading: 'Sora', 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Sora', 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+    --sidebar-background: 220 14% 96%;
+    --sidebar-foreground: 220 25% 10%;
+    --sidebar-primary: 220 70% 15%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 93%;
+    --sidebar-accent-foreground: 220 25% 10%;
+    --sidebar-border: 220 14% 91%;
+    --sidebar-ring: 220 70% 15%;
+
+    --chart-1: 213 57% 35%;
+    --chart-2: 160 40% 55%;
+    --chart-3: 230 60% 70%;
+    --chart-4: 213 40% 55%;
+    --chart-5: 160 35% 70%;
+  }
+
+  .dark {
+    --background: 220 25% 6%;
+    --foreground: 220 14% 95%;
+    --card: 220 20% 9%;
+    --card-foreground: 220 14% 95%;
+    --popover: 220 20% 9%;
+    --popover-foreground: 220 14% 95%;
+    --primary: 213 57% 55%;
+    --primary-foreground: 220 25% 6%;
+    --secondary: 220 18% 14%;
+    --secondary-foreground: 220 14% 95%;
+    --muted: 220 18% 14%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 220 18% 18%;
+    --accent-foreground: 220 14% 95%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 18% 18%;
+    --input: 220 18% 18%;
+    --ring: 213 57% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-heading;
+  }
+}

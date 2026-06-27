@@ -1,0 +1,30 @@
+{
+  "name": "EarlyAccess",
+  "type": "object",
+  "properties": {
+    "nombre": {
+      "type": "string"
+    },
+    "empresa": {
+      "type": "string"
+    },
+    "cargo": {
+      "type": "string"
+    },
+    "correo": {
+      "type": "string"
+    },
+    "contrataciones_anuales": {
+      "type": "string"
+    },
+    "mensaje": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "nombre",
+    "empresa",
+    "cargo",
+    "correo"
+  ]
+}
