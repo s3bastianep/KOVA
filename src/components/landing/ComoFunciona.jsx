@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 
 const pasos = [
-  { title: 'Diagnóstico inicial.', desc: 'Entendemos la estructura actual del área comercial, los perfiles existentes, problemas recurrentes y objetivos de crecimiento.', entregable: 'Informe de diagnóstico comercial', color: '#6366F1', bg: '#EEF2FF' },
+  { title: 'Definición del perfil.', desc: 'Entendemos la estructura actual del área comercial, los perfiles existentes, problemas recurrentes y objetivos de crecimiento.', entregable: 'Perfil ideal documentado', color: '#6366F1', bg: '#EEF2FF' },
   { title: 'Definimos el perfil ideal.', desc: 'Construimos el perfil de cargo ideal: competencias, experiencia, estilo de venta y fit cultural, específico para tu empresa.', entregable: 'Perfil de cargo por posición', color: '#0EA5E9', bg: '#F0F9FF' },
   { title: 'Reclutamos y evaluamos.', desc: 'Buscamos activamente, entrevistamos por competencias y aplicamos pruebas psicotécnicas. Solo presentamos candidatos validados.', entregable: 'Terna con informes ejecutivos', color: '#10B981', bg: '#ECFDF5' },
   { title: 'Diseñamos y publicamos el proceso en una plataforma interactiva.', desc: 'Construimos el proceso de ventas específico para tu empresa y lo dejamos vivo en una plataforma interactiva. Cualquier asesor puede entrar, consultar cómo se hace cada etapa y resolver dudas en el momento que las tenga, sin depender de un superior.', entregable: 'Plataforma interactiva del proceso comercial', color: '#F59E0B', bg: '#FFFBEB' },
@@ -21,12 +21,12 @@ export default function ComoFunciona() {
               De cero a un área comercial que funciona.
             </h2>
             <p className="text-sm leading-relaxed mb-8" style={{ color: '#6B7280', lineHeight: 1.85 }}>
-              Kova acompaña todo el proceso, desde el primer diagnóstico hasta que el equipo está operando.
+              Kova acompaña todo el proceso, desde la definición del perfil hasta que el equipo está operando.
             </p>
             <button onClick={() => document.getElementById('acceso')?.scrollIntoView({ behavior: 'smooth' })}
               className="group inline-flex items-center gap-2 text-sm font-semibold px-5 py-3 rounded-xl transition-all text-white"
               style={{ background: 'linear-gradient(135deg, #6366F1, #4F46E5)', boxShadow: '0 4px 16px rgba(99,102,241,0.3)' }}>
-              Agendar diagnóstico <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              Cuéntanos tu vacante <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </button>
           </div>
 

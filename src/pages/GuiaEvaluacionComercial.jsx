@@ -242,7 +242,7 @@ export default function GuiaEvaluacionComercial() {
           Un puntaje sin contexto no sirve. El valor está en el ranking comparativo: quién destaca y por qué, con
           el mismo marco para todos.
         </GuiaNumberedItem>
-        <GuiaNumberedItem num={4} title="Involucra a dirección comercial desde el diagnóstico">
+        <GuiaNumberedItem num={4} title="Involucra a dirección comercial desde el inicio">
           Talento humano y comercial deben alinear criterios desde el inicio. Kova facilita ese lenguaje común
           antes de evaluar a nadie.
         </GuiaNumberedItem>
@@ -264,8 +264,8 @@ export default function GuiaEvaluacionComercial() {
 
         <GuiaArticleCTA
           title="Contrata comercial con confianza usando la evaluación de Kova"
-          description="Kova ayuda a empresas de todo tipo a evaluar candidatos comerciales con criterio especializado: diagnóstico de vacante, evaluación por competencias e informe comparativo para decidir con evidencia, no con intuición."
-          primaryLabel="Agendar diagnóstico comercial"
+          description="Kova ayuda a empresas de todo tipo a evaluar candidatos comerciales con criterio especializado: definición del perfil, evaluación por competencias e informe comparativo para decidir con evidencia, no con intuición."
+          primaryLabel="Cuéntanos tu vacante"
           primaryTo="/#acceso"
           secondaryLabel="Ver cómo funciona Kova"
           secondaryTo="/#proceso"

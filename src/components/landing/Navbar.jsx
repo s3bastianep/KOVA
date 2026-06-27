@@ -157,7 +157,7 @@ export default function Navbar() {
           className="text-sm font-semibold px-4 py-2.5 rounded-xl transition-all text-white hover:opacity-95"
           style={{ background: '#4338CA', boxShadow: '0 2px 8px rgba(67,56,202,0.22)' }}
         >
-          Diagnóstico gratuito
+          Cuéntanos tu vacante
         </Link>
       </div>
     </nav>

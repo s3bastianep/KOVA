@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CheckCircle2, TrendingUp, Users, ShieldCheck } from 'lucide-react';
+import { Users } from 'lucide-react';
 
 const tabs = [
   { id: 'resumen', label: 'Resumen' },
@@ -7,18 +7,22 @@ const tabs = [
   { id: 'recomendacion', label: 'Recomendación' },
 ];
 
+const MATCH = 92;
+
 const competencias = [
-  { label: 'Venta consultiva', value: 92, color: '#4F46E5' },
-  { label: 'Prospección', value: 88, color: '#10B981' },
-  { label: 'Manejo de objeciones', value: 90, color: '#F59E0B' },
-  { label: 'Orientación al logro', value: 94, color: '#0EA5E9' },
+  { label: 'Venta consultiva', value: 92 },
+  { label: 'Prospección', value: 88 },
+  { label: 'Manejo de objeciones', value: 90 },
+  { label: 'Orientación al logro', value: 94 },
 ];
 
 const candidatos = [
-  { id: 'A', name: 'Candidato A', score: 92, tag: 'Recomendado', highlight: true },
+  { id: 'A', name: 'María López', score: 92, tag: 'Recomendada', highlight: true },
   { id: 'B', name: 'Candidato B', score: 67, tag: null, highlight: false },
   { id: 'C', name: 'Candidato C', score: 51, tag: null, highlight: false },
 ];
+
+const BAR = '#6366F1';
 
 export default function EntregableReportMockup() {
   const [tab, setTab] = useState('resumen');
@@ -26,64 +30,47 @@ export default function EntregableReportMockup() {
   return (
     <div className="relative w-full">
       <div
-        className="absolute -inset-6 rounded-3xl kova-dot-grid opacity-50 pointer-events-none"
-        aria-hidden
-      />
-      <div
         className="relative rounded-2xl overflow-hidden bg-white"
         style={{
           border: '1px solid #E2E8F0',
-          boxShadow: '0 4px 6px rgba(15,23,42,0.04), 0 24px 64px rgba(99,102,241,0.12)',
+          boxShadow: '0 1px 2px rgba(15,23,42,0.04), 0 16px 40px rgba(15,23,42,0.05)',
         }}
       >
-        {/* Chrome */}
         <div className="flex items-center gap-2 px-4 py-3 border-b" style={{ background: '#F8FAFC', borderColor: '#E2E8F0' }}>
           <div className="flex gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
-            <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
-            <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
+            <span className="w-2 h-2 rounded-full bg-slate-300" />
+            <span className="w-2 h-2 rounded-full bg-slate-300" />
+            <span className="w-2 h-2 rounded-full bg-slate-300" />
           </div>
           <div className="flex-1 mx-2">
-            <div className="h-6 rounded-md flex items-center px-3 mx-auto max-w-xs" style={{ background: '#FFF', border: '1px solid #E2E8F0' }}>
+            <div className="h-5 rounded-md flex items-center px-3 mx-auto max-w-xs" style={{ background: '#FFF', border: '1px solid #E2E8F0' }}>
               <span className="text-[10px] font-medium truncate w-full text-center" style={{ color: '#94A3B8' }}>
-                app.kova.com.co · Reporte de selección
+                Informe de selección · Ejecutivo Comercial
               </span>
             </div>
           </div>
         </div>
 
-        {/* Report header */}
-        <div className="px-5 py-4 border-b flex items-start justify-between gap-3" style={{ borderColor: '#F1F5F9' }}>
+        <div className="px-5 py-4 border-b flex items-center justify-between gap-3" style={{ borderColor: '#F1F5F9' }}>
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#94A3B8' }}>
-              Vacante · Ejecutivo Comercial
-            </p>
-            <p className="text-sm font-semibold" style={{ color: '#0F172A' }}>
-              Informe de ajuste comercial
-            </p>
-            <p className="text-xs mt-0.5" style={{ color: '#64748B' }}>3 candidatos evaluados · Metodología Kova</p>
+            <p className="text-sm font-semibold" style={{ color: '#0F172A' }}>Informe comparativo</p>
+            <p className="text-xs mt-0.5" style={{ color: '#64748B' }}>3 candidatos evaluados</p>
           </div>
-          <span
-            className="text-[10px] font-semibold px-2.5 py-1 rounded-md whitespace-nowrap flex items-center gap-1"
-            style={{ background: '#ECFDF5', color: '#047857', border: '1px solid #A7F3D0' }}
-          >
-            <ShieldCheck className="w-3 h-3" strokeWidth={2.5} />
-            Listo para decidir
+          <span className="text-[10px] font-medium px-2 py-1 rounded-md" style={{ background: '#F8FAFC', color: '#64748B' }}>
+            Terna lista
           </span>
         </div>
 
-        {/* Tabs */}
-        <div className="flex border-b px-5 gap-1" style={{ borderColor: '#F1F5F9', background: '#FAFBFC' }}>
+        <div className="flex border-b px-5 gap-1" style={{ borderColor: '#F1F5F9' }}>
           {tabs.map(({ id, label }) => (
             <button
               key={id}
               type="button"
               onClick={() => setTab(id)}
-              className="text-xs font-semibold px-4 py-2.5 -mb-px transition-colors"
+              className="text-[11px] font-medium px-3 py-2 -mb-px transition-colors"
               style={{
-                color: tab === id ? '#4338CA' : '#64748B',
-                borderBottom: tab === id ? '2px solid #4338CA' : '2px solid transparent',
-                background: tab === id ? '#FFFFFF' : 'transparent',
+                color: tab === id ? '#4338CA' : '#94A3B8',
+                borderBottom: tab === id ? '2px solid #6366F1' : '2px solid transparent',
               }}
             >
               {label}
@@ -91,42 +78,43 @@ export default function EntregableReportMockup() {
           ))}
         </div>
 
-        <div className="p-5 lg:p-6">
+        <div className="p-5">
           {tab === 'resumen' && (
             <>
-              <div className="flex items-end justify-between mb-6 pb-5 border-b" style={{ borderColor: '#F1F5F9' }}>
+              <div className="flex items-end justify-between mb-5 pb-5 border-b" style={{ borderColor: '#F1F5F9' }}>
                 <div>
-                  <p className="text-xs font-medium mb-1" style={{ color: '#94A3B8' }}>Candidato destacado</p>
-                  <p className="text-sm font-semibold mb-2" style={{ color: '#0F172A' }}>Candidato A</p>
-                  <p className="font-heading font-bold text-4xl leading-none tabular-nums" style={{ color: '#4338CA' }}>
-                    92<span className="text-lg font-semibold text-slate-400">/100</span>
+                  <p className="text-sm font-semibold mb-1" style={{ color: '#0F172A' }}>María López</p>
+                  <p className="text-xs mb-2" style={{ color: '#64748B' }}>Mejor coincidencia con el puesto</p>
+                  <p className="font-heading font-bold text-3xl leading-none tabular-nums" style={{ color: '#4338CA' }}>
+                    {MATCH}%
                   </p>
                 </div>
-                <div className="text-right space-y-2">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-semibold" style={{ background: '#EEF2FF', color: '#4338CA' }}>
-                    <TrendingUp className="w-3 h-3" />
-                    +24 pts vs. promedio
-                  </div>
-                  <p className="text-[10px]" style={{ color: '#94A3B8' }}>vs. otros evaluados</p>
-                </div>
+                <p className="text-[10px] tabular-nums" style={{ color: '#94A3B8' }}>+24 vs. promedio</p>
               </div>
-              <div className="space-y-3.5 mb-5">
-                {competencias.map((c) => (
-                  <div key={c.label}>
-                    <div className="flex justify-between text-xs mb-1.5">
-                      <span className="font-medium" style={{ color: '#475569' }}>{c.label}</span>
-                      <span className="font-bold tabular-nums" style={{ color: c.color }}>{c.value}</span>
+
+              <div className="space-y-2.5 mb-5">
+                {competencias.map(({ label, value }) => (
+                  <div key={label}>
+                    <div className="flex justify-between text-[11px] mb-1">
+                      <span className="font-medium" style={{ color: '#475569' }}>{label}</span>
+                      <span className="tabular-nums" style={{ color: '#64748B' }}>{value}%</span>
                     </div>
-                    <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
-                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${c.value}%`, backgroundColor: c.color }} />
+                    <div className="h-1.5 rounded-full overflow-hidden" style={{ background: '#F1F5F9' }}>
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: `${value}%`, background: BAR, opacity: 0.35 + (value / 100) * 0.65 }}
+                      />
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="rounded-xl p-4" style={{ background: '#F0FDF4', border: '1px solid #BBF7D0' }}>
-                <p className="text-xs font-semibold mb-2" style={{ color: '#047857' }}>Conclusión del evaluador</p>
-                <p className="text-sm leading-relaxed" style={{ color: '#166534', lineHeight: 1.65 }}>
-                  Perfil alineado con las competencias del rol. Recomendado para incluir en la terna final y avanzar a entrevista con dirección comercial.
+
+              <div className="rounded-lg px-3.5 py-3" style={{ background: '#F8FAFC', border: '1px solid #E8ECF1' }}>
+                <p className="text-[10px] font-semibold uppercase tracking-wide mb-1" style={{ color: '#64748B' }}>
+                  Conclusión del evaluador
+                </p>
+                <p className="text-xs leading-relaxed" style={{ color: '#334155', lineHeight: 1.65 }}>
+                  Alta coincidencia con las competencias del rol. Recomendada para la terna final.
                 </p>
               </div>
             </>
@@ -134,79 +122,67 @@ export default function EntregableReportMockup() {
 
           {tab === 'comparativo' && (
             <>
-              <p className="text-[10px] font-semibold uppercase tracking-wider mb-4 flex items-center gap-1.5" style={{ color: '#94A3B8' }}>
+              <p className="text-xs mb-4 flex items-center gap-1.5" style={{ color: '#64748B' }}>
                 <Users className="w-3.5 h-3.5" />
-                Ranking de candidatos evaluados
+                Ranking por coincidencia con el puesto
               </p>
-              <div className="space-y-2 mb-5">
+              <div className="space-y-1.5">
                 {candidatos.map(({ id, name, score, tag, highlight }) => (
                   <div
                     key={id}
-                    className="flex items-center justify-between px-4 py-3.5 rounded-xl"
+                    className="flex items-center justify-between px-3 py-2.5 rounded-lg"
                     style={{
-                      background: highlight ? '#F8FAFF' : '#FAFBFC',
-                      border: `1px solid ${highlight ? '#C7D2FE' : '#E2E8F0'}`,
+                      background: highlight ? '#F8FAFC' : 'transparent',
+                      border: `1px solid ${highlight ? '#E2E8F0' : 'transparent'}`,
                     }}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2.5">
                       <span
-                        className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold"
-                        style={{ background: highlight ? '#4338CA' : '#F1F5F9', color: highlight ? '#FFF' : '#64748B' }}
+                        className="w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold"
+                        style={{ background: highlight ? '#EEF2FF' : '#F1F5F9', color: highlight ? '#4338CA' : '#94A3B8' }}
                       >
                         {id}
                       </span>
                       <div>
-                        <span className="text-sm font-semibold block" style={{ color: '#0F172A' }}>{name}</span>
-                        {tag && <span className="text-[10px] font-semibold" style={{ color: '#059669' }}>{tag}</span>}
+                        <span className="text-xs font-medium block" style={{ color: '#334155' }}>{name}</span>
+                        {tag && <span className="text-[10px]" style={{ color: '#64748B' }}>{tag}</span>}
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="hidden sm:block w-24 h-1.5 rounded-full bg-slate-100 overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${score}%`, background: highlight ? '#4338CA' : '#CBD5E1' }} />
-                      </div>
-                      <span className="text-lg font-bold tabular-nums" style={{ color: highlight ? '#4338CA' : '#94A3B8' }}>
-                        {score}<span className="text-xs font-medium text-slate-400">/100</span>
-                      </span>
-                    </div>
+                    <span className="text-sm font-semibold tabular-nums" style={{ color: highlight ? '#4338CA' : '#94A3B8' }}>
+                      {score}%
+                    </span>
                   </div>
                 ))}
               </div>
-              <p className="text-xs leading-relaxed px-1" style={{ color: '#64748B' }}>
-                Comparación por competencias definidas para la vacante. Mismo criterio para todos los candidatos evaluados.
-              </p>
             </>
           )}
 
           {tab === 'recomendacion' && (
-            <>
-              <div className="rounded-xl p-5 mb-4" style={{ background: '#F8FAFF', border: '1px solid #E0E7FF' }}>
-                <p className="text-[10px] font-semibold uppercase tracking-wider mb-3" style={{ color: '#6366F1' }}>
-                  Terna recomendada
-                </p>
-                <div className="space-y-2">
-                  {['Candidato A: Prioridad alta (92/100)', 'Candidato B: Alternativa viable (67/100)', 'Candidato C: No recomendado (51/100)'].map((line, i) => (
-                    <div key={line} className="flex items-center gap-2.5 text-sm" style={{ color: i === 0 ? '#0F172A' : '#64748B', fontWeight: i === 0 ? 600 : 400 }}>
-                      <span className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0" style={{ background: i === 0 ? '#4338CA' : '#CBD5E1' }}>
-                        {i + 1}
-                      </span>
-                      {line}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="space-y-2.5">
+            <div className="space-y-4">
+              <p className="text-xs font-medium" style={{ color: '#64748B' }}>Terna recomendada</p>
+              <ol className="space-y-2">
                 {[
-                  'Informe listo para compartir con dirección comercial y talento humano',
-                  'Sustento por competencia para respaldar tu elección de talento',
-                  'Reduce el riesgo de elegir por intuición o solo por entrevista',
-                ].map((item) => (
-                  <div key={item} className="flex items-start gap-2.5 text-sm" style={{ color: '#334155' }}>
-                    <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#059669' }} strokeWidth={2} />
-                    {item}
-                  </div>
+                  'María López · prioridad alta (92%)',
+                  'Candidato B · alternativa viable (67%)',
+                  'Candidato C · no recomendado (51%)',
+                ].map((line, i) => (
+                  <li
+                    key={line}
+                    className="text-sm pl-3 border-l-2"
+                    style={{
+                      color: i === 0 ? '#0F172A' : '#64748B',
+                      borderColor: i === 0 ? '#6366F1' : '#E2E8F0',
+                      fontWeight: i === 0 ? 600 : 400,
+                    }}
+                  >
+                    {line}
+                  </li>
                 ))}
-              </div>
-            </>
+              </ol>
+              <p className="text-xs leading-relaxed pt-2 border-t" style={{ color: '#64748B', borderColor: '#F1F5F9', lineHeight: 1.65 }}>
+                Informe listo para compartir con dirección comercial y talento humano.
+              </p>
+            </div>
           )}
         </div>
       </div>

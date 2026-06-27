@@ -48,7 +48,7 @@ export const ISSUES = [
     summary: 'Contratar mal en comercial cuesta meses de productividad, pipeline estancado y reemplazos caros.',
     paragraphs: [
       'La rotación en ventas puede ser hasta tres veces mayor que en otros roles. Cada error de contratación implica tiempo de inducción, oportunidades perdidas, presión sobre el equipo y costos directos de reemplazo.',
-      'Gran parte de esa rotación temprana no se debe solo a la inducción deficiente, sino a que el candidato nunca estuvo alineado con lo que el rol realmente exigía. Sin un diagnóstico previo de la vacante y una evaluación comercial rigurosa, el ciclo se repite.',
+      'Gran parte de esa rotación temprana no se debe solo a la inducción deficiente, sino a que el candidato nunca estuvo alineado con lo que el rol realmente exigía. Sin definir el perfil de la vacante con rigor y una evaluación comercial estructurada, el ciclo se repite.',
     ],
     solution: 'Kova entrega una terna argumentada con sustento comparativo para que decidas con más certeza. Menos contrataciones improvisadas significa menos rotación evitable y equipos que alcanzan productividad antes.',
   },
@@ -61,7 +61,7 @@ export const ISSUES = [
       'Cada vez más empresas usan evaluaciones de habilidades en su proceso de selección. Eso es positivo cuando las pruebas están diseñadas para el rol. Pero aplicar evaluaciones genéricas a vacantes comerciales diluye el valor: miden aptitudes generales, no desempeño en ventas.',
       'Un candidato puede obtener buenos resultados en un test de personalidad o lógica y aun así fracasar en prospección, manejo de objeciones o venta consultiva. Para comercial, la evaluación debe ser específica del rol y del contexto de la vacante.',
     ],
-    solution: 'La metodología de Kova está diseñada exclusivamente para selección comercial: diagnóstico de vacante, evaluación por competencias, comparación entre candidatos e informe para decidir con criterio de experto.',
+    solution: 'La metodología de Kova está diseñada exclusivamente para selección comercial: definición del perfil, evaluación por competencias, comparación entre candidatos e informe para decidir con criterio de experto.',
   },
 ];
 

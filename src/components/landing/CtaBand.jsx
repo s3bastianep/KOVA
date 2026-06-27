@@ -17,7 +17,7 @@ export default function CtaBand() {
           className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-semibold transition-all"
           style={{ background: '#FFFFFF', color: '#4F46E5', boxShadow: '0 8px 32px rgba(0,0,0,0.15)' }}
         >
-          Agendar diagnóstico comercial
+          Cuéntanos tu vacante
           <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>

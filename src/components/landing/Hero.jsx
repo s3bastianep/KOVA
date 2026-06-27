@@ -57,7 +57,7 @@ export default function Hero() {
               <button onClick={scrollToAcceso}
                 className="group inline-flex items-center gap-2 font-semibold px-6 py-3.5 rounded-xl text-sm transition-all text-white"
                 style={{ background: 'linear-gradient(135deg, #6366F1, #4F46E5)', boxShadow: '0 4px 24px rgba(99,102,241,0.35)' }}>
-                Agendar diagnóstico gratuito
+                Cuéntanos tu vacante
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </button>
               <button onClick={scrollToServicios}

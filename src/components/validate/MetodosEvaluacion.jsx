@@ -11,7 +11,7 @@ import SectionHeader from '@/components/landing/SectionHeader';
 const metodos = [
   {
     icon: Target,
-    title: 'Diagnóstico de vacante',
+    title: 'Definición del perfil',
     desc: 'Definimos competencias, contexto comercial y criterios de éxito antes de evaluar a nadie.',
     color: '#4338CA',
     bg: '#EEF2FF',

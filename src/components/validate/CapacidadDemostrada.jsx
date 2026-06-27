@@ -1,97 +1,106 @@
-import { SlidersHorizontal, ShieldCheck, BarChart3, CircleDollarSign } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import SectionHeader from '@/components/landing/SectionHeader';
 
-const beneficios = [
+const pilares = [
   {
-    icon: SlidersHorizontal,
-    title: 'Evaluación personalizada según el cargo',
-    desc: 'Cada vacante tiene su propio marco de competencias. Un SDR no se evalúa igual que un account manager: definimos habilidades, simulaciones y criterios según lo que el rol exige en tu operación.',
-    color: '#4338CA',
-    bg: '#EEF2FF',
+    title: 'Especialización comercial',
+    desc: 'Contratamos exclusivamente en áreas comerciales. Conocemos los roles, ciclos de venta y competencias que definen el desempeño en cada puesto.',
   },
   {
-    icon: ShieldCheck,
-    title: 'Capacidad real, no solo buena entrevista',
-    desc: 'Situaciones comerciales, entrevistas por competencias y el mismo criterio para todos los candidatos. Así ves lo que cada perfil demuestra en escenarios parecidos al día a día del puesto, no solo lo que dice en una conversación.',
-    color: '#059669',
-    bg: '#ECFDF5',
+    title: 'Evaluación por cargo, no plantillas',
+    desc: 'Cada vacante tiene su marco de competencias. Definimos qué medir y cómo medirlo según el perfil que necesitas cubrir.',
   },
   {
-    icon: BarChart3,
-    title: 'Decisiones basadas en evidencia comparada',
-    desc: 'Ranking por coincidencia con el puesto, puntaje por competencia y conclusión del evaluador. Compartes el informe con dirección comercial y talento humano para decidir alineados, con el mismo sustento.',
-    color: '#0284C7',
-    bg: '#F0F9FF',
-  },
-  {
-    icon: CircleDollarSign,
-    title: 'Menos errores de contratación desde el inicio',
-    desc: 'Elegir mal en comercial cuesta rotación, capacitación y pipeline perdido. Identificar antes quién encaja de verdad con el rol reduce reemplazos y acelera el impacto en ventas.',
-    color: '#D97706',
-    bg: '#FFFBEB',
+    title: 'Decisión con respaldo documentado',
+    desc: 'Te entregamos una terna comparada con puntajes, evidencia y conclusión del evaluador. Para que elijas con criterio, no con intuición.',
   },
 ];
 
-const metodos = [
-  'Diagnóstico de vacante',
-  'Entrevista por competencias',
-  'Simulación comercial',
-  'Evaluación psicométrica',
-  'Ranking comparativo',
-  'Informe con conclusión',
+const proceso = [
+  {
+    n: '01',
+    title: 'Definimos el perfil ideal',
+    desc: 'Definición del perfil ideal, competencias del rol y criterios de éxito.',
+  },
+  {
+    n: '02',
+    title: 'Evaluamos con el mismo criterio',
+    desc: 'Entrevista por competencias, simulaciones comerciales y evaluación psicométrica según el cargo.',
+  },
+  {
+    n: '03',
+    title: 'Recomendamos la terna final',
+    desc: 'Ranking comparativo e informe unificado listo para decidir en equipo.',
+  },
 ];
 
 export default function CapacidadDemostrada() {
   return (
-    <section id="evaluacion" className="py-24 lg:py-28 px-6 lg:px-8" style={{ background: '#F8FAFC' }}>
+    <section id="evaluacion" className="py-24 lg:py-28 px-6 lg:px-8 bg-white">
       <div className="max-w-6xl mx-auto">
-        <SectionHeader
-          align="center"
-          className="mb-12 lg:mb-14 max-w-3xl mx-auto"
-          eyebrow="Nuestra evaluación"
-          title="Evaluaciones personalizadas de habilidades comerciales, diseñadas para cada cargo."
-          description="No aplicamos una plantilla genérica. Traducimos tu vacante en competencias concretas, medimos desempeño con el mismo criterio para todos y te entregamos una comparación que puedes defender ante tu equipo."
-        />
+        <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-start">
+          <div>
+            <SectionHeader
+              align="left"
+              className="mb-8 lg:mb-10 max-w-none"
+              eyebrow="Especialistas en contratación comercial"
+              title="Contratamos talento comercial midiendo lo que el cargo exige."
+              description="Somos una firma dedicada a encontrar y evaluar perfiles comerciales. Un especialista conduce tu vacante, diseña la evaluación según el rol y te entrega una terna lista para decidir."
+            />
 
-        <div className="grid sm:grid-cols-2 gap-5 lg:gap-6 mb-12 lg:mb-14">
-          {beneficios.map(({ icon: Icon, title, desc, color, bg }) => (
-            <article
-              key={title}
-              className="rounded-2xl p-6 lg:p-7 bg-white h-full"
-              style={{ border: '1px solid #E2E8F0' }}
-            >
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                style={{ background: bg, border: `1px solid ${color}22` }}
-              >
-                <Icon className="w-5 h-5" style={{ color }} strokeWidth={2} />
-              </div>
-              <h3 className="text-sm font-semibold mb-2 leading-snug" style={{ color: '#0F172A' }}>{title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: '#64748B', lineHeight: 1.7 }}>{desc}</p>
-            </article>
-          ))}
-        </div>
+            <ul className="space-y-5">
+              {pilares.map(({ title, desc }) => (
+                <li key={title} className="flex gap-3.5">
+                  <CheckCircle2
+                    className="w-5 h-5 flex-shrink-0 mt-0.5"
+                    style={{ color: '#4338CA' }}
+                    strokeWidth={2.25}
+                  />
+                  <div>
+                    <p className="text-sm font-semibold mb-1" style={{ color: '#0F172A' }}>{title}</p>
+                    <p className="text-sm leading-relaxed" style={{ color: '#64748B', lineHeight: 1.7 }}>{desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        <div
-          className="rounded-2xl p-6 lg:p-8 bg-white"
-          style={{ border: '1px solid #E2E8F0' }}
-        >
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-1" style={{ color: '#6366F1' }}>
-            Instrumentos por vacante
-          </p>
-          <p className="text-sm mb-4 max-w-2xl" style={{ color: '#64748B', lineHeight: 1.65 }}>
-            Seleccionamos y combinamos los métodos según el perfil comercial que buscas. Un especialista conduce el proceso mientras tu equipo sigue operando.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {metodos.map((m) => (
-              <span
-                key={m}
-                className="text-xs font-medium px-3 py-2 rounded-lg"
-                style={{ background: '#F8FAFC', color: '#334155', border: '1px solid #E2E8F0' }}
-              >
-                {m}
-              </span>
-            ))}
+          <div
+            className="rounded-2xl p-6 lg:p-8"
+            style={{ background: '#FAFBFF', border: '1px solid #E2E8F0' }}
+          >
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-6" style={{ color: '#64748B' }}>
+              Cómo trabajamos cada vacante
+            </p>
+
+            <ol className="space-y-0">
+              {proceso.map(({ n, title, desc }, i) => (
+                <li key={n} className="flex gap-4">
+                  <div className="flex flex-col items-center flex-shrink-0">
+                    <span
+                      className="w-8 h-8 rounded-lg flex items-center justify-center text-[11px] font-bold tabular-nums"
+                      style={{ background: '#EEF2FF', color: '#4338CA' }}
+                    >
+                      {n}
+                    </span>
+                    {i < proceso.length - 1 && (
+                      <div className="w-px flex-1 min-h-[2rem] my-1" style={{ background: '#E2E8F0' }} />
+                    )}
+                  </div>
+                  <div className={i < proceso.length - 1 ? 'pb-6' : ''}>
+                    <p className="text-sm font-semibold mb-1" style={{ color: '#0F172A' }}>{title}</p>
+                    <p className="text-sm leading-relaxed" style={{ color: '#64748B', lineHeight: 1.65 }}>{desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+
+            <div className="mt-6 pt-6 border-t" style={{ borderColor: '#E2E8F0' }}>
+              <p className="text-xs leading-relaxed" style={{ color: '#64748B', lineHeight: 1.65 }}>
+                <span className="font-semibold" style={{ color: '#334155' }}>Resultado: </span>
+                tres candidatos evaluados con el mismo criterio, comparados entre sí y documentados en un informe unificado.
+              </p>
+            </div>
           </div>
         </div>
       </div>

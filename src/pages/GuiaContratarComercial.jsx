@@ -232,20 +232,17 @@ export default function GuiaContratarComercial() {
                   Identifiquemos el talento comercial ideal para tu vacante
                 </h3>
                 <p className="text-base mb-7 max-w-lg mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                  Agenda un diagnóstico sin costo con un especialista de Kova. Revisamos tu contexto comercial y te
-                  orientamos sobre el perfil y las competencias que tu rol exige.
+                  Cuéntanos tu vacante. Un especialista de Kova revisa tu contexto comercial y te presenta una
+                  propuesta con perfil, alcance y cotización.
                 </p>
                 <Link
                   to="/#acceso"
                   className="group inline-flex items-center gap-2 font-semibold px-6 py-3.5 rounded-xl text-sm text-white hover:opacity-95 transition-opacity"
                   style={{ background: '#4338CA' }}
                 >
-                  Agendar diagnóstico comercial
+                  Cuéntanos tu vacante
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
-                <p className="text-xs mt-5" style={{ color: 'rgba(255,255,255,0.38)' }}>
-                  Sin compromiso · Diagnóstico personalizado para tu vacante
-                </p>
               </div>
             </div>
     </GuiaPageLayout>

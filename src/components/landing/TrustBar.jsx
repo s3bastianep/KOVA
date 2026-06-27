@@ -3,7 +3,7 @@ import { Shield, Target, FileCheck, Users } from 'lucide-react';
 const items = [
   { icon: Target, label: 'Talento ideal por vacante', desc: 'Perfil y competencias alineadas al rol' },
   { icon: FileCheck, label: 'Recomendación argumentada', desc: 'Informe para decidir con criterio' },
-  { icon: Users, label: 'Acompañamiento especializado', desc: 'Diagnóstico personalizado sin costo' },
+  { icon: Users, label: 'Acompañamiento especializado', desc: 'Un consultor conduce tu vacante' },
   { icon: Shield, label: 'Datos confidenciales', desc: 'Información tratada con reserva' },
 ];
 

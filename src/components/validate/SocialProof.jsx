@@ -3,8 +3,8 @@ import SectionHeader from '@/components/landing/SectionHeader';
 const stats = [
   { value: '3+', label: 'Candidatos comparados', sub: 'En cada terna con el mismo criterio' },
   { value: '5+', label: 'Competencias por rol', sub: 'Definidas según tu vacante' },
-  { value: '24h', label: 'Respuesta inicial', sub: 'Tras solicitar el diagnóstico' },
-  { value: '$0', label: 'Diagnóstico inicial', sub: 'Sin compromiso de contratación' },
+  { value: '24h', label: 'Respuesta inicial', sub: 'Tras recibir tu solicitud' },
+  { value: '1', label: 'Especialista dedicado', sub: 'Por vacante, de principio a fin' },
 ];
 
 const testimonios = [

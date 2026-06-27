@@ -15,8 +15,8 @@ const inputStyle = { background: '#FFFFFF', border: '1px solid #CBD5E1', color: 
 
 const pasosDespues = [
   { title: 'Confirmación', desc: 'Recibes acuse de solicitud al instante.' },
-  { title: 'Diagnóstico', desc: 'Un especialista te contacta en 24 horas hábiles.' },
-  { title: 'Propuesta clara', desc: 'Perfil, alcance y siguiente paso para tu vacante.' },
+  { title: 'Primer contacto', desc: 'Un especialista te contacta en 24 horas hábiles.' },
+  { title: 'Propuesta clara', desc: 'Perfil, alcance y cotización para tu vacante.' },
 ];
 
 export default function AccesoAnticipado() {
@@ -67,8 +67,8 @@ export default function AccesoAnticipado() {
         <div className="grid lg:grid-cols-[1fr_440px] gap-14 lg:gap-16 items-start">
 
           <div className="lg:sticky lg:top-28">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-4" style={{ color: '#059669' }}>
-              Solicitar diagnóstico
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-4" style={{ color: '#4338CA' }}>
+              Contacto comercial
             </p>
             <h2
               className="font-heading font-bold leading-tight mb-4"
@@ -78,7 +78,7 @@ export default function AccesoAnticipado() {
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#64748B', lineHeight: 1.75 }}>
               Cuéntanos tu vacante. Un especialista en selección comercial revisa tu caso, define el perfil ideal
-              y te explica cómo Kova puede ayudarte, sin compromiso.
+              y te presenta una propuesta con alcance y cotización.
             </p>
 
             <div
@@ -130,7 +130,7 @@ export default function AccesoAnticipado() {
                 </div>
                 <h3 className="font-heading font-semibold text-xl mb-2" style={{ color: '#0F172A' }}>Solicitud recibida</h3>
                 <p className="text-sm mb-2 leading-relaxed" style={{ color: '#64748B' }}>
-                  Un especialista de Kova te contactará en las próximas 24 horas hábiles para coordinar el diagnóstico.
+                  Un especialista de Kova te contactará en las próximas 24 horas hábiles para conversar sobre tu vacante.
                 </p>
                 <p className="text-sm font-medium" style={{ color: '#4338CA' }}>contacto@kova.com.co</p>
               </div>
@@ -138,7 +138,7 @@ export default function AccesoAnticipado() {
               <form onSubmit={handleSubmit} className="kova-card rounded-2xl overflow-hidden">
                 <div className="px-6 pt-6 pb-5 border-b" style={{ borderColor: '#E2E8F0', background: '#FAFBFC' }}>
                   <h3 className="font-heading font-semibold text-lg mb-1" style={{ color: '#0F172A' }}>
-                    Solicitar diagnóstico
+                    Cuéntanos tu vacante
                   </h3>
                   <p className="text-sm" style={{ color: '#64748B' }}>
                     Solo lo esencial. Un especialista te contacta directamente.
@@ -221,7 +221,7 @@ export default function AccesoAnticipado() {
                     className="group w-full flex items-center justify-center gap-2 font-semibold py-3.5 rounded-xl text-sm transition-all text-white disabled:opacity-50 hover:opacity-95"
                     style={{ background: '#4338CA', boxShadow: '0 4px 14px rgba(67,56,202,0.25)' }}
                   >
-                    {loading ? 'Enviando...' : 'Agendar diagnóstico comercial'}
+                    {loading ? 'Enviando...' : 'Enviar solicitud'}
                     {!loading && <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />}
                   </button>
 

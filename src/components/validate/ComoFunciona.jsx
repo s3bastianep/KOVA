@@ -1,53 +1,27 @@
-import { ArrowRight, Target, ClipboardCheck, FileText, UserCheck, Search, BarChart3, Handshake, Briefcase } from 'lucide-react';
+import { ArrowRight, Target, ClipboardCheck, FileText } from 'lucide-react';
 import SectionHeader from '@/components/landing/SectionHeader';
 
 const pasos = [
   {
     n: '01',
     icon: Target,
-    title: 'Definimos el perfil de la vacante',
-    desc: 'Entendemos tu contexto comercial, modelo de venta y metas del rol. Traducimos la vacante en competencias concretas antes de evaluar candidatos.',
-    entregable: 'Perfil ideal + criterios de éxito',
-    color: '#818CF8',
+    title: 'Definición del perfil',
+    desc: 'Conocemos tu operación comercial y definimos qué competencias necesita el rol. Sin supuestos, sin plantillas.',
+    resultado: 'Perfil ideal y criterios de evaluación',
   },
   {
     n: '02',
     icon: ClipboardCheck,
-    title: 'Buscamos y evaluamos con el mismo criterio',
-    desc: 'Reclutamos talento comercial y lo evaluamos con instrumentos diseñados para tu cargo: entrevista por competencias, simulaciones y criterios alineados al rol.',
-    entregable: 'Candidatos evaluados y comparados',
-    color: '#34D399',
+    title: 'Búsqueda y evaluación',
+    desc: 'Encontramos candidatos y los evaluamos con los mismos instrumentos, ajustados al cargo que buscas cubrir.',
+    resultado: 'Candidatos calificados y comparados',
   },
   {
     n: '03',
     icon: FileText,
-    title: 'Te entregamos la terna para decidir',
-    desc: 'Recibes un informe comparativo con ranking, coincidencia por puesto y conclusión del evaluador para elegir con datos, no con corazonada.',
-    entregable: 'Informe unificado listo para decidir',
-    color: '#FBBF24',
-  },
-];
-
-const valor = [
-  {
-    icon: UserCheck,
-    title: 'Especialista dedicado',
-    desc: 'Un consultor comercial conduce tu vacante de principio a fin.',
-  },
-  {
-    icon: Search,
-    title: 'Búsqueda activa',
-    desc: 'No esperamos postulaciones: buscamos talento que encaje con el perfil.',
-  },
-  {
-    icon: BarChart3,
-    title: 'Evaluación personalizada por cargo',
-    desc: 'Competencias, simulaciones y criterios definidos para tu vacante. Mismo estándar para todos, adaptado al rol.',
-  },
-  {
-    icon: Handshake,
-    title: 'Acompañamiento hasta decidir',
-    desc: 'Te apoyamos hasta la contratación, alineando comercial y talento humano.',
+    title: 'Terna e informe',
+    desc: 'Te presentamos tres perfiles rankeados con puntajes por competencia y la recomendación del evaluador.',
+    resultado: 'Informe unificado para decidir',
   },
 ];
 
@@ -75,14 +49,14 @@ export default function ComoFunciona() {
         <SectionHeader
           align="center"
           dark
-          className="mb-12 lg:mb-16 max-w-3xl"
-          eyebrow="Cómo funciona"
-          title="Un proceso completo para contratar comercial con criterio."
-          description="Nos especializamos en áreas comerciales para empresas de cualquier sector. Adaptamos el criterio a tu vacante, evaluamos talento por competencias y te entregamos una terna comparada para decidir con claridad."
+          className="mb-12 lg:mb-14 max-w-2xl"
+          eyebrow="El proceso"
+          title="De tu vacante a la contratación, con un solo interlocutor."
+          description="Nos cuentas el rol. Buscamos, evaluamos y te presentamos a quienes mejor encajan. Tu equipo no pierde tiempo filtrando currículos."
         />
 
-        <div className="grid md:grid-cols-3 gap-4 lg:gap-5 mb-12 lg:mb-14">
-          {pasos.map(({ n, icon: Icon, title, desc, entregable, color }) => (
+        <div className="grid md:grid-cols-3 gap-4 lg:gap-5 mb-14 lg:mb-16">
+          {pasos.map(({ n, icon: Icon, title, desc, resultado }) => (
             <article
               key={title}
               className="rounded-2xl p-5 lg:p-6 flex flex-col h-full"
@@ -90,14 +64,14 @@ export default function ComoFunciona() {
             >
               <div className="flex items-center gap-3 mb-4">
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: `${color}22`, border: `1px solid ${color}44` }}
+                  className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(165,180,252,0.2)' }}
                 >
-                  <Icon className="w-5 h-5" style={{ color }} strokeWidth={2} />
+                  <Icon className="w-4 h-4" style={{ color: '#A5B4FC' }} strokeWidth={2} />
                 </div>
                 <span
-                  className="text-[10px] font-mono font-bold px-2 py-0.5 rounded"
-                  style={{ background: 'rgba(99,102,241,0.2)', color: '#C7D2FE' }}
+                  className="text-[10px] font-mono font-bold tabular-nums"
+                  style={{ color: 'rgba(255,255,255,0.35)' }}
                 >
                   {n}
                 </span>
@@ -106,62 +80,31 @@ export default function ComoFunciona() {
               <p className="text-sm leading-relaxed flex-1 mb-4" style={{ color: 'rgba(255,255,255,0.58)', lineHeight: 1.65 }}>
                 {desc}
               </p>
-              <span
-                className="inline-block text-[10px] font-semibold px-2.5 py-1.5 rounded-lg w-fit"
-                style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}
-              >
-                → {entregable}
-              </span>
+              <p className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                {resultado}
+              </p>
             </article>
           ))}
         </div>
 
-        <div
-          className="rounded-2xl p-6 lg:p-8 mb-10"
-          style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}
-        >
-          <div className="flex items-center gap-2 mb-6">
-            <Briefcase className="w-4 h-4" style={{ color: '#A5B4FC' }} strokeWidth={2} />
-            <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#A5B4FC' }}>
-              Qué incluye trabajar con Kova
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
-            {valor.map(({ icon: Icon, title, desc }) => (
-              <div key={title}>
-                <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center mb-3"
-                  style={{ background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(165,180,252,0.15)' }}
-                >
-                  <Icon className="w-4 h-4" style={{ color: '#C7D2FE' }} strokeWidth={2} />
-                </div>
-                <p className="text-sm font-semibold text-white mb-1">{title}</p>
-                <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)', lineHeight: 1.65 }}>
-                  {desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 pt-8 border-t" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#A5B4FC' }}>
-              Vacantes que cubrimos
+              Roles que cubrimos
             </p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 mb-3">
               {roles.map((rol) => (
                 <span
                   key={rol}
                   className="text-xs font-medium px-3 py-1.5 rounded-full"
-                  style={{ background: 'rgba(99,102,241,0.15)', color: '#E0E7FF', border: '1px solid rgba(165,180,252,0.2)' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.75)', border: '1px solid rgba(255,255,255,0.1)' }}
                 >
                   {rol}
                 </span>
               ))}
             </div>
-            <p className="text-xs mt-3 max-w-xl" style={{ color: 'rgba(255,255,255,0.45)', lineHeight: 1.65 }}>
-              B2B, B2C, retail, servicios, industria y más. El criterio se adapta a cómo vende tu empresa.
+            <p className="text-xs max-w-lg" style={{ color: 'rgba(255,255,255,0.4)', lineHeight: 1.65 }}>
+              B2B, B2C, retail, servicios e industria. El criterio se adapta a cómo vende tu empresa.
             </p>
           </div>
 
@@ -171,7 +114,7 @@ export default function ComoFunciona() {
             className="group inline-flex items-center gap-2 font-semibold px-6 py-3.5 rounded-xl text-sm text-white transition-all hover:opacity-95 flex-shrink-0"
             style={{ background: '#4338CA', boxShadow: '0 4px 14px rgba(67,56,202,0.35)' }}
           >
-            Agendar diagnóstico comercial
+            Cuéntanos tu vacante
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </button>
         </div>

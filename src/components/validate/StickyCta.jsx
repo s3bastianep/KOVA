@@ -28,7 +28,7 @@ export default function StickyCta() {
         className="w-full flex items-center justify-center gap-2 font-semibold py-3.5 rounded-xl text-sm text-white"
         style={{ background: '#4338CA', boxShadow: '0 4px 14px rgba(67,56,202,0.4)' }}
       >
-        Diagnóstico gratuito
+        Cuéntanos tu vacante
         <ArrowRight className="w-4 h-4" />
       </button>
     </div>

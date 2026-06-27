@@ -46,13 +46,13 @@ export default function GuiaSidebar({ currentPath }) {
             style={{ background: '#F8FAFF', border: '1px solid #E0E7FF' }}
           >
             <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#6366F1' }}>
-              Diagnóstico gratuito
+              Contacto comercial
             </p>
             <p className="text-sm font-semibold mb-1" style={{ color: '#0F172A' }}>
               Hablemos de tu vacante comercial
             </p>
             <p className="text-xs leading-relaxed" style={{ color: '#64748B' }}>
-              Un especialista de Kova te orienta sobre tu vacante. Sin compromiso.
+              Un especialista de Kova revisa tu caso y te presenta una propuesta.
             </p>
           </Link>
         </div>

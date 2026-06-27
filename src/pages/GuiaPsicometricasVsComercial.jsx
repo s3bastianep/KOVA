@@ -94,7 +94,7 @@ export default function GuiaPsicometricasVsComercial() {
           en abstracto; evalúa si puedes desempeñar este rol comercial en esta empresa.
         </GuiaProse>
         <GuiaProse>
-          El proceso parte de un diagnóstico de vacante, define criterios medibles, evalúa candidatos con el mismo
+          El proceso parte de la definición del perfil, define criterios medibles, evalúa candidatos con el mismo
           marco y entrega un informe comparativo con ranking y recomendación argumentada para dirección comercial
           y talento humano.
         </GuiaProse>
@@ -190,8 +190,8 @@ export default function GuiaPsicometricasVsComercial() {
 
         <GuiaArticleCTA
           title="Contrata comercial con evaluación que sí predice desempeño"
-          description="Agenda un diagnóstico comercial sin costo. Te mostramos cómo la metodología Kova reemplaza pruebas genéricas por evaluación especializada alineada a tu vacante."
-          primaryLabel="Agendar diagnóstico comercial"
+          description="Cuéntanos tu vacante. Te mostramos cómo la metodología Kova reemplaza pruebas genéricas por evaluación especializada alineada a tu rol."
+          primaryLabel="Cuéntanos tu vacante"
           primaryTo="/#acceso"
           secondaryLabel="Leer guía de evaluación comercial"
           secondaryTo="/guia-evaluacion-comercial"

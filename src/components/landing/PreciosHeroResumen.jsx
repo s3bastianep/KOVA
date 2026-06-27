@@ -1,7 +1,7 @@
 import { Target, Search, BarChart3, FileText, UserCheck } from 'lucide-react';
 
 const highlights = [
-  { icon: Target, label: 'Diagnóstico de vacante y perfil ideal' },
+  { icon: Target, label: 'Definición del perfil ideal y competencias del rol' },
   { icon: Search, label: 'Búsqueda activa de talento comercial' },
   { icon: BarChart3, label: 'Evaluación comparativa por competencias' },
   { icon: FileText, label: 'Terna argumentada para decidir' },
@@ -23,7 +23,7 @@ export default function PreciosHeroResumen() {
       </p>
       <p className="text-lg font-semibold text-white mb-1">Todo el proceso, una sola propuesta</p>
       <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.55)', lineHeight: 1.65 }}>
-        Cotizamos según tu vacante, no por licencias ni usuarios. El alcance se define en el diagnóstico inicial.
+        Cotizamos según tu vacante, no por licencias ni usuarios. El alcance se define en la primera reunión.
       </p>
 
       <ul className="space-y-3">
@@ -47,7 +47,7 @@ export default function PreciosHeroResumen() {
         style={{ background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(165,180,252,0.2)' }}
       >
         <p className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.65)', lineHeight: 1.6 }}>
-          El diagnóstico comercial inicial no tiene costo. Ahí definimos perfil, entregables y propuesta.
+          Cada proyecto incluye perfil, entregables y propuesta comercial antes de iniciar el proceso.
         </p>
       </div>
     </div>

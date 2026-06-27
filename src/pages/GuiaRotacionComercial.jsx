@@ -182,7 +182,7 @@ export default function GuiaRotacionComercial() {
         <GuiaCallout
           title="Cómo Kova reduce el riesgo de rotación comercial"
           items={[
-            'Diagnóstico de vacante antes de evaluar candidatos.',
+            'Definición del perfil antes de evaluar candidatos.',
             'Evaluación por competencias comerciales específicas del rol.',
             'Informe comparativo con ranking y recomendación argumentada.',
             'Decisión documentada para que comercial y talento humano actúen con el mismo criterio.',
@@ -206,8 +206,8 @@ export default function GuiaRotacionComercial() {
 
         <GuiaArticleCTA
           title="Reduce la rotación comercial con evaluación especializada de Kova"
-          description="Agenda un diagnóstico comercial sin costo. Te orientamos sobre tu vacante y cómo validar competencias antes de contratar, para que dejes de repetir el ciclo escasez-rotación-escasez."
-          primaryLabel="Agendar diagnóstico comercial"
+          description="Cuéntanos tu vacante. Un especialista de Kova te orienta sobre cómo validar competencias antes de contratar y dejar de repetir el ciclo escasez-rotación-escasez."
+          primaryLabel="Cuéntanos tu vacante"
           primaryTo="/#acceso"
           secondaryLabel="Ver guía de evaluación comercial"
           secondaryTo="/guia-evaluacion-comercial"

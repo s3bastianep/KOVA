@@ -19,7 +19,7 @@ import Footer from '@/components/landing/Footer';
 import PreciosHeroResumen from '@/components/landing/PreciosHeroResumen';
 
 const includes = [
-  { icon: Target, label: 'Diagnóstico de vacante y perfil ideal' },
+  { icon: Target, label: 'Definición del perfil ideal y competencias del rol' },
   { icon: Search, label: 'Búsqueda activa de talento comercial' },
   { icon: ClipboardCheck, label: 'Evaluación por competencias comerciales' },
   { icon: BarChart3, label: 'Informe comparativo con ranking' },
@@ -131,7 +131,7 @@ export default function Precios() {
               className="inline-flex items-center gap-2 font-semibold px-6 py-3.5 rounded-xl text-sm text-white transition-all hover:opacity-95"
               style={{ background: '#4338CA', boxShadow: '0 4px 14px rgba(67,56,202,0.35)' }}
             >
-              Agendar diagnóstico comercial
+              Cuéntanos tu vacante
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -221,7 +221,7 @@ export default function Precios() {
               Somos tu equipo de reclutamiento comercial, no un proveedor de software.
             </h2>
             <p className="text-base mb-6" style={{ color: 'rgba(255,255,255,0.65)', lineHeight: 1.75 }}>
-              Kova ejecuta el proceso de principio a fin: diagnóstico, búsqueda, evaluación por competencias e
+              Kova ejecuta el proceso de principio a fin: definición del perfil, búsqueda, evaluación por competencias e
               informe comparativo. Tú te enfocas en decidir; nosotros en encontrar al talento que encaja con tu
               vacante y tu forma de vender.
             </p>

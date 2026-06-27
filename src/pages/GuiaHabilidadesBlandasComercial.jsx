@@ -194,7 +194,7 @@ export default function GuiaHabilidadesBlandasComercial() {
         <GuiaCallout
           title="Cómo lo aborda Kova"
           items={[
-            'Diagnóstico de vacante antes de evaluar: definimos qué habilidades blandas exige el rol.',
+            'Definición del perfil antes de evaluar: definimos qué habilidades blandas exige el rol.',
             'Evaluación por competencias comerciales con rúbricas, no impresiones subjetivas.',
             'Comparación estandarizada entre candidatos con informe para dirección comercial.',
             'Especialistas en selección comercial.',
@@ -213,14 +213,14 @@ export default function GuiaHabilidadesBlandasComercial() {
         </GuiaProse>
         <GuiaProse>
           Kova ayuda a empresas de todo tipo a evaluar habilidades blandas comerciales con metodología especializada:
-          diagnóstico de vacante, evaluación por competencias, comparación entre candidatos e informe
+          definición del perfil, evaluación por competencias, comparación entre candidatos e informe
           argumentado para que dirección comercial y talento humano decidan con evidencia.
         </GuiaProse>
 
         <GuiaArticleCTA
           title="Evalúa habilidades blandas comerciales con criterio de experto"
-          description="Agenda un diagnóstico comercial sin costo. Un especialista de Kova te orienta sobre tu vacante y cómo medir competencias interpersonales con rigor, no con intuición."
-          primaryLabel="Agendar diagnóstico comercial"
+          description="Cuéntanos tu vacante. Un especialista de Kova te orienta sobre cómo medir competencias interpersonales con rigor, no con intuición."
+          primaryLabel="Cuéntanos tu vacante"
           primaryTo="/#acceso"
           secondaryLabel="Ver guía de evaluación comercial"
           secondaryTo="/guia-evaluacion-comercial"
