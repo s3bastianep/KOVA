@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
-import PreciosCandidatoDashboard from '@/components/landing/PreciosCandidatoDashboard';
+import PreciosHeroResumen from '@/components/landing/PreciosHeroResumen';
 
 const includes = [
   { icon: Target, label: 'Diagnóstico de vacante y perfil ideal' },
@@ -30,7 +30,7 @@ const includes = [
   { icon: Handshake, label: 'Seguimiento hasta la decisión final' },
   { icon: Shield, label: 'Confidencialidad de datos corporativos' },
   { icon: LineChart, label: 'Criterio documentado para cada candidato' },
-  { icon: CheckCircle2, label: 'Metodología propia especializada en B2B' },
+  { icon: CheckCircle2, label: 'Metodología propia para áreas comerciales' },
 ];
 
 const stats = [
@@ -136,7 +136,7 @@ export default function Precios() {
             </Link>
           </div>
           <div className="mt-8 lg:mt-0">
-            <PreciosCandidatoDashboard />
+            <PreciosHeroResumen />
           </div>
         </div>
       </section>

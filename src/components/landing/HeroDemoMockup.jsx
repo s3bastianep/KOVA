@@ -72,7 +72,7 @@ export default function HeroDemoMockup() {
             <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#94A3B8' }}>
               Vacante evaluada
             </p>
-            <p className="text-sm font-semibold" style={{ color: '#0F172A' }}>Ejecutivo Comercial B2B</p>
+            <p className="text-sm font-semibold" style={{ color: '#0F172A' }}>Ejecutivo Comercial</p>
             <p className="text-[10px] mt-0.5" style={{ color: '#64748B' }}>Perfil definido según tu proceso comercial</p>
           </div>
           <span
@@ -148,7 +148,7 @@ export default function HeroDemoMockup() {
               <div className="rounded-xl p-3.5" style={{ background: '#F0FDF4', border: '1px solid #BBF7D0' }}>
                 <p className="text-[10px] font-semibold mb-1" style={{ color: '#047857' }}>Conclusión del evaluador</p>
                 <p className="text-xs leading-relaxed" style={{ color: '#166534', lineHeight: 1.65 }}>
-                  Perfil con alta coincidencia ({MATCH_PERCENT}%) con venta consultiva B2B. Recomendado para la terna final.
+                  Perfil con alta coincidencia ({MATCH_PERCENT}%) con las competencias del rol. Recomendado para la terna final.
                 </p>
               </div>
             </>

@@ -28,7 +28,7 @@ const entregables = [
 const outcomes = [
   { value: '3', label: 'Candidatos comparados' },
   { value: '1', label: 'Informe unificado' },
-  { value: 'B2B', label: 'Enfoque especializado' },
+  { value: 'Todo', label: 'Tipo de empresa' },
 ];
 
 export default function Entregable() {

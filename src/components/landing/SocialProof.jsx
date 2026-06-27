@@ -16,7 +16,7 @@ const testimonios = [
   {
     quote: 'La evaluación por competencias nos ahorró dos meses de contratación fallida.',
     author: 'Gerente General',
-    company: 'Tecnología B2B · Medellín',
+    company: 'Tecnología · Medellín',
   },
 ];
 

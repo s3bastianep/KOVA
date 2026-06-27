@@ -4,7 +4,7 @@ import HeroDemoMockup from '@/components/landing/HeroDemoMockup';
 
 const proofPoints = [
   'Identificamos el perfil comercial ideal para tu vacante',
-  'Metodología especializada en ventas B2B',
+  'Metodología especializada para áreas comerciales',
   'Informe comparativo para decidir con criterio',
 ];
 
@@ -33,7 +33,7 @@ export default function Hero() {
               style={{ background: '#FFFFFF', color: '#4338CA', border: '1px solid #E0E7FF', boxShadow: '0 1px 2px rgba(15,23,42,0.04)' }}
             >
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#6366F1' }} />
-              Atracción de talento comercial B2B
+              Especialistas en áreas comerciales
             </div>
 
             <h1
@@ -46,8 +46,8 @@ export default function Hero() {
             </h1>
 
             <p className="text-base lg:text-lg mb-8 max-w-[520px]" style={{ color: '#64748B', lineHeight: 1.75 }}>
-              No buscamos llenar puestos: entendemos tu vacante, evaluamos competencias comerciales y te presentamos
-              el perfil que sí puede desempeñar el rol en tu contexto.
+              Evaluamos lo que cada candidato demuestra en competencias comerciales, no solo lo que aparece en
+              el currículum. Te presentamos el perfil que sí puede desempeñar el rol en tu contexto.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 mb-10">

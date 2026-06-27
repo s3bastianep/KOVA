@@ -47,7 +47,7 @@ export default function GuiaHabilidadesBlandasComercial() {
           técnicas de cierre, manejo de producto), no se miden con un certificado ni con años en el currículum.
         </GuiaProse>
         <GuiaProse>
-          En ventas B2B, estas competencias son decisivas. Un ejecutivo comercial puede dominar el producto y
+          En cualquier área comercial, estas competencias son decisivas. Un ejecutivo comercial puede dominar el producto y
           aun así fracasar si no escucha al cliente, no gestiona el rechazo o no sabe construir relaciones a
           largo plazo. Por eso las habilidades blandas suelen diferenciar a quienes superan cuota de forma
           consistente de quienes dependen de un buen trimestre aislado.
@@ -169,7 +169,7 @@ export default function GuiaHabilidadesBlandasComercial() {
 
         <GuiaNumberedItem num={2} title="Depender de pruebas de personalidad genéricas">
           Los tests psicométricos miden rasgos generales, no desempeño en ventas. Un candidato puede tener un
-          perfil extrovertido y aun así no saber prospectar en B2B consultivo. Deben complementarse, no
+          perfil extrovertido y aun así no saber prospectar en venta consultiva. Deben complementarse, no
           reemplazar, evaluaciones de comportamiento comercial específicas del rol.
         </GuiaNumberedItem>
 
@@ -197,7 +197,7 @@ export default function GuiaHabilidadesBlandasComercial() {
             'Diagnóstico de vacante antes de evaluar: definimos qué habilidades blandas exige el rol.',
             'Evaluación por competencias comerciales con rúbricas, no impresiones subjetivas.',
             'Comparación estandarizada entre candidatos con informe para dirección comercial.',
-            'Especialistas en selección comercial B2B.',
+            'Especialistas en selección comercial.',
           ]}
         />
 
@@ -212,7 +212,7 @@ export default function GuiaHabilidadesBlandasComercial() {
           competencias, observar comportamiento en escenarios reales y comparar candidatos con el mismo criterio.
         </GuiaProse>
         <GuiaProse>
-          Kova ayuda a empresas B2B a evaluar habilidades blandas comerciales con metodología especializada:
+          Kova ayuda a empresas de todo tipo a evaluar habilidades blandas comerciales con metodología especializada:
           diagnóstico de vacante, evaluación por competencias, comparación entre candidatos e informe
           argumentado para que dirección comercial y talento humano decidan con evidencia.
         </GuiaProse>

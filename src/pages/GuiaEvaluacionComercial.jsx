@@ -24,7 +24,7 @@ export default function GuiaEvaluacionComercial() {
         <GuiaProse>
           Contratar comercial sin evaluar competencias es una apuesta. Entrevistas, referencias y años de experiencia
           no demuestran si alguien puede prospectar, manejar objeciones o cerrar en tu mercado. Por eso cada vez más
-          empresas B2B están adoptando evaluación comercial especializada antes de tomar la decisión final.
+          empresas están adoptando evaluación comercial especializada antes de tomar la decisión final.
         </GuiaProse>
         <GuiaProse>
           En Kova diseñamos procesos de selección comercial basados en competencias: medimos lo que la vacante exige,
@@ -128,7 +128,7 @@ export default function GuiaEvaluacionComercial() {
           relevantes: un SDR no se evalúa igual que un account manager ni que un director comercial.
         </GuiaNumberedItem>
         <GuiaNumberedItem num={2} title="Ajuste al contexto de la vacante">
-          Tipo de cliente, ciclo de venta, ticket promedio y modelo comercial. Un hunter B2B y un farmer de cuentas
+          Tipo de cliente, ciclo de venta, ticket promedio y modelo comercial. Un hunter de prospección y un farmer de cuentas
           requieren perfiles distintos aunque ambos se llamen ejecutivos comerciales.
         </GuiaNumberedItem>
         <GuiaNumberedItem num={3} title="Simulación de escenarios comerciales">
@@ -217,7 +217,7 @@ export default function GuiaEvaluacionComercial() {
         </GuiaNumberedItem>
         <GuiaNumberedItem num={3} title="Validez de contenido">
           Expertos en selección comercial definen qué se evalúa y cómo. El contenido refleja las demandas actuales
-          del mercado B2B latinoamericano.
+          del mercado comercial latinoamericano.
         </GuiaNumberedItem>
         <GuiaNumberedItem num={4} title="Validez predictiva">
           El objetivo final es predecir desempeño comercial. Por eso priorizamos escenarios y competencias con
@@ -264,7 +264,7 @@ export default function GuiaEvaluacionComercial() {
 
         <GuiaArticleCTA
           title="Contrata comercial con confianza usando la evaluación de Kova"
-          description="Kova ayuda a empresas B2B a evaluar candidatos comerciales con criterio especializado: diagnóstico de vacante, evaluación por competencias e informe comparativo para decidir con evidencia, no con intuición."
+          description="Kova ayuda a empresas de todo tipo a evaluar candidatos comerciales con criterio especializado: diagnóstico de vacante, evaluación por competencias e informe comparativo para decidir con evidencia, no con intuición."
           primaryLabel="Agendar diagnóstico comercial"
           primaryTo="/#acceso"
           secondaryLabel="Ver cómo funciona Kova"

@@ -1,6 +1,6 @@
 const empresas = [
   { name: 'FinTech Pro', sector: 'Sector financiero' },
-  { name: 'NovaTech', sector: 'Tecnología B2B' },
+  { name: 'NovaTech', sector: 'Tecnología' },
   { name: 'Retail Plus', sector: 'Retail' },
   { name: 'ConsultaCo', sector: 'Servicios' },
   { name: 'InduMax', sector: 'Manufactura' },

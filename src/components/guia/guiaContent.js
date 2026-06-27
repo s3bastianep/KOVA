@@ -37,7 +37,7 @@ export const ISSUES = [
     summary: 'Priorizar solo experiencia previa o empresas reconocidas no garantiza desempeño en tu vacante.',
     paragraphs: [
       'Muchas organizaciones se enfocan en candidatos con historial en grandes corporaciones, títulos llamativos o años de experiencia en ventas. Pero el desempeño pasado no siempre se traduce en resultados futuros, sobre todo si el producto, el mercado o el tipo de venta son diferentes.',
-      'En sectores B2B con ciclos largos, venta consultiva o productos técnicos, el contexto del rol pesa tanto como la experiencia genérica. Ignorarlo lleva a pasar por alto perfiles con el ADN comercial correcto o, peor aún, a pagar prima salarial por un currículum que no encaja.',
+      'En roles con ciclos largos, venta consultiva o productos técnicos, el contexto del rol pesa tanto como la experiencia genérica. Ignorarlo lleva a pasar por alto perfiles con el ADN comercial correcto o, peor aún, a pagar prima salarial por un currículum que no encaja.',
     ],
     solution: 'Kova define competencias clave alineadas al rol real y al contexto comercial de la vacante. Eso permite comparar candidatos con un marco claro, más allá del historial en papel.',
   },

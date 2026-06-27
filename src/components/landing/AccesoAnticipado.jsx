@@ -3,7 +3,7 @@ import { submitEarlyAccess } from '@/api/earlyAccess';
 import { ArrowRight, CheckCircle2, Lock } from 'lucide-react';
 
 const vacantes = [
-  'Ejecutivo comercial B2B',
+  'Ejecutivo comercial',
   'SDR / Prospección',
   'Account manager',
   'Director / Gerente comercial',

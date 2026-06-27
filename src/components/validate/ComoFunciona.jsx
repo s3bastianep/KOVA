@@ -1,6 +1,6 @@
 import React from 'react';
 import SectionHeader from '@/components/landing/SectionHeader';
-import ComoFuncionaVisual from '@/components/validate/ComoFuncionaVisual';
+import ComoFuncionaProceso from '@/components/validate/ComoFuncionaProceso';
 
 const pasos = [
   {
@@ -58,7 +58,7 @@ export default function ComoFunciona() {
             </div>
           </div>
 
-          <ComoFuncionaVisual />
+          <ComoFuncionaProceso />
         </div>
       </div>
     </section>

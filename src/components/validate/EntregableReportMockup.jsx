@@ -56,7 +56,7 @@ export default function EntregableReportMockup() {
         <div className="px-5 py-4 border-b flex items-start justify-between gap-3" style={{ borderColor: '#F1F5F9' }}>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#94A3B8' }}>
-              Vacante · Ejecutivo Comercial B2B
+              Vacante · Ejecutivo Comercial
             </p>
             <p className="text-sm font-semibold" style={{ color: '#0F172A' }}>
               Informe de ajuste comercial
@@ -126,7 +126,7 @@ export default function EntregableReportMockup() {
               <div className="rounded-xl p-4" style={{ background: '#F0FDF4', border: '1px solid #BBF7D0' }}>
                 <p className="text-xs font-semibold mb-2" style={{ color: '#047857' }}>Conclusión del evaluador</p>
                 <p className="text-sm leading-relaxed" style={{ color: '#166534', lineHeight: 1.65 }}>
-                  Perfil alineado con venta consultiva B2B. Recomendado para incluir en la terna final y avanzar a entrevista con dirección comercial.
+                  Perfil alineado con las competencias del rol. Recomendado para incluir en la terna final y avanzar a entrevista con dirección comercial.
                 </p>
               </div>
             </>

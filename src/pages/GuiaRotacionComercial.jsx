@@ -22,7 +22,7 @@ export default function GuiaRotacionComercial() {
       tocItems={TOC_ROTACION}
     >
         <GuiaProse>
-          Muchas empresas B2B viven un ciclo frustrante: les cuesta encontrar vendedores, contratan con prisa,
+          Muchas empresas viven un ciclo frustrante: les cuesta encontrar vendedores, contratan con prisa,
           el nuevo comercial no rinde y se va en pocos meses. La vacante queda abierta otra vez y el equipo
           absorbe la presión. El problema rara vez empieza en la inducción: empieza en la contratación.
         </GuiaProse>
@@ -121,7 +121,7 @@ export default function GuiaRotacionComercial() {
           reales. Kova evalúa habilidades demostradas, no solo lo que el candidato declara que puede hacer.
         </GuiaNumberedItem>
         <GuiaNumberedItem num={2} title="Falta de evaluación específica para la vacante">
-          Un hunter B2B y un account manager requieren perfiles distintos. Aplicar el mismo filtro genérico
+          Un hunter de prospección y un account manager requieren perfiles distintos. Aplicar el mismo filtro genérico
           a ambos roles genera desajustes predecibles y rotación evitable.
         </GuiaNumberedItem>
         <GuiaNumberedItem num={3} title="Brechas ocultas en roles comerciales especializados">

@@ -112,9 +112,9 @@ export default function DemoSection() {
                       <p className="font-heading font-bold text-xl" style={{ color: '#111110', letterSpacing: '-0.02em' }}>Ana Martínez</p>
                       <span className="text-xs px-2.5 py-1 rounded-full font-semibold" style={{ background: '#E8F8F5', color: '#2EC4A5' }}>Recomendado</span>
                     </div>
-                    <p className="text-sm mb-3" style={{ color: '#888880' }}>SDR Senior · 4 años experiencia B2B · Bogotá</p>
+                    <p className="text-sm mb-3" style={{ color: '#888880' }}>SDR Senior · 4 años en ventas · Bogotá</p>
                     <div className="flex flex-wrap gap-2">
-                      {['Cierre consultivo', 'Alta resiliencia', 'Perfil Hunter', 'B2B Senior'].map(b => (
+                      {['Cierre consultivo', 'Alta resiliencia', 'Perfil Hunter', 'Ventas senior'].map(b => (
                         <span key={b} className="px-3 py-1 rounded-full text-xs font-medium" style={{ background: '#F7F8FA', color: '#555550', border: '1px solid #E8E8E3' }}>{b}</span>
                       ))}
                     </div>

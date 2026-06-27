@@ -27,7 +27,7 @@ export default function GuiaPsicometricasVsComercial() {
         </GuiaProse>
         <GuiaProse>
           El costo de una mala contratación comercial no es solo el salario mal invertido: es pipeline estancado,
-          rotación elevada y meses perdidos antes de reconocer el error. Por eso cada vez más organizaciones B2B
+          rotación elevada y meses perdidos antes de reconocer el error. Por eso cada vez más organizaciones
           están reemplazando métodos genéricos por evaluación comercial especializada.
         </GuiaProse>
         <GuiaProse>
@@ -49,7 +49,7 @@ export default function GuiaPsicometricasVsComercial() {
         </GuiaProse>
         <GuiaProse>
           El problema en comercial es que estos tests fueron diseñados para roles generales, no para medir prospección,
-          manejo de objeciones, venta consultiva ni cierre en un mercado B2B específico.
+          manejo de objeciones, venta consultiva ni cierre en el modelo comercial de tu empresa.
         </GuiaProse>
 
         <GuiaDivider />
@@ -116,7 +116,7 @@ export default function GuiaPsicometricasVsComercial() {
         </GuiaNumberedItem>
         <GuiaNumberedItem num={2} title="Medida directa de ajuste al puesto">
           Cada evaluación se calibra a la vacante: tipo de cliente, ciclo de venta, ticket y modelo comercial.
-          Un SDR, un ejecutivo B2B y un account manager no se evalúan con el mismo cuestionario genérico.
+          Un SDR, un ejecutivo comercial y un account manager no se evalúan con el mismo cuestionario genérico.
         </GuiaNumberedItem>
         <GuiaNumberedItem num={3} title="Sesgo reducido con criterios objetivos">
           Puntajes por competencia, comparación entre candidatos y sustento documentado reducen la dependencia
@@ -144,7 +144,7 @@ export default function GuiaPsicometricasVsComercial() {
         <GuiaProse>
           Reemplazar pruebas genéricas por evaluación comercial especializada no es un gasto de RH: es una
           inversión directa en la calidad del equipo que genera ingresos. Estos son los impactos que vemos
-          en empresas B2B:
+          en empresas de cualquier sector:
         </GuiaProse>
 
         <GuiaNumberedItem num={1} title="Mejor retención del talento comercial">

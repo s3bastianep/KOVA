@@ -35,7 +35,7 @@ export default function Footer() {
               <span className="font-heading font-semibold text-base text-white">Kova</span>
             </Link>
             <p className="text-sm leading-relaxed mb-5 max-w-xs" style={{ color: 'rgba(255,255,255,0.55)', lineHeight: 1.75 }}>
-              Especialistas en atraer y evaluar talento comercial ideal para empresas B2B en Latinoamérica.
+              Especialistas en selección comercial para áreas comerciales de todo tipo de empresa en Latinoamérica.
             </p>
             <a
               href="mailto:contacto@kova.com.co"

@@ -65,7 +65,7 @@ export default function GuiaPageLayout({
               <div>
                 <p className="text-sm font-semibold" style={{ color: '#0F172A' }}>Equipo Kova</p>
                 <p className="text-xs" style={{ color: '#64748B' }}>
-                  Especialistas en selección comercial B2B
+                  Especialistas en áreas comerciales
                 </p>
               </div>
             </div>

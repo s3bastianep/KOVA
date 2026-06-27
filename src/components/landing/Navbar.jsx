@@ -55,7 +55,7 @@ export default function Navbar() {
               Kova
             </span>
             <span className="text-[10px] font-medium hidden sm:block mt-0.5" style={{ color: '#64748B' }}>
-              Selección comercial B2B
+              Áreas comerciales · Todo tipo de empresa
             </span>
           </div>
         </Link>

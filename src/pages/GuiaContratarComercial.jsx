@@ -58,7 +58,7 @@ export default function GuiaContratarComercial() {
       tocItems={TOC_CONTRATAR}
     >
             <p className={`${prose} mb-8`} style={proseColor}>
-              Muchas empresas asumen que atraer talento comercial es cuestión de identificar a los más extrovertidos o a quienes mejor cuentan su experiencia. Pero en B2B hay muchos más obstáculos: roles mal definidos, entrevistas que no predicen desempeño y evaluaciones genéricas que no miden ventas.
+              Muchas empresas asumen que atraer talento comercial es cuestión de identificar a los más extrovertidos o a quienes mejor cuentan su experiencia. Pero en selección comercial hay muchos más obstáculos: roles mal definidos, entrevistas que no predicen desempeño y evaluaciones genéricas que no miden ventas.
             </p>
             <p className={`${prose} mb-8`} style={proseColor}>
               Con presión por crecer el equipo comercial, elegir al perfil equivocado cuesta caro: rotación elevada, pipeline estancado y meses perdidos. En Kova abordamos esto con metodología propia y especialistas en selección comercial: identificamos el talento ideal para tu vacante, sin pruebas genéricas de RH.
@@ -178,7 +178,7 @@ export default function GuiaContratarComercial() {
               6 competencias clave que debes evaluar al contratar comercial
             </SectionTitle>
             <p className={`${prose} mb-8`} style={proseColor}>
-              Ya sea SDR, ejecutivo comercial, account manager o director comercial, estas capacidades son centrales en casi toda vacante de ventas B2B. Kova las evalúa en función de lo que cada rol exige.
+              Ya sea SDR, ejecutivo comercial, account manager o director comercial, estas capacidades son centrales en casi toda vacante comercial. Kova las evalúa en función de lo que cada rol exige.
             </p>
 
             <div className="grid sm:grid-cols-2 gap-4 mb-14">
