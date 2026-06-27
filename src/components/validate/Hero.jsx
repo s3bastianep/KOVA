@@ -3,7 +3,7 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import HeroDemoMockup from '@/components/landing/HeroDemoMockup';
 
 const proofPoints = [
-  'Identificamos el perfil comercial ideal para tu vacante',
+  'Evaluación personalizada de habilidades según el cargo',
   'Metodología especializada para áreas comerciales',
   'Informe comparativo para decidir con criterio',
 ];
@@ -46,8 +46,8 @@ export default function Hero() {
             </h1>
 
             <p className="text-base lg:text-lg mb-8 max-w-[520px]" style={{ color: '#64748B', lineHeight: 1.75 }}>
-              Evaluamos lo que cada candidato demuestra en competencias comerciales, no solo lo que aparece en
-              el currículum. Te presentamos el perfil que sí puede desempeñar el rol en tu contexto.
+              Diseñamos la evaluación según tu vacante y medimos lo que cada candidato demuestra en competencias
+              comerciales, no solo lo que aparece en el currículum.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 mb-10">

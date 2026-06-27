@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TrendingUp, Users, Target, ShieldCheck, Briefcase } from 'lucide-react';
+import { TrendingUp, Users, Target, ShieldCheck, Briefcase, Star, CheckCircle2 } from 'lucide-react';
 
 const tabs = [
   { id: 'resumen', label: 'Resumen' },
@@ -16,10 +16,10 @@ const kpis = [
 ];
 
 const competenciasResumen = [
-  { label: 'Venta consultiva', value: 92 },
-  { label: 'Prospección', value: 90 },
-  { label: 'Manejo de objeciones', value: 88 },
-  { label: 'Orientación al logro', value: 95 },
+  { label: 'Venta consultiva', value: 92, color: '#4F46E5' },
+  { label: 'Prospección', value: 90, color: '#059669' },
+  { label: 'Manejo de objeciones', value: 88, color: '#D97706' },
+  { label: 'Orientación al logro', value: 95, color: '#0284C7' },
 ];
 
 const candidatos = [
@@ -30,9 +30,6 @@ const candidatos = [
 
 const CANDIDATE_PHOTO =
   'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=160&h=160&fit=crop&crop=face';
-
-const barFill = (value) =>
-  `linear-gradient(90deg, rgba(99,102,241,${0.45 + (value / 100) * 0.55}) 0%, #6366F1 100%)`;
 
 export default function HeroDemoMockup() {
   const [tab, setTab] = useState('resumen');
@@ -110,59 +107,96 @@ export default function HeroDemoMockup() {
         <div className="p-5">
           {tab === 'resumen' && (
             <>
-              <div className="flex gap-4 mb-5">
-                <img
-                  src={CANDIDATE_PHOTO}
-                  alt="María López"
-                  className="w-14 h-14 rounded-full object-cover flex-shrink-0"
-                  style={{ border: '2px solid #E0E7FF' }}
-                />
-                <div className="flex-1 min-w-0 pt-0.5">
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <p className="text-sm font-semibold truncate" style={{ color: '#0F172A' }}>María López</p>
-                    <span
-                      className="text-[10px] font-medium px-2 py-0.5 rounded-md flex-shrink-0 tabular-nums"
-                      style={{ background: '#F8FAFC', color: '#64748B' }}
+              <p className="text-[10px] font-semibold uppercase tracking-wider mb-3" style={{ color: '#6366F1' }}>
+                Candidato destacado
+              </p>
+
+              <div
+                className="rounded-xl p-4 mb-5"
+                style={{ background: '#FAFBFF', border: '1px solid #E0E7FF' }}
+              >
+                <div className="flex gap-4">
+                  <div className="relative flex-shrink-0">
+                    <div
+                      className="rounded-full p-0.5"
+                      style={{ background: 'linear-gradient(135deg, #C7D2FE 0%, #A5B4FC 100%)' }}
                     >
-                      +24 vs. promedio
+                      <img
+                        src={CANDIDATE_PHOTO}
+                        alt="María López"
+                        className="w-[4.5rem] h-[4.5rem] rounded-full object-cover block"
+                        style={{ border: '2px solid #FFFFFF' }}
+                      />
+                    </div>
+                    <span
+                      className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full flex items-center justify-center shadow-sm"
+                      style={{ background: '#6366F1', border: '2px solid #FFFFFF' }}
+                    >
+                      <Star className="w-2.5 h-2.5 text-white fill-white" strokeWidth={0} />
                     </span>
                   </div>
-                  <div className="flex items-baseline gap-1.5 mb-1">
-                    <span className="font-heading font-bold text-2xl tabular-nums leading-none" style={{ color: '#4338CA' }}>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <p className="text-sm font-semibold leading-snug" style={{ color: '#0F172A' }}>
+                        Candidata María López
+                      </p>
+                      <span
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold flex-shrink-0"
+                        style={{ background: '#EEF2FF', color: '#4338CA' }}
+                      >
+                        <TrendingUp className="w-3 h-3" />
+                        +24 vs. promedio
+                      </span>
+                    </div>
+
+                    <p className="font-heading font-bold text-[1.75rem] leading-none tabular-nums mb-1" style={{ color: '#4338CA' }}>
                       {MATCH_PERCENT}%
-                    </span>
-                    <span className="text-xs font-medium" style={{ color: '#64748B' }}>coincidencia con el puesto</span>
-                  </div>
-                  <div className="h-1.5 rounded-full overflow-hidden mt-2" style={{ background: '#F1F5F9' }}>
-                    <div className="h-full rounded-full" style={{ width: `${MATCH_PERCENT}%`, background: '#6366F1' }} />
+                      <span className="text-sm font-semibold ml-1" style={{ color: '#6366F1' }}>de coincidencia</span>
+                    </p>
+                    <p className="text-[11px] font-medium mb-2.5 leading-snug" style={{ color: '#475569' }}>
+                      Cumple el {MATCH_PERCENT}% de las habilidades necesarias para el puesto
+                    </p>
+                    <div className="h-2 rounded-full overflow-hidden" style={{ background: '#EEF2FF' }}>
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: `${MATCH_PERCENT}%`, background: 'linear-gradient(90deg, #818CF8, #6366F1)' }}
+                      />
+                    </div>
+                    <p className="text-[10px] mt-2" style={{ color: '#94A3B8' }}>
+                      5 competencias evaluadas contra el perfil de la vacante
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-2.5 mb-5">
-                {competenciasResumen.map(({ label, value }) => (
+              <div className="space-y-3 mb-5">
+                {competenciasResumen.map(({ label, value, color }) => (
                   <div key={label}>
                     <div className="flex justify-between text-[11px] mb-1">
-                      <span className="font-medium truncate pr-2" style={{ color: '#475569' }}>{label}</span>
-                      <span className="font-semibold tabular-nums flex-shrink-0" style={{ color: '#4338CA' }}>{value}%</span>
+                      <span className="font-medium truncate pr-2" style={{ color: '#334155' }}>{label}</span>
+                      <span className="font-bold tabular-nums flex-shrink-0" style={{ color }}>{value}%</span>
                     </div>
-                    <div className="h-1.5 rounded-full overflow-hidden" style={{ background: '#F1F5F9' }}>
-                      <div className="h-full rounded-full" style={{ width: `${value}%`, background: barFill(value) }} />
+                    <div className="h-2 rounded-full overflow-hidden" style={{ background: '#F1F5F9' }}>
+                      <div className="h-full rounded-full" style={{ width: `${value}%`, backgroundColor: color }} />
                     </div>
                   </div>
                 ))}
               </div>
 
               <div
-                className="rounded-lg px-3.5 py-3"
-                style={{ background: '#F8FAFC', border: '1px solid #E8ECF1' }}
+                className="rounded-xl px-4 py-3.5 flex gap-3"
+                style={{ background: '#F0FDF4', border: '1px solid #BBF7D0' }}
               >
-                <p className="text-[10px] font-semibold uppercase tracking-wide mb-1" style={{ color: '#64748B' }}>
-                  Conclusión del evaluador
-                </p>
-                <p className="text-xs leading-relaxed" style={{ color: '#334155', lineHeight: 1.65 }}>
-                  Alta coincidencia con las competencias del rol. Recomendada para la terna final.
-                </p>
+                <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#059669' }} strokeWidth={2.25} />
+                <div>
+                  <p className="text-[11px] font-semibold mb-1" style={{ color: '#047857' }}>
+                    Conclusión del evaluador
+                  </p>
+                  <p className="text-xs leading-relaxed" style={{ color: '#166534', lineHeight: 1.65 }}>
+                    Perfil con alta coincidencia ({MATCH_PERCENT}%) con las competencias del rol. Recomendada para la terna final.
+                  </p>
+                </div>
               </div>
             </>
           )}
@@ -173,14 +207,14 @@ export default function HeroDemoMockup() {
                 <p className="text-xs font-medium" style={{ color: '#64748B' }}>María López · 4 competencias</p>
                 <p className="font-heading font-bold text-xl tabular-nums" style={{ color: '#4338CA' }}>{MATCH_PERCENT}%</p>
               </div>
-              {competenciasResumen.map(({ label, value }) => (
+              {competenciasResumen.map(({ label, value, color }) => (
                 <div key={label} className="py-1">
                   <div className="flex justify-between text-xs mb-1.5">
                     <span className="font-medium" style={{ color: '#334155' }}>{label}</span>
-                    <span className="font-semibold tabular-nums" style={{ color: '#4338CA' }}>{value}%</span>
+                    <span className="font-semibold tabular-nums" style={{ color }}>{value}%</span>
                   </div>
                   <div className="h-2 rounded-full overflow-hidden" style={{ background: '#F1F5F9' }}>
-                    <div className="h-full rounded-full" style={{ width: `${value}%`, background: '#6366F1' }} />
+                    <div className="h-full rounded-full" style={{ width: `${value}%`, backgroundColor: color }} />
                   </div>
                 </div>
               ))}

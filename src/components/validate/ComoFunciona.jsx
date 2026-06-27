@@ -14,7 +14,7 @@ const pasos = [
     n: '02',
     icon: ClipboardCheck,
     title: 'Buscamos y evaluamos con el mismo criterio',
-    desc: 'Reclutamos talento comercial y lo medimos con la misma escala: entrevista por competencias, simulaciones y evaluación alineada al rol.',
+    desc: 'Reclutamos talento comercial y lo evaluamos con instrumentos diseñados para tu cargo: entrevista por competencias, simulaciones y criterios alineados al rol.',
     entregable: 'Candidatos evaluados y comparados',
     color: '#34D399',
   },
@@ -41,8 +41,8 @@ const valor = [
   },
   {
     icon: BarChart3,
-    title: 'Evaluación por competencias',
-    desc: 'Mismo criterio para todos. Ves quién cumple más con el rol y por qué.',
+    title: 'Evaluación personalizada por cargo',
+    desc: 'Competencias, simulaciones y criterios definidos para tu vacante. Mismo estándar para todos, adaptado al rol.',
   },
   {
     icon: Handshake,

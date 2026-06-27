@@ -62,12 +62,7 @@ export default function AccesoAnticipado() {
   };
 
   return (
-    <section id="acceso" className="py-24 lg:py-28 px-6 lg:px-8 pb-28 md:pb-24 bg-white relative overflow-hidden">
-      <div
-        className="absolute inset-0 pointer-events-none opacity-40"
-        style={{ background: 'radial-gradient(circle at 100% 0%, rgba(99,102,241,0.06) 0%, transparent 45%)' }}
-      />
-
+    <section id="acceso" className="py-24 lg:py-28 px-6 lg:px-8 pb-28 md:pb-24 relative overflow-hidden" style={{ background: '#FAFBFF' }}>
       <div className="max-w-5xl mx-auto relative z-10">
         <div className="grid lg:grid-cols-[1fr_440px] gap-14 lg:gap-16 items-start">
 

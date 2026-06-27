@@ -27,7 +27,7 @@ const testimonios = [
 
 export default function SocialProof() {
   return (
-    <section id="resultados" className="py-24 lg:py-28 px-6 lg:px-8 bg-white">
+    <section id="resultados" className="py-24 lg:py-28 px-6 lg:px-8 bg-white border-b border-slate-200/80">
       <div className="max-w-6xl mx-auto">
         <SectionHeader
           eyebrow="Confianza"

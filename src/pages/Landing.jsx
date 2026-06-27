@@ -9,7 +9,6 @@ import CapacidadDemostrada from '@/components/validate/CapacidadDemostrada';
 import ComoFunciona from '@/components/validate/ComoFunciona';
 import Entregable from '@/components/validate/Entregable';
 import SocialProof from '@/components/validate/SocialProof';
-import CtaDiagnostico from '@/components/validate/CtaDiagnostico';
 import StickyCta from '@/components/validate/StickyCta';
 
 export default function Landing() {
@@ -24,7 +23,6 @@ export default function Landing() {
       <SectionReveal delay={50}><ComoFunciona /></SectionReveal>
       <SectionReveal delay={50}><Entregable /></SectionReveal>
       <SectionReveal delay={50}><SocialProof /></SectionReveal>
-      <CtaDiagnostico />
       <AccesoAnticipado />
       <Footer />
     </div>
