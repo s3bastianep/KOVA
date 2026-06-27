@@ -1,45 +1,51 @@
 import React from 'react';
 
+const cards = [
+  {
+    num: '01',
+    title: 'Entrevistan bien, pero no siempre venden bien',
+    desc: 'Un buen discurso en la entrevista no garantiza desempeño comercial real.',
+    color: '#6366F1',
+    bg: '#EEF2FF',
+  },
+  {
+    num: '02',
+    title: 'Contratar mal cuesta tiempo y oportunidades',
+    desc: 'Una mala decisión puede significar meses perdidos y pipeline estancado.',
+    color: '#0EA5E9',
+    bg: '#F0F9FF',
+  },
+  {
+    num: '03',
+    title: 'Cada vacante requiere competencias distintas',
+    desc: 'Un hunter no necesita lo mismo que un account manager ni un SDR.',
+    color: '#10B981',
+    bg: '#ECFDF5',
+  },
+];
+
 export default function Problema() {
   return (
     <section id="problema" className="py-24 px-6 lg:px-8" style={{ background: '#FFFFFF' }}>
       <div className="max-w-6xl mx-auto">
-        <div className="grid lg:grid-cols-[380px_1fr] gap-16 items-start">
-          <div className="lg:sticky lg:top-28">
-            <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#6366F1', letterSpacing: '0.15em' }}>El problema</p>
-            <h2 className="font-heading font-black leading-tight mb-5" style={{ fontSize: 'clamp(1.35rem, 1.8vw, 1.75rem)', color: '#0F0A2A', letterSpacing: '-0.02em' }}>
-              Si contratas vendedores, esto probablemente ya te pasó.
-            </h2>
-            <p className="text-sm leading-relaxed mb-8" style={{ color: '#6B7280', lineHeight: 1.85 }}>
-              No es un problema de falta de candidatos. Es que los procesos actuales no están diseñados para evaluar lo que predice el éxito en ventas.
-            </p>
-            <div className="p-5 rounded-2xl" style={{ background: '#F9FAFB', border: '1px solid #E5E7EB' }}>
-              <p className="text-sm leading-relaxed italic mb-3" style={{ color: '#374151' }}>
-                "El candidato hablaba muy bien en la entrevista. Tres meses después, el pipeline seguía igual."
-              </p>
-              <p className="text-xs font-bold" style={{ color: '#6366F1' }}>Gerente Comercial, Bogotá</p>
-            </div>
-          </div>
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#6366F1', letterSpacing: '0.15em' }}>El problema</p>
+          <h2 className="font-heading font-black leading-tight mb-4" style={{ fontSize: 'clamp(1.35rem, 1.8vw, 1.75rem)', color: '#0F0A2A', letterSpacing: '-0.02em' }}>
+            El currículum se queda corto para saber si es la persona correcta.
+          </h2>
+          <p className="text-sm leading-relaxed" style={{ color: '#6B7280', lineHeight: 1.85 }}>
+            Tener experiencia o pasar una buena entrevista no siempre demuestra que alguien tendrá el desempeño comercial que la vacante exige.
+          </p>
+        </div>
 
-          <div className="space-y-6 text-sm leading-relaxed" style={{ color: '#6B7280', lineHeight: 1.85 }}>
-            <p style={{ color: '#374151', fontWeight: 500 }}>
-              Llevas semanas entrevistando. El candidato conoce el sector, tiene experiencia y un currículum impecable.
-            </p>
-            <p>
-              Tres meses después, las objeciones lo paralizan. El equipo comercial sigue cargando el mismo peso. No fue mala suerte: fue una decisión tomada con información insuficiente.
-            </p>
-            <p>
-              Recibes decenas de currículums, pero pocos perfiles que encajen con lo que la vacante exige. Cada entrevista consume tiempo de gerentes que ya tienen demasiado en su agenda.
-            </p>
-            <div className="p-6 rounded-2xl" style={{ background: '#EEF2FF', border: '1px solid rgba(99,102,241,0.15)' }}>
-              <p className="font-heading font-bold text-sm mb-2" style={{ color: '#0F0A2A' }}>
-                Y cuando la contratación falla, pierdes meses, no solo un puesto vacío.
-              </p>
-              <p className="text-xs" style={{ color: '#6B7280' }}>
-                Entrevistas a quien habla bien pero vende poco. Muchas hojas de vida, pocos candidatos adecuados. Procesos genéricos que no distinguen un hunter de un account manager.
-              </p>
+        <div className="grid md:grid-cols-3 gap-4">
+          {cards.map(({ num, title, desc, color, bg }) => (
+            <div key={num} className="p-6 rounded-2xl" style={{ background: bg, border: `1px solid ${color}18` }}>
+              <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg text-xs font-black mb-4 text-white" style={{ background: color }}>{num}</span>
+              <h3 className="font-heading font-bold text-sm mb-2 leading-snug" style={{ color: '#0F0A2A' }}>{title}</h3>
+              <p className="text-xs leading-relaxed" style={{ color: '#6B7280', lineHeight: 1.75 }}>{desc}</p>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
