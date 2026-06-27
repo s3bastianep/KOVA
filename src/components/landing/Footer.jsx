@@ -15,12 +15,12 @@ export default function Footer() {
               <span className="font-heading font-bold text-base text-white">Kova</span>
             </div>
             <p className="text-xs leading-relaxed mb-2" style={{ color: 'rgba(255,255,255,0.35)', lineHeight: 1.8 }}>
-              Firma especializada en reclutamiento, evaluación y capacitación comercial para Latinoamérica.
+              Especialistas en selección de talento comercial para Latinoamérica.
             </p>
             <p className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.25)' }}>contacto@kova.com.co</p>
           </div>
           <div className="flex flex-wrap gap-x-7 gap-y-2">
-            {[['Servicios', 'producto'], ['Proceso', 'proceso'], ['Impacto', 'impacto'], ['Resultados', 'resultados'], ['Diagnóstico', 'acceso']].map(([label, id]) => (
+            {[['Problema', 'problema'], ['Filosofía', 'filosofia'], ['Proceso', 'proceso'], ['Entregable', 'entregable'], ['Acceso', 'acceso']].map(([label, id]) => (
               <button key={label} onClick={() => scrollTo(id)}
                 className="text-sm font-medium transition-colors"
                 style={{ color: 'rgba(255,255,255,0.35)' }}

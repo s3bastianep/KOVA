@@ -55,18 +55,18 @@ export default function AccesoAnticipado() {
 
           {/* LEFT: pitch */}
           <div className="lg:sticky lg:top-28">
-            <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#6366F1', letterSpacing: '0.15em' }}>Hablemos</p>
+            <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#6366F1', letterSpacing: '0.15em' }}>Acceso anticipado</p>
             <h2 className="font-heading font-black leading-tight mb-4" style={{ fontSize: 'clamp(1.35rem, 1.8vw, 1.75rem)', letterSpacing: '-0.02em', color: '#0F0A2A' }}>
-              Cuéntanos qué está pasando en tu empresa. Nosotros te decimos si podemos ayudarte.
+              Estamos seleccionando empresas para validar el servicio.
             </h2>
             <p className="text-sm leading-relaxed mb-8" style={{ color: '#6B7280', lineHeight: 1.85 }}>
-              No hay nada que vender en esta llamada. Escuchamos tu situación, te damos un diagnóstico honesto — y si hay algo que podamos hacer juntos, te lo proponemos sin rodeos.
+              Si contratas vendedores y sientes que el proceso actual no te da suficiente certeza, queremos conocerte. Sin compromiso, sin pitch de ventas.
             </p>
             <div className="space-y-3 mb-8">
               {[
-                'Diagnóstico escrito de tu área comercial',
-                'Hoja de ruta con los próximos pasos',
-                'Una conversación directa, sin presión de venta',
+                'Respuesta en menos de 48 horas',
+                'Prioridad para empresas piloto',
+                'Metodología especializada en selección comercial',
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#818CF8' }} />
@@ -166,7 +166,7 @@ export default function AccesoAnticipado() {
                 <button type="submit" disabled={loading}
                   className="group w-full flex items-center justify-center gap-2 font-semibold py-3.5 rounded-xl text-sm transition-all text-white disabled:opacity-50"
                   style={{ background: 'linear-gradient(135deg, #6366F1, #4F46E5)', boxShadow: '0 4px 20px rgba(99,102,241,0.35)' }}>
-                  {loading ? 'Enviando...' : 'Quiero que me contacten'}
+                  {loading ? 'Enviando...' : 'Solicitar acceso anticipado'}
                   {!loading && <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />}
                 </button>
                 <p className="text-center text-xs" style={{ color: '#9CA3AF' }}>Sin compromiso · Te escribimos en menos de 24 horas</p>
