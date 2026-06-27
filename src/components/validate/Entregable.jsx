@@ -1,5 +1,6 @@
 import React from 'react';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, FileText } from 'lucide-react';
+import SectionHeader from '@/components/landing/SectionHeader';
 
 const beneficios = [
   'Evaluación por competencias específicas de la vacante',
@@ -17,57 +18,100 @@ const competencias = [
 
 export default function Entregable() {
   return (
-    <section id="entregable" className="py-24 px-6 lg:px-8" style={{ background: '#FAFBFF' }}>
+    <section id="entregable" className="py-24 lg:py-28 px-6 lg:px-8" style={{ background: '#F8FAFC' }}>
       <div className="max-w-6xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-14 items-center">
+        <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#6366F1', letterSpacing: '0.15em' }}>Qué recibes</p>
-            <h2 className="font-heading font-black leading-tight mb-5" style={{ fontSize: 'clamp(1.35rem, 1.8vw, 1.75rem)', color: '#0F0A2A', letterSpacing: '-0.02em' }}>
-              No recibes solo hojas de vida. Recibes una recomendación de selección.
-            </h2>
-            <ul className="space-y-3">
+            <SectionHeader
+              align="left"
+              className="mb-8 lg:mb-10"
+              eyebrow="Qué recibes"
+              title="No recibes solo hojas de vida. Recibes una recomendación de selección."
+              description="Un entregable diseñado para que dirección comercial y talento humano decidan con el mismo criterio."
+            />
+
+            <ul className="space-y-4">
               {beneficios.map((item) => (
                 <li key={item} className="flex items-start gap-3">
-                  <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#6366F1' }} />
-                  <span className="text-sm" style={{ color: '#374151' }}>{item}</span>
+                  <div
+                    className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+                    style={{ background: '#EEF2FF' }}
+                  >
+                    <CheckCircle2 className="w-3 h-3" style={{ color: '#4338CA' }} strokeWidth={2.5} />
+                  </div>
+                  <span className="text-sm lg:text-base" style={{ color: '#334155', lineHeight: 1.65 }}>{item}</span>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="rounded-2xl overflow-hidden bg-white" style={{ border: '1px solid #E5E7EB', boxShadow: '0 24px 64px rgba(99,102,241,0.10)' }}>
-            <div className="px-6 py-4 border-b border-slate-100" style={{ background: '#FAFBFF' }}>
-              <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#9CA3AF' }}>Reporte de ajuste comercial</p>
-              <p className="text-sm font-bold mt-0.5" style={{ color: '#0F0A2A' }}>Candidato A · Ejecutivo Comercial B2B</p>
-            </div>
-            <div className="p-6">
-              <div className="flex items-end justify-between mb-6">
-                <div>
-                  <p className="text-xs" style={{ color: '#9CA3AF' }}>Puntaje de evaluación</p>
-                  <p className="font-heading font-black text-4xl leading-none mt-1" style={{ color: '#6366F1' }}>92<span className="text-lg text-slate-400">/100</span></p>
+          <div className="kova-card rounded-2xl overflow-hidden">
+            <div
+              className="px-6 py-4 border-b flex items-center justify-between gap-3"
+              style={{ background: '#FFFFFF', borderColor: '#E2E8F0' }}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-9 h-9 rounded-lg flex items-center justify-center"
+                  style={{ background: '#EEF2FF', border: '1px solid #C7D2FE' }}
+                >
+                  <FileText className="w-4 h-4" style={{ color: '#4338CA' }} strokeWidth={2} />
                 </div>
-                <span className="text-[10px] font-bold uppercase px-2.5 py-1 rounded-lg" style={{ background: '#ECFDF5', color: '#059669' }}>Recomendado</span>
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: '#94A3B8' }}>
+                    Reporte de ajuste comercial
+                  </p>
+                  <p className="text-sm font-semibold mt-0.5" style={{ color: '#0F172A' }}>
+                    Candidato A · Ejecutivo Comercial B2B
+                  </p>
+                </div>
               </div>
-              <div className="space-y-3 mb-6">
+              <span
+                className="text-[10px] font-semibold px-2.5 py-1 rounded-md whitespace-nowrap"
+                style={{ background: '#ECFDF5', color: '#047857', border: '1px solid #A7F3D0' }}
+              >
+                Recomendado
+              </span>
+            </div>
+
+            <div className="p-6 lg:p-7 bg-white">
+              <div className="flex items-end justify-between mb-7 pb-6 border-b" style={{ borderColor: '#F1F5F9' }}>
+                <div>
+                  <p className="text-xs font-medium mb-1" style={{ color: '#94A3B8' }}>Puntaje de evaluación</p>
+                  <p className="font-heading font-bold text-4xl leading-none tabular-nums" style={{ color: '#4338CA' }}>
+                    92<span className="text-lg font-semibold text-slate-400">/100</span>
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#94A3B8' }}>Metodología</p>
+                  <p className="text-xs font-semibold" style={{ color: '#334155' }}>Kova · Competencias comerciales</p>
+                </div>
+              </div>
+
+              <div className="space-y-4 mb-7">
                 {competencias.map((c) => (
                   <div key={c.label}>
-                    <div className="flex justify-between text-xs mb-1">
-                      <span style={{ color: '#374151' }}>{c.label}</span>
-                      <span className="font-bold" style={{ color: '#0F0A2A' }}>{c.value}</span>
+                    <div className="flex justify-between text-xs mb-1.5">
+                      <span className="font-medium" style={{ color: '#475569' }}>{c.label}</span>
+                      <span className="font-semibold tabular-nums" style={{ color: '#0F172A' }}>{c.value}</span>
                     </div>
                     <div className="h-1.5 rounded-full bg-slate-100">
-                      <div className="h-full rounded-full" style={{ width: `${c.value}%`, background: 'linear-gradient(90deg, #6366F1, #4F46E5)' }} />
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: `${c.value}%`, background: 'linear-gradient(90deg, #6366F1, #4338CA)' }}
+                      />
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="space-y-2">
+
+              <div className="rounded-xl p-4 space-y-2.5" style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
                 {[
                   'Perfil alineado con el estilo consultivo requerido',
                   'Recomendado para incluir en la terna final',
                 ].map((item) => (
-                  <div key={item} className="flex items-center gap-2 text-xs" style={{ color: '#374151' }}>
-                    <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#10B981' }} />
+                  <div key={item} className="flex items-center gap-2.5 text-sm" style={{ color: '#334155' }}>
+                    <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{ color: '#059669' }} strokeWidth={2} />
                     {item}
                   </div>
                 ))}

@@ -7,51 +7,99 @@ const competencias = [
 ];
 
 const candidatos = [
-  { name: 'Candidato A', score: '92/100', highlight: true },
-  { name: 'Candidato B', score: '67/100', highlight: false },
-  { name: 'Candidato C', score: '51/100', highlight: false },
+  { name: 'Candidato A', score: '92', highlight: true, tag: 'Recomendado' },
+  { name: 'Candidato B', score: '67', highlight: false, tag: null },
+  { name: 'Candidato C', score: '51', highlight: false, tag: null },
 ];
 
 export default function HeroDemoMockup() {
   return (
-    <div
-      className="rounded-2xl overflow-hidden w-full max-w-lg mx-auto lg:max-w-none lg:mx-0"
-      style={{ background: '#FFFFFF', border: '1px solid #E5E7EB', boxShadow: '0 24px 64px rgba(99,102,241,0.12), 0 8px 24px rgba(0,0,0,0.06)' }}
-    >
-      <div className="px-5 py-4 border-b border-slate-100" style={{ background: '#FAFBFF' }}>
-        <p className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#9CA3AF' }}>Vacante</p>
-        <p className="text-sm font-bold" style={{ color: '#0F0A2A' }}>Ejecutivo Comercial B2B</p>
-        <span className="inline-block mt-2 text-[10px] font-semibold px-2.5 py-1 rounded-full" style={{ background: '#EEF2FF', color: '#6366F1' }}>
-          Evaluación especializada
-        </span>
-      </div>
+    <div className="relative w-full max-w-lg mx-auto lg:max-w-none lg:mx-0">
+      <div
+        className="absolute -inset-4 rounded-3xl kova-dot-grid opacity-60 pointer-events-none"
+        aria-hidden
+      />
 
-      <div className="p-5 space-y-4">
-        {competencias.map((c) => (
-          <div key={c.label}>
-            <div className="flex justify-between mb-1.5">
-              <span className="text-xs font-medium" style={{ color: '#374151' }}>{c.label}</span>
-            </div>
-            <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
-              <div className="h-full rounded-full" style={{ width: c.width, background: 'linear-gradient(90deg, #6366F1, #4F46E5)' }} />
+      <div className="relative kova-card rounded-2xl overflow-hidden">
+        <div
+          className="flex items-center gap-2 px-4 py-3 border-b"
+          style={{ background: '#F8FAFC', borderColor: '#E2E8F0' }}
+        >
+          <div className="flex gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
+            <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
+            <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
+          </div>
+          <div className="flex-1 mx-3">
+            <div className="h-6 rounded-md flex items-center px-3" style={{ background: '#FFFFFF', border: '1px solid #E2E8F0' }}>
+              <span className="text-[10px] font-medium truncate" style={{ color: '#94A3B8' }}>app.kova.com.co · Informe comparativo</span>
             </div>
           </div>
-        ))}
+        </div>
 
-        <div className="pt-3 space-y-2 border-t border-slate-100">
-          {candidatos.map(({ name, score, highlight }) => (
-            <div
-              key={name}
-              className="flex items-center justify-between px-4 py-3 rounded-xl"
-              style={{
-                background: highlight ? '#EEF2FF' : '#F9FAFB',
-                border: `1px solid ${highlight ? '#C7D2FE' : '#E5E7EB'}`,
-              }}
+        <div className="px-5 py-4 border-b" style={{ borderColor: '#F1F5F9' }}>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#94A3B8' }}>Vacante evaluada</p>
+              <p className="text-sm font-semibold" style={{ color: '#0F172A' }}>Ejecutivo Comercial B2B</p>
+            </div>
+            <span
+              className="text-[10px] font-semibold px-2.5 py-1 rounded-md whitespace-nowrap"
+              style={{ background: '#EEF2FF', color: '#4338CA', border: '1px solid #C7D2FE' }}
             >
-              <span className="text-xs font-semibold" style={{ color: '#374151' }}>{name}</span>
-              <span className="text-sm font-black" style={{ color: highlight ? '#6366F1' : '#9CA3AF' }}>{score}</span>
+              Metodología Kova
+            </span>
+          </div>
+        </div>
+
+        <div className="p-5 space-y-4">
+          <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: '#94A3B8' }}>Competencias requeridas</p>
+          {competencias.map((c) => (
+            <div key={c.label}>
+              <div className="flex justify-between mb-1.5">
+                <span className="text-xs font-medium" style={{ color: '#334155' }}>{c.label}</span>
+              </div>
+              <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                <div className="h-full rounded-full" style={{ width: c.width, background: 'linear-gradient(90deg, #6366F1, #4338CA)' }} />
+              </div>
             </div>
           ))}
+
+          <div className="pt-4 space-y-2 border-t" style={{ borderColor: '#F1F5F9' }}>
+            <p className="text-[10px] font-semibold uppercase tracking-wider mb-3" style={{ color: '#94A3B8' }}>Ranking de candidatos</p>
+            {candidatos.map(({ name, score, highlight, tag }) => (
+              <div
+                key={name}
+                className="flex items-center justify-between px-4 py-3 rounded-xl"
+                style={{
+                  background: highlight ? '#F8FAFF' : '#FAFBFC',
+                  border: `1px solid ${highlight ? '#C7D2FE' : '#E2E8F0'}`,
+                }}
+              >
+                <div className="flex items-center gap-2.5">
+                  <span
+                    className="w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold"
+                    style={{
+                      background: highlight ? '#6366F1' : '#F1F5F9',
+                      color: highlight ? '#FFFFFF' : '#64748B',
+                    }}
+                  >
+                    {name.slice(-1)}
+                  </span>
+                  <div>
+                    <span className="text-xs font-semibold block" style={{ color: '#334155' }}>{name}</span>
+                    {tag && (
+                      <span className="text-[10px] font-medium" style={{ color: '#059669' }}>{tag}</span>
+                    )}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="text-base font-bold tabular-nums" style={{ color: highlight ? '#4338CA' : '#94A3B8' }}>{score}</span>
+                  <span className="text-[10px] font-medium ml-0.5" style={{ color: '#94A3B8' }}>/100</span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

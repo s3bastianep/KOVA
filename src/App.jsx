@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import ScrollToTop from './components/ScrollToTop';
 import Landing from './pages/Landing';
+import GuiaContratarComercial from './pages/GuiaContratarComercial';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/guia-contratar-comercial" element={<GuiaContratarComercial />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Router>
