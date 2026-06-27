@@ -11,7 +11,7 @@ const desafios = [
   { id: 'otro', label: 'Tengo otro desafío' },
 ];
 
-const opciones = ['1–5', '6–20', '21–50', '50+'];
+const opciones = ['1-5', '6-20', '21-50', '50+'];
 
 export default function AccesoAnticipado() {
   const [step, setStep] = useState(1); // 1 = elegir desafío, 2 = formulario
@@ -31,7 +31,7 @@ export default function AccesoAnticipado() {
     e.preventDefault();
     setError('');
     if (!form.nombre || !form.empresa || !form.correo) {
-      setError('Por favor completa nombre, empresa y correo.');
+      setError('Por favor, completa nombre, empresa y correo.');
       return;
     }
     setLoading(true);
@@ -78,7 +78,7 @@ export default function AccesoAnticipado() {
               <p className="text-sm italic leading-relaxed mb-2" style={{ color: '#374151' }}>
                 "Pensé que era un pitch de ventas. Terminó siendo la conversación más honesta que tuve sobre mi equipo comercial."
               </p>
-              <p className="text-xs font-bold" style={{ color: '#818CF8' }}>— Gerente Comercial, Bogotá</p>
+              <p className="text-xs font-bold" style={{ color: '#818CF8' }}>Gerente Comercial, Bogotá</p>
             </div>
           </div>
 
@@ -91,7 +91,7 @@ export default function AccesoAnticipado() {
                 </div>
                 <h3 className="font-heading font-bold text-lg mb-2" style={{ color: '#0F0A2A' }}>Perfecto, lo tenemos.</h3>
                 <p className="text-sm mb-4" style={{ color: '#6B7280' }}>Un especialista de Kova te va a escribir en menos de 24 horas para coordinar la conversación.</p>
-                <p className="text-xs" style={{ color: '#9CA3AF' }}>Mientras tanto, si tienes preguntas escribenos a <span style={{ color: '#6366F1' }}>contacto@kova.com.co</span></p>
+                <p className="text-xs" style={{ color: '#9CA3AF' }}>Mientras tanto, si tienes preguntas escríbenos a <span style={{ color: '#6366F1' }}>contacto@kova.com.co</span></p>
               </div>
 
             ) : step === 1 ? (

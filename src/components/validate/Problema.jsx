@@ -17,7 +17,7 @@ export default function Problema() {
               <p className="text-sm leading-relaxed italic mb-3" style={{ color: '#374151' }}>
                 "El candidato hablaba muy bien en la entrevista. Tres meses después, el pipeline seguía igual."
               </p>
-              <p className="text-xs font-bold" style={{ color: '#6366F1' }}>— Gerente Comercial · Bogotá</p>
+              <p className="text-xs font-bold" style={{ color: '#6366F1' }}>Gerente Comercial, Bogotá</p>
             </div>
           </div>
 
@@ -26,17 +26,17 @@ export default function Problema() {
               Llevas semanas entrevistando. El candidato conoce el sector, tiene experiencia y un currículum impecable.
             </p>
             <p>
-              Tres meses después, las objeciones lo paralizan. El equipo comercial sigue cargando el mismo peso. No fue mala suerte — fue una decisión tomada con información insuficiente.
+              Tres meses después, las objeciones lo paralizan. El equipo comercial sigue cargando el mismo peso. No fue mala suerte: fue una decisión tomada con información insuficiente.
             </p>
             <p>
               Recibes decenas de currículums, pero pocos perfiles que encajen con lo que la vacante exige. Cada entrevista consume tiempo de gerentes que ya tienen demasiado en su agenda.
             </p>
             <div className="p-6 rounded-2xl" style={{ background: '#EEF2FF', border: '1px solid rgba(99,102,241,0.15)' }}>
               <p className="font-heading font-bold text-sm mb-2" style={{ color: '#0F0A2A' }}>
-                Y cuando la contratación falla, pierdes meses — no solo un puesto vacío.
+                Y cuando la contratación falla, pierdes meses, no solo un puesto vacío.
               </p>
               <p className="text-xs" style={{ color: '#6B7280' }}>
-                Entrevistas a quien habla bien pero vende poco. Muchos CVs, pocos candidatos adecuados. Procesos genéricos que no distinguen un hunter de un account manager.
+                Entrevistas a quien habla bien pero vende poco. Muchas hojas de vida, pocos candidatos adecuados. Procesos genéricos que no distinguen un hunter de un account manager.
               </p>
             </div>
           </div>

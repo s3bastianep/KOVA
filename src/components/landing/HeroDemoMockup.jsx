@@ -51,7 +51,7 @@ export default function HeroDemoMockup() {
         </div>
         <div className="flex items-center gap-1.5 px-3 py-1 rounded-md text-xs" style={{ background: '#EEEEE8', color: '#AAAAAA' }}>
           <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: '#2EC4A5' }} />
-          kova.co — Entregables
+          kova.co · Entregables
         </div>
         <div className="w-16" />
       </div>
@@ -102,7 +102,7 @@ export default function HeroDemoMockup() {
               <p className="text-xs italic leading-relaxed" style={{ color: '#888880' }}>
                 "Perfil de alto desempeño. Orientación al logro 22 pts. por encima del benchmark. Recomendada para SDR Senior o KAM."
               </p>
-              <p className="text-xs font-semibold mt-1.5" style={{ color: '#2EC4A5' }}>— Evaluador Kova</p>
+              <p className="text-xs font-semibold mt-1.5" style={{ color: '#2EC4A5' }}>Evaluador Kova</p>
             </div>
           </div>
         )}

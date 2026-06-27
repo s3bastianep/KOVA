@@ -38,14 +38,14 @@ const testQs = [
     q: 'Un cliente dice que necesita consultarlo con su equipo antes de decidir. ¿Qué haces?',
     options: ['Espero a que me contacten.', 'Agendo una reunión conjunta con el equipo decisor.', 'Insisto en cerrar antes de que termine la reunión.', 'Le envío un correo con la propuesta.'],
     correct: 1,
-    explanation: 'El vendedor consultivo facilita el proceso de decisión incluyendo a los decisores clave — en lugar de presionar o esperar pasivamente.',
+    explanation: 'El vendedor consultivo facilita el proceso de decisión incluyendo a los decisores clave, en lugar de presionar o esperar pasivamente.',
     competency: 'Orientación al logro',
   },
   {
     q: 'Tu pipeline cayó un 40% este mes. ¿Cuál es tu primera acción?',
     options: ['Espero nuevos leads de marketing.', 'Reviso el embudo y reactivo prospectos fríos.', 'Bajo los precios para cerrar rápido.', 'Aumento el volumen de llamadas en frío.'],
     correct: 1,
-    explanation: 'Diagnosticar primero y actuar sobre lo existente es la señal de madurez comercial. Los mejores vendedores no esperan — gestionan.',
+    explanation: 'Diagnosticar primero y actuar sobre lo existente es la señal de madurez comercial. Los mejores vendedores no esperan: gestionan.',
     competency: 'Proactividad comercial',
   },
 ];
@@ -83,7 +83,7 @@ export default function DemoSection() {
             </h2>
           </div>
           <p className="text-base leading-relaxed" style={{ color: '#888880', lineHeight: 1.8 }}>
-            Cada proceso que hacemos tiene un entregable concreto. Informes de candidatos, programas de inducción y assessments — aquí puedes ver cómo lucen.
+            Cada proceso que hacemos tiene un entregable concreto. Informes de candidatos, programas de inducción y evaluaciones. Aquí puedes ver cómo lucen.
           </p>
         </div>
 
@@ -168,7 +168,7 @@ export default function DemoSection() {
                     { icon: Target, label: 'Perfil', val: 'Hunter / SDR Senior' },
                     { icon: TrendingUp, label: 'Potencial', val: 'Transición a KAM' },
                     { icon: Award, label: 'Ranking Kova', val: 'Top 8% del pool' },
-                    { icon: Users, label: 'Fit cultural', val: 'Alto — validado' },
+                    { icon: Users, label: 'Fit cultural', val: 'Alto, validado' },
                   ].map(({ icon: Icon, label, val }) => (
                     <div key={label} className="flex items-center gap-3 px-4 py-2.5 rounded-xl" style={{ background: '#FFFFFF', border: '1px solid #E8E8E3' }}>
                       <Icon className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#2EC4A5' }} />
@@ -192,7 +192,7 @@ export default function DemoSection() {
                   </div>
                   <div className="text-right">
                     <p className="font-heading font-black text-3xl leading-none" style={{ color: '#1877F2', letterSpacing: '-0.04em' }}>74%</p>
-                    <p className="text-xs mt-1" style={{ color: '#AAAAAA' }}>Carlos R. — Nivel 4</p>
+                    <p className="text-xs mt-1" style={{ color: '#AAAAAA' }}>Carlos R. · Nivel 4</p>
                   </div>
                 </div>
 
@@ -372,7 +372,7 @@ export default function DemoSection() {
                   </div>
                   <div className="text-right">
                     <p className="text-xs font-semibold" style={{ color: '#AAAAAA' }}>Dictamen Kova</p>
-                    <p className="text-sm font-bold mt-0.5" style={{ color: '#2EC4A5' }}>Apto — Alta prioridad</p>
+                    <p className="text-sm font-bold mt-0.5" style={{ color: '#2EC4A5' }}>Apto · Alta prioridad</p>
                   </div>
                 </div>
               </div>

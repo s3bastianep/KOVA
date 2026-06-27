@@ -15,7 +15,7 @@ const strengths = [
 ];
 
 const observations = [
-  'Funciona mejor en ciclos de venta medios (4–8 semanas)',
+  'Funciona mejor en ciclos de venta medios (4 a 8 semanas)',
   'Requiere onboarding estructurado en el producto',
   'Perfil más efectivo con leads calificados que con volumen en frío',
 ];
@@ -31,7 +31,7 @@ export default function Entregable() {
               Una recomendación que puedes defender ante tu equipo.
             </h2>
             <p className="text-sm leading-relaxed" style={{ color: '#6B7280', lineHeight: 1.85 }}>
-              No recibes un currículum más. Recibes un reporte con competencias evaluadas, fortalezas identificadas y observaciones para decidir con claridad — pensado para gerentes comerciales, líderes de talento y gerentes generales.
+              No recibes un currículum más. Recibes un reporte con competencias evaluadas, fortalezas identificadas y observaciones para decidir con claridad. Está pensado para gerentes comerciales, líderes de talento humano y gerentes generales.
             </p>
           </div>
         </div>
@@ -45,7 +45,7 @@ export default function Entregable() {
             </div>
             <div className="flex items-center gap-1.5 px-3 py-1 rounded-md text-xs" style={{ background: '#EEEEE8', color: '#AAAAAA' }}>
               <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: '#6366F1' }} />
-              kova.co — Reporte de evaluación
+              kova.co · Reporte de evaluación
             </div>
             <div className="w-16" />
           </div>

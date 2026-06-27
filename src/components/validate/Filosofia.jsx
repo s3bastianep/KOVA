@@ -35,7 +35,7 @@ export default function Filosofia() {
         <div className="p-6 lg:p-8 rounded-2xl bg-white" style={{ border: '1px solid #E5E7EB', boxShadow: '0 4px 24px rgba(99,102,241,0.06)' }}>
           <p className="text-sm leading-relaxed" style={{ color: '#374151', lineHeight: 1.85 }}>
             <span className="font-heading font-bold" style={{ color: '#0F0A2A' }}>Un vendedor hunter no necesita lo mismo que un account manager.</span>{' '}
-            Por eso diseñamos cada proceso de selección alrededor de las necesidades reales de la vacante — no de una plantilla genérica de recursos humanos.
+            Por eso diseñamos cada proceso de selección alrededor de las necesidades reales de la vacante, no de una plantilla genérica de recursos humanos.
           </p>
         </div>
       </div>

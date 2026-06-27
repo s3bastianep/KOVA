@@ -38,7 +38,7 @@ export default function Hero() {
             </h1>
 
             <p className="text-sm mb-3 max-w-[440px]" style={{ color: '#374151', lineHeight: 1.85, fontWeight: 500 }}>
-              Diseñamos la selección alrededor de lo que cada vacante realmente necesita — no de un proceso genérico de recursos humanos.
+              Diseñamos la selección alrededor de lo que cada vacante realmente necesita, no de un proceso genérico de recursos humanos.
             </p>
             <p className="text-sm mb-8 max-w-[440px]" style={{ color: '#6B7280', lineHeight: 1.8 }}>
               Evaluamos competencias específicas y entregamos una recomendación clara para que contrates con confianza.

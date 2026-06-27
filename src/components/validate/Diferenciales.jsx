@@ -3,7 +3,7 @@ import { CheckCircle2 } from 'lucide-react';
 
 const diferenciales = [
   { titulo: 'Especialización exclusiva en talento comercial', desc: 'No somos una bolsa de empleo ni una consultora generalista. Solo selección comercial.', color: '#6366F1', bg: '#EEF2FF' },
-  { titulo: 'Evaluación por competencias específicas', desc: 'Medimos lo que la vacante exige — no lo que un test genérico asume que todo vendedor necesita.', color: '#0EA5E9', bg: '#F0F9FF' },
+  { titulo: 'Evaluación por competencias específicas', desc: 'Medimos lo que la vacante exige, no lo que un test genérico asume que todo vendedor necesita.', color: '#0EA5E9', bg: '#F0F9FF' },
   { titulo: 'Proceso diseñado para cada vacante', desc: 'La metodología se adapta al rol, al sector y al contexto de tu empresa.', color: '#10B981', bg: '#ECFDF5' },
   { titulo: 'Claridad durante todo el proceso', desc: 'Sabes qué estamos evaluando, por qué y qué significa cada resultado.', color: '#F59E0B', bg: '#FFFBEB' },
   { titulo: 'Recomendación sustentada', desc: 'Un informe que facilita la conversación entre comercial, talento humano y dirección.', color: '#8B5CF6', bg: '#F5F3FF' },

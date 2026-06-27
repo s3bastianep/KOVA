@@ -3,7 +3,7 @@ import React from 'react';
 const stats = [
   { value: '+200', label: 'perfiles colocados', sub: 'en los últimos 3 años', color: '#6366F1', bg: '#EEF2FF' },
   { value: '94%', label: 'retención al año 1', sub: 'vs. 54% del promedio del mercado', color: '#10B981', bg: '#ECFDF5' },
-  { value: '6–18×', label: 'costo de mala contratación', sub: 'en salarios perdidos por rotación', color: '#F59E0B', bg: '#FFFBEB' },
+  { value: '6-18×', label: 'costo de mala contratación', sub: 'en salarios perdidos por rotación', color: '#F59E0B', bg: '#FFFBEB' },
   { value: '< 3 sem', label: 'tiempo de entrega', sub: 'desde briefing hasta terna validada', color: '#0EA5E9', bg: '#F0F9FF' },
 ];
 
@@ -21,7 +21,7 @@ export default function SocialProof() {
             </h2>
           </div>
           <p className="text-sm leading-relaxed" style={{ color: '#6B7280', lineHeight: 1.85 }}>
-            Kova no promete resultados — los entrega. Cada número viene de procesos reales que acompañamos de principio a fin.
+            Kova no promete resultados: los entrega. Cada número viene de procesos reales que acompañamos de principio a fin.
           </p>
         </div>
 

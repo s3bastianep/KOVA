@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 
 const pasos = [
   { title: 'Entendemos la vacante.', desc: 'Conversamos contigo para comprender el rol, el contexto comercial y qué significa el éxito en esa posición.', entregable: 'Brief de vacante comercial', color: '#6366F1', bg: '#EEF2FF' },
-  { title: 'Identificamos competencias críticas.', desc: 'Definimos qué capacidades son esenciales para esa vacante específica — no un checklist genérico de ventas.', entregable: 'Mapa de competencias del rol', color: '#0EA5E9', bg: '#F0F9FF' },
+  { title: 'Identificamos competencias críticas.', desc: 'Definimos qué capacidades son esenciales para esa vacante específica, no un checklist genérico de ventas.', entregable: 'Mapa de competencias del rol', color: '#0EA5E9', bg: '#F0F9FF' },
   { title: 'Evaluamos candidatos.', desc: 'Aplicamos una metodología especializada para medir esas competencias con evidencia, no solo impresiones.', entregable: 'Evaluación por competencias', color: '#10B981', bg: '#ECFDF5' },
   { title: 'Recomendamos el mejor ajuste.', desc: 'Entregamos una recomendación sustentada que facilita la decisión para comercial, talento humano y dirección.', entregable: 'Reporte de recomendación', color: '#F59E0B', bg: '#FFFBEB' },
 ];
