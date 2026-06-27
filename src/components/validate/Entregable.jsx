@@ -1,123 +1,112 @@
-import React from 'react';
-import { CheckCircle2, FileText } from 'lucide-react';
+import { ArrowRight, CheckCircle2, FileSearch, BarChart3, ClipboardCheck, Users2 } from 'lucide-react';
 import SectionHeader from '@/components/landing/SectionHeader';
+import EntregableReportMockup from '@/components/validate/EntregableReportMockup';
 
-const beneficios = [
-  'Evaluación por competencias específicas de la vacante',
-  'Comparación clara entre candidatos evaluados',
-  'Recomendación sustentada para facilitar la decisión',
-  'Informe pensado para comercial, talento humano y dirección',
+const entregables = [
+  {
+    icon: FileSearch,
+    title: 'Diagnóstico de vacante',
+    desc: 'Definimos competencias, contexto comercial y criterios de éxito del rol antes de evaluar candidatos.',
+  },
+  {
+    icon: BarChart3,
+    title: 'Evaluación comparativa',
+    desc: 'Ranking con puntaje por competencia. Ves quién destaca y por qué, con el mismo criterio para todos.',
+  },
+  {
+    icon: ClipboardCheck,
+    title: 'Recomendación argumentada',
+    desc: 'Terna final con sustento documentado para que contrates con confianza, no con corazonada.',
+  },
+  {
+    icon: Users2,
+    title: 'Informe para decidir en equipo',
+    desc: 'Formato pensado para que dirección comercial y talento humano hablen el mismo idioma.',
+  },
 ];
 
-const competencias = [
-  { label: 'Venta consultiva', value: 92 },
-  { label: 'Prospección', value: 88 },
-  { label: 'Manejo de objeciones', value: 90 },
-  { label: 'Orientación al logro', value: 94 },
+const outcomes = [
+  { value: '48h', label: 'Respuesta inicial' },
+  { value: '3', label: 'Candidatos comparados' },
+  { value: '1', label: 'Informe unificado' },
 ];
 
 export default function Entregable() {
+  const scrollToAcceso = () => document.getElementById('acceso')?.scrollIntoView({ behavior: 'smooth' });
+
   return (
-    <section id="entregable" className="py-24 lg:py-28 px-6 lg:px-8" style={{ background: '#F8FAFC' }}>
-      <div className="max-w-6xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
+    <section id="entregable" className="py-24 lg:py-32 px-6 lg:px-8 relative overflow-hidden" style={{ background: '#F8FAFC' }}>
+      <div
+        className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none opacity-60"
+        style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%)', transform: 'translate(30%, -40%)' }}
+      />
+
+      <div className="max-w-6xl mx-auto relative z-10">
+        <div className="grid lg:grid-cols-2 gap-14 lg:gap-16 xl:gap-20 items-center">
           <div>
             <SectionHeader
               align="left"
               className="mb-8 lg:mb-10"
               eyebrow="Qué recibes"
-              title="No recibes solo hojas de vida. Recibes una recomendación de selección."
-              description="Un entregable diseñado para que dirección comercial y talento humano decidan con el mismo criterio."
+              title="No recibes hojas de vida. Recibes la información para contratar bien."
+              description="Un entregable concreto que reduce el riesgo de mala contratación y alinea a comercial y talento humano en la misma decisión."
             />
 
-            <ul className="space-y-4">
-              {beneficios.map((item) => (
-                <li key={item} className="flex items-start gap-3">
+            <div className="grid sm:grid-cols-2 gap-4 mb-8">
+              {entregables.map(({ icon: Icon, title, desc }) => (
+                <div
+                  key={title}
+                  className="rounded-xl p-4 lg:p-5 bg-white transition-shadow hover:shadow-md"
+                  style={{ border: '1px solid #E2E8F0' }}
+                >
                   <div
-                    className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                    style={{ background: '#EEF2FF' }}
+                    className="w-9 h-9 rounded-lg flex items-center justify-center mb-3"
+                    style={{ background: '#EEF2FF', border: '1px solid #C7D2FE' }}
                   >
-                    <CheckCircle2 className="w-3 h-3" style={{ color: '#4338CA' }} strokeWidth={2.5} />
+                    <Icon className="w-4 h-4" style={{ color: '#4338CA' }} strokeWidth={2} />
                   </div>
-                  <span className="text-sm lg:text-base" style={{ color: '#334155', lineHeight: 1.65 }}>{item}</span>
+                  <h3 className="font-heading font-semibold text-sm mb-1.5" style={{ color: '#0F172A' }}>{title}</h3>
+                  <p className="text-xs leading-relaxed" style={{ color: '#64748B', lineHeight: 1.7 }}>{desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div
+              className="flex flex-wrap gap-6 lg:gap-8 mb-8 py-5 px-6 rounded-xl"
+              style={{ background: '#FFFFFF', border: '1px solid #E2E8F0' }}
+            >
+              {outcomes.map(({ value, label }) => (
+                <div key={label}>
+                  <p className="font-heading font-bold text-2xl tabular-nums" style={{ color: '#4338CA' }}>{value}</p>
+                  <p className="text-xs font-medium mt-0.5" style={{ color: '#64748B' }}>{label}</p>
+                </div>
+              ))}
+            </div>
+
+            <ul className="space-y-3 mb-8">
+              {[
+                'Menos rotación por contrataciones mal alineadas al rol',
+                'Decisión documentada que puedes compartir con dirección',
+                'Criterio objetivo: dejas de depender solo de la entrevista',
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#059669' }} strokeWidth={2.5} />
+                  <span className="text-sm font-medium" style={{ color: '#334155', lineHeight: 1.6 }}>{item}</span>
                 </li>
               ))}
             </ul>
-          </div>
 
-          <div className="kova-card rounded-2xl overflow-hidden">
-            <div
-              className="px-6 py-4 border-b flex items-center justify-between gap-3"
-              style={{ background: '#FFFFFF', borderColor: '#E2E8F0' }}
+            <button
+              onClick={scrollToAcceso}
+              className="group inline-flex items-center gap-2 font-semibold px-6 py-3.5 rounded-xl text-sm text-white transition-all hover:opacity-95"
+              style={{ background: '#4338CA', boxShadow: '0 4px 14px rgba(67,56,202,0.28)' }}
             >
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center"
-                  style={{ background: '#EEF2FF', border: '1px solid #C7D2FE' }}
-                >
-                  <FileText className="w-4 h-4" style={{ color: '#4338CA' }} strokeWidth={2} />
-                </div>
-                <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: '#94A3B8' }}>
-                    Reporte de ajuste comercial
-                  </p>
-                  <p className="text-sm font-semibold mt-0.5" style={{ color: '#0F172A' }}>
-                    Candidato A · Ejecutivo Comercial B2B
-                  </p>
-                </div>
-              </div>
-              <span
-                className="text-[10px] font-semibold px-2.5 py-1 rounded-md whitespace-nowrap"
-                style={{ background: '#ECFDF5', color: '#047857', border: '1px solid #A7F3D0' }}
-              >
-                Recomendado
-              </span>
-            </div>
-
-            <div className="p-6 lg:p-7 bg-white">
-              <div className="flex items-end justify-between mb-7 pb-6 border-b" style={{ borderColor: '#F1F5F9' }}>
-                <div>
-                  <p className="text-xs font-medium mb-1" style={{ color: '#94A3B8' }}>Puntaje de evaluación</p>
-                  <p className="font-heading font-bold text-4xl leading-none tabular-nums" style={{ color: '#4338CA' }}>
-                    92<span className="text-lg font-semibold text-slate-400">/100</span>
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#94A3B8' }}>Metodología</p>
-                  <p className="text-xs font-semibold" style={{ color: '#334155' }}>Kova · Competencias comerciales</p>
-                </div>
-              </div>
-
-              <div className="space-y-4 mb-7">
-                {competencias.map((c) => (
-                  <div key={c.label}>
-                    <div className="flex justify-between text-xs mb-1.5">
-                      <span className="font-medium" style={{ color: '#475569' }}>{c.label}</span>
-                      <span className="font-semibold tabular-nums" style={{ color: '#0F172A' }}>{c.value}</span>
-                    </div>
-                    <div className="h-1.5 rounded-full bg-slate-100">
-                      <div
-                        className="h-full rounded-full"
-                        style={{ width: `${c.value}%`, background: 'linear-gradient(90deg, #6366F1, #4338CA)' }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="rounded-xl p-4 space-y-2.5" style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
-                {[
-                  'Perfil alineado con el estilo consultivo requerido',
-                  'Recomendado para incluir en la terna final',
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-2.5 text-sm" style={{ color: '#334155' }}>
-                    <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{ color: '#059669' }} strokeWidth={2} />
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
+              Quiero ver cómo aplicaría a mi vacante
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            </button>
           </div>
+
+          <EntregableReportMockup />
         </div>
       </div>
     </section>
