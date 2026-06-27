@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { submitEarlyAccess } from '@/api/earlyAccess';
-import { ArrowRight, CheckCircle2, Lock } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Lock, Clock } from 'lucide-react';
 
 const vacantes = [
   'Ejecutivo comercial',
@@ -13,13 +13,10 @@ const vacantes = [
 const inputClass = 'w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-shadow';
 const inputStyle = { background: '#FFFFFF', border: '1px solid #CBD5E1', color: '#0F172A' };
 
-const beneficios = [
-  'Diagnóstico con un especialista en selección comercial',
-  'Perfil ideal definido según tu vacante y proceso comercial',
-  'Búsqueda de talento alineado a lo que tu empresa necesita',
-  'Metodología por competencias comerciales, no pruebas genéricas',
-  'Informe comparativo para decidir con criterio de experto',
-  'Diagnóstico sin compromiso',
+const pasosDespues = [
+  { title: 'Confirmación', desc: 'Recibes acuse de solicitud al instante.' },
+  { title: 'Diagnóstico', desc: 'Un especialista te contacta en 24 horas hábiles.' },
+  { title: 'Propuesta clara', desc: 'Perfil, alcance y siguiente paso para tu vacante.' },
 ];
 
 export default function AccesoAnticipado() {
@@ -65,7 +62,7 @@ export default function AccesoAnticipado() {
   };
 
   return (
-    <section id="acceso" className="py-24 lg:py-28 px-6 lg:px-8 bg-white relative overflow-hidden">
+    <section id="acceso" className="py-24 lg:py-28 px-6 lg:px-8 pb-28 md:pb-24 bg-white relative overflow-hidden">
       <div
         className="absolute inset-0 pointer-events-none opacity-40"
         style={{ background: 'radial-gradient(circle at 100% 0%, rgba(99,102,241,0.06) 0%, transparent 45%)' }}
@@ -84,17 +81,47 @@ export default function AccesoAnticipado() {
             >
               Hablemos de tu vacante comercial.
             </h2>
-            <p className="text-base leading-relaxed mb-8" style={{ color: '#64748B', lineHeight: 1.75 }}>
-              ¿Buscas atraer talento comercial con más certeza? En Kova partimos de lo que tu empresa necesita y de
-              su proceso comercial. Un especialista define el perfil ideal para tu vacante y nosotros buscamos ese
-              talento con metodología especializada.
+            <p className="text-base leading-relaxed mb-6" style={{ color: '#64748B', lineHeight: 1.75 }}>
+              Cuéntanos tu vacante. Un especialista en selección comercial revisa tu caso, define el perfil ideal
+              y te explica cómo Kova puede ayudarte, sin compromiso.
             </p>
 
-            <div className="space-y-3.5 mb-10">
-              {beneficios.map((item) => (
-                <div key={item} className="flex items-start gap-3">
-                  <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-1" style={{ color: '#059669' }} strokeWidth={2.5} />
-                  <span className="text-sm leading-relaxed" style={{ color: '#334155' }}>{item}</span>
+            <div
+              className="flex gap-4 p-4 rounded-xl mb-8"
+              style={{ background: '#FAFBFF', border: '1px solid #E2E8F0' }}
+            >
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 font-heading font-bold text-sm text-white"
+                style={{ background: 'linear-gradient(135deg, #6366F1, #4338CA)' }}
+              >
+                KV
+              </div>
+              <div>
+                <p className="text-sm font-semibold" style={{ color: '#0F172A' }}>Especialista Kova</p>
+                <p className="text-xs mt-0.5 mb-2" style={{ color: '#64748B' }}>Selección comercial · Latinoamérica</p>
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium" style={{ color: '#059669' }}>
+                  <Clock className="w-3.5 h-3.5" strokeWidth={2.5} />
+                  Te respondemos en 24 horas hábiles
+                </span>
+              </div>
+            </div>
+
+            <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#94A3B8' }}>
+              Qué pasa después
+            </p>
+            <div className="space-y-3 mb-8">
+              {pasosDespues.map(({ title, desc }, i) => (
+                <div key={title} className="flex gap-3">
+                  <span
+                    className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 text-[10px] font-bold"
+                    style={{ background: '#EEF2FF', color: '#4338CA' }}
+                  >
+                    {i + 1}
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold" style={{ color: '#0F172A' }}>{title}</p>
+                    <p className="text-xs leading-relaxed" style={{ color: '#64748B' }}>{desc}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -107,8 +134,8 @@ export default function AccesoAnticipado() {
                   <CheckCircle2 className="w-7 h-7" style={{ color: '#059669' }} strokeWidth={2} />
                 </div>
                 <h3 className="font-heading font-semibold text-xl mb-2" style={{ color: '#0F172A' }}>Solicitud recibida</h3>
-                <p className="text-sm mb-5 leading-relaxed" style={{ color: '#64748B' }}>
-                  Un especialista de Kova te contactará para coordinar el diagnóstico de tu vacante.
+                <p className="text-sm mb-2 leading-relaxed" style={{ color: '#64748B' }}>
+                  Un especialista de Kova te contactará en las próximas 24 horas hábiles para coordinar el diagnóstico.
                 </p>
                 <p className="text-sm font-medium" style={{ color: '#4338CA' }}>contacto@kova.com.co</p>
               </div>
