@@ -22,7 +22,7 @@ export default function Beneficios() {
             </h2>
           </div>
           <p className="text-sm leading-relaxed" style={{ color: '#6B7280', lineHeight: 1.85 }}>
-            Cada proyecto termina con entregables concretos. No consultoría sin fin — resultados desde el primer mes.
+            Cada proyecto termina con entregables concretos. No consultoría sin fin: resultados desde el primer mes.
           </p>
         </div>
 

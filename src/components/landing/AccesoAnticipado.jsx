@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { submitEarlyAccess } from '@/api/earlyAccess';
-import { ArrowRight, CheckCircle2, Lock, Users } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Lock } from 'lucide-react';
 
 const vacantes = [
   'Ejecutivo comercial B2B',
@@ -15,10 +15,10 @@ const inputStyle = { background: '#FFFFFF', border: '1px solid #CBD5E1', color: 
 
 const beneficios = [
   'Diagnóstico con un especialista en selección comercial',
-  'Metodología propia por competencias comerciales',
-  'Orientación clara sobre tu vacante y perfil ideal',
+  'Perfil ideal definido según tu vacante y proceso comercial',
+  'Búsqueda de talento alineado a lo que tu empresa necesita',
+  'Metodología por competencias comerciales, no pruebas genéricas',
   'Informe comparativo para decidir con criterio de experto',
-  'Menor riesgo de rotación por perfiles mal alineados',
   'Diagnóstico sin compromiso',
 ];
 
@@ -85,8 +85,9 @@ export default function AccesoAnticipado() {
               Hablemos de tu vacante comercial.
             </h2>
             <p className="text-base leading-relaxed mb-8" style={{ color: '#64748B', lineHeight: 1.75 }}>
-              ¿Buscas atraer talento comercial con más certeza? Un especialista de Kova te orienta sobre el perfil ideal para tu vacante.
-              Metodología especializada para identificar el talento comercial ideal.
+              ¿Buscas atraer talento comercial con más certeza? En Kova partimos de lo que tu empresa necesita y de
+              su proceso comercial. Un especialista define el perfil ideal para tu vacante y nosotros buscamos ese
+              talento con metodología especializada.
             </p>
 
             <div className="space-y-3.5 mb-10">
@@ -96,20 +97,6 @@ export default function AccesoAnticipado() {
                   <span className="text-sm leading-relaxed" style={{ color: '#334155' }}>{item}</span>
                 </div>
               ))}
-            </div>
-
-            <div
-              className="rounded-xl p-5 flex items-start gap-3"
-              style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}
-            >
-              <Users className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#64748B' }} strokeWidth={1.75} />
-              <p className="text-sm leading-relaxed" style={{ color: '#64748B', lineHeight: 1.7 }}>
-                ¿Eres candidato buscando empleo? Kova evalúa perfiles para empresas clientes.
-                Escríbenos a{' '}
-                <a href="mailto:contacto@kova.com.co" className="font-medium" style={{ color: '#4338CA' }}>
-                  contacto@kova.com.co
-                </a>
-              </p>
             </div>
           </div>
 

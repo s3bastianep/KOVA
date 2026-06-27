@@ -17,7 +17,7 @@ export default function GuiaPsicometricasVsComercial() {
       title="Pruebas psicométricas frente a evaluación comercial: ¿Cuál predice mejor el desempeño?"
       readTime="16 min"
       heroImage="/images/guia-psicometricas-hero.png"
-      heroImageAlt="Seleccionar al candidato comercial ideal entre varios perfiles evaluados"
+      heroImageAlt="Evaluadores comerciales revisando candidato con criterio estructurado"
       tocItems={TOC_PSICOMETRICAS}
     >
         <GuiaProse>

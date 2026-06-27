@@ -7,6 +7,7 @@ const landingLinks = [
   ['Problema', 'problema'],
   ['Cómo funciona', 'proceso'],
   ['Qué recibes', 'entregable'],
+  ['Precios', '/precios'],
 ];
 
 export default function Navbar() {
@@ -61,28 +62,52 @@ export default function Navbar() {
 
         <div className="hidden md:flex items-center gap-7">
           {!onGuia && landingLinks.map(([label, id]) => (
-            <button
-              key={id}
-              onClick={() => goToSection(id)}
-              className="text-sm font-medium transition-colors"
-              style={{ color: '#64748B' }}
-              onMouseEnter={e => { e.currentTarget.style.color = '#0F172A'; }}
-              onMouseLeave={e => { e.currentTarget.style.color = '#64748B'; }}
-            >
-              {label}
-            </button>
+            id.startsWith('/') ? (
+              <Link
+                key={id}
+                to={id}
+                className="text-sm font-medium transition-colors"
+                style={{ color: location.pathname === id ? '#4338CA' : '#64748B', fontWeight: location.pathname === id ? 600 : 500 }}
+                onMouseEnter={e => { if (location.pathname !== id) e.currentTarget.style.color = '#0F172A'; }}
+                onMouseLeave={e => { if (location.pathname !== id) e.currentTarget.style.color = '#64748B'; }}
+              >
+                {label}
+              </Link>
+            ) : (
+              <button
+                key={id}
+                onClick={() => goToSection(id)}
+                className="text-sm font-medium transition-colors"
+                style={{ color: '#64748B' }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#0F172A'; }}
+                onMouseLeave={e => { e.currentTarget.style.color = '#64748B'; }}
+              >
+                {label}
+              </button>
+            )
           ))}
 
           {onGuia && (
-            <Link
-              to="/"
-              className="text-sm font-medium transition-colors"
-              style={{ color: '#64748B' }}
-              onMouseEnter={e => { e.currentTarget.style.color = '#0F172A'; }}
-              onMouseLeave={e => { e.currentTarget.style.color = '#64748B'; }}
-            >
-              Inicio
-            </Link>
+            <>
+              <Link
+                to="/"
+                className="text-sm font-medium transition-colors"
+                style={{ color: '#64748B' }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#0F172A'; }}
+                onMouseLeave={e => { e.currentTarget.style.color = '#64748B'; }}
+              >
+                Inicio
+              </Link>
+              <Link
+                to="/precios"
+                className="text-sm font-medium transition-colors"
+                style={{ color: '#64748B' }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#0F172A'; }}
+                onMouseLeave={e => { e.currentTarget.style.color = '#64748B'; }}
+              >
+                Precios
+              </Link>
+            </>
           )}
 
           <div

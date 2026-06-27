@@ -7,6 +7,7 @@ const landingLinks = [
   ['Problema', 'problema'],
   ['Cómo funciona', 'proceso'],
   ['Qué recibes', 'entregable'],
+  ['Precios', '/precios'],
   ['Solicitar acceso', 'acceso'],
 ];
 
@@ -52,16 +53,29 @@ export default function Footer() {
             </p>
             <div className="flex flex-col gap-2.5">
               {landingLinks.map(([label, id]) => (
-                <button
-                  key={label}
-                  onClick={() => goToSection(id)}
-                  className="text-sm text-left font-medium transition-colors w-fit"
-                  style={{ color: 'rgba(255,255,255,0.55)' }}
-                  onMouseEnter={e => { e.currentTarget.style.color = '#FFFFFF'; }}
-                  onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.55)'; }}
-                >
-                  {label}
-                </button>
+                id.startsWith('/') ? (
+                  <Link
+                    key={label}
+                    to={id}
+                    className="text-sm font-medium transition-colors w-fit block"
+                    style={{ color: 'rgba(255,255,255,0.55)' }}
+                    onMouseEnter={e => { e.currentTarget.style.color = '#FFFFFF'; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.55)'; }}
+                  >
+                    {label}
+                  </Link>
+                ) : (
+                  <button
+                    key={label}
+                    onClick={() => goToSection(id)}
+                    className="text-sm text-left font-medium transition-colors w-fit"
+                    style={{ color: 'rgba(255,255,255,0.55)' }}
+                    onMouseEnter={e => { e.currentTarget.style.color = '#FFFFFF'; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.55)'; }}
+                  >
+                    {label}
+                  </button>
+                )
               ))}
               {GUIAS.map(({ path, title }) => (
                 <Link

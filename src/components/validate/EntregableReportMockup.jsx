@@ -184,7 +184,7 @@ export default function EntregableReportMockup() {
                   Terna recomendada
                 </p>
                 <div className="space-y-2">
-                  {['Candidato A — Prioridad alta (92/100)', 'Candidato B — Alternativa viable (67/100)', 'Candidato C — No recomendado (51/100)'].map((line, i) => (
+                  {['Candidato A: Prioridad alta (92/100)', 'Candidato B: Alternativa viable (67/100)', 'Candidato C: No recomendado (51/100)'].map((line, i) => (
                     <div key={line} className="flex items-center gap-2.5 text-sm" style={{ color: i === 0 ? '#0F172A' : '#64748B', fontWeight: i === 0 ? 600 : 400 }}>
                       <span className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0" style={{ background: i === 0 ? '#4338CA' : '#CBD5E1' }}>
                         {i + 1}

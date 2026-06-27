@@ -6,27 +6,27 @@ const servicios = [
     id: 'reclutamiento', icon: Users, num: '01', label: 'Reclutamiento', color: '#EFF6FF', accent: '#2563EB',
     title: 'Buscamos, evaluamos y presentamos a los mejores perfiles comerciales.',
     desc: 'Hacemos todo el proceso: definimos el perfil ideal, buscamos activamente (no esperamos CVs), entrevistamos con metodología por competencias y presentamos una terna validada. Tú solo decides.',
-    items: ['Definición del perfil comercial ideal', 'Búsqueda activa — no solo publicaciones', 'Entrevistas por competencias comerciales', 'Assessment de orientación al logro', 'Informe ejecutivo por candidato', 'Garantía de reemplazo'],
+    items: ['Definición del perfil comercial ideal', 'Búsqueda activa, no solo publicaciones', 'Entrevistas por competencias comerciales', 'Assessment de orientación al logro', 'Informe ejecutivo por candidato', 'Garantía de reemplazo'],
     highlight: 'Entregamos terna en 2–3 semanas.',
   },
   {
     id: 'evaluacion', icon: ClipboardList, num: '02', label: 'Evaluación Psicotécnica', color: '#FFF7ED', accent: '#F97316',
     title: 'Medimos objetivamente el perfil comercial antes de contratar.',
-    desc: 'Aplicamos una batería de pruebas diseñada específicamente para perfiles de ventas. Medimos orientación al logro, tolerancia a la presión, capacidad de negociación y comunicación persuasiva — con datos, no con intuición.',
+    desc: 'Aplicamos una batería de pruebas diseñada específicamente para perfiles de ventas. Medimos orientación al logro, tolerancia a la presión, capacidad de negociación y comunicación persuasiva, con datos, no con intuición.',
     items: ['Prueba de orientación al logro', 'Evaluación de tolerancia a presión y resiliencia', 'Assessment de negociación y persuasión', 'Perfil de liderazgo comercial', 'Reporte ejecutivo con scores por competencia', 'Benchmarks vs. top performers del sector'],
     highlight: 'Reporte en 24 horas.',
   },
   {
     id: 'estandarizacion', icon: LayoutGrid, num: '03', label: 'Diseño del Proceso', color: '#F0FDF4', accent: '#10B981',
     title: 'Tu proceso de ventas, estandarizado y vivo en una plataforma interactiva.',
-    desc: 'Mapeamos cómo vende tu empresa hoy, identificamos los cuellos de botella y construimos el proceso ideal: etapas, guiones, protocolos y KPIs. Todo queda en una plataforma interactiva donde cualquier asesor puede consultarlo en el momento que lo necesite — no en un PDF que nadie abre.',
+    desc: 'Mapeamos cómo vende tu empresa hoy, identificamos los cuellos de botella y construimos el proceso ideal: etapas, guiones, protocolos y KPIs. Todo queda en una plataforma interactiva donde cualquier asesor puede consultarlo en el momento que lo necesite, no en un PDF que nadie abre.',
     items: ['Mapeo del proceso de ventas actual', 'Diseño del embudo por etapas específicas de tu negocio', 'Guiones de atención, seguimiento y cierre personalizados', 'Protocolos de manejo de objeciones según tu producto', 'KPIs y métricas por rol comercial', 'Plataforma interactiva de consulta permanente para el equipo'],
     highlight: 'Plataforma activa en 3–4 semanas.',
   },
   {
     id: 'capacitacion', icon: BookOpen, num: '04', label: 'Capacitación e Inducción', color: '#F5F3FF', accent: '#7C3AED',
     title: 'Inducción gamificada, personalizada con el proceso real de tu empresa.',
-    desc: 'No usamos contenido genérico. Construimos el programa de inducción con el proceso que diseñamos para tu empresa — y lo entregamos en formato gamificado: niveles, retos, evaluaciones y certificaciones. El asesor aprende haciendo, no leyendo un manual. Y si tiene una duda en 3 meses, vuelve a la plataforma y la resuelve.',
+    desc: 'No usamos contenido genérico. Construimos el programa de inducción con el proceso que diseñamos para tu empresa y lo entregamos en formato gamificado: niveles, retos, evaluaciones y certificaciones. El asesor aprende haciendo, no leyendo un manual. Y si tiene una duda en 3 meses, vuelve a la plataforma y la resuelve.',
     items: ['Programa diseñado 100% con tu proceso de ventas real', 'Módulos gamificados: niveles, puntos y certificaciones', 'Evaluaciones prácticas con casos de tu industria', 'Plataforma de acceso permanente para consultas del equipo', 'Actualizaciones del contenido cuando el proceso evoluciona', 'Dashboard de progreso individual por asesor'],
     highlight: 'Programa gamificado listo en 4–5 semanas.',
   },
@@ -48,7 +48,7 @@ export default function QueConstruimos() {
               Cuatro servicios.<br />Un solo equipo lo hace todo.
             </h2>
             <p className="text-base leading-relaxed" style={{ color: '#6B7280', lineHeight: 1.8 }}>
-              No somos una plataforma. Somos la firma que recluta, evalúa, diseña y capacita — para que tú tengas un área comercial que funcione desde el primer día.
+              No somos una plataforma. Somos la firma que recluta, evalúa, diseña y capacita para que tú tengas un área comercial que funcione desde el primer día.
             </p>
           </div>
         </div>
@@ -76,7 +76,7 @@ export default function QueConstruimos() {
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: selected.accent }}>
                     <SelectedIcon className="w-5 h-5 text-white" />
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: selected.accent }}>{selected.num} — {selected.label}</span>
+                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: selected.accent }}>{selected.num} · {selected.label}</span>
                 </div>
                 <h3 className="font-heading font-bold text-lg mb-6 leading-snug" style={{ color: '#111827', letterSpacing: '-0.02em' }}>{selected.title}</h3>
                 <p className="text-sm leading-relaxed mb-8" style={{ color: '#4B5563', lineHeight: 1.8 }}>{selected.desc}</p>

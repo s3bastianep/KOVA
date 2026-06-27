@@ -115,7 +115,7 @@ export default function ImpactCharts() {
             Los números no mienten.
           </h2>
           <p className="text-sm mt-3 max-w-lg mx-auto" style={{ color: '#6B7280', lineHeight: 1.8 }}>
-            La diferencia entre contratar con proceso y sin él — en velocidad, retención y desempeño.
+            La diferencia entre contratar con proceso y sin él, en velocidad, retención y desempeño.
           </p>
         </div>
 

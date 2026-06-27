@@ -72,7 +72,7 @@ export default function ImpactSection() {
             </h2>
           </div>
           <p className="text-sm max-w-xs lg:text-right" style={{ color: '#9CA3AF', lineHeight: 1.8 }}>
-            Datos reales de procesos que acompañamos — velocidad, retención y desempeño comparado.
+            Datos reales de procesos que acompañamos: velocidad, retención y desempeño comparado.
           </p>
         </div>
 
@@ -241,10 +241,10 @@ export default function ImpactSection() {
                     <p className="text-xs font-semibold" style={{ color: '#059669' }}>de diferencia al año 1</p>
                   </div>
                   <p className="text-xs leading-relaxed" style={{ color: '#6B7280', lineHeight: 1.85 }}>
-                    El mercado promedio pierde casi la mitad del equipo comercial en el primer año. <strong style={{ color: '#0F0A2A' }}>Kova mantiene el 94%</strong> — porque contratar bien desde el inicio reduce la rotación.
+                    El mercado promedio pierde casi la mitad del equipo comercial en el primer año. <strong style={{ color: '#0F0A2A' }}>Kova mantiene el 94%</strong>, porque contratar bien desde el inicio reduce la rotación.
                   </p>
                   <div className="space-y-2">
-                    {[['Año 1 — Kova', '94%', '#10B981'], ['Año 1 — Mercado', '54%', '#D1D5DB']].map(([l, v, c]) => (
+                    {[['Año 1 · Kova', '94%', '#10B981'], ['Año 1 · Mercado', '54%', '#D1D5DB']].map(([l, v, c]) => (
                       <div key={l} className="flex items-center justify-between text-xs">
                         <span style={{ color: '#9CA3AF' }}>{l}</span>
                         <span className="font-bold" style={{ color: c }}>{v}</span>
@@ -260,7 +260,7 @@ export default function ImpactSection() {
                     <p className="text-xs font-semibold" style={{ color: '#D97706' }}>del pool de candidatos</p>
                   </div>
                   <p className="text-xs leading-relaxed" style={{ color: '#6B7280', lineHeight: 1.85 }}>
-                    Solo presentamos candidatos que superan el benchmark sectorial en orientación al logro, resiliencia y negociación. <strong style={{ color: '#0F0A2A' }}>No en uno — en todos los criterios.</strong>
+                    Solo presentamos candidatos que superan el benchmark sectorial en orientación al logro, resiliencia y negociación. <strong style={{ color: '#0F0A2A' }}>No en uno: en todos los criterios.</strong>
                   </p>
                   <div className="space-y-2">
                     {competenciasData.map(({ comp, kova, bench }) => (

@@ -22,7 +22,7 @@ export default function GuiaHabilidadesBlandasComercial() {
     >
         <GuiaProse>
           Contratar comercial exige medir mucho más que años de experiencia o cuota alcanzada en el pasado. Las
-          habilidades blandas —comunicación, resiliencia, orientación al cliente, trabajo en equipo— determinan si
+          habilidades blandas (comunicación, resiliencia, orientación al cliente, trabajo en equipo) determinan si
           un vendedor sostiene pipeline, maneja objeciones y cierra en tu mercado. El problema es que la mayoría
           de los procesos no las evalúa con rigor.
         </GuiaProse>
@@ -43,8 +43,8 @@ export default function GuiaHabilidadesBlandasComercial() {
         </GuiaSectionTitle>
         <GuiaProse>
           Las habilidades blandas son capacidades interpersonales y de comportamiento que influyen en cómo una
-          persona trabaja, se comunica y colabora. A diferencia de habilidades técnicas —conocimiento de CRM,
-          técnicas de cierre, manejo de producto—, no se miden con un certificado ni con años en el currículum.
+          persona trabaja, se comunica y colabora. A diferencia de habilidades técnicas (conocimiento de CRM,
+          técnicas de cierre, manejo de producto), no se miden con un certificado ni con años en el currículum.
         </GuiaProse>
         <GuiaProse>
           En ventas B2B, estas competencias son decisivas. Un ejecutivo comercial puede dominar el producto y
@@ -79,7 +79,7 @@ export default function GuiaHabilidadesBlandasComercial() {
         <GuiaProse>
           Evaluar habilidades técnicas es relativamente directo: puedes revisar historial, pedir casos concretos
           o simular una demo de producto. Las habilidades blandas, en cambio, dependen del contexto, son difíciles
-          de cuantificar y los candidatos comerciales —por naturaleza del rol— suelen responder con discursos
+          de cuantificar y los candidatos comerciales, por naturaleza del rol, suelen responder con discursos
           ensayados que suenan convincentes pero no demuestran desempeño real.
         </GuiaProse>
 
@@ -108,7 +108,7 @@ export default function GuiaHabilidadesBlandasComercial() {
         <GuiaProse>
           La contratación basada en competencias no pregunta si alguien es extrovertido o carismático. Define
           qué comportamientos exige la vacante y mide si el candidato los demuestra. Para roles comerciales,
-          eso implica escenarios reales del puesto, criterios comparables y evaluación por especialistas — no
+          eso implica escenarios reales del puesto, criterios comparables y evaluación por especialistas, no
           impresiones subjetivas del entrevistador.
         </GuiaProse>
 
@@ -133,7 +133,7 @@ export default function GuiaHabilidadesBlandasComercial() {
         </GuiaNumberedItem>
 
         <GuiaNumberedItem num={4} title="Evaluación por pares y múltiples observadores">
-          Incorporar la perspectiva de más de un evaluador —idealmente alguien con experiencia comercial— reduce
+          Incorporar la perspectiva de más de un evaluador (idealmente alguien con experiencia comercial) reduce
           sesgos individuales y enriquece la lectura del candidato. Meta-análisis de investigación en selección
           confirman que evaluaciones estructuradas con múltiples fuentes predicen mejor el desempeño laboral
           que entrevistas informales.
@@ -169,13 +169,13 @@ export default function GuiaHabilidadesBlandasComercial() {
 
         <GuiaNumberedItem num={2} title="Depender de pruebas de personalidad genéricas">
           Los tests psicométricos miden rasgos generales, no desempeño en ventas. Un candidato puede tener un
-          perfil extrovertido y aun así no saber prospectar en B2B consultivo. Deben complementarse —no
-          reemplazar— evaluaciones de comportamiento comercial específicas del rol.
+          perfil extrovertido y aun así no saber prospectar en B2B consultivo. Deben complementarse, no
+          reemplazar, evaluaciones de comportamiento comercial específicas del rol.
         </GuiaNumberedItem>
 
         <GuiaNumberedItem num={3} title="Hacer solo preguntas hipotéticas">
           ¿Qué harías si un cliente te rechazara tres veces? invita respuestas ensayadas. Las preguntas
-          conductuales —cuéntame la última vez que perdiste una venta importante y qué hiciste— obligan al
+          conductuales (cuéntame la última vez que perdiste una venta importante y qué hiciste) obligan al
           candidato a demostrar experiencia real, no teoría.
         </GuiaNumberedItem>
 

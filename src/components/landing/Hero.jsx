@@ -47,10 +47,10 @@ export default function Hero() {
             </h1>
 
             <p className="text-sm mb-3 max-w-[440px]" style={{ color: '#374151', lineHeight: 1.85, fontWeight: 500 }}>
-              Kova es la firma que busca al vendedor correcto, lo evalúa con pruebas reales, diseña el proceso de ventas de tu empresa y lo convierte en un programa de capacitación gamificado — para que cualquier asesor aprenda rápido y venda bien.
+              Kova es la firma que busca al vendedor correcto, lo evalúa con pruebas reales, diseña el proceso de ventas de tu empresa y lo convierte en un programa de capacitación gamificado para que cualquier asesor aprenda rápido y venda bien.
             </p>
             <p className="text-sm mb-8 max-w-[440px]" style={{ color: '#6B7280', lineHeight: 1.8 }}>
-              No mandamos CVs. No damos talleres genéricos. Construimos el sistema que hace que tu área comercial funcione — y lo dejamos corriendo dentro de tu empresa.
+              No mandamos CVs. No damos talleres genéricos. Construimos el sistema que hace que tu área comercial funcione y lo dejamos corriendo dentro de tu empresa.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 mb-12">

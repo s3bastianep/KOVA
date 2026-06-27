@@ -64,7 +64,7 @@ export default function QuienesSomos() {
         <div className="mt-8 rounded-2xl p-8 text-center border border-border">
           <p className="text-muted-foreground text-lg leading-relaxed max-w-3xl mx-auto">
             Después de años en procesos de selección, liderazgo y desarrollo comercial, creamos Kova para que las empresas tengan acceso a{' '}
-            <span className="text-foreground font-bold">talento, consultoría y estrategia comercial de verdad</span> — sin intermediarios genéricos.
+            <span className="text-foreground font-bold">talento, consultoría y estrategia comercial de verdad</span>, sin intermediarios genéricos.
           </p>
         </div>
       </div>

@@ -18,7 +18,7 @@ export default function NuestraVision() {
               Contratar mal no es un error de RRHH. Es una pérdida financiera.
             </h2>
             <p className="text-sm leading-relaxed mb-7" style={{ color: '#6B7280', lineHeight: 1.85 }}>
-              Las empresas pierden entre 6 y 18 salarios cada vez que un vendedor se va. Y la mayoría no lo ve — porque lo atribuye a mala suerte, no a un proceso roto. Kova nació para cambiar eso.
+              Las empresas pierden entre 6 y 18 salarios cada vez que un vendedor se va. Y la mayoría no lo ve: lo atribuye a mala suerte, no a un proceso roto. Kova nació para cambiar eso.
             </p>
             <blockquote className="pl-4 py-1 mb-8" style={{ borderLeft: '3px solid #6366F1' }}>
               <p className="text-sm font-medium leading-relaxed" style={{ color: '#374151' }}>
