@@ -84,12 +84,6 @@ export default function GuiaHabilidadesBlandasComercial() {
           ensayados que suenan convincentes pero no demuestran desempeño real.
         </GuiaProse>
 
-        <GuiaInlineImage
-          src="/images/guia-habilidades-inline-1.png"
-          alt="Mapa de competencias comerciales en pizarra"
-          caption="Sin criterio estructurado, la entrevista favorece al que mejor se vende, no al que mejor vende."
-        />
-
         <GuiaCallout
           title="Por qué las empresas fallan al medir habilidades blandas"
           items={[

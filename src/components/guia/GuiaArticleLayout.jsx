@@ -59,7 +59,7 @@ export function GuiaSectionTitle({ id, children }) {
 
 export function GuiaProse({ children, className = '' }) {
   return (
-    <p className={`text-[17px] leading-[1.85] mb-5 ${className}`} style={{ color: '#334155' }}>
+    <p className={`text-[17px] leading-[1.85] mb-5 text-left ${className}`} style={{ color: '#334155' }}>
       {children}
     </p>
   );
@@ -71,7 +71,7 @@ export function GuiaNumberedItem({ num, title, children }) {
       <h3 className="font-heading font-bold text-lg mb-3" style={{ color: '#0F172A' }}>
         {num}. {title}
       </h3>
-      <p className="text-[17px] leading-[1.85]" style={{ color: '#334155' }}>
+      <p className="text-[17px] leading-[1.85] text-left" style={{ color: '#334155' }}>
         {children}
       </p>
     </div>

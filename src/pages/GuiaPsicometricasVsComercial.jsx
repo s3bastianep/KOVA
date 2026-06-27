@@ -6,7 +6,6 @@ import {
   GuiaNumberedItem,
   GuiaCallout,
   GuiaArticleCTA,
-  GuiaInlineImage,
 } from '@/components/guia/GuiaArticleLayout';
 import { GUIA_PSICOMETRICAS } from '@/components/guia/guiaRoutes';
 import { TOC_PSICOMETRICAS } from '@/components/guia/guiaToc';
@@ -58,12 +57,6 @@ export default function GuiaPsicometricasVsComercial() {
         <GuiaSectionTitle id="limites-psicometricas">
           Los límites de las pruebas psicométricas en selección comercial
         </GuiaSectionTitle>
-
-        <GuiaInlineImage
-          src="/images/guia-seleccion-digital.png"
-          alt="Selección de talento comercial con criterio objetivo"
-          caption="Contratar comercial requiere identificar quién puede desempeñar el rol, no solo quién encaja en un perfil psicológico genérico."
-        />
 
         <GuiaProse>
           Usar pruebas psicométricas para contratar vendedores puede parecer riguroso, pero en comercial presenta

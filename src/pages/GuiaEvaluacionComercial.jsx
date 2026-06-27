@@ -6,7 +6,6 @@ import {
   GuiaNumberedItem,
   GuiaCallout,
   GuiaArticleCTA,
-  GuiaInlineImage,
 } from '@/components/guia/GuiaArticleLayout';
 import { GUIA_EVALUACION } from '@/components/guia/guiaRoutes';
 import { TOC_EVALUACION } from '@/components/guia/guiaToc';
@@ -83,12 +82,6 @@ export default function GuiaEvaluacionComercial() {
           tanto, los mejores candidatos aceptan otras ofertas. Un proceso estructurado con evaluación comercial reduce
           iteraciones y acelera la decisión.
         </GuiaNumberedItem>
-
-        <GuiaInlineImage
-          src="/images/guia-seleccion-digital.png"
-          alt="Profesionales evaluando candidatos comerciales con criterio estructurado"
-          caption="La evaluación comercial coloca al candidato en escenarios reales del rol, no solo en una entrevista convencional."
-        />
 
         <GuiaDivider />
 
