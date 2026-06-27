@@ -36,7 +36,7 @@ export default function GuiaHabilidadesBlandasComercial() {
         <GuiaProse>
           Si eres líder comercial o de talento humano, necesitas un sistema de evaluación justo y objetivo que
           mida competencias reales, no impresiones de una entrevista de 45 minutos. En Kova abordamos esto con
-          metodología especializada y criterio humano: sin IA, sin pruebas genéricas de RH, sin automatismos.
+          metodología especializada: evaluación por competencias, sin pruebas genéricas de RH.
         </GuiaProse>
         <GuiaProse>
           En esta guía explicamos qué son las habilidades blandas comerciales, por qué cuesta evaluarlas, cómo
@@ -132,7 +132,7 @@ export default function GuiaHabilidadesBlandasComercial() {
 
         <GuiaNumberedItem num={1} title="Evaluaciones de comportamiento comercial">
           Las evaluaciones de comportamiento miden cómo un candidato actúa en situaciones de venta reales:
-          prospección, presentación de propuesta, manejo de objeciones y cierre. En Kova, un especialista humano
+          prospección, presentación de propuesta, manejo de objeciones y cierre. En Kova, un especialista
           observa y califica cada competencia con rúbricas definidas para la vacante, no con preguntas genéricas
           de RH.
         </GuiaNumberedItem>
@@ -215,7 +215,7 @@ export default function GuiaHabilidadesBlandasComercial() {
             'Diagnóstico de vacante antes de evaluar: definimos qué habilidades blandas exige el rol.',
             'Evaluación por competencias comerciales con rúbricas, no impresiones subjetivas.',
             'Comparación estandarizada entre candidatos con informe para dirección comercial.',
-            'Especialistas humanos en selección comercial B2B — sin algoritmos ni calificación automática.',
+            'Especialistas en selección comercial B2B.',
           ]}
         />
 
@@ -232,8 +232,7 @@ export default function GuiaHabilidadesBlandasComercial() {
         <GuiaProse>
           Kova ayuda a empresas B2B a evaluar habilidades blandas comerciales con metodología especializada:
           diagnóstico de vacante, evaluación por competencias, comparación entre candidatos e informe
-          argumentado para que dirección comercial y talento humano decidan con evidencia. Criterio humano,
-          sin IA, sin automatismos.
+          argumentado para que dirección comercial y talento humano decidan con evidencia.
         </GuiaProse>
 
         <GuiaArticleCTA

@@ -36,7 +36,7 @@ export const GUIAS = [
   {
     path: GUIA_HABILIDADES,
     title: 'Cómo evaluar habilidades blandas al atraer talento comercial',
-    excerpt: 'Guía para líderes comerciales sobre evaluación por competencias sin pruebas genéricas ni automatismos.',
+    excerpt: 'Guía para líderes comerciales sobre evaluación por competencias sin pruebas genéricas.',
     readTime: '15 min',
     image: '/images/guia-seleccion-digital.png',
   },

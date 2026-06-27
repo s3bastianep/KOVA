@@ -52,7 +52,7 @@ export default function GuiaSidebar({ currentPath }) {
               Hablemos de tu vacante comercial
             </p>
             <p className="text-xs leading-relaxed" style={{ color: '#64748B' }}>
-              Un especialista humano te contacta en 48 h. Sin IA, sin compromiso.
+              Un especialista de Kova te orienta sobre tu vacante. Sin compromiso.
             </p>
           </Link>
         </div>

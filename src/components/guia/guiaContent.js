@@ -61,7 +61,7 @@ export const ISSUES = [
       'Cada vez más empresas usan evaluaciones de habilidades en su proceso de selección. Eso es positivo cuando las pruebas están diseñadas para el rol. Pero aplicar evaluaciones genéricas a vacantes comerciales diluye el valor: miden aptitudes generales, no desempeño en ventas.',
       'Un candidato puede obtener buenos resultados en un test de personalidad o lógica y aun así fracasar en prospección, manejo de objeciones o venta consultiva. Para comercial, la evaluación debe ser específica del rol y del contexto de la vacante.',
     ],
-    solution: 'La metodología de Kova está diseñada exclusivamente para selección comercial por especialistas humanos: diagnóstico de vacante, evaluación por competencias, comparación entre candidatos e informe para decidir con criterio de experto. Sin pruebas genéricas ni automatismos.',
+    solution: 'La metodología de Kova está diseñada exclusivamente para selección comercial: diagnóstico de vacante, evaluación por competencias, comparación entre candidatos e informe para decidir con criterio de experto.',
   },
 ];
 

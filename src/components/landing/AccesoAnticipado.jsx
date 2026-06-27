@@ -14,12 +14,12 @@ const inputClass = 'w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus
 const inputStyle = { background: '#FFFFFF', border: '1px solid #CBD5E1', color: '#0F172A' };
 
 const beneficios = [
-  'Diagnóstico con un especialista humano en selección comercial',
-  'Metodología propia por competencias, sin automatismos ni IA',
+  'Diagnóstico con un especialista en selección comercial',
+  'Metodología propia por competencias comerciales',
   'Orientación clara sobre tu vacante y perfil ideal',
   'Informe comparativo para decidir con criterio de experto',
   'Menor riesgo de rotación por perfiles mal alineados',
-  'Respuesta en menos de 48 horas, sin compromiso',
+  'Diagnóstico sin compromiso',
 ];
 
 export default function AccesoAnticipado() {
@@ -86,7 +86,7 @@ export default function AccesoAnticipado() {
             </h2>
             <p className="text-base leading-relaxed mb-8" style={{ color: '#64748B', lineHeight: 1.75 }}>
               ¿Buscas atraer talento comercial con más certeza? Un especialista de Kova te orienta sobre el perfil ideal para tu vacante.
-              Criterio humano, metodología especializada y respuesta en 48 horas.
+              Metodología especializada para identificar el talento comercial ideal.
             </p>
 
             <div className="space-y-3.5 mb-10">
@@ -121,7 +121,7 @@ export default function AccesoAnticipado() {
                 </div>
                 <h3 className="font-heading font-semibold text-xl mb-2" style={{ color: '#0F172A' }}>Solicitud recibida</h3>
                 <p className="text-sm mb-5 leading-relaxed" style={{ color: '#64748B' }}>
-                  Un especialista de Kova te contactará en menos de 48 horas para coordinar el diagnóstico de tu vacante.
+                  Un especialista de Kova te contactará para coordinar el diagnóstico de tu vacante.
                 </p>
                 <p className="text-sm font-medium" style={{ color: '#4338CA' }}>contacto@kova.com.co</p>
               </div>
@@ -219,7 +219,7 @@ export default function AccesoAnticipado() {
                   <div className="flex items-start gap-2.5">
                     <Lock className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: '#94A3B8' }} strokeWidth={2} />
                     <p className="text-xs leading-relaxed" style={{ color: '#94A3B8' }}>
-                      Datos confidenciales. Solo los usa un especialista de Kova para contactarte. Sin IA, sin terceros.
+                      Datos confidenciales. Solo los usa un especialista de Kova para contactarte.
                     </p>
                   </div>
                 </div>
