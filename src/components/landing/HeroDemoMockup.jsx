@@ -7,25 +7,24 @@ const tabs = [
   { id: 'ranking', label: 'Ranking' },
 ];
 
+const MATCH_PERCENT = 92;
+
 const kpis = [
   { label: 'Candidatos evaluados', value: '3', icon: Users },
   { label: 'Competencias definidas', value: '5', icon: Target },
-  { label: 'Puntaje recomendado', value: '92', icon: TrendingUp },
+  { label: 'Coincidencia con el puesto', value: `${MATCH_PERCENT}%`, icon: TrendingUp },
 ];
 
 const competencias = [
-  { label: 'Venta consultiva', value: 92, color: '#4F46E5' },
-  { label: 'Prospección', value: 88, color: '#10B981' },
-  { label: 'Manejo de objeciones', value: 90, color: '#F59E0B' },
-  { label: 'Orientación al logro', value: 94, color: '#0EA5E9' },
+  { label: 'Venta consultiva', value: 92, color: '#4F46E5', bg: '#EEF2FF' },
+  { label: 'Prospección', value: 88, color: '#059669', bg: '#ECFDF5' },
+  { label: 'Manejo de objeciones', value: 90, color: '#D97706', bg: '#FFFBEB' },
+  { label: 'Orientación al logro', value: 94, color: '#0284C7', bg: '#F0F9FF' },
 ];
 
-const skillMix = [
-  { label: 'Consultiva', pct: 28, color: '#4F46E5' },
-  { label: 'Prospección', pct: 22, color: '#10B981' },
-  { label: 'Objeciones', pct: 24, color: '#F59E0B' },
-  { label: 'Logro', pct: 26, color: '#0EA5E9' },
-];
+const promedioCompetencias = Math.round(
+  competencias.reduce((sum, c) => sum + c.value, 0) / competencias.length
+);
 
 const candidatos = [
   { name: 'Candidato A', score: '92', highlight: true, tag: 'Recomendado' },
@@ -119,23 +118,37 @@ export default function HeroDemoMockup() {
         <div className="p-5">
           {tab === 'resumen' && (
             <>
-              <div className="flex items-end justify-between mb-4 pb-4 border-b" style={{ borderColor: '#F1F5F9' }}>
-                <div>
-                  <p className="text-[10px] font-medium mb-1" style={{ color: '#94A3B8' }}>Candidato destacado</p>
-                  <p className="text-sm font-semibold mb-1" style={{ color: '#0F172A' }}>Candidato A</p>
-                  <p className="font-heading font-bold text-3xl leading-none tabular-nums" style={{ color: '#4338CA' }}>
-                    92<span className="text-sm font-semibold text-slate-400">/100</span>
-                  </p>
+              <div className="mb-4 pb-4 border-b" style={{ borderColor: '#F1F5F9' }}>
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div>
+                    <p className="text-[10px] font-medium mb-1" style={{ color: '#94A3B8' }}>Candidato destacado</p>
+                    <p className="text-sm font-semibold" style={{ color: '#0F172A' }}>Candidato A</p>
+                  </div>
+                  <div className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-semibold flex-shrink-0" style={{ background: '#EEF2FF', color: '#4338CA' }}>
+                    <TrendingUp className="w-3 h-3" />
+                    +24 vs. promedio
+                  </div>
                 </div>
-                <div className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-semibold" style={{ background: '#EEF2FF', color: '#4338CA' }}>
-                  <TrendingUp className="w-3 h-3" />
-                  +24 vs. promedio
+                <p className="font-heading font-bold text-3xl leading-none tabular-nums mb-2" style={{ color: '#4338CA' }}>
+                  {MATCH_PERCENT}<span className="text-lg font-bold">%</span>
+                </p>
+                <p className="text-xs font-medium mb-2.5 leading-snug" style={{ color: '#334155' }}>
+                  Cumple el {MATCH_PERCENT}% de las habilidades necesarias para el puesto
+                </p>
+                <div className="h-2 rounded-full overflow-hidden" style={{ background: '#EEF2FF' }}>
+                  <div
+                    className="h-full rounded-full"
+                    style={{ width: `${MATCH_PERCENT}%`, background: 'linear-gradient(90deg, #6366F1 0%, #4338CA 100%)' }}
+                  />
                 </div>
+                <p className="text-[10px] mt-1.5" style={{ color: '#64748B' }}>
+                  5 competencias evaluadas contra el perfil de la vacante
+                </p>
               </div>
               <div className="rounded-xl p-3.5" style={{ background: '#F0FDF4', border: '1px solid #BBF7D0' }}>
                 <p className="text-[10px] font-semibold mb-1" style={{ color: '#047857' }}>Conclusión del evaluador</p>
                 <p className="text-xs leading-relaxed" style={{ color: '#166534', lineHeight: 1.65 }}>
-                  Perfil alineado con venta consultiva B2B. Recomendado para la terna final.
+                  Perfil con alta coincidencia ({MATCH_PERCENT}%) con venta consultiva B2B. Recomendado para la terna final.
                 </p>
               </div>
             </>
@@ -143,54 +156,57 @@ export default function HeroDemoMockup() {
 
           {tab === 'competencias' && (
             <div className="space-y-4">
-              <div className="grid grid-cols-[88px_1fr] gap-4 items-start">
-                <div className="relative w-[88px] h-[88px] mx-auto">
-                  <div
-                    className="w-full h-full rounded-full"
-                    style={{
-                      background: `conic-gradient(${skillMix.map((s, i) => {
-                        const start = skillMix.slice(0, i).reduce((a, x) => a + x.pct, 0);
-                        return `${s.color} ${start}% ${start + s.pct}%`;
-                      }).join(', ')})`,
-                    }}
-                  />
-                  <div
-                    className="absolute inset-[18%] rounded-full flex items-center justify-center"
-                    style={{ background: '#FFFFFF' }}
-                  >
-                    <span className="text-[9px] font-semibold text-center leading-tight" style={{ color: '#64748B' }}>
-                      Top
-                      <br />
-                      skills
-                    </span>
-                  </div>
+              <div
+                className="flex items-center justify-between rounded-xl px-4 py-3"
+                style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}
+              >
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#94A3B8' }}>
+                    Promedio evaluado
+                  </p>
+                  <p className="text-xs font-medium" style={{ color: '#64748B' }}>Candidato A · 4 competencias</p>
                 </div>
-                <div className="space-y-1.5">
-                  {skillMix.map((s) => (
-                    <div key={s.label} className="flex items-center gap-2 text-[10px]">
-                      <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: s.color }} />
-                      <span className="flex-1 font-medium" style={{ color: '#475569' }}>{s.label}</span>
-                      <span className="tabular-nums font-semibold" style={{ color: '#64748B' }}>{s.pct}%</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="space-y-3 pt-3 border-t" style={{ borderColor: '#F1F5F9' }}>
-                <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: '#94A3B8' }}>
-                  Puntaje por competencia
+                <p className="font-heading font-bold text-2xl tabular-nums leading-none" style={{ color: '#4338CA' }}>
+                  {promedioCompetencias}
+                  <span className="text-xs font-semibold text-slate-400">/100</span>
                 </p>
+              </div>
+
+              <div className="space-y-2.5">
                 {competencias.map((c) => (
-                  <div key={c.label}>
-                    <div className="flex justify-between text-xs mb-1">
-                      <span className="font-medium" style={{ color: '#334155' }}>{c.label}</span>
-                      <span className="font-bold tabular-nums" style={{ color: c.color }}>{c.value}</span>
+                  <div
+                    key={c.label}
+                    className="rounded-xl px-3.5 py-3"
+                    style={{ background: '#FFFFFF', border: '1px solid #E2E8F0' }}
+                  >
+                    <div className="flex items-center justify-between gap-3 mb-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span
+                          className="w-2 h-2 rounded-full flex-shrink-0"
+                          style={{ background: c.color }}
+                        />
+                        <span className="text-xs font-semibold truncate" style={{ color: '#334155' }}>{c.label}</span>
+                      </div>
+                      <span
+                        className="text-[11px] font-bold tabular-nums px-2 py-0.5 rounded-md flex-shrink-0"
+                        style={{ background: c.bg, color: c.color }}
+                      >
+                        {c.value}
+                      </span>
                     </div>
-                    <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
-                      <div className="h-full rounded-full" style={{ width: `${c.value}%`, backgroundColor: c.color }} />
+                    <div className="h-2 rounded-full overflow-hidden" style={{ background: '#F1F5F9' }}>
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{ width: `${c.value}%`, backgroundColor: c.color }}
+                      />
                     </div>
                   </div>
                 ))}
               </div>
+
+              <p className="text-[10px] leading-relaxed px-0.5" style={{ color: '#94A3B8' }}>
+                Mismas competencias y escala para todos los candidatos de la vacante.
+              </p>
             </div>
           )}
 

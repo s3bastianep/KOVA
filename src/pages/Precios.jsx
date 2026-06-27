@@ -16,12 +16,7 @@ import {
 } from 'lucide-react';
 import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
+import PreciosCandidatoDashboard from '@/components/landing/PreciosCandidatoDashboard';
 
 const includes = [
   { icon: Target, label: 'Diagnóstico de vacante y perfil ideal' },
@@ -39,38 +34,67 @@ const includes = [
 ];
 
 const stats = [
-  { value: '100%', label: 'del proceso de reclutamiento a cargo de Kova' },
-  { value: '1', label: 'especialista asignado por vacante comercial' },
-  { value: '3+', label: 'candidatos comparados con el mismo criterio' },
-  { value: '5+', label: 'competencias comerciales evaluadas por rol' },
+  {
+    pct: 67,
+    label: 'Menos entrevistas por contratación al evaluar competencias comerciales antes de decidir.',
+  },
+  {
+    pct: 80,
+    label: 'Mayor acierto cuando la selección se basa en desempeño evaluado, no solo en la entrevista.',
+  },
+  {
+    pct: 44,
+    label: 'Menor rotación temprana frente a contratar sin evaluación comercial especializada.',
+  },
+  {
+    pct: 90,
+    label: 'Decisiones más ágiles cuando dirección comercial y talento humano usan el mismo informe.',
+  },
 ];
 
-const faqs = [
-  {
-    q: '¿Cómo funciona la cotización?',
-    a: 'Cada vacante comercial es distinta. Después del diagnóstico inicial definimos alcance, perfil ideal y entregables. La propuesta se adapta a lo que tu empresa necesita y a la complejidad del rol.',
-  },
-  {
-    q: '¿Qué incluye el servicio de Kova?',
-    a: 'Nos encargamos del proceso completo: entender la vacante, buscar talento, evaluar por competencias comerciales y entregarte una terna comparada con sustento para que decidas con criterio.',
-  },
-  {
-    q: '¿Es una plataforma o un software?',
-    a: 'No. Kova es una firma de reclutamiento comercial. Trabajamos contigo de forma programada: un especialista conduce el proceso y tú recibes el informe y la recomendación para contratar.',
-  },
-  {
-    q: '¿Puedo contratar solo la evaluación?',
-    a: 'El servicio se diseña según tu necesidad. Si ya tienes candidatos, podemos enfocarnos en evaluación comparativa. Si partes desde cero, incluimos búsqueda, evaluación y terna recomendada.',
-  },
-  {
-    q: '¿Cuánto tarda un proceso?',
-    a: 'Depende del rol, del mercado y del nivel de exigencia del perfil. En el diagnóstico inicial te damos un estimado realista según tu vacante y contexto comercial.',
-  },
-  {
-    q: '¿Hay costo por el diagnóstico inicial?',
-    a: 'El diagnóstico comercial inicial no tiene costo. Sirve para entender tu vacante, alinear criterios y, si encaja, presentarte una propuesta de servicio clara.',
-  },
-];
+function StatRing({ pct, label }) {
+  const size = 120;
+  const stroke = 5;
+  const radius = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (pct / 100) * circumference;
+
+  return (
+    <div className="flex flex-col items-center text-center">
+      <div className="relative mb-5" style={{ width: size, height: size }}>
+        <svg width={size} height={size} className="block -rotate-90" aria-hidden>
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            fill="none"
+            stroke="#E2E8F0"
+            strokeWidth={stroke}
+          />
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            fill="none"
+            stroke="#4338CA"
+            strokeWidth={stroke}
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
+            strokeLinecap="round"
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="font-heading font-bold text-2xl tabular-nums leading-none" style={{ color: '#4338CA' }}>
+            {pct}%
+          </span>
+        </div>
+      </div>
+      <p className="text-sm leading-relaxed max-w-[220px]" style={{ color: '#475569', lineHeight: 1.65 }}>
+        {label}
+      </p>
+    </div>
+  );
+}
 
 export default function Precios() {
   return (
@@ -95,9 +119,12 @@ export default function Precios() {
             >
               Mejor talento comercial, vacante a vacante.
             </h1>
-            <p className="text-base lg:text-lg mb-8 max-w-lg" style={{ color: 'rgba(255,255,255,0.65)', lineHeight: 1.75 }}>
-              No vendemos licencias ni autoservicio. Kova recluta, evalúa y te presenta el perfil ideal según lo
+            <p className="text-base lg:text-lg mb-3 max-w-lg" style={{ color: 'rgba(255,255,255,0.65)', lineHeight: 1.75 }}>
+              Reclutamos, evaluamos por competencias comerciales y te presentamos el talento ideal según lo
               que tu empresa necesita y cómo vende.
+            </p>
+            <p className="text-sm mb-8 max-w-lg" style={{ color: 'rgba(255,255,255,0.45)', lineHeight: 1.7 }}>
+              Cada vacante recibe un informe comparativo con el sustento para decidir con criterio.
             </p>
             <Link
               to="/#acceso"
@@ -108,28 +135,8 @@ export default function Precios() {
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
-          <div className="hidden lg:block">
-            <div
-              className="rounded-2xl p-6"
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
-            >
-              <p className="text-[10px] font-semibold uppercase tracking-wider mb-4" style={{ color: '#A5B4FC' }}>
-                Qué hacemos por ti
-              </p>
-              <div className="space-y-3">
-                {['Definimos el perfil según tu proceso comercial', 'Buscamos y evaluamos candidatos', 'Te entregamos terna comparada con criterio'].map((step, i) => (
-                  <div key={step} className="flex items-start gap-3">
-                    <span
-                      className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0"
-                      style={{ background: 'rgba(99,102,241,0.25)', color: '#C7D2FE' }}
-                    >
-                      {i + 1}
-                    </span>
-                    <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{step}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
+          <div className="mt-8 lg:mt-0">
+            <PreciosCandidatoDashboard />
           </div>
         </div>
       </section>
@@ -192,22 +199,14 @@ export default function Precios() {
             className="font-heading font-bold mb-4"
             style={{ fontSize: 'clamp(1.5rem, 2.2vw, 2rem)', color: '#0F172A', letterSpacing: '-0.025em' }}
           >
-            Reclutamiento comercial con resultados que importan
+            Resultados que construyen valor en cada contratación
           </h2>
           <p className="text-base max-w-2xl mx-auto mb-14" style={{ color: '#64748B', lineHeight: 1.75 }}>
-            Nos encargamos del proceso para que contrates al perfil correcto, no al que mejor se vende en una entrevista.
+            Contratar comercial con criterio reduce errores, acelera la decisión y mejora la retención del equipo.
           </p>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
-            {stats.map(({ value, label }) => (
-              <div key={label} className="flex flex-col items-center">
-                <div
-                  className="w-28 h-28 rounded-full flex items-center justify-center mb-4"
-                  style={{ background: '#EEF2FF', border: '3px solid #C7D2FE' }}
-                >
-                  <span className="font-heading font-bold text-2xl tabular-nums" style={{ color: '#4338CA' }}>{value}</span>
-                </div>
-                <p className="text-sm font-medium max-w-[200px]" style={{ color: '#475569', lineHeight: 1.6 }}>{label}</p>
-              </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+            {stats.map(({ pct, label }) => (
+              <StatRing key={label} pct={pct} label={label} />
             ))}
           </div>
         </div>
@@ -247,30 +246,6 @@ export default function Precios() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="py-20 lg:py-24 px-6 lg:px-8 bg-white">
-        <div className="max-w-3xl mx-auto">
-          <h2
-            className="font-heading font-bold text-center mb-10"
-            style={{ fontSize: 'clamp(1.5rem, 2.2vw, 2rem)', color: '#0F172A', letterSpacing: '-0.025em' }}
-          >
-            Preguntas frecuentes
-          </h2>
-          <Accordion type="single" collapsible className="w-full">
-            {faqs.map(({ q, a }, i) => (
-              <AccordionItem key={q} value={`item-${i}`} style={{ borderColor: '#E2E8F0' }}>
-                <AccordionTrigger className="text-left font-semibold hover:no-underline" style={{ color: '#0F172A' }}>
-                  {q}
-                </AccordionTrigger>
-                <AccordionContent className="text-sm leading-relaxed" style={{ color: '#64748B', lineHeight: 1.75 }}>
-                  {a}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
         </div>
       </section>
 
