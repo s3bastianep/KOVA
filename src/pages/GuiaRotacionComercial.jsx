@@ -1,32 +1,26 @@
-import Navbar from '@/components/landing/Navbar';
-import Footer from '@/components/landing/Footer';
+import GuiaPageLayout from '@/components/guia/GuiaPageLayout';
 import {
-  GuiaHeroSplit,
   GuiaDivider,
   GuiaSectionTitle,
   GuiaProse,
   GuiaNumberedItem,
   GuiaCallout,
   GuiaArticleCTA,
-  GuiaArticleShell,
   GuiaInlineImage,
 } from '@/components/guia/GuiaArticleLayout';
 import { GUIA_ROTACION } from '@/components/guia/guiaRoutes';
+import { TOC_ROTACION } from '@/components/guia/guiaToc';
 
 export default function GuiaRotacionComercial() {
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-
-      <GuiaHeroSplit
-        label="Recursos para la contratación"
-        title="Cómo las señales débiles de contratación convierten la escasez comercial en rotación"
-        readTime="14 minutos"
-        image="/images/guia-rotacion-hero.png"
-        imageAlt="Profesional comercial en transición laboral por mala contratación"
-      />
-
-      <GuiaArticleShell currentPath={GUIA_ROTACION}>
+    <GuiaPageLayout
+      currentPath={GUIA_ROTACION}
+      title="Cómo las señales débiles de contratación convierten la escasez comercial en rotación"
+      readTime="14 min"
+      heroImage="/images/guia-rotacion-hero.png"
+      heroImageAlt="Profesional comercial en transición laboral por mala contratación"
+      tocItems={TOC_ROTACION}
+    >
         <GuiaProse>
           Muchas empresas B2B viven un ciclo frustrante: les cuesta encontrar vendedores, contratan con prisa,
           el nuevo comercial no rinde y se va en pocos meses. La vacante queda abierta otra vez y el equipo
@@ -219,9 +213,6 @@ export default function GuiaRotacionComercial() {
           secondaryTo="/guia-evaluacion-comercial"
         />
 
-      </GuiaArticleShell>
-
-      <Footer />
-    </div>
+    </GuiaPageLayout>
   );
 }

@@ -9,7 +9,7 @@ export default function GuiaSidebar({ currentPath }) {
     <aside className="hidden lg:block">
       <div className="sticky top-28">
         <p className="text-sm font-semibold mb-5" style={{ color: '#0F172A' }}>
-          Más recursos de Kova
+          Artículos recientes
         </p>
         <div className="space-y-5">
           {related.map(({ path, title, excerpt, image, readTime }) => (

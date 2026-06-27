@@ -1,13 +1,10 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
-import Navbar from '@/components/landing/Navbar';
-import Footer from '@/components/landing/Footer';
-import GuiaTableOfContents from '@/components/guia/GuiaTableOfContents';
-import GuiaSidebar from '@/components/guia/GuiaSidebar';
+import { ArrowRight } from 'lucide-react';
+import GuiaPageLayout from '@/components/guia/GuiaPageLayout';
 import GuiaIssuesSummary from '@/components/guia/GuiaIssuesSummary';
-import { GUIA_CONTRATAR, getRelatedGuides } from '@/components/guia/guiaRoutes';
-import { TOC_ITEMS, ISSUES, SKILLS } from '@/components/guia/guiaContent';
+import { GUIA_CONTRATAR } from '@/components/guia/guiaRoutes';
+import { TOC_CONTRATAR } from '@/components/guia/guiaToc';
+import { ISSUES, SKILLS } from '@/components/guia/guiaContent';
 
 const prose = 'text-[17px] leading-[1.85]';
 const proseColor = { color: '#334155' };
@@ -51,79 +48,15 @@ function IssueBlock({ issue }) {
 }
 
 export default function GuiaContratarComercial() {
-  const [activeId, setActiveId] = useState(TOC_ITEMS[0].id);
-
-  useEffect(() => {
-    const ids = TOC_ITEMS.map((item) => item.id);
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (visible[0]?.target?.id) setActiveId(visible[0].target.id);
-      },
-      { rootMargin: '-20% 0px -60% 0px', threshold: [0, 0.25, 0.5] }
-    );
-
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-
-      {/* Hero editorial */}
-      <header className="pt-28 lg:pt-32 pb-10" style={{ background: '#FAFBFF', borderBottom: '1px solid #E2E8F0' }}>
-        <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm font-medium mb-6 transition-colors hover:opacity-80"
-            style={{ color: '#64748B' }}
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Recursos para atraer talento comercial
-          </Link>
-
-          <h1
-            className="font-heading font-bold max-w-4xl mb-6"
-            style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', letterSpacing: '-0.03em', lineHeight: 1.1, color: '#0F172A' }}
-          >
-            5 problemas al atraer talento comercial y cómo resolverlos
-          </h1>
-
-          <div className="flex items-center gap-3 mb-8">
-            <div
-              className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white"
-              style={{ background: '#4338CA' }}
-            >
-              K
-            </div>
-            <div>
-              <p className="text-sm font-semibold" style={{ color: '#0F172A' }}>Equipo Kova</p>
-              <p className="text-xs" style={{ color: '#64748B' }}>Especialistas en selección comercial B2B · Lectura de 12 min</p>
-            </div>
-          </div>
-
-          <div className="rounded-2xl overflow-hidden aspect-[21/9] max-h-[420px]" style={{ border: '1px solid #E2E8F0' }}>
-            <img
-              src="/images/guia-reunion-comercial.png"
-              alt="Equipo comercial en reunión de resultados y pipeline"
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-      </header>
-
-      {/* 3-column body */}
-      <div className="max-w-6xl mx-auto px-6 lg:px-8 py-12 lg:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px] gap-10 xl:gap-14">
-
-          <GuiaTableOfContents activeId={activeId} />
-
-          <main className="min-w-0 max-w-[720px] lg:max-w-none mx-auto lg:mx-0">
+    <GuiaPageLayout
+      currentPath={GUIA_CONTRATAR}
+      title="5 problemas al atraer talento comercial y cómo resolverlos"
+      readTime="12 min"
+      heroImage="/images/guia-reunion-comercial.png"
+      heroImageAlt="Equipo comercial en reunión de resultados y pipeline"
+      tocItems={TOC_CONTRATAR}
+    >
             <p className={`${prose} mb-8`} style={proseColor}>
               Muchas empresas asumen que atraer talento comercial es cuestión de identificar a los más extrovertidos o a quienes mejor cuentan su experiencia. Pero en B2B hay muchos más obstáculos: roles mal definidos, entrevistas que no predicen desempeño y evaluaciones genéricas que no miden ventas.
             </p>
@@ -315,43 +248,6 @@ export default function GuiaContratarComercial() {
                 </p>
               </div>
             </div>
-          </main>
-
-          <GuiaSidebar currentPath={GUIA_CONTRATAR} />
-        </div>
-      </div>
-
-      {/* Mobile related + TOC */}
-      <div className="xl:hidden border-t px-6 py-8 space-y-8" style={{ borderColor: '#E2E8F0', background: '#F8FAFC' }}>
-        <div>
-          <p className="text-sm font-semibold mb-4" style={{ color: '#0F172A' }}>Más recursos de Kova</p>
-          <div className="space-y-4">
-            {getRelatedGuides(GUIA_CONTRATAR).map(({ path, title, readTime }) => (
-              <Link key={path} to={path} className="block rounded-xl p-4 bg-white" style={{ border: '1px solid #E2E8F0' }}>
-                <p className="text-sm font-semibold mb-0.5" style={{ color: '#4338CA' }}>{title}</p>
-                <p className="text-xs" style={{ color: '#94A3B8' }}>Lectura de {readTime}</p>
-              </Link>
-            ))}
-          </div>
-        </div>
-        <div>
-          <p className="text-sm font-semibold mb-4" style={{ color: '#0F172A' }}>En esta publicación</p>
-          <div className="flex flex-wrap gap-2">
-            {TOC_ITEMS.map(({ id, label }) => (
-              <a
-                key={id}
-                href={`#${id}`}
-                className="text-xs font-medium px-3 py-2 rounded-lg"
-                style={{ background: '#FFFFFF', color: '#4338CA', border: '1px solid #E0E7FF' }}
-              >
-                {label}
-              </a>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <Footer />
-    </div>
+    </GuiaPageLayout>
   );
 }

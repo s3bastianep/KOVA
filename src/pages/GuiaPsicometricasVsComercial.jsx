@@ -1,32 +1,26 @@
-import Navbar from '@/components/landing/Navbar';
-import Footer from '@/components/landing/Footer';
+import GuiaPageLayout from '@/components/guia/GuiaPageLayout';
 import {
-  GuiaHeroSplit,
   GuiaDivider,
   GuiaSectionTitle,
   GuiaProse,
   GuiaNumberedItem,
   GuiaCallout,
   GuiaArticleCTA,
-  GuiaArticleShell,
   GuiaInlineImage,
 } from '@/components/guia/GuiaArticleLayout';
 import { GUIA_PSICOMETRICAS } from '@/components/guia/guiaRoutes';
+import { TOC_PSICOMETRICAS } from '@/components/guia/guiaToc';
 
 export default function GuiaPsicometricasVsComercial() {
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-
-      <GuiaHeroSplit
-        label="Recursos para la contratación"
-        title="Pruebas psicométricas frente a evaluación comercial: ¿Cuál predice mejor el desempeño?"
-        readTime="16 minutos"
-        image="/images/guia-psicometricas-hero.png"
-        imageAlt="Profesionales en evaluación comercial de candidatos"
-      />
-
-      <GuiaArticleShell currentPath={GUIA_PSICOMETRICAS}>
+    <GuiaPageLayout
+      currentPath={GUIA_PSICOMETRICAS}
+      title="Pruebas psicométricas frente a evaluación comercial: ¿Cuál predice mejor el desempeño?"
+      readTime="16 min"
+      heroImage="/images/guia-psicometricas-hero.png"
+      heroImageAlt="Profesionales en evaluación comercial de candidatos"
+      tocItems={TOC_PSICOMETRICAS}
+    >
         <GuiaProse>
           Contratar comercial es una de las decisiones con mayor impacto en ingresos. Sin embargo, muchas empresas
           siguen apoyándose en pruebas psicométricas genéricas, entrevistas subjetivas y currículums que no demuestran
@@ -210,9 +204,6 @@ export default function GuiaPsicometricasVsComercial() {
           secondaryTo="/guia-evaluacion-comercial"
         />
 
-      </GuiaArticleShell>
-
-      <Footer />
-    </div>
+    </GuiaPageLayout>
   );
 }

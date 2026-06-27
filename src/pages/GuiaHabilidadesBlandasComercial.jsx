@@ -1,32 +1,26 @@
-import Navbar from '@/components/landing/Navbar';
-import Footer from '@/components/landing/Footer';
+import GuiaPageLayout from '@/components/guia/GuiaPageLayout';
 import {
-  GuiaHeroSplit,
   GuiaDivider,
   GuiaSectionTitle,
   GuiaProse,
   GuiaNumberedItem,
   GuiaCallout,
   GuiaArticleCTA,
-  GuiaArticleShell,
   GuiaInlineImage,
 } from '@/components/guia/GuiaArticleLayout';
 import { GUIA_HABILIDADES } from '@/components/guia/guiaRoutes';
+import { TOC_HABILIDADES } from '@/components/guia/guiaToc';
 
 export default function GuiaHabilidadesBlandasComercial() {
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-
-      <GuiaHeroSplit
-        label="Recursos para la contratación"
-        title="Guía para líderes comerciales: cómo evaluar habilidades blandas en la contratación por competencias"
-        readTime="15 minutos"
-        image="/images/guia-seleccion-digital.png"
-        imageAlt="Equipo comercial en proceso de selección y evaluación de candidatos"
-      />
-
-      <GuiaArticleShell currentPath={GUIA_HABILIDADES}>
+    <GuiaPageLayout
+      currentPath={GUIA_HABILIDADES}
+      title="Guía para líderes comerciales: cómo evaluar habilidades blandas en la contratación por competencias"
+      readTime="15 min"
+      heroImage="/images/guia-habilidades-hero.png"
+      heroImageAlt="Equipo comercial en reunión de selección y evaluación de candidatos"
+      tocItems={TOC_HABILIDADES}
+    >
         <GuiaProse>
           Contratar comercial exige medir mucho más que años de experiencia o cuota alcanzada en el pasado. Las
           habilidades blandas —comunicación, resiliencia, orientación al cliente, trabajo en equipo— determinan si
@@ -91,8 +85,8 @@ export default function GuiaHabilidadesBlandasComercial() {
         </GuiaProse>
 
         <GuiaInlineImage
-          src="/images/guia-reunion-comercial.png"
-          alt="Equipo comercial en reunión de evaluación de candidatos"
+          src="/images/guia-habilidades-inline-1.png"
+          alt="Mapa de competencias comerciales en pizarra"
           caption="Sin criterio estructurado, la entrevista favorece al que mejor se vende, no al que mejor vende."
         />
 
@@ -126,8 +120,8 @@ export default function GuiaHabilidadesBlandasComercial() {
         </GuiaProse>
 
         <GuiaInlineImage
-          src="/images/guia-evaluacion-comercial.png"
-          alt="Evaluación comparativa de competencias comerciales entre candidatos"
+          src="/images/guia-habilidades-inline-2.png"
+          alt="Evaluación comparativa de perfiles comerciales"
         />
 
         <GuiaNumberedItem num={1} title="Evaluaciones de comportamiento comercial">
@@ -243,9 +237,7 @@ export default function GuiaHabilidadesBlandasComercial() {
           secondaryLabel="Ver guía de evaluación comercial"
           secondaryTo="/guia-evaluacion-comercial"
         />
-      </GuiaArticleShell>
 
-      <Footer />
-    </div>
+    </GuiaPageLayout>
   );
 }

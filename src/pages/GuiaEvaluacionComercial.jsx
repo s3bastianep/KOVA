@@ -1,31 +1,26 @@
-import Navbar from '@/components/landing/Navbar';
-import Footer from '@/components/landing/Footer';
+import GuiaPageLayout from '@/components/guia/GuiaPageLayout';
 import {
-  GuiaHeroSplit,
   GuiaDivider,
   GuiaSectionTitle,
   GuiaProse,
   GuiaNumberedItem,
   GuiaCallout,
   GuiaArticleCTA,
-  GuiaArticleShell,
+  GuiaInlineImage,
 } from '@/components/guia/GuiaArticleLayout';
 import { GUIA_EVALUACION } from '@/components/guia/guiaRoutes';
+import { TOC_EVALUACION } from '@/components/guia/guiaToc';
 
 export default function GuiaEvaluacionComercial() {
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-
-      <GuiaHeroSplit
-        label="Recursos para la contratación"
-        title="La guía completa para la evaluación comercial"
-        readTime="18 minutos"
-        image="/images/guia-evaluacion-comercial.png"
-        imageAlt="Equipo comercial evaluando candidatos con datos y criterio"
-      />
-
-      <GuiaArticleShell currentPath={GUIA_EVALUACION}>
+    <GuiaPageLayout
+      currentPath={GUIA_EVALUACION}
+      title="La guía completa para la evaluación comercial"
+      readTime="18 min"
+      heroImage="/images/guia-evaluacion-comercial.png"
+      heroImageAlt="Equipo comercial evaluando candidatos con datos y criterio"
+      tocItems={TOC_EVALUACION}
+    >
         {/* Intro */}
         <GuiaProse>
           Contratar comercial sin evaluar competencias es una apuesta. Entrevistas, referencias y años de experiencia
@@ -88,6 +83,12 @@ export default function GuiaEvaluacionComercial() {
           tanto, los mejores candidatos aceptan otras ofertas. Un proceso estructurado con evaluación comercial reduce
           iteraciones y acelera la decisión.
         </GuiaNumberedItem>
+
+        <GuiaInlineImage
+          src="/images/guia-seleccion-digital.png"
+          alt="Profesionales evaluando candidatos comerciales con criterio estructurado"
+          caption="La evaluación comercial coloca al candidato en escenarios reales del rol, no solo en una entrevista convencional."
+        />
 
         <GuiaDivider />
 
@@ -277,9 +278,6 @@ export default function GuiaEvaluacionComercial() {
           secondaryTo="/#proceso"
         />
 
-      </GuiaArticleShell>
-
-      <Footer />
-    </div>
+    </GuiaPageLayout>
   );
 }

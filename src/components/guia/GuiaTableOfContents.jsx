@@ -1,14 +1,12 @@
-import { TOC_ITEMS } from './guiaContent';
-
-export default function GuiaTableOfContents({ activeId }) {
+export default function GuiaTableOfContents({ items, activeId, className = 'hidden xl:block' }) {
   return (
-    <aside className="hidden xl:block">
+    <aside className={className}>
       <div className="sticky top-28">
         <p className="text-sm font-semibold mb-4" style={{ color: '#0F172A' }}>
           En esta publicación
         </p>
         <nav className="space-y-1">
-          {TOC_ITEMS.map(({ id, label }) => (
+          {items.map(({ id, label }) => (
             <a
               key={id}
               href={`#${id}`}
