@@ -28,7 +28,7 @@ export default function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-7">
-          {[['Problema', 'problema'], ['Filosofía', 'filosofia'], ['Proceso', 'proceso'], ['Entregable', 'entregable'], ['Acceso', 'acceso']].map(([label, id]) => (
+          {[['Problema', 'problema'], ['Filosofía', 'filosofia'], ['Proceso', 'proceso'], ['Entregable', 'entregable'], ['Resultados', 'resultados'], ['Acceso', 'acceso']].map(([label, id]) => (
             <button key={id} onClick={() => scrollTo(id)}
               className="text-sm font-medium transition-colors"
               style={{ color: '#6B7280' }}

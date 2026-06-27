@@ -70,7 +70,7 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="hidden lg:block">
+          <div className="mt-10 lg:mt-0">
             <HeroDemoMockup />
           </div>
         </div>

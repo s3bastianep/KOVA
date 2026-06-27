@@ -36,7 +36,7 @@ export default function Entregable() {
           </div>
         </div>
 
-        <div className="rounded-2xl overflow-hidden bg-white" style={{ border: '1px solid #E5E7EB', boxShadow: '0 20px 60px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.04)' }}>
+        <div className="rounded-2xl overflow-hidden bg-white" style={{ border: '1px solid #E5E7EB', boxShadow: '0 24px 64px rgba(99,102,241,0.10), 0 8px 24px rgba(0,0,0,0.05)' }}>
           <div className="flex items-center justify-between px-5 py-3" style={{ background: '#F7F8FA', borderBottom: '1px solid #E8E8E3' }}>
             <div className="flex gap-1.5">
               <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#FECACA' }} />
