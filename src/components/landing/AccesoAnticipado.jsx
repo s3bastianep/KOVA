@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { submitEarlyAccess } from '@/api/earlyAccess';
 import { ArrowRight, CheckCircle2, ChevronRight } from 'lucide-react';
 
 const desafios = [
@@ -35,9 +35,14 @@ export default function AccesoAnticipado() {
       return;
     }
     setLoading(true);
-    await base44.entities.EarlyAccess.create(form);
-    setLoading(false);
-    setDone(true);
+    try {
+      await submitEarlyAccess(form);
+      setDone(true);
+    } catch (err) {
+      setError(err.message || 'No pudimos enviar tu solicitud. Intenta de nuevo.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

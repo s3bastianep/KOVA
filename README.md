@@ -1,77 +1,45 @@
-# Base44 Project
+# KOVA
 
-Use this repository to run and edit the app locally, then publish changes back through Base44.
+Landing page de Kova — React + Vite.
 
-Any change pushed to the repo will also be reflected in the Base44 Builder.
-
-## Prerequisites
-
-1. Clone the repository using the project's Git URL.
-2. Navigate to the project directory.
-3. Install dependencies: `npm install`.
-4. Install the Base44 CLI: `npm install -g base44@latest`.
-
-See the [Base44 CLI docs](https://docs.base44.com/developers/references/cli/get-started/overview) if you want to run Base44 commands directly.
-
-## Run Locally
-
-Run the full local development environment from the project root:
+## Desarrollo local
 
 ```bash
-base44 dev
-```
-
-`base44 dev` starts the local Base44 development backend and, when this app is configured for it, also starts the frontend dev server for you. Use the frontend URL printed by the command.
-
-For example, when the Base44 project config includes a `serveCommand`, `base44 dev` can launch the frontend too:
-
-```json5
-{
-  "site": {
-    "serveCommand": "npm run dev"
-  }
-}
-```
-
-In a Base44 project this lives in `base44/config.jsonc`.
-
-## Run Only The Frontend
-
-If you only want to work on the frontend against the hosted Base44 backend, run:
-
-```bash
+npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite.
+Abre la URL que imprime Vite (normalmente `http://localhost:5173`).
 
-## Use The Hosted Backend
+## Formulario de contacto
 
-For frontend-only development, create or update `.env.local` in the project root:
+El formulario de acceso anticipado envía datos a la URL definida en `VITE_EARLY_ACCESS_API_URL`.
 
-```bash
-VITE_BASE44_APP_ID=your_app_id
-VITE_BASE44_APP_BASE_URL=https://your-app.base44.app
-```
-
-`VITE_BASE44_APP_ID` identifies the Base44 app.
-
-`VITE_BASE44_APP_BASE_URL` tells the Base44 Vite plugin where to send local `/api` requests. Point it at your deployed Base44 app URL when you want the local frontend to use the hosted backend.
-
-When you use `base44 dev`, the command injects the local Base44 values for you, so `.env.local` is mainly needed for frontend-only workflows.
-
-## Publish Your Changes
-
-After pushing your changes to git, open the Base44 dashboard and publish the app:
+Crea `.env.local` en la raíz del proyecto:
 
 ```bash
-base44 dashboard open
+VITE_EARLY_ACCESS_API_URL=https://tu-api.com/early-access
 ```
 
-## Docs & Support
+Puedes usar Formspree, un webhook propio o un backend en Railway.
 
-Documentation: [https://docs.base44.com/Integrations/Using-GitHub](https://docs.base44.com/Integrations/Using-GitHub)
+## Deploy en Railway
 
-Base44 CLI command reference: [https://docs.base44.com/developers/references/cli/commands/introduction](https://docs.base44.com/developers/references/cli/commands/introduction)
+1. Conecta el repo de GitHub en [railway.app](https://railway.app).
+2. Railway detectará Node.js automáticamente.
+3. **Build command:** `npm run build`
+4. **Start command:** `npm run start`
+5. Añade la variable `VITE_EARLY_ACCESS_API_URL` si ya tienes endpoint para el formulario.
+6. Genera un dominio en **Settings → Networking**.
 
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+Cada push a `master` redeploya la app.
+
+## Scripts
+
+| Comando | Descripción |
+|---|---|
+| `npm run dev` | Servidor de desarrollo |
+| `npm run build` | Build de producción en `dist/` |
+| `npm run start` | Sirve `dist/` (Railway) |
+| `npm run preview` | Preview local del build |
+| `npm run lint` | ESLint |
