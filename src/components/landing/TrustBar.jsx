@@ -1,7 +1,7 @@
 import { Shield, Clock, Target, FileCheck } from 'lucide-react';
 
 const items = [
-  { icon: Target, label: 'Evaluación por competencias', desc: 'Alineada a cada vacante' },
+  { icon: Target, label: 'Talento ideal por vacante', desc: 'Perfil y competencias alineadas al rol' },
   { icon: FileCheck, label: 'Recomendación argumentada', desc: 'Informe para decidir con criterio' },
   { icon: Clock, label: 'Respuesta en 48 horas', desc: 'Diagnóstico inicial sin costo' },
   { icon: Shield, label: 'Datos confidenciales', desc: 'Información tratada con reserva' },

@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Shield, Mail } from 'lucide-react';
-
-const GUIDE_PATH = '/guia-contratar-comercial';
+import { GUIAS } from '@/components/guia/guiaRoutes';
 
 const landingLinks = [
   ['Problema', 'problema'],
@@ -35,7 +34,7 @@ export default function Footer() {
               <span className="font-heading font-semibold text-base text-white">Kova</span>
             </Link>
             <p className="text-sm leading-relaxed mb-5 max-w-xs" style={{ color: 'rgba(255,255,255,0.55)', lineHeight: 1.75 }}>
-              Especialistas en selección de talento comercial para empresas B2B en Latinoamérica.
+              Especialistas en atraer y evaluar talento comercial ideal para empresas B2B en Latinoamérica.
             </p>
             <a
               href="mailto:contacto@kova.com.co"
@@ -64,15 +63,18 @@ export default function Footer() {
                   {label}
                 </button>
               ))}
-              <Link
-                to={GUIDE_PATH}
-                className="text-sm font-medium transition-colors w-fit"
-                style={{ color: 'rgba(255,255,255,0.55)' }}
-                onMouseEnter={e => { e.currentTarget.style.color = '#FFFFFF'; }}
-                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.55)'; }}
-              >
-                Guía: contratar comercial
-              </Link>
+              {GUIAS.map(({ path, title }) => (
+                <Link
+                  key={path}
+                  to={path}
+                  className="text-sm font-medium transition-colors w-fit block"
+                  style={{ color: 'rgba(255,255,255,0.55)' }}
+                  onMouseEnter={e => { e.currentTarget.style.color = '#FFFFFF'; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.55)'; }}
+                >
+                  {title}
+                </Link>
+              ))}
             </div>
           </div>
 

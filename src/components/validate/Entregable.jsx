@@ -16,7 +16,7 @@ const entregables = [
   {
     icon: ClipboardCheck,
     title: 'Recomendación argumentada',
-    desc: 'Terna final con sustento documentado para que contrates con confianza, no con corazonada.',
+    desc: 'Terna final con sustento documentado para que elijas al talento ideal con confianza, no con corazonada.',
   },
   {
     icon: Users2,
@@ -48,8 +48,8 @@ export default function Entregable() {
               align="left"
               className="mb-8 lg:mb-10"
               eyebrow="Qué recibes"
-              title="No recibes hojas de vida. Recibes la información para contratar bien."
-              description="Un entregable concreto que reduce el riesgo de mala contratación y alinea a comercial y talento humano en la misma decisión."
+              title="No recibes hojas de vida. Recibes el talento comparado con criterio."
+              description="Un entregable concreto que te ayuda a identificar al perfil comercial ideal y alinea a comercial y talento humano en la misma decisión."
             />
 
             <div className="grid sm:grid-cols-2 gap-4 mb-8">
@@ -85,7 +85,7 @@ export default function Entregable() {
 
             <ul className="space-y-3 mb-8">
               {[
-                'Menos rotación por contrataciones mal alineadas al rol',
+                'Menos rotación por perfiles mal alineados al rol',
                 'Decisión documentada que puedes compartir con dirección',
                 'Criterio objetivo: dejas de depender solo de la entrevista',
               ].map((item) => (

@@ -3,9 +3,9 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import HeroDemoMockup from '@/components/landing/HeroDemoMockup';
 
 const proofPoints = [
+  'Identificamos el perfil comercial ideal para tu vacante',
   'Metodología especializada en ventas B2B',
-  'Informe comparativo para tu equipo directivo',
-  'Diagnóstico inicial sin compromiso',
+  'Informe comparativo para decidir con criterio',
 ];
 
 export default function Hero() {
@@ -33,19 +33,21 @@ export default function Hero() {
               style={{ background: '#FFFFFF', color: '#4338CA', border: '1px solid #E0E7FF', boxShadow: '0 1px 2px rgba(15,23,42,0.04)' }}
             >
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#6366F1' }} />
-              Selección comercial para empresas B2B
+              Atracción de talento comercial B2B
             </div>
 
             <h1
               className="font-heading font-bold mb-6"
               style={{ fontSize: 'clamp(2rem, 3.5vw, 3.1rem)', letterSpacing: '-0.035em', lineHeight: 1.06, color: '#0F172A' }}
             >
-              Más precisión para contratar{' '}
-              <span style={{ color: '#4338CA' }}>talento comercial.</span>
+              Atraemos el{' '}
+              <span style={{ color: '#4338CA' }}>talento comercial ideal</span>{' '}
+              para tu vacante.
             </h1>
 
             <p className="text-base lg:text-lg mb-8 max-w-[520px]" style={{ color: '#64748B', lineHeight: 1.75 }}>
-              Una excelente contratación comercial empieza por entender la vacante y luego identificar quiénes sí tienen las competencias necesarias para desempeñarla.
+              No buscamos llenar puestos: entendemos tu vacante, evaluamos competencias comerciales y te presentamos
+              el perfil que sí puede desempeñar el rol en tu contexto.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 mb-10">

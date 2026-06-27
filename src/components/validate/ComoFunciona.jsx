@@ -15,8 +15,8 @@ const pasos = [
     desc: 'Análisis estructurado de capacidades comerciales, no solo entrevistas convencionales.',
   },
   {
-    title: 'Presentamos una terna argumentada',
-    desc: 'Recomendación comparativa con sustento para facilitar la decisión de contratación.',
+    title: 'Presentamos el talento ideal comparado',
+    desc: 'Terna argumentada con sustento para que elijas al perfil comercial correcto con confianza.',
   },
 ];
 
@@ -36,8 +36,8 @@ export default function ComoFunciona() {
             dark
             className="mb-0 lg:mb-2"
             eyebrow="Cómo funciona"
-            title="La selección comercial no debería ser genérica."
-            description="Diseñamos el proceso alrededor de lo que cada vacante realmente necesita: competencias, contexto comercial y criterios de éxito claros."
+            title="Atraer talento comercial no debería ser a ciegas."
+            description="Diseñamos el proceso alrededor de lo que cada vacante realmente necesita: perfil ideal, competencias, contexto comercial y criterios de éxito claros."
           />
 
           <div className="space-y-3 lg:pt-2">

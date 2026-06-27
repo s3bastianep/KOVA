@@ -9,8 +9,8 @@ const cards = [
   },
   {
     num: '02',
-    title: 'Contratar mal cuesta tiempo y oportunidades',
-    desc: 'Una mala decisión puede significar meses perdidos, rotación elevada y cuota comercial estancada.',
+    title: 'Elegir al perfil equivocado cuesta tiempo y oportunidades',
+    desc: 'Atraer talento sin el criterio correcto puede significar meses perdidos, rotación elevada y cuota comercial estancada.',
   },
   {
     num: '03',
@@ -25,8 +25,8 @@ export default function Problema() {
       <div className="max-w-6xl mx-auto">
         <SectionHeader
           eyebrow="El problema"
-          title="El currículum se queda corto para saber si es la persona correcta."
-          description="Tener experiencia o pasar una buena entrevista no siempre demuestra que alguien tendrá el desempeño comercial que la vacante exige."
+          title="El currículum no basta para identificar al talento comercial ideal."
+          description="Tener experiencia o pasar una buena entrevista no demuestra que alguien tenga el perfil y las competencias que tu vacante realmente exige."
         />
 
         <div className="grid md:grid-cols-3 gap-5 lg:gap-6">

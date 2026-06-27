@@ -6,6 +6,7 @@ import Footer from '@/components/landing/Footer';
 import GuiaTableOfContents from '@/components/guia/GuiaTableOfContents';
 import GuiaSidebar from '@/components/guia/GuiaSidebar';
 import GuiaIssuesSummary from '@/components/guia/GuiaIssuesSummary';
+import { GUIA_CONTRATAR, getRelatedGuides } from '@/components/guia/guiaRoutes';
 import { TOC_ITEMS, ISSUES, SKILLS } from '@/components/guia/guiaContent';
 
 const prose = 'text-[17px] leading-[1.85]';
@@ -83,14 +84,14 @@ export default function GuiaContratarComercial() {
             style={{ color: '#64748B' }}
           >
             <ArrowLeft className="w-4 h-4" />
-            Recursos para la contratación
+            Recursos para atraer talento comercial
           </Link>
 
           <h1
             className="font-heading font-bold max-w-4xl mb-6"
             style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', letterSpacing: '-0.03em', lineHeight: 1.1, color: '#0F172A' }}
           >
-            5 problemas al contratar comercial y cómo resolverlos
+            5 problemas al atraer talento comercial y cómo resolverlos
           </h1>
 
           <div className="flex items-center gap-3 mb-8">
@@ -102,7 +103,7 @@ export default function GuiaContratarComercial() {
             </div>
             <div>
               <p className="text-sm font-semibold" style={{ color: '#0F172A' }}>Equipo Kova</p>
-              <p className="text-xs" style={{ color: '#64748B' }}>Especialistas en selección comercial B2B</p>
+              <p className="text-xs" style={{ color: '#64748B' }}>Especialistas humanos en selección comercial B2B · Lectura de 12 min</p>
             </div>
           </div>
 
@@ -124,10 +125,13 @@ export default function GuiaContratarComercial() {
 
           <main className="min-w-0 max-w-[720px] lg:max-w-none mx-auto lg:mx-0">
             <p className={`${prose} mb-8`} style={proseColor}>
-              Muchas empresas asumen que contratar comercial es cuestión de identificar a los más extrovertidos o a quienes mejor cuentan su experiencia. Pero en B2B hay muchos más obstáculos: roles mal definidos, entrevistas que no predicen desempeño y evaluaciones que no miden ventas.
+              Muchas empresas asumen que atraer talento comercial es cuestión de identificar a los más extrovertidos o a quienes mejor cuentan su experiencia. Pero en B2B hay muchos más obstáculos: roles mal definidos, entrevistas que no predicen desempeño y evaluaciones genéricas que no miden ventas.
+            </p>
+            <p className={`${prose} mb-8`} style={proseColor}>
+              Con presión por crecer el equipo comercial, elegir al perfil equivocado cuesta caro: rotación elevada, pipeline estancado y meses perdidos. En Kova abordamos esto con metodología propia y criterio humano especializado: identificamos el talento ideal para tu vacante, sin IA, sin automatismos, sin pruebas genéricas de RH.
             </p>
             <p className={`${prose} mb-12`} style={proseColor}>
-              Con presión por crecer el equipo comercial, el error cuesta caro: rotación elevada, pipeline estancado y meses perdidos. En esta guía repasamos los cinco problemas más comunes y cómo abordarlos con selección basada en competencias.
+              En esta guía repasamos los cinco problemas más comunes y cómo resolverlos con selección basada en competencias comerciales.
             </p>
 
             <SectionTitle id="por-que-es-dificil">¿Por qué es difícil contratar comercial?</SectionTitle>
@@ -201,8 +205,8 @@ export default function GuiaContratarComercial() {
             <p className={`${prose} mb-5`} style={proseColor}>
               En comercial, las habilidades blandas son tan relevantes como las técnicas: gestión, comunicación, orientación al cliente, liderazgo y resiliencia suelen estar entre las más demandadas. Pero medirlas requiere un enfoque específico del rol, no pruebas genéricas.
             </p>
-            <p className={`${prose} mb-12`} style={proseColor}>
-              Kova aplica este enfoque de forma especializada: diagnosticamos la vacante, evaluamos competencias comerciales y entregamos un informe comparativo para que dirección comercial y talento humano decidan con el mismo criterio.
+            <p className={`${prose} mb-5`} style={proseColor}>
+              Kova aplica este enfoque con especialistas humanos: diagnosticamos la vacante, evaluamos competencias comerciales y entregamos un informe comparativo para que dirección comercial y talento humano decidan con el mismo criterio. Sin algoritmos ni calificación automática.
             </p>
 
             <SectionTitle id="seis-competencias">
@@ -238,7 +242,7 @@ export default function GuiaContratarComercial() {
               En Kova, el proceso cubre distintos perfiles comerciales (SDR, ejecutivo, account manager) con el mismo rigor metodológico: entender la vacante, definir competencias, evaluar candidatos y presentar una terna argumentada.
             </p>
             <p className={`${prose} mb-12`} style={proseColor}>
-              El resultado es un informe pensado para quien decide: comparación clara, puntajes por competencia y recomendación sustentada. Menos intuición, más criterio.
+              El resultado es un informe pensado para quien decide: comparación clara, puntajes por competencia y recomendación sustentada por un evaluador especializado. Menos intuición, más criterio humano.
             </p>
 
             <GuiaIssuesSummary />
@@ -249,10 +253,10 @@ export default function GuiaContratarComercial() {
               style={{ background: '#0F172A' }}
             >
               <h3 className="font-heading font-bold text-xl lg:text-2xl text-white mb-4 leading-tight">
-                ¿Listo para contratar comercial con más certeza?
+                Hablemos de tu vacante comercial
               </h3>
               <p className="text-base mb-6 max-w-lg mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                Agenda un diagnóstico comercial sin costo. Te orientamos sobre tu vacante y cómo evaluar candidatos con criterio especializado.
+                Agenda un diagnóstico sin costo con un especialista de Kova. Te orientamos sobre tu vacante en menos de 48 horas. Criterio humano, sin IA.
               </p>
               <Link
                 to="/#acceso"
@@ -265,24 +269,37 @@ export default function GuiaContratarComercial() {
             </div>
           </main>
 
-          <GuiaSidebar />
+          <GuiaSidebar currentPath={GUIA_CONTRATAR} />
         </div>
       </div>
 
-      {/* Mobile TOC */}
-      <div className="xl:hidden border-t px-6 py-8" style={{ borderColor: '#E2E8F0', background: '#F8FAFC' }}>
-        <p className="text-sm font-semibold mb-4" style={{ color: '#0F172A' }}>En esta publicación</p>
-        <div className="flex flex-wrap gap-2">
-          {TOC_ITEMS.map(({ id, label }) => (
-            <a
-              key={id}
-              href={`#${id}`}
-              className="text-xs font-medium px-3 py-2 rounded-lg"
-              style={{ background: '#FFFFFF', color: '#4338CA', border: '1px solid #E0E7FF' }}
-            >
-              {label}
-            </a>
-          ))}
+      {/* Mobile related + TOC */}
+      <div className="xl:hidden border-t px-6 py-8 space-y-8" style={{ borderColor: '#E2E8F0', background: '#F8FAFC' }}>
+        <div>
+          <p className="text-sm font-semibold mb-4" style={{ color: '#0F172A' }}>Más recursos de Kova</p>
+          <div className="space-y-4">
+            {getRelatedGuides(GUIA_CONTRATAR).map(({ path, title, readTime }) => (
+              <Link key={path} to={path} className="block rounded-xl p-4 bg-white" style={{ border: '1px solid #E2E8F0' }}>
+                <p className="text-sm font-semibold mb-0.5" style={{ color: '#4338CA' }}>{title}</p>
+                <p className="text-xs" style={{ color: '#94A3B8' }}>Lectura de {readTime}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className="text-sm font-semibold mb-4" style={{ color: '#0F172A' }}>En esta publicación</p>
+          <div className="flex flex-wrap gap-2">
+            {TOC_ITEMS.map(({ id, label }) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                className="text-xs font-medium px-3 py-2 rounded-lg"
+                style={{ background: '#FFFFFF', color: '#4338CA', border: '1px solid #E0E7FF' }}
+              >
+                {label}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
 

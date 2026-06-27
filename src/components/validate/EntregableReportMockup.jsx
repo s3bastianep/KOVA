@@ -197,8 +197,8 @@ export default function EntregableReportMockup() {
               <div className="space-y-2.5">
                 {[
                   'Informe listo para compartir con dirección comercial y talento humano',
-                  'Sustento por competencia para respaldar la decisión de contratación',
-                  'Reduce el riesgo de contratar por intuición o solo por entrevista',
+                  'Sustento por competencia para respaldar tu elección de talento',
+                  'Reduce el riesgo de elegir por intuición o solo por entrevista',
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-2.5 text-sm" style={{ color: '#334155' }}>
                     <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#059669' }} strokeWidth={2} />

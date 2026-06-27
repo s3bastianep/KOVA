@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-
-const GUIDE_PATH = '/guia-contratar-comercial';
+import { ChevronDown } from 'lucide-react';
+import { GUIAS, isGuiaPath } from '@/components/guia/guiaRoutes';
 
 const landingLinks = [
   ['Problema', 'problema'],
@@ -11,9 +11,10 @@ const landingLinks = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [recursosOpen, setRecursosOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const isGuide = location.pathname === GUIDE_PATH;
+  const onGuia = isGuiaPath(location.pathname);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 24);
@@ -59,7 +60,7 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden md:flex items-center gap-7">
-          {!isGuide && landingLinks.map(([label, id]) => (
+          {!onGuia && landingLinks.map(([label, id]) => (
             <button
               key={id}
               onClick={() => goToSection(id)}
@@ -72,7 +73,7 @@ export default function Navbar() {
             </button>
           ))}
 
-          {isGuide && (
+          {onGuia && (
             <Link
               to="/"
               className="text-sm font-medium transition-colors"
@@ -84,15 +85,46 @@ export default function Navbar() {
             </Link>
           )}
 
-          <Link
-            to={GUIDE_PATH}
-            className="text-sm font-medium transition-colors"
-            style={{ color: isGuide ? '#4338CA' : '#64748B', fontWeight: isGuide ? 600 : 500 }}
-            onMouseEnter={e => { if (!isGuide) e.currentTarget.style.color = '#0F172A'; }}
-            onMouseLeave={e => { if (!isGuide) e.currentTarget.style.color = '#64748B'; }}
+          <div
+            className="relative"
+            onMouseEnter={() => setRecursosOpen(true)}
+            onMouseLeave={() => setRecursosOpen(false)}
           >
-            Guía
-          </Link>
+            <button
+              type="button"
+              className="flex items-center gap-1 text-sm font-medium transition-colors"
+              style={{ color: onGuia ? '#4338CA' : '#64748B', fontWeight: onGuia ? 600 : 500 }}
+            >
+              Recursos
+              <ChevronDown className="w-3.5 h-3.5" />
+            </button>
+            {recursosOpen && (
+              <div
+                className="absolute top-full left-0 pt-2 w-72"
+              >
+                <div
+                  className="rounded-xl py-2 bg-white overflow-hidden"
+                  style={{ border: '1px solid #E2E8F0', boxShadow: '0 8px 24px rgba(15,23,42,0.08)' }}
+                >
+                  {GUIAS.map(({ path, title, readTime }) => (
+                    <Link
+                      key={path}
+                      to={path}
+                      className="block px-4 py-3 transition-colors hover:bg-slate-50"
+                      style={{
+                        background: location.pathname === path ? '#F8FAFF' : 'transparent',
+                      }}
+                    >
+                      <p className="text-sm font-medium leading-snug mb-0.5" style={{ color: location.pathname === path ? '#4338CA' : '#0F172A' }}>
+                        {title}
+                      </p>
+                      <p className="text-xs" style={{ color: '#94A3B8' }}>Lectura de {readTime}</p>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <Link
