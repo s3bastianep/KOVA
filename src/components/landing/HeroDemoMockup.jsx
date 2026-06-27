@@ -1,9 +1,9 @@
 import React from 'react';
 
 const competencias = [
-  { label: 'Venta consultiva', width: '88%' },
-  { label: 'Prospección', width: '72%' },
-  { label: 'Manejo de objeciones', width: '81%' },
+  { label: 'Venta consultiva', width: '88%', color: '#4F46E5' },
+  { label: 'Prospección', width: '72%', color: '#10B981' },
+  { label: 'Manejo de objeciones', width: '81%', color: '#F59E0B' },
 ];
 
 const candidatos = [
@@ -60,7 +60,7 @@ export default function HeroDemoMockup() {
                 <span className="text-xs font-medium" style={{ color: '#334155' }}>{c.label}</span>
               </div>
               <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
-                <div className="h-full rounded-full" style={{ width: c.width, background: 'linear-gradient(90deg, #6366F1, #4338CA)' }} />
+                <div className="h-full rounded-full" style={{ width: c.width, backgroundColor: c.color }} />
               </div>
             </div>
           ))}

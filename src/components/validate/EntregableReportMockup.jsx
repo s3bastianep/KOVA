@@ -8,10 +8,10 @@ const tabs = [
 ];
 
 const competencias = [
-  { label: 'Venta consultiva', value: 92 },
-  { label: 'Prospección', value: 88 },
-  { label: 'Manejo de objeciones', value: 90 },
-  { label: 'Orientación al logro', value: 94 },
+  { label: 'Venta consultiva', value: 92, color: '#4F46E5' },
+  { label: 'Prospección', value: 88, color: '#10B981' },
+  { label: 'Manejo de objeciones', value: 90, color: '#F59E0B' },
+  { label: 'Orientación al logro', value: 94, color: '#0EA5E9' },
 ];
 
 const candidatos = [
@@ -115,10 +115,10 @@ export default function EntregableReportMockup() {
                   <div key={c.label}>
                     <div className="flex justify-between text-xs mb-1.5">
                       <span className="font-medium" style={{ color: '#475569' }}>{c.label}</span>
-                      <span className="font-bold tabular-nums" style={{ color: '#0F172A' }}>{c.value}</span>
+                      <span className="font-bold tabular-nums" style={{ color: c.color }}>{c.value}</span>
                     </div>
                     <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
-                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${c.value}%`, background: 'linear-gradient(90deg, #6366F1, #4338CA)' }} />
+                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${c.value}%`, backgroundColor: c.color }} />
                     </div>
                   </div>
                 ))}

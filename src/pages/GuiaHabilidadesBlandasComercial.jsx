@@ -6,7 +6,6 @@ import {
   GuiaNumberedItem,
   GuiaCallout,
   GuiaArticleCTA,
-  GuiaInlineImage,
 } from '@/components/guia/GuiaArticleLayout';
 import { GUIA_HABILIDADES } from '@/components/guia/guiaRoutes';
 import { TOC_HABILIDADES } from '@/components/guia/guiaToc';
@@ -18,7 +17,7 @@ export default function GuiaHabilidadesBlandasComercial() {
       title="Guía para líderes comerciales: cómo evaluar habilidades blandas en la contratación por competencias"
       readTime="15 min"
       heroImage="/images/guia-habilidades-hero.png"
-      heroImageAlt="Equipo comercial en reunión de selección y evaluación de candidatos"
+      heroImageAlt="Equipo comercial colaborando: evaluación de habilidades blandas en conjunto"
       tocItems={TOC_HABILIDADES}
     >
         <GuiaProse>
@@ -112,11 +111,6 @@ export default function GuiaHabilidadesBlandasComercial() {
           eso implica escenarios reales del puesto, criterios comparables y evaluación por especialistas — no
           impresiones subjetivas del entrevistador.
         </GuiaProse>
-
-        <GuiaInlineImage
-          src="/images/guia-habilidades-inline-2.png"
-          alt="Evaluación comparativa de perfiles comerciales"
-        />
 
         <GuiaNumberedItem num={1} title="Evaluaciones de comportamiento comercial">
           Las evaluaciones de comportamiento miden cómo un candidato actúa en situaciones de venta reales:

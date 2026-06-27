@@ -17,7 +17,7 @@ export default function GuiaEvaluacionComercial() {
       title="La guía completa para la evaluación comercial"
       readTime="18 min"
       heroImage="/images/guia-evaluacion-comercial.png"
-      heroImageAlt="Equipo comercial evaluando candidatos con datos y criterio"
+      heroImageAlt="Equipo comercial evaluando candidatos con datos, gráficos y criterio objetivo"
       tocItems={TOC_EVALUACION}
     >
         {/* Intro */}
