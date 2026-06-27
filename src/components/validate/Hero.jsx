@@ -48,13 +48,13 @@ export default function Hero() {
               <button onClick={scrollToAcceso}
                 className="group inline-flex items-center gap-2 font-semibold px-6 py-3.5 rounded-xl text-sm transition-all text-white"
                 style={{ background: 'linear-gradient(135deg, #6366F1, #4F46E5)', boxShadow: '0 4px 24px rgba(99,102,241,0.35)' }}>
-                Solicitar acceso anticipado
+                Agendar diagnóstico comercial
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </button>
-              <button onClick={scrollToAcceso}
+              <button onClick={scrollToProceso}
                 className="inline-flex items-center gap-2 font-medium px-6 py-3.5 rounded-xl text-sm transition-all"
                 style={{ background: '#FFFFFF', color: '#374151', border: '1.5px solid #E5E7EB', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
-                Quiero ser empresa piloto
+                Conocer la metodología
               </button>
             </div>
 
