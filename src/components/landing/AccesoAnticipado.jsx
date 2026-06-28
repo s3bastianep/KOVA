@@ -55,7 +55,7 @@ export default function AccesoAnticipado() {
 
             <Link
               to="/contacto"
-              className="group kova-btn-primary inline-flex items-center gap-2 font-semibold px-6 py-3.5 rounded-xl text-sm transition-all text-white"
+              className="hidden md:inline-flex group kova-btn-primary items-center gap-2 font-semibold px-6 py-3.5 rounded-xl text-sm transition-all text-white"
             >
               Contáctenos
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />

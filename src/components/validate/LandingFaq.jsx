@@ -285,22 +285,6 @@ export default function LandingFaq() {
             })}
           </Accordion>
 
-          <div
-            className="lg:hidden flex flex-col gap-3 rounded-xl p-5 -mt-2"
-            style={{ background: KOVA.surface, border: `1px solid ${KOVA.border}` }}
-          >
-            <p className="text-sm font-semibold" style={{ color: BRAND.navy }}>
-              ¿Tu pregunta no está aquí?
-            </p>
-            <Link
-              to="/contacto"
-              className="group inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:opacity-80"
-              style={{ color: BRAND.blue }}
-            >
-              Escríbenos
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-          </div>
         </div>
       </div>
     </section>

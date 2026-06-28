@@ -75,7 +75,7 @@ export default function HeroCapabilities() {
           </div>
           <Link
             to="/contacto"
-            className="relative group kova-btn-primary inline-flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg text-sm flex-shrink-0 transition-all text-white"
+            className="relative group kova-btn-primary hidden md:inline-flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg text-sm flex-shrink-0 transition-all text-white"
           >
             Hablemos
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />

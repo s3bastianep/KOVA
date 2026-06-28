@@ -131,7 +131,10 @@ export default function Navbar() {
           </div>
         </div>
 
-        <Link to="/contacto" className="kova-btn-primary text-sm font-semibold px-4 py-2.5 rounded-lg transition-all text-white hover:opacity-95">
+        <Link
+          to="/contacto"
+          className="hidden md:inline-flex kova-btn-primary text-sm font-semibold px-4 py-2.5 rounded-lg transition-all text-white hover:opacity-95"
+        >
           Hablar con un experto
         </Link>
       </div>

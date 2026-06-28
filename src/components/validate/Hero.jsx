@@ -34,7 +34,7 @@ export default function Hero() {
 
             <Link
               to="/contacto"
-              className="kova-btn-primary group inline-flex items-center gap-2 font-semibold px-6 py-3.5 rounded-lg text-sm transition-all text-white"
+              className="hidden md:inline-flex kova-btn-primary group items-center gap-2 font-semibold px-6 py-3.5 rounded-lg text-sm transition-all text-white"
             >
               Hablar con un experto
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
