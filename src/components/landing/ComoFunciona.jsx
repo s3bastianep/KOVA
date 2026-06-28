@@ -26,7 +26,7 @@ export default function ComoFunciona() {
             <button onClick={() => document.getElementById('acceso')?.scrollIntoView({ behavior: 'smooth' })}
               className="group inline-flex items-center gap-2 text-sm font-semibold px-5 py-3 rounded-xl transition-all text-white"
               style={{ background: 'linear-gradient(135deg, #6366F1, #4F46E5)', boxShadow: '0 4px 16px rgba(99,102,241,0.3)' }}>
-              Cuéntanos tu vacante <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              Contáctenos <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </button>
           </div>
 

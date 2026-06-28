@@ -1,56 +1,41 @@
-import React from 'react';
 import SectionHeader from '@/components/landing/SectionHeader';
 
 const cards = [
   {
-    num: '01',
-    title: 'Entrevistan bien, pero no siempre venden bien',
-    desc: 'Un buen discurso en la entrevista no garantiza desempeño comercial real ni resultados en el pipeline.',
+    title: 'Entrevistan bien, venden distinto',
+    desc: 'Un buen discurso no garantiza desempeño comercial real.',
   },
   {
-    num: '02',
-    title: 'Elegir al perfil equivocado cuesta tiempo y oportunidades',
-    desc: 'Atraer talento sin el criterio correcto puede significar meses perdidos, rotación elevada y cuota comercial estancada.',
+    title: 'El perfil equivocado cuesta caro',
+    desc: 'Rotación, pipeline perdido y meses sin cubrir la vacante.',
   },
   {
-    num: '03',
-    title: 'Cada vacante requiere competencias distintas',
-    desc: 'Un hunter no necesita lo mismo que un account manager ni un SDR. El criterio debe adaptarse al rol.',
+    title: 'Cada rol exige competencias distintas',
+    desc: 'Un SDR no se evalúa igual que un account manager.',
   },
 ];
 
 export default function Problema() {
   return (
-    <section id="problema" className="py-24 lg:py-28 px-6 lg:px-8 bg-white">
+    <section id="problema" className="py-16 lg:py-20 px-6 lg:px-8 bg-white">
       <div className="max-w-6xl mx-auto">
         <SectionHeader
+          align="center"
+          className="mb-8 lg:mb-10 max-w-2xl"
           eyebrow="El problema"
-          title="El currículum no basta para identificar al talento comercial ideal."
-          description="Tener experiencia o pasar una buena entrevista no demuestra que alguien tenga el perfil y las competencias que tu vacante realmente exige."
+          title="El currículum no basta para contratar comercial."
+          description="Experiencia y buena entrevista no demuestran que alguien tenga las competencias que tu vacante exige."
         />
 
-        <div className="grid md:grid-cols-3 gap-5 lg:gap-6">
-          {cards.map(({ num, title, desc }) => (
+        <div className="grid md:grid-cols-3 gap-4">
+          {cards.map(({ title, desc }) => (
             <article
-              key={num}
-              className="kova-card kova-card-hover rounded-2xl p-7 lg:p-8 relative overflow-hidden"
+              key={title}
+              className="rounded-xl p-5 bg-white"
+              style={{ border: '1px solid #E2E8F0' }}
             >
-              <div
-                className="absolute top-0 left-0 w-full h-1"
-                style={{ background: 'linear-gradient(90deg, #6366F1, #4338CA)' }}
-              />
-              <span
-                className="inline-flex items-center justify-center w-9 h-9 rounded-lg text-xs font-bold mb-5 text-white"
-                style={{ background: '#4338CA' }}
-              >
-                {num}
-              </span>
-              <h3 className="font-heading font-semibold text-base mb-3 leading-snug" style={{ color: '#0F172A' }}>
-                {title}
-              </h3>
-              <p className="text-sm leading-relaxed" style={{ color: '#64748B', lineHeight: 1.75 }}>
-                {desc}
-              </p>
+              <h3 className="text-sm font-semibold mb-2 leading-snug" style={{ color: '#0F1F3D' }}>{title}</h3>
+              <p className="text-xs leading-relaxed" style={{ color: '#3D3D3D', lineHeight: 1.65 }}>{desc}</p>
             </article>
           ))}
         </div>

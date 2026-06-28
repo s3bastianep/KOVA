@@ -190,9 +190,9 @@ export default function GuiaPsicometricasVsComercial() {
 
         <GuiaArticleCTA
           title="Contrata comercial con evaluación que sí predice desempeño"
-          description="Cuéntanos tu vacante. Te mostramos cómo la metodología Kova reemplaza pruebas genéricas por evaluación especializada alineada a tu rol."
-          primaryLabel="Cuéntanos tu vacante"
-          primaryTo="/#acceso"
+          description="Contáctenos. Te mostramos cómo la metodología Kova reemplaza pruebas genéricas por evaluación especializada alineada a tu rol."
+          primaryLabel="Contáctenos"
+          primaryTo="/contacto"
           secondaryLabel="Leer guía de evaluación comercial"
           secondaryTo="/guia-evaluacion-comercial"
         />

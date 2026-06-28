@@ -10,7 +10,8 @@ import GuiaEvaluacionComercial from './pages/GuiaEvaluacionComercial';
 import GuiaPsicometricasVsComercial from './pages/GuiaPsicometricasVsComercial';
 import GuiaRotacionComercial from './pages/GuiaRotacionComercial';
 import GuiaHabilidadesBlandasComercial from './pages/GuiaHabilidadesBlandasComercial';
-import Precios from './pages/Precios';
+import Contacto from './pages/Contacto';
+import QuienesSomos from './pages/QuienesSomos';
 
 function App() {
   return (
@@ -24,7 +25,8 @@ function App() {
           <Route path="/guia-psicometricas-vs-comercial" element={<GuiaPsicometricasVsComercial />} />
           <Route path="/guia-rotacion-comercial" element={<GuiaRotacionComercial />} />
           <Route path="/guia-habilidades-blandas-comercial" element={<GuiaHabilidadesBlandasComercial />} />
-          <Route path="/precios" element={<Precios />} />
+          <Route path="/contacto" element={<Contacto />} />
+          <Route path="/quienes-somos" element={<QuienesSomos />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Router>

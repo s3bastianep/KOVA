@@ -206,9 +206,9 @@ export default function GuiaRotacionComercial() {
 
         <GuiaArticleCTA
           title="Reduce la rotación comercial con evaluación especializada de Kova"
-          description="Cuéntanos tu vacante. Un especialista de Kova te orienta sobre cómo validar competencias antes de contratar y dejar de repetir el ciclo escasez-rotación-escasez."
-          primaryLabel="Cuéntanos tu vacante"
-          primaryTo="/#acceso"
+          description="Contáctenos. Un especialista de Kova te orienta sobre cómo validar competencias antes de contratar y dejar de repetir el ciclo escasez-rotación-escasez."
+          primaryLabel="Contáctenos"
+          primaryTo="/contacto"
           secondaryLabel="Ver guía de evaluación comercial"
           secondaryTo="/guia-evaluacion-comercial"
         />

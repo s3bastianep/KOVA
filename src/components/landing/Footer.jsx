@@ -2,11 +2,9 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail } from 'lucide-react';
 
 const links = [
-  ['Problema', 'problema'],
-  ['Proceso', 'proceso'],
-  ['Entregable', 'entregable'],
-  ['Precios', '/precios'],
-  ['Contacto', 'acceso'],
+  ['El servicio', 'proceso'],
+  ['Quiénes somos', '/quienes-somos'],
+  ['Contacto', '/contacto'],
 ];
 
 export default function Footer() {
@@ -22,11 +20,11 @@ export default function Footer() {
   };
 
   return (
-    <footer style={{ background: '#0F172A' }} className="px-6 lg:px-8 py-5">
+    <footer style={{ background: '#0F1F3D' }} className="px-6 lg:px-8 py-5">
       <div className="max-w-6xl mx-auto flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <Link to="/" className="flex items-center gap-2 w-fit">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: '#4338CA' }}>
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: '#1A3FAA' }}>
               <span className="font-heading font-bold text-xs text-white">K</span>
             </div>
             <span className="font-heading font-semibold text-sm text-white">Kova</span>

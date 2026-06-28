@@ -219,9 +219,9 @@ export default function GuiaHabilidadesBlandasComercial() {
 
         <GuiaArticleCTA
           title="Evalúa habilidades blandas comerciales con criterio de experto"
-          description="Cuéntanos tu vacante. Un especialista de Kova te orienta sobre cómo medir competencias interpersonales con rigor, no con intuición."
-          primaryLabel="Cuéntanos tu vacante"
-          primaryTo="/#acceso"
+          description="Contáctenos. Un especialista de Kova te orienta sobre cómo medir competencias interpersonales con rigor, no con intuición."
+          primaryLabel="Contáctenos"
+          primaryTo="/contacto"
           secondaryLabel="Ver guía de evaluación comercial"
           secondaryTo="/guia-evaluacion-comercial"
         />

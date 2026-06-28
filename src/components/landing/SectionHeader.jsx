@@ -6,7 +6,7 @@ export default function SectionHeader({ eyebrow, title, description, align = 'ce
     <div className={`${alignClass} ${maxW} mb-14 lg:mb-16 ${className}`}>
       <p
         className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-4"
-        style={{ color: dark ? '#A5B4FC' : '#6366F1' }}
+        style={{ color: dark ? 'rgba(255,255,255,0.65)' : '#1A3FAA' }}
       >
         {eyebrow}
       </p>
@@ -14,7 +14,7 @@ export default function SectionHeader({ eyebrow, title, description, align = 'ce
         className="font-heading font-bold leading-tight mb-4"
         style={{
           fontSize: 'clamp(1.5rem, 2.2vw, 2rem)',
-          color: dark ? '#FFFFFF' : '#0F172A',
+          color: dark ? '#FFFFFF' : '#0F1F3D',
           letterSpacing: '-0.025em',
         }}
       >
@@ -23,7 +23,7 @@ export default function SectionHeader({ eyebrow, title, description, align = 'ce
       {description && (
         <p
           className="text-base leading-relaxed"
-          style={{ color: dark ? 'rgba(255,255,255,0.65)' : '#64748B', lineHeight: 1.75 }}
+          style={{ color: dark ? 'rgba(255,255,255,0.75)' : '#3D3D3D', lineHeight: 1.75 }}
         >
           {description}
         </p>

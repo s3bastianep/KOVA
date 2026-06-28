@@ -41,7 +41,7 @@ export default function GuiaSidebar({ currentPath }) {
           ))}
 
           <Link
-            to="/#acceso"
+            to="/contacto"
             className="block rounded-xl p-4 mt-6 transition-colors hover:bg-indigo-50"
             style={{ background: '#F8FAFF', border: '1px solid #E0E7FF' }}
           >

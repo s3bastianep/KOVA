@@ -114,7 +114,7 @@ export default function ComoFunciona() {
             className="group inline-flex items-center gap-2 font-semibold px-6 py-3.5 rounded-xl text-sm text-white transition-all hover:opacity-95 flex-shrink-0"
             style={{ background: '#4338CA', boxShadow: '0 4px 14px rgba(67,56,202,0.35)' }}
           >
-            Cuéntanos tu vacante
+            Contáctenos
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </button>
         </div>
