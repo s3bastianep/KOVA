@@ -191,7 +191,7 @@ export default function LandingFaq() {
   return (
     <section
       id="faq"
-      className="py-16 lg:py-24 px-6 lg:px-8 relative overflow-hidden"
+      className="py-12 lg:py-16 px-6 lg:px-8 relative overflow-hidden"
       style={{ background: KOVA.white, borderTop: `1px solid ${KOVA.border}` }}
     >
       <div
@@ -201,7 +201,7 @@ export default function LandingFaq() {
       />
 
       <div className="max-w-6xl mx-auto relative">
-        <div className="grid lg:grid-cols-[minmax(0,320px)_1fr] gap-10 lg:gap-14 xl:gap-16 items-start">
+        <div className="grid lg:grid-cols-[minmax(0,320px)_1fr] gap-8 lg:gap-10 xl:gap-12 items-start">
           <div className="lg:sticky lg:top-28">
             <p className="kova-eyebrow-pill mb-5">Preguntas frecuentes</p>
             <h2

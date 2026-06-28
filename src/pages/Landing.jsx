@@ -14,9 +14,9 @@ export default function Landing() {
       <Navbar />
       <StickyCta />
       <Hero />
-      <HeroCapabilities />
-      <ImpactStats />
-      <AccesoAnticipado />
+      <SectionReveal><HeroCapabilities /></SectionReveal>
+      <SectionReveal delay={40}><ImpactStats /></SectionReveal>
+      <SectionReveal delay={40}><AccesoAnticipado /></SectionReveal>
       <SectionReveal delay={50}><LandingFaq /></SectionReveal>
       <Footer />
     </div>

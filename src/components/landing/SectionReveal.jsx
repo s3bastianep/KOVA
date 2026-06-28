@@ -5,6 +5,12 @@ export default function SectionReveal({ children, className = '', delay = 0 }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      setVisible(true);
+      return;
+    }
+
     const node = ref.current;
     if (!node) return;
 
@@ -15,7 +21,7 @@ export default function SectionReveal({ children, className = '', delay = 0 }) {
           observer.disconnect();
         }
       },
-      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.06, rootMargin: '0px 0px -32px 0px' },
     );
 
     observer.observe(node);
@@ -28,8 +34,8 @@ export default function SectionReveal({ children, className = '', delay = 0 }) {
       className={className}
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(28px)',
-        transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
+        transform: visible ? 'translateY(0)' : 'translateY(18px)',
+        transition: `opacity 0.65s ease ${delay}ms, transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,
       }}
     >
       {children}

@@ -38,10 +38,10 @@ const siSomos = [
 
 export default function QuienesSomos() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
 
-      <main>
+      <main className="flex-1">
         <section className="pt-24 pb-8 lg:pb-10 px-6 lg:px-8 kova-section-warm">
           <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-10 items-center">
             <div>

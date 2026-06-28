@@ -6,7 +6,7 @@ import { BRAND, KOVA } from '@/theme/kovaPalette';
 export default function Hero() {
   return (
     <section className="relative overflow-hidden kova-hero-light">
-      <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 pt-28 pb-14 lg:pt-36 lg:pb-20 w-full">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 pt-28 pb-12 lg:pt-36 lg:pb-16 w-full">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
           <div className="min-w-0 max-w-lg">
             <span className="kova-eyebrow-pill mb-5">

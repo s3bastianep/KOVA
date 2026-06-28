@@ -25,10 +25,10 @@ const benefits = [
 
 export default function HeroCapabilities() {
   return (
-    <section id="proceso" className="py-14 lg:py-20 px-6 lg:px-8 border-b kova-section-warm" style={{ borderColor: KOVA.border }}>
-      <div className="max-w-6xl mx-auto space-y-10 lg:space-y-12">
+    <section id="proceso" className="py-12 lg:py-16 px-6 lg:px-8 border-b kova-section-warm" style={{ borderColor: KOVA.border }}>
+      <div className="max-w-6xl mx-auto space-y-8 lg:space-y-10">
         <header className="text-center max-w-3xl mx-auto">
-          <p className="kova-eyebrow-pill mb-5">Para empresas</p>
+          <p className="kova-eyebrow-pill mb-4">Para empresas</p>
           <p
             className="text-[17px] lg:text-lg font-normal text-balance mx-auto"
             style={{ color: KOVA.body, lineHeight: 1.75, maxWidth: '34rem' }}
@@ -70,8 +70,7 @@ export default function HeroCapabilities() {
           <div className="relative text-center sm:text-left max-w-xl">
             <p className="text-sm font-semibold text-white mb-1">¿Vacante comercial activa?</p>
             <p className="text-xs sm:text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
-              Cada día sin el candidato correcto tiene un impacto en su operación comercial. Un consultor le
-              responde en menos de 24 horas hábiles.
+              Cada día sin el candidato correcto afecta sus resultados.
             </p>
           </div>
           <Link

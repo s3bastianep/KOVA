@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Users } from 'lucide-react';
 import SectionHeader from '@/components/landing/SectionHeader';
 import { BRAND, KOVA } from '@/theme/kovaPalette';
@@ -42,7 +43,7 @@ const stats = [
   },
 ];
 
-function StatCard({ value, title, description, accent }) {
+function StatCard({ value, title, description, accent, animate }) {
   return (
     <article
       className="relative flex flex-col h-full px-5 py-6 lg:px-6 lg:py-7
@@ -68,8 +69,12 @@ function StatCard({ value, title, description, accent }) {
         role="presentation"
       >
         <div
-          className="h-full rounded-full transition-all duration-700"
-          style={{ width: `${value}%`, background: accent }}
+          className="h-full rounded-full"
+          style={{
+            width: animate ? `${value}%` : '0%',
+            background: accent,
+            transition: 'width 0.9s cubic-bezier(0.22, 1, 0.36, 1)',
+          }}
         />
       </div>
 
@@ -84,30 +89,54 @@ function StatCard({ value, title, description, accent }) {
 }
 
 export default function ImpactStats() {
+  const gridRef = useRef(null);
+  const [barsVisible, setBarsVisible] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setBarsVisible(true);
+      return;
+    }
+    const node = gridRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setBarsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
-      className="py-16 lg:py-20 px-6 lg:px-8 border-b"
+      className="py-12 lg:py-16 px-6 lg:px-8 border-b"
       style={{ background: KOVA.surface, borderColor: KOVA.border }}
     >
       <div className="max-w-6xl mx-auto">
         <SectionHeader
           align="center"
-          className="mb-10 lg:mb-12 max-w-2xl"
+          className="mb-8 lg:mb-10 max-w-2xl"
           eyebrow="Impacto medible"
           title="Metodología probada. Resultados que hablan por sí solos."
         />
 
         <div
+          ref={gridRef}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 rounded-xl overflow-hidden bg-white"
           style={{ border: `1px solid ${KOVA.border}`, boxShadow: '0 1px 3px rgba(15,31,61,0.04)' }}
         >
           {stats.map((stat) => (
-            <StatCard key={stat.title} {...stat} />
+            <StatCard key={stat.title} {...stat} animate={barsVisible} />
           ))}
         </div>
 
         <div
-          className="mt-8 rounded-xl overflow-hidden bg-white px-5 py-6 lg:px-8 lg:py-7"
+          className="mt-6 rounded-xl overflow-hidden bg-white px-5 py-5 lg:px-8 lg:py-6"
           style={{ border: `1px solid ${KOVA.border}`, boxShadow: '0 1px 3px rgba(15,31,61,0.04)' }}
         >
           <p
