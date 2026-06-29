@@ -15,8 +15,9 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const onGuia = isGuiaPath(location.pathname);
-  const navMuted = '#64748B';
-  const navHover = BRAND.navy;
+  const onLandingHero = location.pathname === '/' && !scrolled;
+  const navMuted = onLandingHero ? 'rgba(255,255,255,0.72)' : '#64748B';
+  const navHover = onLandingHero ? '#FFFFFF' : BRAND.navy;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 24);
@@ -37,11 +38,19 @@ export default function Navbar() {
     <nav
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
-        background: scrolled ? 'rgba(255,255,255,0.97)' : 'rgba(248,249,251,0.92)',
+        background: onLandingHero
+          ? 'rgba(15, 31, 61, 0.35)'
+          : scrolled
+            ? 'rgba(255,255,255,0.97)'
+            : 'rgba(248,249,251,0.92)',
         backdropFilter: 'blur(16px)',
         borderBottom: '1px solid',
-        borderColor: scrolled ? KOVA.border : 'rgba(226,230,237,0.8)',
-        boxShadow: scrolled ? '0 1px 3px rgba(15,31,61,0.04)' : 'none',
+        borderColor: onLandingHero
+          ? 'rgba(255,255,255,0.08)'
+          : scrolled
+            ? KOVA.border
+            : 'rgba(226,230,237,0.8)',
+        boxShadow: scrolled && !onLandingHero ? '0 1px 3px rgba(15,31,61,0.04)' : 'none',
       }}
     >
       <div className="max-w-6xl mx-auto px-6 lg:px-8 h-[72px] flex items-center justify-between">
@@ -53,11 +62,11 @@ export default function Navbar() {
             <span className="font-heading font-bold text-sm text-white">K</span>
           </div>
           <div>
-            <span className="font-heading font-semibold text-base tracking-tight block leading-none" style={{ color: BRAND.navy }}>
+            <span className="font-heading font-semibold text-base tracking-tight block leading-none" style={{ color: onLandingHero ? '#FFFFFF' : BRAND.navy }}>
               Kova
             </span>
-            <span className="text-[10px] font-medium tracking-wide hidden sm:block mt-0.5" style={{ color: KOVA.muted }}>
-              Expertos en selección comercial
+            <span className="text-[10px] font-medium tracking-wide hidden sm:block mt-0.5" style={{ color: onLandingHero ? 'rgba(255,255,255,0.55)' : KOVA.muted }}>
+              Gestión integral del talento comercial
             </span>
           </div>
         </Link>

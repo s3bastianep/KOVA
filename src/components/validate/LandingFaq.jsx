@@ -4,7 +4,9 @@ import {
   Building2,
   ClipboardCheck,
   FileCheck,
+  Gauge,
   Handshake,
+  Target,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -141,6 +143,16 @@ const faqs = [
         </p>
       </div>
     ),
+  },
+  {
+    icon: Target,
+    q: '¿Cómo definen el perfil ideal para mi organización?',
+    a: 'Antes de iniciar cualquier búsqueda, nuestro consultor analiza su organización, proceso comercial e indicadores de desempeño para definir con precisión qué perfil necesita su equipo.',
+  },
+  {
+    icon: Gauge,
+    q: '¿Qué es el Kova Score?',
+    a: 'Es un índice predictivo que estima la probabilidad de éxito de cada candidato en su organización y modelo de ventas específico. No reemplaza la decisión, la respalda con evidencia real.',
   },
   {
     icon: Handshake,

@@ -1,84 +1,220 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight, Check } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Check } from 'lucide-react';
 import { BRAND, KOVA } from '@/theme/kovaPalette';
 
-const diferenciales = [
-  'Equipo 100% enfocado en talento comercial.',
-  'Evaluación diseñada para cada rol, no genérica.',
-  'Simulaciones que miden desempeño real en ventas.',
-  'Recomendación con evidencia para decidir con confianza.',
-  'Resultados probados con empresas en Latinoamérica.',
-  'Seguimiento completo hasta que contrate.',
+const reasons = [
+  {
+    title: 'No se permite adivinar con el currículum.',
+    desc: 'Obtenga visibilidad clara sobre el ajuste del candidato, su experiencia comercial y las señales que importan para su modelo de ventas.',
+  },
+  {
+    title: 'Ninguna entrevista desperdiciada.',
+    desc: 'Solo se reúne con candidatos previamente evaluados y alineados al perfil que su organización definió.',
+  },
+  {
+    title: 'No confíe en la intuición.',
+    desc: 'Un proceso de selección respaldado por datos, evaluación por competencias y recomendación documentada.',
+  },
 ];
 
+const comparisons = [
+  {
+    old: 'Revisión del currículum y percepción intuitiva',
+    kova: 'Evaluación por competencias según los criterios específicos de su modelo de ventas.',
+  },
+  {
+    old: 'Esperar que el candidato sepa vender de verdad.',
+    kova: 'Visibilidad sobre la idoneidad comercial del candidato, su experiencia y las señales relevantes para el rol.',
+  },
+  {
+    old: 'Entrevistar a todos los que parezcan adecuados',
+    kova: 'Solo se presentan candidatos previamente evaluados y alineados al perfil definido.',
+  },
+  {
+    old: 'Descubrir una mala contratación a los 6 meses',
+    kova: 'Tome decisiones de contratación más informadas desde el primer día.',
+  },
+];
+
+function useRevealStagger() {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setVisible(true);
+      return;
+    }
+    const node = ref.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.12 },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, visible };
+}
+
+function CompareRow({ old, kova, index, visible }) {
+  const delay = 80 + index * 70;
+
+  return (
+    <div
+      className="space-y-2 flex-1 flex flex-col justify-center"
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : 'translateY(12px)',
+        transition: `opacity 0.55s ease ${delay}ms, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,
+      }}
+    >
+      <div
+        className="flex items-center gap-3 rounded-xl px-4 py-3.5 lg:px-5 lg:py-4 transition-shadow duration-200 hover:shadow-sm"
+        style={{ background: KOVA.paleCoral, border: '1px solid #FFD4CF' }}
+      >
+        <p
+          className="text-[14px] lg:text-[15px] leading-relaxed line-through flex-1 min-w-0"
+          style={{ color: '#94A3B8', lineHeight: 1.55 }}
+        >
+          {old}
+        </p>
+        <span
+          className="flex-shrink-0 text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full whitespace-nowrap"
+          style={{ background: BRAND.coral, color: '#FFFFFF' }}
+        >
+          Antigua
+        </span>
+      </div>
+      <div
+        className="flex items-center gap-3 rounded-xl px-4 py-3.5 lg:px-5 lg:py-4 transition-all duration-200 hover:shadow-md hover:-translate-y-px"
+        style={{ background: KOVA.paleBlue, border: '1px solid #C5D4F0' }}
+      >
+        <p
+          className="text-[14px] lg:text-[15px] font-medium leading-relaxed flex-1 min-w-0"
+          style={{ color: BRAND.navy, lineHeight: 1.55 }}
+        >
+          {kova}
+        </p>
+        <span
+          className="flex-shrink-0 text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full whitespace-nowrap"
+          style={{ background: BRAND.blue, color: '#FFFFFF' }}
+        >
+          Kova
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default function AccesoAnticipado() {
+  const { ref, visible } = useRevealStagger();
+
   return (
     <section
       id="acceso"
-      className="py-14 lg:py-20 px-6 lg:px-8 relative overflow-hidden"
-      style={{ background: KOVA.white }}
+      className="py-12 lg:py-16 px-6 lg:px-8 relative overflow-hidden bg-white border-t"
+      style={{ borderColor: KOVA.border }}
     >
-      <div className="max-w-6xl mx-auto relative z-10">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 xl:gap-14 items-center">
-          <div>
-            <p className="kova-eyebrow-pill mb-5">Hablemos con Kova</p>
+      <div
+        className="pointer-events-none absolute inset-0 opacity-60"
+        style={{
+          background:
+            'radial-gradient(ellipse 50% 40% at 0% 50%, rgba(26,63,170,0.04) 0%, transparent 60%), radial-gradient(ellipse 40% 40% at 100% 50%, rgba(0,178,122,0.04) 0%, transparent 60%)',
+        }}
+        aria-hidden
+      />
+
+      <div className="max-w-6xl mx-auto relative">
+        <div
+          ref={ref}
+          className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.08fr)] gap-8 lg:gap-10 xl:gap-12 lg:items-stretch"
+        >
+          <div className="flex flex-col max-w-xl lg:max-w-none">
+            <p className="kova-eyebrow-pill mb-5">¿Por qué elegir Kova?</p>
             <h2
               className="font-heading font-bold leading-tight mb-4 text-balance"
               style={{
-                fontSize: 'clamp(1.75rem, 2.8vw, 2.375rem)',
+                fontSize: 'clamp(1.875rem, 3vw, 2.5rem)',
                 letterSpacing: '-0.03em',
                 color: BRAND.navy,
               }}
             >
-              Descubra cómo Kova encuentra el talento comercial que su empresa necesita.
+              Por qué las organizaciones eligen Kova
             </h2>
-            <p className="text-base leading-relaxed mb-6 max-w-lg" style={{ color: KOVA.body, lineHeight: 1.75 }}>
-              Selección comercial ejecutada con rigor. Búsqueda, evaluación y recomendación en un proceso
-              estructurado y transparente.
+            <p
+              className="text-base lg:text-[17px] leading-relaxed mb-6 lg:mb-7"
+              style={{ color: KOVA.body, lineHeight: 1.75 }}
+            >
+              La forma antigua de selección envía currículums y apuesta por la entrevista. Kova le aporta criterio,
+              evidencia y estructura para reducir el riesgo de cada contratación comercial.
             </p>
 
-            <ul className="space-y-3.5 mb-8">
-              {diferenciales.map((item) => (
-                <li key={item} className="flex items-start gap-3.5">
+            <ul className="space-y-4 lg:flex-1 lg:flex lg:flex-col lg:justify-between lg:gap-4 lg:space-y-0">
+              {reasons.map(({ title, desc }, i) => (
+                <li
+                  key={title}
+                  className="flex items-start gap-4 rounded-xl px-4 py-4 lg:px-5 lg:py-5 lg:flex-1"
+                  style={{
+                    background: KOVA.surface,
+                    border: `1px solid ${KOVA.border}`,
+                    opacity: visible ? 1 : 0,
+                    transform: visible ? 'translateX(0)' : 'translateX(-10px)',
+                    transition: `opacity 0.5s ease ${i * 80}ms, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) ${i * 80}ms`,
+                  }}
+                >
                   <span
-                    className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                    style={{ background: BRAND.blue }}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{ background: KOVA.paleGreen }}
                   >
-                    <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
+                    <Check className="w-4 h-4" style={{ color: BRAND.greenDark }} strokeWidth={2.5} />
                   </span>
-                  <span className="text-[15px] leading-snug" style={{ color: KOVA.body, lineHeight: 1.6 }}>
-                    {item}
-                  </span>
+                  <div>
+                    <p className="text-[15px] lg:text-base font-semibold mb-1 leading-snug" style={{ color: BRAND.navy }}>
+                      {title}
+                    </p>
+                    <p className="text-[14px] leading-relaxed" style={{ color: KOVA.muted, lineHeight: 1.65 }}>
+                      {desc}
+                    </p>
+                  </div>
                 </li>
               ))}
             </ul>
-
-            <Link
-              to="/contacto"
-              className="hidden md:inline-flex group kova-btn-primary items-center gap-2 font-semibold px-6 py-3.5 rounded-xl text-sm transition-all text-white"
-            >
-              Contáctenos
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
           </div>
 
-          <div className="relative">
-            <div
-              className="absolute -inset-3 rounded-2xl opacity-60 pointer-events-none"
-              style={{ background: 'linear-gradient(135deg, rgba(26,63,170,0.08), rgba(0,178,122,0.06))' }}
-              aria-hidden
-            />
-            <img
-              src="/images/equipo-kova.png"
-              alt="Equipo Kova colaborando en evaluación de talento comercial"
-              className="relative w-full rounded-2xl object-cover aspect-[4/3] shadow-lg"
-              style={{ boxShadow: '0 8px 32px rgba(15,31,61,0.12)' }}
-            />
+          <div
+            className="rounded-2xl p-5 lg:p-7 xl:p-8 flex flex-col h-full"
+            style={{
+              background: KOVA.white,
+              border: `1px solid ${KOVA.border}`,
+              boxShadow: '0 12px 40px rgba(15,31,61,0.07)',
+              opacity: visible ? 1 : 0,
+              transform: visible ? 'translateY(0)' : 'translateY(16px)',
+              transition: 'opacity 0.6s ease 60ms, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 60ms',
+            }}
+          >
+            <p
+              className="text-base lg:text-lg font-semibold mb-5 lg:mb-6 pb-4 lg:pb-5 border-b flex-shrink-0"
+              style={{ color: BRAND.navy, borderColor: KOVA.border }}
+            >
+              Forma antigua frente a Kova
+            </p>
+            <div className="space-y-4 lg:flex-1 lg:flex lg:flex-col lg:justify-between lg:gap-4 lg:space-y-0">
+              {comparisons.map(({ old, kova }, i) => (
+                <CompareRow key={old} old={old} kova={kova} index={i} visible={visible} />
+              ))}
+            </div>
           </div>
         </div>
 
         <p
-          className="text-center text-sm mt-10 lg:mt-12 max-w-2xl mx-auto"
+          className="text-center text-sm lg:text-[15px] mt-8 lg:mt-10 max-w-xl mx-auto"
           style={{ color: KOVA.muted, lineHeight: 1.65 }}
         >
           Selección comercial basada en competencias, no en experiencia declarada.

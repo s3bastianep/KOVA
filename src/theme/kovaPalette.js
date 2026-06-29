@@ -6,6 +6,8 @@ export const BRAND = {
   blueMid: '#2D5BE3',
   green: '#00B27A',
   greenDark: '#009966',
+  coral: '#FF3B30',
+  coralDark: '#E63228',
 };
 
 export const KOVA = {
@@ -17,6 +19,7 @@ export const KOVA = {
   surfaceAlt: '#F1F3F6',
   paleBlue: '#EEF2FA',
   paleGreen: '#E6FAF3',
+  paleCoral: '#FFF0EE',
   border: '#E2E6ED',
   borderSoft: '#E2E8F0',
 };
