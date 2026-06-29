@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { BRAND } from '@/theme/kovaPalette';
 
 const stats = [
-  { value: 67, title: 'Reducción de entrevistas por contratación', accent: BRAND.green },
-  { value: 92, title: 'Alineación con el perfil comercial', accent: BRAND.green },
-  { value: 100, title: 'Criterio de evaluación uniforme', accent: BRAND.green },
-  { value: 94, title: 'Retención al primer año', accent: BRAND.green },
+  { value: 67, title: 'Reducción de entrevistas por contratación' },
+  { value: 92, title: 'Alineación con el perfil comercial' },
+  { value: 100, title: 'Criterio de evaluación uniforme' },
+  { value: 94, title: 'Retención al primer año' },
 ];
 
 function useCountUp(target, active, duration = 1400) {
@@ -61,50 +61,30 @@ function useReveal() {
   return { ref, visible };
 }
 
-function StatCard({ value, title, accent, index, active }) {
+function StatCard({ value, title, active }) {
   const count = useCountUp(value, active);
-  const delay = index * 90;
 
   return (
-    <article
-      className="kova-stat-card relative rounded-2xl px-4 py-5 lg:px-5 lg:py-6 flex flex-col items-center text-center overflow-hidden"
-      style={{
-        opacity: active ? 1 : 0,
-        transform: active ? 'translateY(0)' : 'translateY(20px)',
-        transition: `opacity 0.55s ease ${delay}ms, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,
-      }}
-    >
+    <article className="kova-stat-card relative px-4 py-6 lg:py-7 flex flex-col items-center text-center h-full min-h-[168px]">
       <span
-        className="absolute top-0 inset-x-0 h-[3px] rounded-t-2xl"
-        style={{ background: accent }}
+        className="absolute top-0 inset-x-0 h-[3px]"
+        style={{ background: BRAND.green }}
         aria-hidden
       />
-      <div className="flex items-baseline gap-0.5 mb-3">
+      <div className="flex items-baseline justify-center gap-0.5 h-14 mb-3">
         <span
           className="font-heading font-bold tabular-nums leading-none text-white"
-          style={{ fontSize: 'clamp(2.5rem, 5vw, 3.25rem)', letterSpacing: '-0.04em' }}
+          style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3rem)', letterSpacing: '-0.04em' }}
         >
           {count}
         </span>
-        <span className="text-xl font-semibold tabular-nums" style={{ color: accent }}>
+        <span className="text-lg font-semibold tabular-nums" style={{ color: BRAND.green }}>
           %
         </span>
       </div>
-      <div
-        className="w-full max-w-[120px] h-1 rounded-full mb-5 overflow-hidden"
-        style={{ background: 'rgba(255,255,255,0.08)' }}
-      >
-        <div
-          className="h-full rounded-full"
-          style={{
-            width: active ? `${value}%` : '0%',
-            background: accent,
-            transition: `width 1.2s cubic-bezier(0.22, 1, 0.36, 1) ${delay + 200}ms`,
-          }}
-        />
-      </div>
+      <div className="w-8 h-0.5 rounded-full mb-4 flex-shrink-0" style={{ background: BRAND.green }} />
       <p
-        className="text-[13px] lg:text-sm font-medium leading-snug max-w-[12rem]"
+        className="text-[13px] lg:text-sm font-medium leading-snug max-w-[11.5rem] min-h-[2.75rem] flex items-center justify-center"
         style={{ color: 'rgba(255,255,255,0.82)' }}
       >
         {title}
@@ -119,13 +99,8 @@ export default function ImpactStats() {
   return (
     <section className="relative py-12 lg:py-16 px-6 lg:px-8 overflow-hidden kova-section-results">
       <div
-        className="pointer-events-none absolute -top-24 -left-24 w-72 h-72 rounded-full kova-results-orb-a"
-        style={{ background: 'radial-gradient(circle, rgba(255,59,48,0.12) 0%, transparent 70%)' }}
-        aria-hidden
-      />
-      <div
         className="pointer-events-none absolute -bottom-20 -right-16 w-80 h-80 rounded-full kova-results-orb-b"
-        style={{ background: 'radial-gradient(circle, rgba(45,91,227,0.14) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(circle, rgba(0,178,122,0.1) 0%, transparent 70%)' }}
         aria-hidden
       />
 
@@ -134,8 +109,7 @@ export default function ImpactStats() {
           className="text-center max-w-2xl mx-auto mb-8 lg:mb-9"
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible ? 'translateY(0)' : 'translateY(14px)',
-            transition: 'opacity 0.5s ease, transform 0.5s ease',
+            transition: 'opacity 0.5s ease',
           }}
         >
           <p className="kova-eyebrow-results mb-5 mx-auto w-fit">Resultados con evidencia</p>
@@ -155,9 +129,16 @@ export default function ImpactStats() {
           </p>
         </header>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
-          {stats.map((stat, i) => (
-            <StatCard key={stat.title} {...stat} index={i} active={visible} />
+        <div
+          className="grid grid-cols-2 lg:grid-cols-4 rounded-2xl overflow-hidden divide-x divide-y lg:divide-y-0 divide-white/[0.08] items-stretch"
+          style={{
+            border: '1px solid rgba(255,255,255,0.1)',
+            opacity: visible ? 1 : 0,
+            transition: 'opacity 0.5s ease 80ms',
+          }}
+        >
+          {stats.map((stat) => (
+            <StatCard key={stat.title} {...stat} active={visible} />
           ))}
         </div>
 

@@ -103,12 +103,12 @@
 
   .kova-btn-primary {
     background: var(--kova-coral);
-    box-shadow: 0 4px 16px rgba(255, 59, 48, 0.32);
+    box-shadow: 0 4px 14px rgba(255, 59, 48, 0.28);
   }
 
   .kova-btn-primary:hover {
     background: var(--kova-coral-dark);
-    box-shadow: 0 6px 20px rgba(255, 59, 48, 0.4);
+    box-shadow: 0 6px 18px rgba(255, 59, 48, 0.34);
     transform: translateY(-1px);
   }
 
@@ -235,14 +235,8 @@
 
   .kova-stat-card {
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-  }
-
-  .kova-stat-card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(255, 255, 255, 0.18);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    border: none;
+    border-radius: 0;
   }
 
   @keyframes kova-orb-drift-a {
