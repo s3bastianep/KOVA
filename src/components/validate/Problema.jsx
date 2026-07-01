@@ -21,33 +21,25 @@ const points = [
 
 export default function Problema() {
   return (
-    <section id="problema" className="py-12 lg:py-16 px-6 lg:px-8 bg-white border-b" style={{ borderColor: KOVA.border }}>
+    <section id="problema" className="py-10 lg:py-16 px-5 sm:px-6 lg:px-8 bg-white border-b" style={{ borderColor: KOVA.border }}>
       <div className="max-w-6xl mx-auto">
-        <p className="kova-eyebrow-pill kova-eyebrow-coral mb-4">El problema</p>
-        <h2
-          className="font-heading font-bold leading-tight mb-8 lg:mb-10 text-balance max-w-2xl"
-          style={{
-            fontSize: 'clamp(1.75rem, 3vw, 2.375rem)',
-            color: BRAND.navy,
-            letterSpacing: '-0.03em',
-            lineHeight: 1.15,
-          }}
-        >
+        <p className="kova-eyebrow-pill kova-eyebrow-coral mb-3 sm:mb-4">El problema</p>
+        <h2 className="font-heading font-bold leading-tight mb-6 sm:mb-8 lg:mb-10 text-balance max-w-2xl kova-text-h2-section" style={{ color: BRAND.navy }}>
           La contratación de talento comercial es diferente.
         </h2>
 
-        <div className="grid lg:grid-cols-[minmax(0,1fr)_300px] gap-8 lg:gap-10 xl:gap-12 lg:items-stretch">
-          <div className="space-y-6 lg:space-y-7 max-w-2xl">
+        <div className="grid lg:grid-cols-[minmax(0,1fr)_300px] gap-6 sm:gap-8 lg:gap-10 xl:gap-12 lg:items-stretch">
+          <div className="space-y-5 sm:space-y-6 lg:space-y-7 max-w-2xl">
             {points.map(({ title, desc }) => (
               <article
                 key={title}
-                className="pl-5 border-l-[3px]"
+                className="pl-4 sm:pl-5 border-l-[3px]"
                 style={{ borderColor: BRAND.coral }}
               >
-                <h3 className="text-[15px] lg:text-base font-semibold mb-1.5 leading-snug" style={{ color: BRAND.navy }}>
+                <h3 className="text-[14px] sm:text-[15px] lg:text-base font-semibold mb-1.5 leading-snug" style={{ color: BRAND.navy }}>
                   {title}
                 </h3>
-                <p className="text-[14px] lg:text-[15px] leading-relaxed" style={{ color: KOVA.muted, lineHeight: 1.7 }}>
+                <p className="text-[13px] sm:text-[14px] lg:text-[15px] leading-relaxed" style={{ color: KOVA.muted, lineHeight: 1.65 }}>
                   {desc}
                 </p>
               </article>
@@ -55,7 +47,7 @@ export default function Problema() {
           </div>
 
           <aside
-            className="flex flex-col items-center justify-center text-center rounded-2xl px-7 py-10 lg:px-8 lg:py-12 w-full max-w-[300px] mx-auto lg:mx-0 lg:max-w-none lg:min-h-full"
+            className="flex flex-col items-center justify-center text-center rounded-xl sm:rounded-2xl px-5 py-8 sm:px-7 sm:py-10 lg:px-8 lg:py-12 w-full lg:min-h-full"
             style={{
               background: 'linear-gradient(180deg, #0F1F3D 0%, #121E32 100%)',
               boxShadow: '0 8px 32px rgba(15,31,61,0.14)',
@@ -63,12 +55,12 @@ export default function Problema() {
           >
             <div className="flex items-baseline justify-center gap-0.5 mb-6">
               <span
-                className="font-heading font-bold tabular-nums leading-none"
-                style={{ fontSize: 'clamp(3.25rem, 8vw, 4rem)', color: BRAND.coral, letterSpacing: '-0.04em' }}
+                className="font-heading font-bold tabular-nums leading-none kova-text-stat"
+                style={{ color: BRAND.coral }}
               >
                 67
               </span>
-              <span className="text-2xl font-bold" style={{ color: BRAND.coral }}>
+              <span className="text-xl font-bold" style={{ color: BRAND.coral }}>
                 %
               </span>
             </div>

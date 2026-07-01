@@ -5,7 +5,7 @@ import { GUIAS, isGuiaPath } from '@/components/guia/guiaRoutes';
 import { BRAND, KOVA } from '@/theme/kovaPalette';
 
 const landingLinks = [
-  ['El servicio', 'proceso'],
+  ['Cómo trabajamos', '/como-trabajamos'],
   ['Quiénes somos', '/quienes-somos'],
 ];
 
@@ -53,7 +53,7 @@ export default function Navbar() {
         boxShadow: scrolled && !onLandingHero ? '0 1px 3px rgba(15,31,61,0.04)' : 'none',
       }}
     >
-      <div className="max-w-6xl mx-auto px-6 lg:px-8 h-[72px] flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 h-16 sm:h-[72px] flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 text-left">
           <div
             className="w-9 h-9 rounded-lg flex items-center justify-center"

@@ -2,7 +2,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail } from 'lucide-react';
 
 const links = [
-  ['El servicio', 'proceso'],
+  ['Cómo trabajamos', '/como-trabajamos'],
   ['Quiénes somos', '/quienes-somos'],
   ['Contacto', '/contacto'],
 ];
@@ -20,7 +20,7 @@ export default function Footer() {
   };
 
   return (
-    <footer style={{ background: '#0F1F3D' }} className="px-6 lg:px-8 py-5">
+    <footer style={{ background: '#0F1F3D' }} className="px-5 sm:px-6 lg:px-8 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] md:pb-5">
       <div className="max-w-6xl mx-auto flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <Link to="/" className="flex items-center gap-2 w-fit">

@@ -66,6 +66,9 @@ function useRevealStagger() {
 function CompareRow({ old, kova, index, visible }) {
   const delay = 80 + index * 70;
 
+  const rowBase =
+    'rounded-xl px-3.5 py-3 sm:px-4 sm:py-3.5 lg:px-5 lg:py-4 transition-all duration-200';
+
   return (
     <div
       className="space-y-2 flex-1 flex flex-col justify-center"
@@ -76,38 +79,38 @@ function CompareRow({ old, kova, index, visible }) {
       }}
     >
       <div
-        className="flex items-center gap-3 rounded-xl px-4 py-3.5 lg:px-5 lg:py-4 transition-shadow duration-200 hover:shadow-sm"
+        className={`${rowBase} flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-3 hover:shadow-sm`}
         style={{ background: KOVA.paleCoral, border: '1px solid #FFD4CF' }}
       >
-        <p
-          className="text-[14px] lg:text-[15px] leading-relaxed line-through flex-1 min-w-0"
-          style={{ color: '#94A3B8', lineHeight: 1.55 }}
-        >
-          {old}
-        </p>
         <span
-          className="flex-shrink-0 text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full whitespace-nowrap"
+          className="self-start text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full whitespace-nowrap order-1 sm:order-2 sm:flex-shrink-0"
           style={{ background: BRAND.coral, color: '#FFFFFF' }}
         >
           Antigua
         </span>
+        <p
+          className="text-[13px] sm:text-[14px] lg:text-[15px] leading-relaxed line-through flex-1 min-w-0 order-2 sm:order-1"
+          style={{ color: '#94A3B8', lineHeight: 1.55 }}
+        >
+          {old}
+        </p>
       </div>
       <div
-        className="flex items-center gap-3 rounded-xl px-4 py-3.5 lg:px-5 lg:py-4 transition-all duration-200 hover:shadow-md hover:-translate-y-px"
+        className={`${rowBase} flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-3 hover:shadow-md hover:-translate-y-px`}
         style={{ background: KOVA.paleBlue, border: '1px solid #C5D4F0' }}
       >
-        <p
-          className="text-[14px] lg:text-[15px] font-medium leading-relaxed flex-1 min-w-0"
-          style={{ color: BRAND.navy, lineHeight: 1.55 }}
-        >
-          {kova}
-        </p>
         <span
-          className="flex-shrink-0 text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full whitespace-nowrap"
+          className="self-start text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full whitespace-nowrap order-1 sm:order-2 sm:flex-shrink-0"
           style={{ background: BRAND.blue, color: '#FFFFFF' }}
         >
           Kova
         </span>
+        <p
+          className="text-[13px] sm:text-[14px] lg:text-[15px] font-medium leading-relaxed flex-1 min-w-0 order-2 sm:order-1"
+          style={{ color: BRAND.navy, lineHeight: 1.55 }}
+        >
+          {kova}
+        </p>
       </div>
     </div>
   );
@@ -119,7 +122,7 @@ export default function AccesoAnticipado() {
   return (
     <section
       id="acceso"
-      className="py-12 lg:py-16 px-6 lg:px-8 relative overflow-hidden bg-white border-t"
+      className="py-10 lg:py-16 px-5 sm:px-6 lg:px-8 relative overflow-hidden bg-white border-t"
       style={{ borderColor: KOVA.border }}
     >
       <div
@@ -134,24 +137,14 @@ export default function AccesoAnticipado() {
       <div className="max-w-6xl mx-auto relative">
         <div
           ref={ref}
-          className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.08fr)] gap-8 lg:gap-10 xl:gap-12 lg:items-stretch"
+          className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.08fr)] gap-6 sm:gap-8 lg:gap-10 xl:gap-12 lg:items-stretch"
         >
           <div className="flex flex-col max-w-xl lg:max-w-none">
             <p className="kova-eyebrow-pill mb-5">¿Por qué elegir Kova?</p>
-            <h2
-              className="font-heading font-bold leading-tight mb-4 text-balance"
-              style={{
-                fontSize: 'clamp(1.875rem, 3vw, 2.5rem)',
-                letterSpacing: '-0.03em',
-                color: BRAND.navy,
-              }}
-            >
+            <h2 className="font-heading font-bold leading-tight mb-4 text-balance kova-text-h2-section" style={{ color: BRAND.navy }}>
               Por qué las organizaciones eligen Kova
             </h2>
-            <p
-              className="text-base lg:text-[17px] leading-relaxed mb-6 lg:mb-7"
-              style={{ color: KOVA.body, lineHeight: 1.75 }}
-            >
+            <p className="kova-text-body leading-relaxed mb-6 lg:mb-7" style={{ color: KOVA.body }}>
               La forma antigua de selección envía currículums y apuesta por la entrevista. Kova le aporta criterio,
               evidencia y estructura para reducir el riesgo de cada contratación comercial.
             </p>
@@ -189,7 +182,7 @@ export default function AccesoAnticipado() {
           </div>
 
           <div
-            className="rounded-2xl p-5 lg:p-7 xl:p-8 flex flex-col h-full"
+            className="rounded-xl sm:rounded-2xl p-4 sm:p-5 lg:p-7 xl:p-8 flex flex-col h-full"
             style={{
               background: KOVA.white,
               border: `1px solid ${KOVA.border}`,

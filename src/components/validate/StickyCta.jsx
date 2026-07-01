@@ -8,7 +8,7 @@ export default function StickyCta() {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-40 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] md:hidden border-t"
+      className="fixed bottom-0 left-0 right-0 z-40 px-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:hidden border-t"
       style={{ background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(12px)', borderColor: '#E7E5E4' }}
     >
       <Link

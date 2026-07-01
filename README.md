@@ -1,6 +1,6 @@
 # KOVA
 
-Landing page de Kova — React + Vite.
+Landing page de Kova — React + Vite + API propia de agendamiento.
 
 ## Desarrollo local
 
@@ -9,37 +9,42 @@ npm install
 npm run dev
 ```
 
-Abre la URL que imprime Vite (normalmente `http://localhost:5173`).
+Abre **http://localhost:3000** — sirve el frontend (Vite) y la API de citas en el mismo puerto.
 
-## Formulario de contacto
+## Agendamiento propio (`/contacto`)
 
-El formulario de acceso anticipado envía datos a la URL definida en `VITE_EARLY_ACCESS_API_URL`.
+Sin Calendly ni servicios externos. Flujo:
 
-Crea `.env.local` en la raíz del proyecto:
+1. El visitante elige **fecha y hora** en el calendario Kova
+2. Completa **nombre, correo, teléfono y empresa**
+3. La cita se guarda en `data/bookings.json` vía `POST /api/bookings`
 
-```bash
-VITE_EARLY_ACCESS_API_URL=https://tu-api.com/early-access
-```
+### API
 
-Puedes usar Formspree, un webhook propio o un backend en Railway.
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `GET` | `/api/availability?date=YYYY-MM-DD` | Horarios libres del día |
+| `POST` | `/api/bookings` | Crear cita |
+| `GET` | `/api/health` | Estado del servicio |
+
+### Configurar horarios
+
+Edita `server/schedule.js`: días laborables, franja horaria (9:00–17:00), duración de slot (30 min), zona horaria.
 
 ## Deploy en Railway
 
-1. Conecta el repo de GitHub en [railway.app](https://railway.app).
-2. Railway detectará Node.js automáticamente.
-3. **Build command:** `npm run build`
-4. **Start command:** `npm run start`
-5. Añade la variable `VITE_EARLY_ACCESS_API_URL` si ya tienes endpoint para el formulario.
-6. Genera un dominio en **Settings → Networking**.
+1. Conecta el repo en [railway.app](https://railway.app).
+2. **Build command:** `npm run build`
+3. **Start command:** `npm run start`
+4. Genera un dominio en **Settings → Networking**.
 
-Cada push a `master` redeploya la app.
+Cada push redeploya la app. Las citas persisten en el volumen/archivo `data/bookings.json` del contenedor (para producción seria recomendable un volumen persistente o base de datos).
 
 ## Scripts
 
 | Comando | Descripción |
-|---|---|
-| `npm run dev` | Servidor de desarrollo |
+|---------|-------------|
+| `npm run dev` | Frontend + API en localhost:3000 |
 | `npm run build` | Build de producción en `dist/` |
-| `npm run start` | Sirve `dist/` (Railway) |
-| `npm run preview` | Preview local del build |
+| `npm run start` | Sirve `dist/` + API (Railway) |
 | `npm run lint` | ESLint |

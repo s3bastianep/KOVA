@@ -12,6 +12,7 @@ import GuiaRotacionComercial from './pages/GuiaRotacionComercial';
 import GuiaHabilidadesBlandasComercial from './pages/GuiaHabilidadesBlandasComercial';
 import Contacto from './pages/Contacto';
 import QuienesSomos from './pages/QuienesSomos';
+import ComoTrabajamos from './pages/ComoTrabajamos';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/guia-habilidades-blandas-comercial" element={<GuiaHabilidadesBlandasComercial />} />
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/quienes-somos" element={<QuienesSomos />} />
+          <Route path="/como-trabajamos" element={<ComoTrabajamos />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Router>

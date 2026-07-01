@@ -12,7 +12,7 @@ import StickyCta from '@/components/validate/StickyCta';
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-background pb-24 md:pb-0">
+    <div className="min-h-screen bg-background pb-[calc(5.75rem+env(safe-area-inset-bottom))] md:pb-0">
       <Navbar />
       <StickyCta />
       <Hero />

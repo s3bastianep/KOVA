@@ -54,6 +54,9 @@
 
   html {
     scroll-behavior: smooth;
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   body {
@@ -67,6 +70,42 @@
 }
 
 @layer utilities {
+  /* Escala tipográfica unificada — landing e interiores al mismo zoom visual */
+  .kova-text-h1 {
+    font-size: clamp(1.625rem, 3.2vw, 2.375rem);
+    letter-spacing: -0.035em;
+    line-height: 1.12;
+  }
+
+  .kova-text-h2 {
+    font-size: clamp(1.375rem, 2.5vw, 2rem);
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+  }
+
+  .kova-text-h2-section {
+    font-size: clamp(1.5rem, 2.8vw, 2.125rem);
+    letter-spacing: -0.03em;
+    line-height: 1.12;
+  }
+
+  .kova-text-body {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+
+  .kova-text-stat {
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .kova-text-display {
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
   .kova-card {
     background: #FFFFFF;
     border: 1px solid #E2E8F0;
@@ -110,6 +149,96 @@
     background: var(--kova-coral-dark);
     box-shadow: 0 6px 18px rgba(255, 59, 48, 0.34);
     transform: translateY(-1px);
+  }
+
+  /* Calendario de agendamiento — limpio y B2B */
+  .kova-booking-calendar.rdp {
+    --rdp-cell-size: 2.25rem;
+    margin: 0;
+  }
+
+  .kova-booking-calendar .rdp-months {
+    width: 100%;
+  }
+
+  .kova-booking-calendar .rdp-month {
+    width: 100%;
+  }
+
+  .kova-booking-calendar .rdp-caption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0.25rem 0.75rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .kova-booking-calendar .rdp-caption_label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0F1F3D;
+    text-transform: capitalize;
+  }
+
+  .kova-booking-calendar .rdp-nav_button {
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    background: transparent;
+    border-radius: 0.5rem;
+    opacity: 0.7;
+    transition: background 0.15s ease, opacity 0.15s ease;
+  }
+
+  .kova-booking-calendar .rdp-nav_button:hover {
+    background: #F1F5F9;
+    opacity: 1;
+  }
+
+  .kova-booking-calendar .rdp-head_cell {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .kova-booking-calendar .rdp-day_button {
+    width: var(--rdp-cell-size);
+    height: var(--rdp-cell-size);
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #0F1F3D;
+    border: none;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .kova-booking-calendar .rdp-day_button:hover:not(:disabled) {
+    background: #EEF2FA;
+  }
+
+  .kova-booking-calendar .rdp-day_selected .rdp-day_button,
+  .kova-booking-calendar .rdp-day_selected .rdp-day_button:hover {
+    background: #1A3FAA;
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .kova-booking-calendar .rdp-day_today:not(.rdp-day_selected) .rdp-day_button {
+    background: #F8FAFC;
+    box-shadow: inset 0 0 0 1px #CBD5E1;
+    font-weight: 600;
+  }
+
+  .kova-booking-calendar .rdp-day_outside .rdp-day_button {
+    color: #CBD5E1;
+    opacity: 1;
+  }
+
+  .kova-booking-calendar .rdp-day_disabled .rdp-day_button {
+    color: #E2E8F0;
+    cursor: not-allowed;
   }
 
   .kova-eyebrow-pill {
@@ -190,7 +319,7 @@
 
   .kova-hero-eyebrow {
     display: inline-flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
     border-radius: 9999px;
@@ -201,6 +330,20 @@
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.14);
     color: rgba(255, 255, 255, 0.88);
+    line-height: 1.45;
+    max-width: 100%;
+  }
+
+  @media (max-width: 639px) {
+    .kova-hero-eyebrow {
+      font-size: 11px;
+      padding: 0.45rem 0.75rem;
+    }
+
+    .kova-eyebrow-pill {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+    }
   }
 
   .kova-hero-highlight {
@@ -212,6 +355,13 @@
       0 0 0 1px rgba(255, 255, 255, 0.06),
       0 24px 48px rgba(0, 0, 0, 0.28),
       0 48px 96px rgba(26, 63, 170, 0.18);
+  }
+
+  .kova-hero-mockup-glow-light {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.85),
+      0 20px 48px rgba(0, 0, 0, 0.22),
+      0 40px 80px rgba(26, 63, 170, 0.14);
   }
 
   .kova-section-results {

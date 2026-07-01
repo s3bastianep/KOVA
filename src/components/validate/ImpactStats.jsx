@@ -65,26 +65,25 @@ function StatCard({ value, title, active }) {
   const count = useCountUp(value, active);
 
   return (
-    <article className="kova-stat-card relative px-4 py-6 lg:py-7 flex flex-col items-center text-center h-full min-h-[168px]">
+    <article className="kova-stat-card relative px-3 py-5 sm:px-4 sm:py-6 lg:py-7 flex flex-col items-center text-center h-full min-h-0 sm:min-h-[152px]">
       <span
         className="absolute top-0 inset-x-0 h-[3px]"
         style={{ background: BRAND.green }}
         aria-hidden
       />
-      <div className="flex items-baseline justify-center gap-0.5 h-14 mb-3">
+      <div className="flex items-baseline justify-center gap-0.5 h-12 sm:h-14 mb-2 sm:mb-3">
         <span
-          className="font-heading font-bold tabular-nums leading-none text-white"
-          style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3rem)', letterSpacing: '-0.04em' }}
+          className="font-heading font-bold tabular-nums leading-none text-white kova-text-stat"
         >
           {count}
         </span>
-        <span className="text-lg font-semibold tabular-nums" style={{ color: BRAND.green }}>
+        <span className="text-sm font-semibold tabular-nums" style={{ color: BRAND.green }}>
           %
         </span>
       </div>
-      <div className="w-8 h-0.5 rounded-full mb-4 flex-shrink-0" style={{ background: BRAND.green }} />
+      <div className="w-8 h-0.5 rounded-full mb-3 sm:mb-4 flex-shrink-0" style={{ background: BRAND.green }} />
       <p
-        className="text-[13px] lg:text-sm font-medium leading-snug max-w-[11.5rem] min-h-[2.75rem] flex items-center justify-center"
+        className="text-xs sm:text-[13px] lg:text-sm font-medium leading-snug max-w-[14rem] sm:max-w-[11.5rem]"
         style={{ color: 'rgba(255,255,255,0.82)' }}
       >
         {title}
@@ -97,40 +96,33 @@ export default function ImpactStats() {
   const { ref, visible } = useReveal();
 
   return (
-    <section className="relative py-12 lg:py-16 px-6 lg:px-8 overflow-hidden kova-section-results">
+    <section className="relative py-10 lg:py-16 px-5 sm:px-6 lg:px-8 overflow-hidden kova-section-results">
       <div
         className="pointer-events-none absolute -bottom-20 -right-16 w-80 h-80 rounded-full kova-results-orb-b"
         style={{ background: 'radial-gradient(circle, rgba(0,178,122,0.1) 0%, transparent 70%)' }}
         aria-hidden
       />
 
-      <div ref={ref} className="max-w-5xl mx-auto relative">
+      <div ref={ref} className="max-w-6xl mx-auto relative">
         <header
-          className="text-center max-w-2xl mx-auto mb-8 lg:mb-9"
+          className="text-center max-w-2xl mx-auto mb-6 sm:mb-8 lg:mb-9 px-0.5"
           style={{
             opacity: visible ? 1 : 0,
             transition: 'opacity 0.5s ease',
           }}
         >
-          <p className="kova-eyebrow-results mb-5 mx-auto w-fit">Resultados con evidencia</p>
-          <h2
-            className="font-heading font-bold text-white text-balance mb-4"
-            style={{
-              fontSize: 'clamp(1.625rem, 2.8vw, 2.125rem)',
-              letterSpacing: '-0.03em',
-              lineHeight: 1.2,
-            }}
-          >
+          <p className="kova-eyebrow-results mb-4 sm:mb-5 mx-auto w-fit">Resultados con evidencia</p>
+          <h2 className="font-heading font-bold text-white text-balance mb-3 sm:mb-4 kova-text-h2" style={{ lineHeight: 1.2 }}>
             Resultados reales para equipos de selección comercial
           </h2>
-          <p className="text-sm lg:text-[15px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.58)', lineHeight: 1.7 }}>
+          <p className="kova-text-body leading-relaxed" style={{ color: 'rgba(255,255,255,0.58)' }}>
             Metodología estructurada con criterio uniforme, evidencia documentada y evaluación diseñada para talento
             comercial.
           </p>
         </header>
 
         <div
-          className="grid grid-cols-2 lg:grid-cols-4 rounded-2xl overflow-hidden divide-x divide-y lg:divide-y-0 divide-white/[0.08] items-stretch"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 rounded-xl sm:rounded-2xl overflow-hidden divide-y sm:divide-y-0 sm:divide-x divide-white/[0.08] items-stretch"
           style={{
             border: '1px solid rgba(255,255,255,0.1)',
             opacity: visible ? 1 : 0,

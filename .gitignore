@@ -16,6 +16,7 @@ dist
 *.zip
 dist-ssr
 *.local
+data/bookings.json
 
 # Editor directories and files
 .vscode/*

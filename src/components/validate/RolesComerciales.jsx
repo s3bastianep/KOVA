@@ -57,7 +57,7 @@ export default function RolesComerciales() {
   const { ref, visible } = useReveal();
 
   return (
-    <section id="roles" className="relative py-12 lg:py-16 px-6 lg:px-8" style={{ background: KOVA.paleBlue }}>
+    <section id="roles" className="relative pt-10 pb-6 lg:pt-16 lg:pb-8 px-5 sm:px-6 lg:px-8" style={{ background: KOVA.paleBlue }}>
       <div className="absolute inset-x-0 top-0 flex h-[3px]" aria-hidden>
         <span className="flex-1" style={{ background: BRAND.blue }} />
         <span className="flex-1" style={{ background: BRAND.green }} />
@@ -65,33 +65,35 @@ export default function RolesComerciales() {
       </div>
 
       <div ref={ref} className="max-w-6xl mx-auto">
-        <header className="text-center max-w-2xl mx-auto mb-7 lg:mb-8">
-          <p className="kova-eyebrow-pill mb-4 mx-auto w-fit">Diseñado para cualquier rol comercial</p>
+        <header className="text-center max-w-2xl mx-auto mb-5 sm:mb-7 lg:mb-8">
+          <p className="kova-eyebrow-pill mb-3 sm:mb-4 mx-auto w-fit text-[10px] sm:text-xs">
+            Diseñado para cualquier rol comercial
+          </p>
           <h2
-            className="font-heading font-bold tracking-tight mb-4 text-balance"
-            style={{
-              fontSize: 'clamp(1.625rem, 3vw, 2.25rem)',
-              letterSpacing: '-0.03em',
-              lineHeight: 1.15,
-              color: BRAND.navy,
-            }}
+            className="font-heading font-bold tracking-tight mb-3 sm:mb-4 text-balance px-1 kova-text-h2-section"
+            style={{ color: BRAND.navy }}
           >
-            De representantes de desarrollo de ventas a{' '}
-            <span style={{ color: BRAND.blue }}>líderes </span>
-            <span style={{ color: BRAND.coral }}>comerciales</span>
+            <span className="sm:hidden">
+              De representantes a{' '}
+              <span style={{ color: BRAND.blue }}>líderes </span>
+              <span style={{ color: BRAND.coral }}>comerciales</span>
+            </span>
+            <span className="hidden sm:inline">
+              De representantes de desarrollo de ventas a{' '}
+              <span style={{ color: BRAND.blue }}>líderes </span>
+              <span style={{ color: BRAND.coral }}>comerciales</span>
+            </span>
           </h2>
-          <div className="flex items-center justify-center gap-1.5 mb-4" aria-hidden>
-            <span className="w-8 h-1 rounded-full" style={{ background: BRAND.blue }} />
-            <span className="w-8 h-1 rounded-full" style={{ background: BRAND.green }} />
-            <span className="w-8 h-1 rounded-full" style={{ background: BRAND.coral }} />
-          </div>
-          <p className="text-sm lg:text-base" style={{ color: KOVA.body, lineHeight: 1.65 }}>
+          <p
+            className="text-[13px] sm:text-sm lg:text-base max-w-md sm:max-w-none mx-auto px-1"
+            style={{ color: KOVA.body, lineHeight: 1.6 }}
+          >
             Cada candidato se evalúa con precisión según los requisitos de su vacante.
           </p>
         </header>
 
         <div
-          className="rounded-2xl p-4 lg:p-5 bg-white"
+          className="rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 bg-white"
           style={{
             border: `1px solid #C5D4F0`,
             boxShadow: '0 8px 32px rgba(26, 63, 170, 0.08)',
@@ -100,19 +102,20 @@ export default function RolesComerciales() {
             transition: 'opacity 0.5s ease, transform 0.5s ease',
           }}
         >
-          <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1 lg:grid lg:grid-cols-5 lg:gap-3 lg:overflow-visible snap-x snap-mandatory scrollbar-hide">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-3 items-stretch">
             {roles.map(({ title, desc }, i) => {
               const accent = roleAccents[i];
               return (
                 <article
                   key={title}
-                  className="kova-role-card-light flex-shrink-0 w-[188px] sm:w-[200px] lg:w-auto snap-start rounded-xl px-4 py-4 lg:py-5 flex flex-col gap-2"
+                  className="kova-role-card-light rounded-xl px-3.5 py-3.5 sm:px-4 sm:py-4 lg:py-5 flex flex-col gap-1.5 sm:gap-2 min-w-0 h-full"
                   style={{
                     borderColor: `${accent}33`,
                     opacity: visible ? 1 : 0,
                     transition: `opacity 0.4s ease ${60 + i * 40}ms, border-color 0.2s ease, box-shadow 0.2s ease`,
                   }}
                   onMouseEnter={(e) => {
+                    if (!window.matchMedia('(hover: hover)').matches) return;
                     e.currentTarget.style.borderColor = accent;
                     e.currentTarget.style.boxShadow = `0 4px 16px ${accent}22`;
                   }}
@@ -126,10 +129,13 @@ export default function RolesComerciales() {
                     style={{ background: accent }}
                     aria-hidden
                   />
-                  <h3 className="text-[13px] lg:text-sm font-semibold leading-snug" style={{ color: BRAND.navy }}>
+                  <h3
+                    className="text-[13px] sm:text-[13px] lg:text-sm font-semibold leading-snug"
+                    style={{ color: BRAND.navy }}
+                  >
                     {title}
                   </h3>
-                  <p className="text-xs lg:text-[13px] leading-snug" style={{ color: KOVA.muted, lineHeight: 1.55 }}>
+                  <p className="text-[11px] sm:text-xs lg:text-[13px] leading-snug" style={{ color: KOVA.muted, lineHeight: 1.5 }}>
                     {desc}
                   </p>
                 </article>

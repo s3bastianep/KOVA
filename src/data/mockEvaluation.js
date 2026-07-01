@@ -35,7 +35,11 @@ export function weightedMatch(scores) {
 }
 
 export function competencyList(scores) {
-  return COMPETENCIES.map((c) => ({ label: c.label, value: scores[c.id] }));
+  return COMPETENCIES.map((c) => ({
+    label: c.label,
+    shortLabel: c.shortLabel,
+    value: scores[c.id],
+  }));
 }
 
 export function ternAverageScores() {
@@ -53,3 +57,41 @@ export const RANKING = TERN_CANDIDATES.map((c) => ({
   ...c,
   match: weightedMatch(c.scores),
 }));
+
+/** Perfil predictivo derivado de las competencias — una sola fuente de verdad para el mockup */
+export function buildCandidateProfile(
+  candidate,
+  { evaluatedCount = VACANCY_STATS.evaluatedCount, rank = 1 } = {},
+) {
+  const { scores } = candidate;
+  const matchScore = weightedMatch(scores);
+  const competencies = competencyList(scores);
+
+  const modelFit = Math.round((scores.ventaConsultiva + scores.prospeccion) / 2);
+  const culturalFit = Math.round(scores.orientacion * 0.55 + scores.objeciones * 0.45);
+  const successProbability = Math.max(72, matchScore - 4);
+  const quotaPotential = Math.round((scores.ventaConsultiva + scores.orientacion) / 2);
+  const retention12m = Math.min(94, scores.orientacion - 8);
+  const riskScore = Math.max(8, 100 - matchScore + 6);
+
+  const strengths = competencies.filter((c) => c.value >= 90).map((c) => c.shortLabel);
+
+  return {
+    matchScore,
+    kovaScore: matchScore,
+    successProbability,
+    culturalFit,
+    modelFit,
+    quotaPotential,
+    retention12m,
+    riskLevel: matchScore >= 85 ? 'Bajo' : matchScore >= 72 ? 'Medio' : 'Alto',
+    riskScore,
+    percentile: rank,
+    evaluatedCount,
+    shortlistSize: TERN_CANDIDATES.length,
+    competencies,
+    strengths,
+  };
+}
+
+export const TOP_PROFILE = buildCandidateProfile(TOP_CANDIDATE, { rank: 1 });
