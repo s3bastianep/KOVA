@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, Award, Users, BookOpen, CheckCircle } from 'lucide-react';
+import { TrendingUp, Award, Users, CheckCircle } from 'lucide-react';
 
 const skills = [
   { label: 'Prospección', value: 87, color: 'bg-brand' },

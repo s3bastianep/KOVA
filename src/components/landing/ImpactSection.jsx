@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis,
-  CartesianGrid, Tooltip, ResponsiveContainer, Cell, ReferenceLine
+  CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine
 } from 'recharts';
-import { TrendingUp, Users, Zap, Award } from 'lucide-react';
+import { Users, Zap, Award } from 'lucide-react';
 
 // --- DATA ---
 const contratacionData = [

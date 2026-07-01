@@ -5,4 +5,4 @@ export {
   formatDateKey,
   generateTimeSlots,
   isBookableDateKey,
-} from '../../shared/schedule.js';
+} from '../shared/schedule.js';
