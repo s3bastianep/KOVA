@@ -9,10 +9,6 @@ const landingLinks = [
   ['Quiénes somos', '/quienes-somos'],
 ];
 
-// Misma URL en producción (/login). Solo localhost en desarrollo local del dashboard.
-const DASHBOARD_LOGIN_URL =
-  import.meta.env.DEV ? 'http://localhost:3001/login' : '/login';
-
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [recursosOpen, setRecursosOpen] = useState(false);
@@ -146,7 +142,7 @@ export default function Navbar() {
 
         <div className="hidden md:flex items-center gap-3">
           <a
-            href={DASHBOARD_LOGIN_URL}
+            href={import.meta.env.VITE_DASHBOARD_URL ?? 'http://localhost:3001/login'}
             className="text-sm font-medium transition-colors px-3 py-2 rounded-lg border"
             style={{
               color: onLandingHero ? 'rgba(255,255,255,0.85)' : BRAND.navy,

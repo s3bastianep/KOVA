@@ -6,9 +6,6 @@
 # Next.js
 .next/
 next-env.d.ts
-*.tsbuildinfo
-apps/dashboard/public/www/*
-!apps/dashboard/public/www/.gitkeep
 
 # Logs
 /logs
@@ -39,4 +36,3 @@ data/bookings.json
 
 .env
 .vite
-.vite-cache
