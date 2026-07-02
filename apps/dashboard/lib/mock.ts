@@ -10,16 +10,43 @@ export const MOCK_USER = {
 
 export const MOCK_DASHBOARD = {
   kpis: {
-    activeVacancies: 3,
-    closedVacancies: 1,
     activeClients: 5,
-    newClients: 2,
-    activeConsultants: 4,
-    candidatesCount: 18,
-    interviewsScheduled: 6,
+    activeProcesses: 3,
+    activeCandidates: 18,
+    interviewsToday: 2,
+    pendingReviews: 4,
+    stalledProcesses: 1,
+    dueSoon: 2,
+    activeDeals: 3,
     pendingTasks: 9,
     hiresThisMonth: 2,
   },
+  todayWork: [
+    { id: 'tw1', title: 'Llamar cliente TechSales', priority: 'HIGH', type: 'Llamada', processId: 'seed-vacancy-001', processTitle: 'Ejecutivo Comercial B2B' },
+    { id: 'tw2', title: 'Revisar prueba de Juan Pérez', priority: 'HIGH', type: 'Prueba', processId: 'seed-vacancy-001', candidateId: 'c1' },
+    { id: 'tw3', title: 'Agendar entrevista con Laura Méndez', priority: 'MEDIUM', type: 'Entrevista', processId: 'seed-vacancy-002' },
+    { id: 'tw4', title: 'Enviar finalistas a TechSales', priority: 'HIGH', type: 'Finalistas', processId: 'seed-vacancy-001' },
+    { id: 'tw5', title: 'Responder correo cliente Distribuidora Andina', priority: 'MEDIUM', type: 'Correo', processId: 'seed-vacancy-002' },
+    { id: 'tw6', title: 'Enviar propuesta comercial', priority: 'LOW', type: 'Comercial', processId: null },
+  ],
+  recruitmentFunnel: [
+    { stage: 'Prospectados', count: 24 },
+    { stage: 'Contactados', count: 18 },
+    { stage: 'Respondieron', count: 12 },
+    { stage: 'Entrevistados', count: 8 },
+    { stage: 'Pruebas', count: 5 },
+    { stage: 'Cliente', count: 3 },
+    { stage: 'Oferta', count: 2 },
+    { stage: 'Contratados', count: 1 },
+  ],
+  commercialFunnel: [
+    { stage: 'Prospecto', count: 8 },
+    { stage: 'Contacto', count: 6 },
+    { stage: 'Reunión', count: 4 },
+    { stage: 'Propuesta', count: 3 },
+    { stage: 'Negociación', count: 2 },
+    { stage: 'Ganado', count: 1 },
+  ],
   pipeline: [
     { stage: 'APPLIED', _count: { stage: 6 } },
     { stage: 'SCREENING', _count: { stage: 4 } },
@@ -43,14 +70,14 @@ export const MOCK_DASHBOARD = {
     },
     {
       id: '3',
-      description: 'Nueva vacante: Ejecutivo Comercial B2B',
+      description: 'Nuevo proceso: Ejecutivo Comercial B2B',
       createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
       user: { firstName: 'Admin', lastName: 'Kova' },
     },
   ],
   alerts: [
-    { id: '1', title: 'Seguimiento con TechSales', status: 'PENDING', dueDate: new Date(Date.now() + 86400000).toISOString() },
-    { id: '2', title: 'Entrevista con candidato finalista', status: 'PENDING', dueDate: new Date(Date.now() + 172800000).toISOString() },
+    { id: '1', title: 'Proceso sin actividad — Distribuidora Andina', status: 'OVERDUE', dueDate: new Date(Date.now() - 86400000).toISOString() },
+    { id: '2', title: 'Entrevista mañana con Ana Gómez', status: 'PENDING', dueDate: new Date(Date.now() + 86400000).toISOString() },
   ],
 };
 
@@ -91,16 +118,24 @@ export const MOCK_VACANCIES = [
     priority: 'HIGH',
     company: { id: 'seed-company-001', name: 'TechSales Colombia SAS' },
     _count: { candidates: 8 },
+    interviewsCount: 4,
+    finalistsCount: 2,
+    progress: 72,
+    requiredDate: new Date(Date.now() + 21 * 86400000).toISOString(),
   },
   {
     id: 'seed-vacancy-002',
     title: 'Gerente Comercial Regional',
-    status: 'DISCOVERY',
+    status: 'DISCOVERY_PENDING',
     city: 'Medellín',
     modality: 'Presencial',
     priority: 'MEDIUM',
     company: { id: 'seed-company-002', name: 'Distribuidora Andina' },
     _count: { candidates: 3 },
+    interviewsCount: 1,
+    finalistsCount: 0,
+    progress: 15,
+    requiredDate: new Date(Date.now() + 45 * 86400000).toISOString(),
   },
 ];
 
@@ -557,17 +592,19 @@ export function getMockVacancy(id: string) {
   if (!base) return null;
   const candidates = MOCK_CANDIDATES.filter((c) => c.vacancies.some((cv) => cv.vacancy.id === id));
   const stages = [
-    { stage: 'APPLIED', label: 'Postulados' },
-    { stage: 'SCREENING', label: 'Filtro' },
-    { stage: 'CALL', label: 'Llamada' },
-    { stage: 'INTERVIEW', label: 'Entrevista' },
-    { stage: 'ASSESSMENT', label: 'Prueba' },
-    { stage: 'ROLE_PLAY', label: 'Role Play' },
+    { stage: 'APPLIED', label: 'Prospectados' },
+    { stage: 'SCREENING', label: 'Contactados' },
+    { stage: 'CALL', label: 'Respondieron' },
+    { stage: 'INTERVIEW', label: 'Entrevistados' },
+    { stage: 'ASSESSMENT', label: 'Pruebas' },
     { stage: 'CLIENT_REVIEW', label: 'Cliente' },
     { stage: 'OFFER', label: 'Oferta' },
-    { stage: 'HIRED', label: 'Contratado' },
-    { stage: 'ONBOARDING', label: 'Onboarding' },
+    { stage: 'HIRED', label: 'Contratados' },
   ];
+  const openedAt = new Date(Date.now() - 14 * 86400000);
+  const requiredDate = new Date(Date.now() + 21 * 86400000);
+  const daysElapsed = 14;
+  const daysRemaining = 21;
   return {
     ...base,
     salaryMin: 3500000,
@@ -575,17 +612,65 @@ export function getMockVacancy(id: string) {
     variablePay: 'Comisiones por cumplimiento de meta',
     quantity: 1,
     urgency: 'Alta',
+    requiredDate: requiredDate.toISOString(),
     description: 'Responsable de la prospección, negociación y cierre de nuevos clientes B2B, cumpliendo metas mensuales de ventas.',
-    openedAt: new Date(Date.now() - 14 * 86400000).toISOString(),
+    openedAt: openedAt.toISOString(),
+    progress: 72,
+    daysElapsed,
+    daysRemaining,
+    stats: {
+      candidates: candidates.length,
+      interviewed: 2,
+      finalists: 1,
+      hired: 0,
+    },
+    nextActivity: { title: 'Presentación finalistas', date: new Date(Date.now() + 2 * 86400000).toISOString() },
     pipelineStages: stages.map((s, i) => ({ ...s, order: i })),
     candidates: candidates.map((c, i) => ({
       id: `cv-${c.id}`,
-      stage: i === 0 ? 'INTERVIEW' : 'SCREENING',
+      stage: i === 0 ? 'INTERVIEW' : i === 1 ? 'ASSESSMENT' : 'SCREENING',
       ranking: i + 1,
-      candidate: { id: c.id, firstName: c.firstName, lastName: c.lastName, email: c.email },
+      compatibility: c.compatibility ?? 85,
+      candidate: {
+        id: c.id,
+        firstName: c.firstName,
+        lastName: c.lastName,
+        email: c.email,
+        phone: c.phone,
+        city: c.city,
+      },
     })),
+    interviews: [
+      { id: 'iv1', candidateName: 'Juan Pérez', scheduledAt: new Date(Date.now() + 86400000).toISOString(), status: 'SCHEDULED', type: 'Virtual', score: null },
+      { id: 'iv2', candidateName: 'Ana Gómez', scheduledAt: new Date(Date.now() - 86400000).toISOString(), status: 'COMPLETED', type: 'Presencial', score: 8.5 },
+    ],
+    assessments: MOCK_ASSESSMENTS.filter((a) => a.vacancyTitle === base.title),
+    activities: [
+      { id: 'act1', description: 'Proceso creado', createdAt: openedAt.toISOString() },
+      { id: 'act2', description: 'CV de Juan Pérez cargado', createdAt: new Date(Date.now() - 10 * 86400000).toISOString() },
+      { id: 'act3', description: 'Entrevista realizada con Ana Gómez', createdAt: new Date(Date.now() - 86400000).toISOString() },
+      { id: 'act4', description: 'Prueba comercial enviada a Juan Pérez', createdAt: new Date(Date.now() - 2 * 86400000).toISOString() },
+    ],
+    notes: [
+      { id: 'n1', content: 'Cliente prioriza experiencia en software B2B.', author: 'María Consultora', createdAt: new Date(Date.now() - 5 * 86400000).toISOString() },
+    ],
+    documents: [
+      { id: 'd1', name: 'Perfil del cargo.pdf', type: 'Perfil', date: new Date(Date.now() - 12 * 86400000).toISOString() },
+      { id: 'd2', name: 'Informe finalistas.pdf', type: 'Informe', date: new Date(Date.now() - 1 * 86400000).toISOString() },
+    ],
+    checklist: [
+      { id: 'ck1', label: 'Buscar candidatos', done: true },
+      { id: 'ck2', label: 'Contactar candidatos', done: true },
+      { id: 'ck3', label: 'Enviar pruebas', done: true },
+      { id: 'ck4', label: 'Agendar entrevistas', done: false },
+      { id: 'ck5', label: 'Presentar finalistas', done: false },
+      { id: 'ck6', label: 'Enviar oferta', done: false },
+      { id: 'ck7', label: 'Cerrar proceso', done: false },
+    ],
     tasks: [
-      { id: 'vt1', title: 'Revisar hojas de vida nuevas', status: 'PENDING', dueDate: new Date(Date.now() + 86400000).toISOString() },
+      { id: 'vt1', title: 'Revisar hojas de vida nuevas', status: 'PENDING', priority: 'HIGH', dueDate: new Date(Date.now() + 86400000).toISOString() },
+      { id: 'vt2', title: 'Agendar entrevista cliente', status: 'PENDING', priority: 'MEDIUM', dueDate: new Date(Date.now() + 2 * 86400000).toISOString() },
+      { id: 'vt3', title: 'Enviar informe de finalistas', status: 'IN_PROGRESS', priority: 'HIGH', dueDate: new Date(Date.now() + 86400000).toISOString() },
     ],
   };
 }

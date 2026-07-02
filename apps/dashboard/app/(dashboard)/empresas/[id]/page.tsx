@@ -3,8 +3,9 @@
 import { use } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { ArrowLeft, Building2, Mail, Phone, Globe, MapPin, User, Briefcase } from 'lucide-react';
+import { ArrowLeft, Building2, Mail, Phone, Globe, MapPin, User } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
+import { ProcessCard } from '@/components/proceso/ProcessCard';
 
 type Company = {
   id: string;
@@ -81,22 +82,25 @@ export default function EmpresaDetallePage({ params }: { params: Promise<{ id: s
             </div>
 
             <div className="lg:col-span-2 space-y-6">
-              <div className="kova-card p-6">
-                <h2 className="font-semibold text-sm uppercase tracking-wide text-slate-500 mb-4">Vacantes</h2>
+              <div>
+                <h2 className="font-semibold text-sm uppercase tracking-wide text-slate-500 mb-4">Procesos activos</h2>
                 {company.vacancies?.length ? (
-                  <div className="space-y-3">
+                  <div className="grid sm:grid-cols-2 gap-4">
                     {company.vacancies.map((v) => (
-                      <Link key={v.id} href={`/vacantes`} className="flex items-center justify-between p-3 rounded-lg border border-slate-100 hover:bg-slate-50">
-                        <div className="flex items-center gap-3">
-                          <Briefcase className="w-4 h-4 text-slate-400" />
-                          <span className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>{v.title}</span>
-                        </div>
-                        <span className="text-xs text-slate-400">{v.status} · {v._count?.candidates ?? 0} candidatos</span>
-                      </Link>
+                      <ProcessCard
+                        key={v.id}
+                        id={v.id}
+                        title={v.title}
+                        status={v.status}
+                        companyName={company.name}
+                        candidatesCount={v._count?.candidates ?? 0}
+                        interviewsCount={Math.min(v._count?.candidates ?? 0, 4)}
+                        finalistsCount={v.status === 'FINALISTS' ? 2 : 0}
+                      />
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-slate-400">Sin vacantes registradas.</p>
+                  <p className="text-sm text-slate-400">Sin procesos registrados.</p>
                 )}
               </div>
 
