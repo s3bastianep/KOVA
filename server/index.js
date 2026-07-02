@@ -94,6 +94,26 @@ app.post('/api/bookings', async (req, res) => {
   });
 });
 
+function dashboardLoginUrl() {
+  const raw =
+    process.env.DASHBOARD_URL ??
+    process.env.VITE_DASHBOARD_URL ??
+    (isDev ? 'http://localhost:3001' : null);
+  if (!raw) return null;
+  const base = raw.replace(/\/$/, '');
+  return base.endsWith('/login') ? base : `${base}/login`;
+}
+
+app.get('/login', (_req, res) => {
+  const target = dashboardLoginUrl();
+  if (!target) {
+    return res.status(503).type('html').send(
+      '<h1>Plataforma no configurada</h1><p>Define DASHBOARD_URL en Railway apuntando al servicio del dashboard.</p>',
+    );
+  }
+  res.redirect(302, target);
+});
+
 async function start() {
   if (isDev) {
     const { createServer: createViteServer } = await import('vite');
