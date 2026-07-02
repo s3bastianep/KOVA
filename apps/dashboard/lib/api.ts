@@ -64,6 +64,15 @@ export const dashboardApi = {
   company: (id: string) => apiFetch<Record<string, unknown>>(`/empresas/${id}`),
   vacancies: () => apiFetch<unknown[]>('/vacantes'),
   vacancy: (id: string) => apiFetch<Record<string, unknown>>(`/vacantes/${id}`),
+  updateProcessCandidate: (
+    vacancyId: string,
+    candidateVacancyId: string,
+    body: { action: 'advance' | 'move' | 'reject'; stage?: string; reason?: string },
+  ) =>
+    apiFetch<Record<string, unknown>>(`/vacantes/${vacancyId}/candidatos/${candidateVacancyId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
   candidates: (vacancyId?: string) =>
     apiFetch<unknown[]>(`/candidatos${vacancyId ? `?vacancyId=${vacancyId}` : ''}`),
   candidate: (id: string) => apiFetch<Record<string, unknown>>(`/candidatos/${id}`),

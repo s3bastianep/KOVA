@@ -1,7 +1,7 @@
 'use client';
 
 import { use, useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import {
   ArrowLeft, Building2, MapPin, Clock, Users, ChevronRight,
@@ -53,10 +53,36 @@ function scoreColor(pct: number) {
 
 export default function ProcesoDetallePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const queryClient = useQueryClient();
   const [tab, setTab] = useState<TabId>('resumen');
+  const [draggingCandidateId, setDraggingCandidateId] = useState<string | null>(null);
+  const [automationMessage, setAutomationMessage] = useState<string | null>(null);
   const { data, isLoading, isError } = useQuery({
     queryKey: ['vacancy', id],
     queryFn: () => dashboardApi.vacancy(id),
+  });
+
+  const candidateAction = useMutation({
+    mutationFn: ({
+      candidateVacancyId,
+      body,
+    }: {
+      candidateVacancyId: string;
+      body: { action: 'advance' | 'move' | 'reject'; stage?: string; reason?: string };
+    }) => dashboardApi.updateProcessCandidate(id, candidateVacancyId, body),
+    onSuccess: (res) => {
+      const automation = res.automation as { activity?: string; task?: string | null; email?: string | null } | undefined;
+      setAutomationMessage(
+        [
+          automation?.activity,
+          automation?.task ? `Tarea creada: ${automation.task}` : null,
+          automation?.email,
+        ].filter(Boolean).join(' · '),
+      );
+      queryClient.invalidateQueries({ queryKey: ['vacancy', id] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    },
   });
 
   const p = data as Proceso | undefined;
@@ -87,6 +113,20 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
     { id: 'reportes', label: 'Reportes' },
     { id: 'config', label: 'Configuración' },
   ];
+
+  function moveCandidate(candidateVacancyId: string, stage: string) {
+    candidateAction.mutate({ candidateVacancyId, body: { action: 'move', stage } });
+  }
+
+  function advanceCandidate(candidateVacancyId: string) {
+    candidateAction.mutate({ candidateVacancyId, body: { action: 'advance' } });
+  }
+
+  function rejectCandidate(candidateVacancyId: string) {
+    const reason = window.prompt('Motivo de rechazo: Experiencia, Salario, Competencias, Ubicación u Otro', 'Otro');
+    if (!reason) return;
+    candidateAction.mutate({ candidateVacancyId, body: { action: 'reject', reason } });
+  }
 
   return (
     <div className="space-y-6">
@@ -125,6 +165,12 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
           </div>
 
           <Tabs tabs={tabs} active={tab} onChange={(t) => setTab(t as TabId)} />
+
+          {automationMessage && (
+            <div className="kova-card p-3 text-sm border-l-4" style={{ borderLeftColor: 'var(--kova-green)' }}>
+              <p style={{ color: 'var(--kova-navy)' }}>{automationMessage}</p>
+            </div>
+          )}
 
           {tab === 'resumen' && (
             <div className="space-y-6">
@@ -195,7 +241,15 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
           {tab === 'pipeline' && (
             <div className="flex gap-4 overflow-x-auto pb-4">
               {(p.pipelineStages ?? []).map((stage) => (
-                <div key={stage.stage} className="shrink-0 w-56">
+                <div
+                  key={stage.stage}
+                  className="shrink-0 w-56"
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={() => {
+                    if (draggingCandidateId) moveCandidate(draggingCandidateId, stage.stage);
+                    setDraggingCandidateId(null);
+                  }}
+                >
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-sm font-semibold" style={{ color: 'var(--kova-navy)' }}>{stage.label}</h3>
                     <span className="text-xs text-slate-400">{(pipelineByStage.get(stage.stage) ?? []).length}</span>
@@ -205,7 +259,9 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
                       <Link
                         key={c.id}
                         href={`/candidatos/${c.candidate.id}`}
-                        className="block p-3 rounded-lg bg-white border border-slate-100 hover:shadow-sm transition-shadow"
+                        draggable
+                        onDragStart={() => setDraggingCandidateId(c.id)}
+                        className="block p-3 rounded-lg bg-white border border-slate-100 hover:shadow-sm transition-shadow cursor-grab active:cursor-grabbing"
                       >
                         <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>
                           {c.candidate.firstName} {c.candidate.lastName}
@@ -253,10 +309,10 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
                     </div>
                     <div className="flex flex-wrap gap-2 mt-4 pt-3 border-t border-slate-100">
                       <ActionBtn href={`/candidatos/${c.candidate.id}`} label="Ver perfil" />
-                      <ActionBtn label="Avanzar" icon={ArrowRight} />
-                      <ActionBtn label="Rechazar" icon={XCircle} variant="danger" />
-                      <ActionBtn label="Agendar entrevista" icon={Calendar} />
-                      <ActionBtn label="Enviar prueba" icon={ClipboardCheck} />
+                      <ActionBtn label="Avanzar" icon={ArrowRight} onClick={() => advanceCandidate(c.id)} />
+                      <ActionBtn label="Rechazar" icon={XCircle} variant="danger" onClick={() => rejectCandidate(c.id)} />
+                      <ActionBtn label="Agendar entrevista" icon={Calendar} onClick={() => moveCandidate(c.id, 'INTERVIEW')} />
+                      <ActionBtn label="Enviar prueba" icon={ClipboardCheck} onClick={() => moveCandidate(c.id, 'ASSESSMENT')} />
                     </div>
                   </div>
                 ))
@@ -399,10 +455,22 @@ function EmptyState({ text }: { text: string }) {
   return <div className="kova-card p-8 text-center text-slate-400 text-sm">{text}</div>;
 }
 
-function ActionBtn({ label, icon: Icon, href, variant }: { label: string; icon?: React.ElementType; href?: string; variant?: 'danger' }) {
+function ActionBtn({
+  label,
+  icon: Icon,
+  href,
+  variant,
+  onClick,
+}: {
+  label: string;
+  icon?: React.ElementType;
+  href?: string;
+  variant?: 'danger';
+  onClick?: () => void;
+}) {
   const cls = `inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg border transition-colors ${
     variant === 'danger' ? 'border-red-100 text-red-600 hover:bg-red-50' : 'border-slate-200 text-slate-600 hover:bg-slate-50'
   }`;
   if (href) return <Link href={href} className={cls}>{Icon && <Icon className="w-3 h-3" />}{label}</Link>;
-  return <button type="button" className={cls}>{Icon && <Icon className="w-3 h-3" />}{label}</button>;
+  return <button type="button" onClick={onClick} className={cls}>{Icon && <Icon className="w-3 h-3" />}{label}</button>;
 }
