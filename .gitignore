@@ -6,6 +6,9 @@
 # Next.js
 .next/
 next-env.d.ts
+*.tsbuildinfo
+apps/dashboard/public/www/*
+!apps/dashboard/public/www/.gitkeep
 
 # Logs
 /logs

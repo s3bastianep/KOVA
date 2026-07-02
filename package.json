@@ -8,8 +8,9 @@
   },
   "scripts": {
     "dev": "node server/index.js --dev",
-    "build": "vite build",
-    "start": "node server/index.js",
+    "build": "npm install --no-audit --no-fund && cd apps/dashboard && npm install --no-audit --no-fund && npm run build:all",
+    "start": "cd apps/dashboard && npm run db:deploy && npm run start",
+    "build:landing": "vite build",
     "lint": "eslint . --quiet",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc -p ./jsconfig.json",

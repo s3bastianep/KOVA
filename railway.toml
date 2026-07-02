@@ -1,7 +1,7 @@
 [build]
-buildCommand = "cd apps/dashboard && npm install --no-audit --no-fund && npm run build:all"
+buildCommand = "npm run build"
 
 [deploy]
-startCommand = "cd apps/dashboard && npm run db:deploy && npm run start"
+startCommand = "npm run start"
 healthcheckPath = "/api/health"
 healthcheckTimeout = 300
