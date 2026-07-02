@@ -8,8 +8,8 @@
   },
   "scripts": {
     "dev": "node server/index.js --dev",
-    "build": "npm install --no-audit --no-fund && cd apps/dashboard && npm install --no-audit --no-fund && npm run build:all && npm run db:deploy",
-    "start": "cd apps/dashboard && npm run start",
+    "build": "npm install --no-audit --no-fund && cd apps/dashboard && npm install --no-audit --no-fund && npm run build:all",
+    "start": "node apps/dashboard/scripts/railway-start.mjs",
     "build:landing": "vite build",
     "lint": "eslint . --quiet",
     "lint:fix": "eslint . --fix",
