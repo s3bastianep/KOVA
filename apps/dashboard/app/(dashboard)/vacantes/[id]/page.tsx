@@ -3,8 +3,9 @@
 import { use } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { ArrowLeft, Briefcase, MapPin, DollarSign, Clock, Users } from 'lucide-react';
+import { ArrowLeft, Briefcase, MapPin, DollarSign, Clock, Users, ChevronRight } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
+import { stageLabel } from '@/lib/stages';
 
 type Vacancy = {
   id: string;
@@ -97,13 +98,20 @@ export default function VacanteDetallePage({ params }: { params: Promise<{ id: s
             {v.candidates?.length ? (
               <div className="space-y-3">
                 {v.candidates.map((c) => (
-                  <div key={c.id} className="flex items-center justify-between p-3 rounded-lg border border-slate-100">
+                  <Link
+                    key={c.id}
+                    href={`/candidatos/${c.candidate.id}`}
+                    className="flex items-center justify-between p-3 rounded-lg border border-slate-100 hover:border-slate-200 hover:bg-slate-50 transition-colors"
+                  >
                     <div>
                       <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>{c.candidate.firstName} {c.candidate.lastName}</p>
                       <p className="text-xs text-slate-400">{c.candidate.email ?? '—'}</p>
                     </div>
-                    <span className="text-xs px-2 py-1 rounded-full bg-slate-100">{c.stage}</span>
-                  </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs px-2 py-1 rounded-full bg-slate-100">{stageLabel(c.stage)}</span>
+                      <ChevronRight className="w-4 h-4 text-slate-300" />
+                    </div>
+                  </Link>
                 ))}
               </div>
             ) : (
