@@ -181,6 +181,24 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
                 <StatCard label="Días restantes" value={p.daysRemaining ?? '—'} icon={Clock} />
               </div>
 
+              <div className="kova-card p-5 border-2 border-dashed border-blue-100">
+                <h3 className="text-xs font-semibold uppercase text-slate-400 mb-2">Formulario de postulación</h3>
+                <p className="text-sm text-slate-600 mb-3">
+                  Comparte este enlace con aspirantes. Responderán las mismas preguntas estándar del cargo y el sistema calculará compatibilidad automáticamente.
+                </p>
+                <code className="text-xs block p-2 rounded bg-slate-50 text-slate-600 break-all">
+                  {typeof window !== 'undefined' ? `${window.location.origin}/postular/${p.id}` : `/postular/${p.id}`}
+                </code>
+                <Link
+                  href={`/postular/${p.id}`}
+                  target="_blank"
+                  className="inline-block mt-3 text-sm font-medium"
+                  style={{ color: 'var(--kova-blue)' }}
+                >
+                  Abrir formulario →
+                </Link>
+              </div>
+
               <div className="grid lg:grid-cols-2 gap-6">
                 {p.nextActivity && (
                   <div className="kova-card p-5">

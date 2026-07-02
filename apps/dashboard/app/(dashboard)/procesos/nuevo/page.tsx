@@ -5,6 +5,12 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
+import {
+  STANDARD_QUESTIONS,
+  defaultSelectedQuestions,
+  type SelectedStandardQuestion,
+} from '@/lib/standard-questions';
+import { selectedToRequirements } from '@/lib/standard-questions';
 
 const STEPS = [
   'Empresa',
@@ -18,15 +24,6 @@ const STEPS = [
 
 const DEFAULT_PIPELINE = [
   'Postulados', 'Preseleccionados', 'Pruebas', 'Entrevista RH', 'Entrevista Cliente', 'Finalistas', 'Contratado',
-];
-
-const DEFAULT_REQUIREMENTS = [
-  { key: 'experience', label: 'Experiencia', weight: 30, type: 'years_min' as const, expected: 3 },
-  { key: 'industry', label: 'Industria', weight: 20, type: 'contains' as const, expected: 'Tecnología' },
-  { key: 'crm', label: 'CRM', weight: 10, type: 'contains' as const, expected: 'Salesforce' },
-  { key: 'education', label: 'Estudios', weight: 10, type: 'contains' as const, expected: 'Profesional' },
-  { key: 'english', label: 'Inglés', weight: 10, type: 'equals' as const, expected: 'B2' },
-  { key: 'competencies', label: 'Competencias', weight: 20, type: 'score_min' as const, expected: 70 },
 ];
 
 const STAGE_OPTIONS = [
@@ -59,7 +56,8 @@ export default function NuevoProcesoPage() {
     functions: '',
     responsibilities: '',
     kpis: '',
-    requirements: DEFAULT_REQUIREMENTS.map((r) => ({ ...r })),
+    requirements: defaultSelectedQuestions(),
+    selectedQuestionIds: defaultSelectedQuestions().map((q) => q.id),
     pipeline: [...DEFAULT_PIPELINE],
     stages: ['Filtro de hoja de vida', 'Entrevista RH', 'Prueba Comercial', 'Entrevista Cliente'] as string[],
     tests: ['Prueba Comercial', 'Role Play'] as string[],
@@ -71,9 +69,33 @@ export default function NuevoProcesoPage() {
 
   const updateRequirement = (index: number, field: 'expected' | 'weight', value: string | number) => {
     setForm((f) => {
-      const requirements = [...f.requirements];
+      const requirements = [...f.requirements] as SelectedStandardQuestion[];
       requirements[index] = { ...requirements[index], [field]: value };
       return { ...f, requirements };
+    });
+  };
+
+  const toggleQuestion = (questionId: string) => {
+    setForm((f) => {
+      const exists = f.requirements.some((r) => r.id === questionId);
+      if (exists) {
+        return {
+          ...f,
+          requirements: f.requirements.filter((r) => r.id !== questionId),
+          selectedQuestionIds: f.selectedQuestionIds.filter((id) => id !== questionId),
+        };
+      }
+      const def = STANDARD_QUESTIONS.find((q) => q.id === questionId)!;
+      const entry: SelectedStandardQuestion = {
+        id: questionId,
+        weight: def.defaultWeight,
+        expected: def.inputType === 'number' ? Number(def.placeholder ?? 0) : (def.options?.[0] ?? ''),
+      };
+      return {
+        ...f,
+        requirements: [...f.requirements, entry],
+        selectedQuestionIds: [...f.selectedQuestionIds, questionId],
+      };
     });
   };
 
@@ -117,7 +139,8 @@ export default function NuevoProcesoPage() {
           startDate: form.startDate,
           urgency: form.urgency,
         },
-        requirements: form.requirements,
+        standardQuestions: form.requirements,
+        requirements: selectedToRequirements(form.requirements),
         pipeline: form.pipeline,
         tests: form.tests,
         checklistTasks: [
@@ -207,31 +230,68 @@ export default function NuevoProcesoPage() {
 
         {step === 4 && (
           <>
-            <p className="text-sm text-slate-500">Define requisitos y pesos. El sistema calculará compatibilidad automáticamente (sin IA).</p>
-            <div className="space-y-3">
-              {form.requirements.map((req, i) => (
-                <div key={req.key} className="grid sm:grid-cols-3 gap-2 p-3 rounded-lg bg-slate-50">
-                  <span className="text-sm font-medium sm:col-span-1" style={{ color: 'var(--kova-navy)' }}>{req.label}</span>
-                  <input
-                    value={String(req.expected)}
-                    onChange={(e) => updateRequirement(i, 'expected', e.target.value)}
-                    className="px-2 py-1.5 rounded border border-slate-200 text-sm"
-                    placeholder="Valor esperado"
-                  />
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="number"
-                      min={0}
-                      max={100}
-                      value={req.weight}
-                      onChange={(e) => updateRequirement(i, 'weight', Number(e.target.value))}
-                      className="w-16 px-2 py-1.5 rounded border border-slate-200 text-sm"
-                    />
-                    <span className="text-xs text-slate-400">% peso</span>
-                  </div>
-                </div>
-              ))}
+            <p className="text-sm text-slate-500">
+              Escoge las preguntas estándar del cargo. Los aspirantes responderán las mismas en el formulario de postulación.
+            </p>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {STANDARD_QUESTIONS.map((q) => {
+                const active = form.selectedQuestionIds.includes(q.id);
+                return (
+                  <button
+                    key={q.id}
+                    type="button"
+                    onClick={() => toggleQuestion(q.id)}
+                    className={`text-xs px-3 py-1.5 rounded-full border ${active ? 'border-[var(--kova-blue)] bg-blue-50 text-[var(--kova-blue)]' : 'border-slate-200 text-slate-600'}`}
+                  >
+                    {active ? '✓ ' : ''}{q.label}
+                  </button>
+                );
+              })}
             </div>
+            <div className="space-y-3">
+              {form.requirements.map((req, i) => {
+                const def = STANDARD_QUESTIONS.find((q) => q.id === req.id);
+                return (
+                  <div key={req.id} className="grid sm:grid-cols-3 gap-2 p-3 rounded-lg bg-slate-50">
+                    <div>
+                      <span className="text-sm font-medium block" style={{ color: 'var(--kova-navy)' }}>{def?.label ?? req.id}</span>
+                      <span className="text-[10px] text-slate-400">{def?.category}</span>
+                    </div>
+                    {def?.inputType === 'select' ? (
+                      <select
+                        value={String(req.expected)}
+                        onChange={(e) => updateRequirement(i, 'expected', e.target.value)}
+                        className="px-2 py-1.5 rounded border border-slate-200 text-sm"
+                      >
+                        {(def.options ?? []).map((o) => <option key={o} value={o}>{o}</option>)}
+                      </select>
+                    ) : (
+                      <input
+                        type={def?.inputType === 'number' ? 'number' : 'text'}
+                        value={String(req.expected)}
+                        onChange={(e) => updateRequirement(i, 'expected', def?.inputType === 'number' ? Number(e.target.value) : e.target.value)}
+                        className="px-2 py-1.5 rounded border border-slate-200 text-sm"
+                        placeholder={def?.placeholder}
+                      />
+                    )}
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        min={0}
+                        max={100}
+                        value={req.weight}
+                        onChange={(e) => updateRequirement(i, 'weight', Number(e.target.value))}
+                        className="w-16 px-2 py-1.5 rounded border border-slate-200 text-sm"
+                      />
+                      <span className="text-xs text-slate-400">% peso</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="text-xs text-slate-400">
+              Peso total: {form.requirements.reduce((s, r) => s + r.weight, 0)}% — idealmente 100%
+            </p>
           </>
         )}
 

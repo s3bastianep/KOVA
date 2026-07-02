@@ -5,6 +5,7 @@ const APP_PREFIXES = [
   '/api',
   '/_next',
   '/login',
+  '/postular',
   '/dashboard',
   '/empresas',
   '/vacantes',

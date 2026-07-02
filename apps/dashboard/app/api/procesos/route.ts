@@ -3,7 +3,8 @@ import { PipelineStage, VacancyStatus } from '@prisma/client';
 import { getUserFromRequest, unauthorized, companyWhereForUser } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode } from '../../../lib/mock';
-import type { RequirementRule } from '../../../lib/compatibility';
+import type { SelectedStandardQuestion } from '../../../lib/standard-questions';
+import { selectedToRequirements } from '../../../lib/standard-questions';
 
 export const dynamic = 'force-dynamic';
 
@@ -63,7 +64,7 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const requirements = (body.requirements ?? []) as RequirementRule[];
+  const requirements = (body.standardQuestions ?? body.requirements ?? []) as SelectedStandardQuestion[];
   const pipelineLabels: string[] = body.pipeline ?? [
     'Postulados', 'Preseleccionados', 'Pruebas', 'Entrevista RH', 'Entrevista Cliente', 'Finalistas', 'Contratado',
   ];
@@ -85,7 +86,8 @@ export async function POST(req: NextRequest) {
         description: body.objective ?? null,
         checklist: body.checklist ?? [],
         metadata: {
-          requirements,
+          standardQuestions: requirements,
+          requirements: selectedToRequirements(requirements),
           workflow: pipelineLabels,
         },
       },

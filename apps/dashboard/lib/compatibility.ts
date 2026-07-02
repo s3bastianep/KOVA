@@ -1,8 +1,11 @@
+import type { QuestionMatchType } from './standard-questions';
+import { standardQuestionsFromMetadata, selectedToRequirements } from './standard-questions';
+
 export type RequirementRule = {
   key: string;
   label: string;
   weight: number;
-  type: 'years_min' | 'contains' | 'equals' | 'score_min';
+  type: QuestionMatchType | 'years_min' | 'contains' | 'equals' | 'score_min';
   expected: string | number;
 };
 
@@ -16,22 +19,11 @@ export type RequirementResult = {
   detail: string;
 };
 
-export type CandidateProfile = {
-  experienceYears?: number;
-  industry?: string;
-  salesType?: string;
-  crm?: string;
-  education?: string;
-  englishLevel?: string;
-  availability?: string;
-  competenciesScore?: number;
-};
-
 const ENGLISH_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
 function englishMeets(candidateLevel: string, requiredLevel: string) {
-  const c = ENGLISH_LEVELS.indexOf(candidateLevel.toUpperCase());
-  const r = ENGLISH_LEVELS.indexOf(requiredLevel.toUpperCase());
+  const c = ENGLISH_LEVELS.indexOf(String(candidateLevel).toUpperCase());
+  const r = ENGLISH_LEVELS.indexOf(String(requiredLevel).toUpperCase());
   if (c < 0 || r < 0) return false;
   return c >= r;
 }
@@ -40,82 +32,64 @@ function normalize(value: unknown) {
   return String(value ?? '').trim().toLowerCase();
 }
 
-function evaluateRule(rule: RequirementRule, profile: CandidateProfile): RequirementResult {
+function evaluateRule(
+  rule: RequirementRule,
+  answers: Record<string, string | number>,
+): RequirementResult {
   const max = rule.weight;
+  const actual = answers[rule.key];
   let met = false;
   let detail = '';
+  const matchType = rule.type;
 
-  switch (rule.key) {
-    case 'experience': {
-      const years = profile.experienceYears ?? 0;
-      const min = Number(rule.expected);
-      met = years >= min;
-      detail = met ? `${years} años (mín. ${min})` : `${years} años — requiere ${min}+`;
-      break;
-    }
-    case 'industry':
-    case 'crm':
-    case 'salesType':
-    case 'education':
-    case 'availability': {
-      const field = rule.key === 'salesType' ? profile.salesType : profile[rule.key as keyof CandidateProfile];
-      const expected = normalize(rule.expected);
-      const actual = normalize(field);
-      met = actual.includes(expected) || expected.includes(actual);
-      detail = met ? String(field ?? 'Cumple') : `Esperado: ${rule.expected}`;
-      break;
-    }
-    case 'english': {
-      met = englishMeets(profile.englishLevel ?? '', String(rule.expected));
-      detail = met
-        ? `${profile.englishLevel ?? '—'} (req. ${rule.expected})`
-        : `${profile.englishLevel ?? '—'} — requiere ${rule.expected}+`;
-      break;
-    }
-    case 'competencies': {
-      const score = profile.competenciesScore ?? 0;
-      const min = Number(rule.expected);
-      met = score >= min;
-      detail = met ? `${score}/100` : `${score}/100 — mínimo ${min}`;
-      break;
-    }
-    default: {
-      met = normalize(profile[rule.key as keyof CandidateProfile]).includes(normalize(rule.expected));
-      detail = met ? 'Cumple' : `Esperado: ${rule.expected}`;
-    }
+  if (matchType === 'years_min' || matchType === 'min_score') {
+    const num = Number(actual ?? 0);
+    const min = Number(rule.expected);
+    met = num >= min;
+    detail = met ? `${num} (mín. ${min})` : `${num} — requiere ${min}+`;
+  } else if (matchType === 'equals' && rule.key === 'english_level') {
+    met = englishMeets(String(actual ?? ''), String(rule.expected));
+    detail = met
+      ? `${actual} (req. ${rule.expected})`
+      : `${actual ?? '—'} — requiere ${rule.expected}+`;
+  } else if (matchType === 'equals') {
+    met = normalize(actual) === normalize(rule.expected);
+    detail = met ? String(actual) : `Esperado: ${rule.expected}`;
+  } else {
+    const expected = normalize(rule.expected);
+    const actualNorm = normalize(actual);
+    met = actualNorm.includes(expected) || expected.includes(actualNorm);
+    detail = met ? String(actual ?? 'Cumple') : `Esperado: ${rule.expected}`;
   }
+
+  const partial =
+    matchType === 'min_score' && !met
+      ? Math.min(max, Math.round((Number(actual ?? 0) / Number(rule.expected || 1)) * max))
+      : 0;
 
   return {
     key: rule.key,
     label: rule.label,
     weight: rule.weight,
     met,
-    earned: met ? max : rule.key === 'competencies' ? Math.min(max, Math.round(((profile.competenciesScore ?? 0) / 100) * max)) : 0,
+    earned: met ? max : partial,
     max,
     detail,
   };
 }
 
-export function calculateCompatibility(requirements: RequirementRule[], profile: CandidateProfile) {
-  const breakdown = requirements.map((rule) => evaluateRule(rule, profile));
+export function calculateCompatibility(
+  requirements: RequirementRule[],
+  answers: Record<string, string | number>,
+) {
+  const breakdown = requirements.map((rule) => evaluateRule(rule, answers));
   const total = Math.round(breakdown.reduce((sum, item) => sum + item.earned, 0));
   return { total, breakdown };
 }
 
-export const DEFAULT_REQUIREMENTS: RequirementRule[] = [
-  { key: 'experience', label: 'Experiencia', weight: 30, type: 'years_min', expected: 3 },
-  { key: 'industry', label: 'Industria', weight: 20, type: 'contains', expected: 'tecnología' },
-  { key: 'salesType', label: 'Ventas', weight: 0, type: 'contains', expected: 'b2b' },
-  { key: 'crm', label: 'CRM', weight: 10, type: 'contains', expected: 'salesforce' },
-  { key: 'education', label: 'Estudios', weight: 10, type: 'contains', expected: 'profesional' },
-  { key: 'english', label: 'Inglés', weight: 10, type: 'equals', expected: 'B2' },
-  { key: 'competencies', label: 'Competencias', weight: 20, type: 'score_min', expected: 70 },
-];
-
 export function requirementsFromMetadata(metadata: unknown): RequirementRule[] {
-  if (!metadata || typeof metadata !== 'object') return DEFAULT_REQUIREMENTS;
-  const reqs = (metadata as { requirements?: RequirementRule[] }).requirements;
-  return Array.isArray(reqs) && reqs.length > 0 ? reqs : DEFAULT_REQUIREMENTS;
+  const selected = standardQuestionsFromMetadata(metadata);
+  return selectedToRequirements(selected);
 }
 
 export function profileFromCandidate(candidate: {
@@ -125,6 +99,12 @@ export function profileFromCandidate(candidate: {
   assessments?: { score?: number | null }[];
 }) {
   const meta = (candidate.metadata ?? {}) as Record<string, unknown>;
+  const standardAnswers = (meta.standardAnswers ?? {}) as Record<string, string | number>;
+
+  if (Object.keys(standardAnswers).length > 0) {
+    return standardAnswers;
+  }
+
   let experienceYears = Number(meta.experienceYears ?? 0);
   if (!experienceYears && candidate.experiences?.length) {
     const exp = candidate.experiences[0];
@@ -133,19 +113,23 @@ export function profileFromCandidate(candidate: {
       experienceYears = Math.max(0, end.getFullYear() - exp.startDate.getFullYear());
     }
   }
-  const avgAssessment =
-    candidate.assessments?.length
-      ? candidate.assessments.reduce((s, a) => s + (a.score ?? 0), 0) / candidate.assessments.length
-      : Number(meta.competenciesScore ?? 75);
 
   return {
-    experienceYears,
+    experience_years: experienceYears,
     industry: String(meta.industry ?? ''),
-    salesType: String(meta.salesType ?? meta.sales ?? 'B2B'),
+    sales_type: String(meta.salesType ?? meta.sales ?? 'B2B'),
     crm: String(meta.crm ?? ''),
     education: String(meta.education ?? ''),
-    englishLevel: String(meta.englishLevel ?? meta.english ?? 'B1'),
+    english_level: String(meta.englishLevel ?? meta.english ?? 'B1'),
+    city: String(meta.city ?? candidate.city ?? ''),
     availability: String(meta.availability ?? ''),
-    competenciesScore: Math.round(avgAssessment),
-  } satisfies CandidateProfile;
+  };
+}
+
+export function compatibilityFromVacancyAndAnswers(
+  vacancyMetadata: unknown,
+  answers: Record<string, string | number>,
+) {
+  const requirements = requirementsFromMetadata(vacancyMetadata);
+  return calculateCompatibility(requirements, answers);
 }
