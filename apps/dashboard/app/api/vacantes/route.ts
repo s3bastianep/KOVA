@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized } from '../../../lib/auth';
+import { getUserFromRequest, unauthorized, companyWhereForUser } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode, MOCK_VACANCIES } from '../../../lib/mock';
 

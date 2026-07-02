@@ -61,11 +61,24 @@ export const authApi = {
 export const dashboardApi = {
   metrics: () => apiFetch<Record<string, unknown>>('/dashboard'),
   companies: () => apiFetch<unknown[]>('/empresas'),
+  company: (id: string) => apiFetch<Record<string, unknown>>(`/empresas/${id}`),
   vacancies: () => apiFetch<unknown[]>('/vacantes'),
+  vacancy: (id: string) => apiFetch<Record<string, unknown>>(`/vacantes/${id}`),
   candidates: (vacancyId?: string) =>
     apiFetch<unknown[]>(`/candidatos${vacancyId ? `?vacancyId=${vacancyId}` : ''}`),
+  candidate: (id: string) => apiFetch<Record<string, unknown>>(`/candidatos/${id}`),
   discoveries: () => apiFetch<unknown[]>('/discovery'),
   tasks: () => apiFetch<unknown[]>('/tareas'),
+  jobProfiles: () => apiFetch<unknown[]>('/perfiles'),
+  interviews: () => apiFetch<unknown[]>('/entrevistas'),
+  assessments: () => apiFetch<unknown[]>('/evaluaciones'),
+  finalists: () => apiFetch<Record<string, unknown>>('/finalistas'),
+  onboarding: () => apiFetch<Record<string, unknown>>('/onboarding'),
+  academia: () => apiFetch<unknown[]>('/academia'),
+  crm: () => apiFetch<unknown[]>('/crm'),
+  calendar: () => apiFetch<unknown[]>('/calendario'),
+  documents: () => apiFetch<unknown[]>('/documentos'),
+  reports: () => apiFetch<Record<string, unknown>>('/reportes'),
 };
 
 export function saveSession(data: LoginResponse) {
