@@ -303,6 +303,7 @@ model Company {
   tasks           Task[]
   activities      ActivityLog[]
   crmInteractions CrmInteraction[]
+  calendarEvents  CalendarEvent[]
 
   @@index([tenantId, status])
   @@index([tenantId, name])
@@ -376,6 +377,8 @@ model Vacancy {
   tasks           Task[]
   documents       Document[]
   activities      ActivityLog[]
+  assessments     Assessment[]
+  calendarEvents  CalendarEvent[]
 
   @@index([tenantId, status])
   @@index([companyId])
@@ -694,6 +697,7 @@ model Assessment {
   updatedAt   DateTime       @updatedAt
 
   candidate Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  vacancy   Vacancy?  @relation(fields: [vacancyId], references: [id], onDelete: SetNull)
 
   @@index([tenantId, candidateId])
   @@index([vacancyId, type])
@@ -857,6 +861,9 @@ model CalendarEvent {
   externalId  String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  company Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  vacancy Vacancy? @relation(fields: [vacancyId], references: [id], onDelete: SetNull)
 
   @@index([tenantId, startAt])
   @@index([userId])

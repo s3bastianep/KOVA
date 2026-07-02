@@ -16,7 +16,7 @@ function mapCandidate(c: {
   source: string | null;
   compatibility: number | null;
   ranking: number | null;
-  vacancies: { stage: string; vacancy: { title: string } }[];
+  vacancies: { stage: string; source?: string | null; ranking?: number | null; vacancy: { title: string } }[];
 }) {
   const primary = c.vacancies[0];
   return {

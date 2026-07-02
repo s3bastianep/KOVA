@@ -1,4 +1,4 @@
-import { PrismaClient, UserRole, CompanyStatus, VacancyStatus, CandidateStatus, PipelineStage } from '@prisma/client';
+import { PrismaClient, UserRole, CompanyStatus, VacancyStatus, CandidateStatus, PipelineStage, AssessmentType } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -56,6 +56,8 @@ async function main() {
       status: CompanyStatus.ACTIVE,
       email: 'contacto@techsales.co',
       phone: '+57 300 123 4567',
+      primaryContact: 'Carlos Restrepo',
+      commercialDir: 'Carlos Restrepo',
     },
   });
 
@@ -115,6 +117,8 @@ async function main() {
       status: CompanyStatus.ACTIVE,
       email: 'comercial@andina.co',
       phone: '+57 310 987 6543',
+      primaryContact: 'Laura Méndez',
+      commercialDir: 'Laura Méndez',
     },
   });
 
@@ -130,7 +134,7 @@ async function main() {
       quantity: 1,
       city: 'Medellín',
       modality: 'Presencial',
-      status: VacancyStatus.DISCOVERY,
+      status: VacancyStatus.DISCOVERY_PENDING,
       priority: 'MEDIUM',
       openedAt: new Date(),
     },
@@ -262,6 +266,128 @@ async function main() {
     }
   }
 
+  const assessments = [
+    { id: 'seed-assessment-001', candidateId: 'seed-candidate-001', vacancyId: vacancy.id, type: AssessmentType.COMMERCIAL, title: 'Venta consultiva', score: 90, result: 'Aprobado', minutes: 42, comments: 'Excelente manejo de objeciones y cierre consultivo.' },
+    { id: 'seed-assessment-002', candidateId: 'seed-candidate-001', vacancyId: vacancy.id, type: AssessmentType.ROLE_PLAY, title: 'Negociación', score: 85, result: 'Aprobado', minutes: 28, comments: 'Buen manejo de la negociación, reforzar propuesta de valor.' },
+    { id: 'seed-assessment-003', candidateId: 'seed-candidate-002', vacancyId: vacancy.id, type: AssessmentType.BEHAVIORAL, title: 'Resiliencia', score: 78, result: 'Aprobado', minutes: 35, comments: 'Responde bien bajo presión. Comunicación clara.' },
+    { id: 'seed-assessment-004', candidateId: 'seed-candidate-002', vacancyId: vacancy.id, type: AssessmentType.COMMERCIAL, title: 'Prospección', score: 82, result: 'Aprobado', minutes: 38, comments: 'Buena estructura de prospección B2B.' },
+    { id: 'seed-assessment-005', candidateId: 'seed-candidate-003', vacancyId: vacancy2.id, type: AssessmentType.COMMERCIAL, title: 'Planeación', score: 72, result: 'En revisión', minutes: 55, comments: 'Plan comercial sólido pero le falta profundidad en KPIs.' },
+    { id: 'seed-assessment-006', candidateId: 'seed-candidate-003', vacancyId: vacancy2.id, type: AssessmentType.TECHNICAL, title: 'Gestión de equipos', score: 68, result: 'En revisión', minutes: 47, comments: 'Experiencia relevante, validar liderazgo en campo.' },
+  ];
+
+  for (const a of assessments) {
+    const started = new Date(Date.now() - a.minutes * 60000 - 86400000);
+    const completed = new Date(started.getTime() + a.minutes * 60000);
+    await prisma.assessment.upsert({
+      where: { id: a.id },
+      update: { score: a.score, result: a.result, comments: a.comments, completedAt: completed },
+      create: {
+        id: a.id,
+        tenantId: tenant.id,
+        candidateId: a.candidateId,
+        vacancyId: a.vacancyId,
+        type: a.type,
+        title: a.title,
+        score: a.score,
+        maxScore: 100,
+        result: a.result,
+        comments: a.comments,
+        createdAt: started,
+        completedAt: completed,
+      },
+    });
+  }
+
+  const calendarEvents = [
+    {
+      id: 'seed-cal-001',
+      companyId: company2.id,
+      vacancyId: vacancy2.id,
+      userId: consultant.id,
+      title: 'Discovery comercial — Distribuidora Andina',
+      type: 'Discovery',
+      daysFromNow: 1,
+      hour: 10,
+      durationMin: 60,
+      location: 'Google Meet',
+      meetingUrl: 'https://meet.google.com/abc-defg-hij',
+      purpose: 'Levantar información del negocio, proceso comercial y perfil ideal del cargo.',
+      notes: 'Confirmar asistencia del gerente general. Llevar propuesta de metodología Kova.',
+    },
+    {
+      id: 'seed-cal-002',
+      companyId: company.id,
+      vacancyId: vacancy.id,
+      userId: consultant.id,
+      title: 'Presentación de finalistas — TechSales',
+      type: 'Reunión cliente',
+      daysFromNow: 2,
+      hour: 14,
+      durationMin: 60,
+      location: 'Oficina TechSales, Bogotá',
+      purpose: 'Presentar 3 finalistas con informe comparativo. Definir entrevistas finales con el cliente.',
+      notes: 'Enviar informe PDF 24h antes. Candidatos: Juan Pérez, Ana Gómez, Carlos Ruiz.',
+    },
+    {
+      id: 'seed-cal-003',
+      companyId: company.id,
+      vacancyId: vacancy.id,
+      userId: consultant.id,
+      title: 'Seguimiento post-entrevista — TechSales',
+      type: 'Llamada',
+      daysFromNow: 3,
+      hour: 9,
+      durationMin: 30,
+      purpose: 'Recoger feedback de entrevistas y avanzar a fase de pruebas comerciales.',
+      notes: 'Preguntar por disponibilidad para role play la próxima semana.',
+    },
+    {
+      id: 'seed-cal-004',
+      companyId: company.id,
+      vacancyId: vacancy.id,
+      userId: consultant.id,
+      title: 'Entrevista cliente — Ana Gómez',
+      type: 'Entrevista cliente',
+      daysFromNow: 4,
+      hour: 11,
+      durationMin: 60,
+      location: 'Presencial — TechSales',
+      purpose: 'Entrevista final del candidato Ana Gómez con el cliente. Coordinar llegada 15 min antes.',
+      notes: 'Candidata: Ana Gómez · Tel. +57 320 555 8899',
+    },
+  ];
+
+  for (const ev of calendarEvents) {
+    const startAt = new Date(Date.now() + ev.daysFromNow * 86400000);
+    startAt.setHours(ev.hour, 0, 0, 0);
+    const endAt = new Date(startAt.getTime() + ev.durationMin * 60000);
+    const description = `type:${ev.type}\npurpose:${ev.purpose}${ev.notes ? `\nnotes:${ev.notes}` : ''}`;
+    await prisma.calendarEvent.upsert({
+      where: { id: ev.id },
+      update: {
+        title: ev.title,
+        description,
+        startAt,
+        endAt,
+        location: ev.location ?? null,
+        meetingUrl: ev.meetingUrl ?? null,
+      },
+      create: {
+        id: ev.id,
+        tenantId: tenant.id,
+        userId: ev.userId,
+        companyId: ev.companyId,
+        vacancyId: ev.vacancyId,
+        title: ev.title,
+        description,
+        startAt,
+        endAt,
+        location: ev.location ?? null,
+        meetingUrl: ev.meetingUrl ?? null,
+      },
+    });
+  }
+
   console.log('Seed completed:');
   console.log({
     tenant: tenant.slug,
@@ -271,6 +397,8 @@ async function main() {
     company: company.name,
     vacancy: vacancy.title,
     candidates: candidates.length,
+    assessments: assessments.length,
+    calendarEvents: calendarEvents.length,
   });
   console.log('Password for all users: Kova2026!');
 }
