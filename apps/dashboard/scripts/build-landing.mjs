@@ -8,6 +8,9 @@ const repoRoot = path.resolve(__dirname, '../../..');
 const dist = path.join(repoRoot, 'dist');
 const target = path.join(__dirname, '../public/www');
 
+console.log('Installing landing dependencies...');
+execSync('npm install --no-audit --no-fund', { cwd: repoRoot, stdio: 'inherit' });
+
 console.log('Building public landing (Vite)...');
 execSync('npm run build', { cwd: repoRoot, stdio: 'inherit' });
 
