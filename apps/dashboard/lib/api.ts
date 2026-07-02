@@ -41,7 +41,7 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}): Prom
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.message ?? 'Error en la solicitud');
+    throw new Error((err as { message?: string }).message ?? `Error en la solicitud (${res.status})`);
   }
 
   return res.json();

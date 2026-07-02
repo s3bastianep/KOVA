@@ -700,5 +700,7 @@ export function getMockCompany(id: string) {
 }
 
 export function isMockMode() {
-  return process.env.USE_MOCK === 'true';
+  if (process.env.USE_MOCK === 'true') return true;
+  const url = process.env.DATABASE_URL?.trim();
+  return !url;
 }

@@ -7,13 +7,16 @@ const port = process.env.PORT || '3001';
 
 if (!process.env.DATABASE_URL) {
   console.error('[kova] DATABASE_URL no está definida. Configúrala en Railway → Variables → Postgres.');
+  process.env.USE_MOCK = 'true';
+  console.warn('[kova] Modo demo activado — login: consultor@kova.co / Kova2026!');
 } else {
   try {
     console.log('[kova] Preparando base de datos...');
     execSync('npm run db:deploy', { cwd: dashboardDir, stdio: 'inherit' });
     console.log('[kova] Base de datos lista.');
   } catch (error) {
-    console.error('[kova] db:deploy falló; la app arrancará igual:', error?.message ?? error);
+    console.error('[kova] db:deploy falló; activando modo demo:', error?.message ?? error);
+    process.env.USE_MOCK = 'true';
   }
 }
 
