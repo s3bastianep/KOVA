@@ -1,0 +1,1060 @@
+// Kova Talent OS — Database Schema
+// Multi-tenant: all client data isolated by companyId / tenantId
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  SUPER_ADMIN
+  COORDINATOR
+  CONSULTANT
+  CLIENT
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING
+}
+
+enum CompanyStatus {
+  PROSPECT
+  ACTIVE
+  INACTIVE
+  CHURNED
+}
+
+enum VacancyStatus {
+  DRAFT
+  DISCOVERY_PENDING
+  PROFILE_BUILDING
+  APPROVAL_PENDING
+  SEARCH_ACTIVE
+  EVALUATION
+  FINALISTS
+  OFFER
+  HIRED
+  CLOSED
+  PAUSED
+}
+
+enum VacancyPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum PipelineStage {
+  APPLIED
+  SCREENING
+  CALL
+  INTERVIEW
+  ASSESSMENT
+  ROLE_PLAY
+  CLIENT_REVIEW
+  OFFER
+  HIRED
+  ONBOARDING
+  REJECTED
+  WITHDRAWN
+}
+
+enum CandidateStatus {
+  NEW
+  ACTIVE
+  FINALIST
+  HIRED
+  REJECTED
+  WITHDRAWN
+  ONBOARDING
+}
+
+enum DiscoveryStatus {
+  DRAFT
+  IN_PROGRESS
+  COMPLETED
+  APPROVED
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  OVERDUE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum DocumentType {
+  CV
+  CONTRACT
+  REPORT
+  PLAYBOOK
+  SCRIPT
+  VIDEO
+  OTHER
+}
+
+enum InterviewStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum AssessmentType {
+  COMMERCIAL
+  TECHNICAL
+  BEHAVIORAL
+  ROLE_PLAY
+}
+
+enum NotificationType {
+  INFO
+  WARNING
+  SUCCESS
+  ERROR
+  TASK
+  ALERT
+}
+
+enum ActivityType {
+  CREATE
+  UPDATE
+  DELETE
+  STAGE_CHANGE
+  COMMENT
+  EMAIL
+  CALL
+  MEETING
+  WHATSAPP
+  AUTO_GENERATED
+}
+
+enum IntegrationProvider {
+  GOOGLE_CALENDAR
+  OUTLOOK
+  GMAIL
+  WHATSAPP
+  TEAMS
+  ZOOM
+  MEET
+  LINKEDIN
+}
+
+enum AutomationTrigger {
+  COMPANY_CREATED
+  DISCOVERY_COMPLETED
+  VACANCY_CREATED
+  CANDIDATE_CREATED
+  STAGE_CHANGED
+  CANDIDATE_HIRED
+  FINALIST_PRESENTED
+}
+
+// ─── Auth & Users ───────────────────────────────────────────────────────────
+
+model Tenant {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  plan      String   @default("enterprise")
+  isActive  Boolean  @default(true)
+  settings  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users     User[]
+  companies Company[]
+
+  @@index([slug])
+  @@map("tenants")
+}
+
+model User {
+  id              String     @id @default(cuid())
+  tenantId        String
+  email           String
+  passwordHash    String
+  firstName       String
+  lastName        String
+  role            UserRole   @default(CONSULTANT)
+  status          UserStatus @default(ACTIVE)
+  avatarUrl       String?
+  phone           String?
+  companyId       String?    // For CLIENT role — linked company
+  failedAttempts  Int        @default(0)
+  lockedUntil     DateTime?
+  emailVerified   Boolean    @default(false)
+  twoFactorReady  Boolean    @default(false)
+  lastLoginAt     DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company?         @relation("ClientUser", fields: [companyId], references: [id])
+  sessions        Session[]
+  refreshTokens   RefreshToken[]
+  assignedCompanies CompanyConsultant[]
+  tasks           Task[]           @relation("TaskAssignee")
+  createdTasks    Task[]           @relation("TaskCreator")
+  notes           Note[]
+  activities      ActivityLog[]
+  notifications   Notification[]
+
+  @@unique([tenantId, email])
+  @@index([tenantId, role])
+  @@index([companyId])
+  @@map("users")
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  userId     String
+  token      String   @unique
+  ipAddress  String?
+  userAgent  String?
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+model PasswordReset {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@map("password_resets")
+}
+
+// ─── Companies (CRM) ──────────────────────────────────────────────────────────
+
+model Company {
+  id              String        @id @default(cuid())
+  tenantId        String
+  name            String
+  legalName       String?
+  sector          String?
+  industry        String?
+  employeeCount   Int?
+  city            String?
+  address         String?
+  website         String?
+  status          CompanyStatus @default(PROSPECT)
+  primaryContact  String?
+  commercialDir   String?
+  generalManager  String?
+  phone           String?
+  email           String?
+  notes           String?       @db.Text
+  metadata        Json?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  tenant          Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  contacts        Contact[]
+  consultants     CompanyConsultant[]
+  clientUsers     User[]              @relation("ClientUser")
+  vacancies       Vacancy[]
+  discoveries     CommercialDiscovery[]
+  documents       Document[]
+  contracts       Contract[]
+  invoices        Invoice[]
+  followUps       FollowUp[]
+  tasks           Task[]
+  activities      ActivityLog[]
+  crmInteractions CrmInteraction[]
+
+  @@index([tenantId, status])
+  @@index([tenantId, name])
+  @@map("companies")
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  companyId String
+  name      String
+  role      String?
+  email     String?
+  phone     String?
+  isPrimary Boolean  @default(false)
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@map("contacts")
+}
+
+model CompanyConsultant {
+  id           String   @id @default(cuid())
+  companyId    String
+  consultantId String
+  isPrimary    Boolean  @default(false)
+  assignedAt   DateTime @default(now())
+
+  company    Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  consultant User    @relation(fields: [consultantId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, consultantId])
+  @@index([consultantId])
+  @@map("company_consultants")
+}
+
+// ─── Vacancies ────────────────────────────────────────────────────────────────
+
+model Vacancy {
+  id              String          @id @default(cuid())
+  tenantId        String
+  companyId       String
+  consultantId    String?
+  title           String
+  quantity        Int             @default(1)
+  city            String?
+  modality        String?
+  salaryMin       Decimal?        @db.Decimal(12, 2)
+  salaryMax       Decimal?        @db.Decimal(12, 2)
+  variablePay     String?
+  requiredDate    DateTime?
+  urgency         VacancyPriority @default(MEDIUM)
+  status          VacancyStatus   @default(DRAFT)
+  priority        VacancyPriority @default(MEDIUM)
+  openedAt        DateTime?
+  closedAt        DateTime?
+  description     String?         @db.Text
+  checklist       Json?
+  metadata        Json?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  company         Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  discovery       CommercialDiscovery?
+  jobProfile      JobProfile?
+  candidates      CandidateVacancy[]
+  pipelineStages  PipelineStageConfig[]
+  tasks           Task[]
+  documents       Document[]
+  activities      ActivityLog[]
+
+  @@index([tenantId, status])
+  @@index([companyId])
+  @@index([consultantId])
+  @@map("vacancies")
+}
+
+// ─── Discovery Comercial ──────────────────────────────────────────────────────
+
+model CommercialDiscovery {
+  id          String          @id @default(cuid())
+  tenantId    String
+  companyId   String
+  vacancyId   String?         @unique
+  consultantId String?
+  status      DiscoveryStatus @default(DRAFT)
+  currentStep Int             @default(1)
+  totalSteps  Int             @default(7)
+  step1Data   Json?           // Vacancy info
+  step2Data   Json?           // Business understanding
+  step3Data   Json?           // Sales process
+  step4Data   Json?           // Job profile
+  step5Data   Json?           // Success profile
+  step6Data   Json?           // Competencies sliders
+  step7Data   Json?           // Salidas automatizadas (perfil, entrevista, pruebas)
+  completedAt DateTime?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  company  Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  vacancy  Vacancy? @relation(fields: [vacancyId], references: [id])
+  competencies DiscoveryCompetency[]
+
+  @@index([tenantId, status])
+  @@index([companyId])
+  @@map("commercial_discoveries")
+}
+
+model DiscoveryCompetency {
+  id          String  @id @default(cuid())
+  discoveryId String
+  name        String
+  weight      Int     @default(5) // 1-10
+  description String?
+
+  discovery CommercialDiscovery @relation(fields: [discoveryId], references: [id], onDelete: Cascade)
+
+  @@index([discoveryId])
+  @@map("discovery_competencies")
+}
+
+// ─── Job Profile ──────────────────────────────────────────────────────────────
+
+model JobProfile {
+  id                  String   @id @default(cuid())
+  vacancyId           String   @unique
+  objective           String?  @db.Text
+  functions           Json?
+  responsibilities    Json?
+  kpis                Json?
+  tools               Json?
+  schedule            String?
+  reportsTo           String?
+  team                String?
+  successFactors      Json?
+  failureReasons      Json?
+  targetCompanies     Json?
+  excludedCompanies   Json?
+  personality         Json?
+  knowledge           Json?
+  experience          Json?
+  expectations30      String?  @db.Text
+  expectations60      String?  @db.Text
+  expectations90      String?  @db.Text
+  autoGenerated       Boolean  @default(false)
+  approvedByClient    Boolean  @default(false)
+  approvedAt          DateTime?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  vacancy      Vacancy             @relation(fields: [vacancyId], references: [id], onDelete: Cascade)
+  competencies JobProfileCompetency[]
+
+  @@map("job_profiles")
+}
+
+model JobProfileCompetency {
+  id           String @id @default(cuid())
+  jobProfileId String
+  name         String
+  weight       Int    @default(5)
+  description  String?
+
+  jobProfile JobProfile @relation(fields: [jobProfileId], references: [id], onDelete: Cascade)
+
+  @@index([jobProfileId])
+  @@map("job_profile_competencies")
+}
+
+// ─── Candidates & ATS ─────────────────────────────────────────────────────────
+
+model Candidate {
+  id              String          @id @default(cuid())
+  tenantId        String
+  firstName       String
+  lastName        String
+  email           String?
+  phone           String?
+  city            String?
+  linkedinUrl     String?
+  source          String?
+  status          CandidateStatus @default(NEW)
+  overallScore    Float?
+  compatibility   Float?
+  ranking         Int?
+  cvText          String?         @db.Text
+  profileSummary  String?         @db.Text
+  flaggedRisks    Json?
+  metadata        Json?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  vacancies       CandidateVacancy[]
+  experiences     WorkExperience[]
+  educations      Education[]
+  documents       Document[]
+  references      Reference[]
+  notes           Note[]
+  interviews      Interview[]
+  assessments     Assessment[]
+  activities      ActivityLog[]
+
+  @@index([tenantId, status])
+  @@index([tenantId, email])
+  @@map("candidates")
+}
+
+model CandidateVacancy {
+  id          String        @id @default(cuid())
+  candidateId String
+  vacancyId   String
+  stage       PipelineStage @default(APPLIED)
+  stageOrder  Int           @default(0)
+  score       Float?
+  ranking     Int?
+  source      String?
+  enteredStageAt DateTime   @default(now())
+  rejectedAt  DateTime?
+  rejectReason String?
+  hiredAt     DateTime?
+  metadata    Json?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  candidate Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  vacancy   Vacancy   @relation(fields: [vacancyId], references: [id], onDelete: Cascade)
+  stageHistory PipelineStageHistory[]
+
+  @@unique([candidateId, vacancyId])
+  @@index([vacancyId, stage])
+  @@map("candidate_vacancies")
+}
+
+model PipelineStageConfig {
+  id        String        @id @default(cuid())
+  vacancyId String
+  stage     PipelineStage
+  order     Int
+  label     String?
+  isActive  Boolean       @default(true)
+
+  vacancy Vacancy @relation(fields: [vacancyId], references: [id], onDelete: Cascade)
+
+  @@unique([vacancyId, stage])
+  @@map("pipeline_stage_configs")
+}
+
+model PipelineStageHistory {
+  id                 String        @id @default(cuid())
+  candidateVacancyId String
+  fromStage          PipelineStage?
+  toStage            PipelineStage
+  changedById        String?
+  reason             String?
+  createdAt          DateTime      @default(now())
+
+  candidateVacancy CandidateVacancy @relation(fields: [candidateVacancyId], references: [id], onDelete: Cascade)
+
+  @@index([candidateVacancyId])
+  @@map("pipeline_stage_history")
+}
+
+model WorkExperience {
+  id          String    @id @default(cuid())
+  candidateId String
+  company     String
+  role        String
+  startDate   DateTime?
+  endDate     DateTime?
+  isCurrent   Boolean   @default(false)
+  description String?   @db.Text
+  results     String?   @db.Text
+
+  candidate Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@index([candidateId])
+  @@map("work_experiences")
+}
+
+model Education {
+  id          String  @id @default(cuid())
+  candidateId String
+  institution String
+  degree      String?
+  field       String?
+  year        Int?
+
+  candidate Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@index([candidateId])
+  @@map("educations")
+}
+
+model Reference {
+  id          String  @id @default(cuid())
+  candidateId String
+  name        String
+  company     String?
+  role        String?
+  phone       String?
+  email       String?
+  notes       String?
+  verified    Boolean @default(false)
+
+  candidate Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@index([candidateId])
+  @@map("references")
+}
+
+// ─── Interviews & Assessments ─────────────────────────────────────────────────
+
+model Interview {
+  id          String          @id @default(cuid())
+  tenantId    String
+  candidateId String
+  vacancyId   String?
+  interviewerId String?
+  title       String
+  status      InterviewStatus @default(SCHEDULED)
+  scheduledAt DateTime?
+  completedAt DateTime?
+  duration    Int?
+  overallScore Float?
+  summary     String?         @db.Text
+  recommendation String?
+  automatedSummary String?         @db.Text
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  candidate Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  questions InterviewQuestion[]
+  responses InterviewResponse[]
+
+  @@index([tenantId, candidateId])
+  @@index([vacancyId])
+  @@map("interviews")
+}
+
+model InterviewQuestion {
+  id           String  @id @default(cuid())
+  interviewId  String
+  competency   String?
+  question     String  @db.Text
+  weight       Int     @default(5)
+  order        Int     @default(0)
+
+  interview Interview @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  responses InterviewResponse[]
+
+  @@index([interviewId])
+  @@map("interview_questions")
+}
+
+model InterviewResponse {
+  id          String  @id @default(cuid())
+  interviewId String
+  questionId  String
+  answer      String? @db.Text
+  score       Float?
+  evidence    String? @db.Text
+  comment     String? @db.Text
+  risk        String?
+  strength    String?
+
+  interview Interview         @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  question  InterviewQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([interviewId])
+  @@map("interview_responses")
+}
+
+model Assessment {
+  id          String         @id @default(cuid())
+  tenantId    String
+  candidateId String
+  vacancyId   String?
+  type        AssessmentType
+  title       String
+  score       Float?
+  maxScore    Float          @default(100)
+  result      String?
+  comments    String?        @db.Text
+  completedAt DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  candidate Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, candidateId])
+  @@index([vacancyId, type])
+  @@map("assessments")
+}
+
+// ─── Finalists Report ─────────────────────────────────────────────────────────
+
+model FinalistReport {
+  id            String   @id @default(cuid())
+  tenantId      String
+  vacancyId     String
+  consultantId  String?
+  executiveSummary String? @db.Text
+  comparison    Json?
+  strengths     Json?
+  weaknesses    Json?
+  results       Json?
+  competencies  Json?
+  ranking       Json?
+  recommendation String? @db.Text
+  conclusions   String?  @db.Text
+  pdfUrl        String?
+  presentedAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([tenantId, vacancyId])
+  @@map("finalist_reports")
+}
+
+// ─── Onboarding ───────────────────────────────────────────────────────────────
+
+model OnboardingProgram {
+  id          String   @id @default(cuid())
+  tenantId    String
+  companyId   String
+  candidateId String?
+  vacancyId   String?
+  title       String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  modules OnboardingModule[]
+  progress OnboardingProgress[]
+
+  @@index([tenantId, companyId])
+  @@map("onboarding_programs")
+}
+
+model OnboardingModule {
+  id          String  @id @default(cuid())
+  programId   String
+  title       String
+  type        String  // course, video, document, playbook, script, evaluation
+  content     String? @db.Text
+  fileUrl     String?
+  order       Int     @default(0)
+  isRequired  Boolean @default(true)
+
+  program  OnboardingProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  progress OnboardingProgress[]
+
+  @@index([programId])
+  @@map("onboarding_modules")
+}
+
+model OnboardingProgress {
+  id          String    @id @default(cuid())
+  programId   String
+  moduleId    String
+  candidateId String
+  completed   Boolean   @default(false)
+  score       Float?
+  completedAt DateTime?
+
+  program OnboardingProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  module  OnboardingModule  @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@unique([moduleId, candidateId])
+  @@index([programId, candidateId])
+  @@map("onboarding_progress")
+}
+
+// ─── CRM, Tasks, Calendar ─────────────────────────────────────────────────────
+
+model FollowUp {
+  id          String    @id @default(cuid())
+  companyId   String
+  userId      String?
+  type        String    // call, email, meeting, whatsapp
+  subject     String
+  notes       String?   @db.Text
+  scheduledAt DateTime?
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@map("follow_ups")
+}
+
+model CrmInteraction {
+  id        String   @id @default(cuid())
+  companyId String
+  userId    String?
+  channel   String   // email, call, whatsapp, meeting
+  subject   String?
+  content   String?  @db.Text
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@map("crm_interactions")
+}
+
+model Task {
+  id          String       @id @default(cuid())
+  tenantId    String
+  title       String
+  description String?      @db.Text
+  status      TaskStatus   @default(PENDING)
+  priority    TaskPriority @default(MEDIUM)
+  dueDate     DateTime?
+  assigneeId  String?
+  creatorId   String?
+  companyId   String?
+  vacancyId   String?
+  completedAt DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  assignee User?    @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  creator  User?    @relation("TaskCreator", fields: [creatorId], references: [id])
+  company  Company? @relation(fields: [companyId], references: [id])
+  vacancy  Vacancy? @relation(fields: [vacancyId], references: [id])
+
+  @@index([tenantId, status])
+  @@index([assigneeId])
+  @@index([companyId])
+  @@map("tasks")
+}
+
+model CalendarEvent {
+  id          String   @id @default(cuid())
+  tenantId    String
+  userId      String?
+  companyId   String?
+  vacancyId   String?
+  title       String
+  description String?  @db.Text
+  startAt     DateTime
+  endAt       DateTime
+  location    String?
+  meetingUrl  String?
+  provider    IntegrationProvider?
+  externalId  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([tenantId, startAt])
+  @@index([userId])
+  @@map("calendar_events")
+}
+
+// ─── Documents & Contracts ────────────────────────────────────────────────────
+
+model Document {
+  id          String       @id @default(cuid())
+  tenantId    String
+  companyId   String?
+  vacancyId   String?
+  candidateId String?
+  name        String
+  type        DocumentType @default(OTHER)
+  url         String
+  mimeType    String?
+  sizeBytes   Int?
+  uploadedBy  String?
+  createdAt   DateTime     @default(now())
+
+  company   Company?   @relation(fields: [companyId], references: [id])
+  vacancy   Vacancy?   @relation(fields: [vacancyId], references: [id])
+  candidate Candidate? @relation(fields: [candidateId], references: [id])
+
+  @@index([tenantId])
+  @@index([companyId])
+  @@index([candidateId])
+  @@map("documents")
+}
+
+model Contract {
+  id        String    @id @default(cuid())
+  companyId String
+  title     String
+  value     Decimal?  @db.Decimal(12, 2)
+  startDate DateTime?
+  endDate   DateTime?
+  status    String    @default("active")
+  fileUrl   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@map("contracts")
+}
+
+model Invoice {
+  id        String    @id @default(cuid())
+  companyId String
+  number    String
+  amount    Decimal   @db.Decimal(12, 2)
+  status    String    @default("pending")
+  dueDate   DateTime?
+  paidAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@map("invoices")
+}
+
+// ─── Notes, Activity, Notifications ───────────────────────────────────────────
+
+model Note {
+  id          String   @id @default(cuid())
+  tenantId    String
+  authorId    String?
+  candidateId String?
+  companyId   String?
+  content     String   @db.Text
+  isPrivate   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  author    User?      @relation(fields: [authorId], references: [id])
+  candidate Candidate? @relation(fields: [candidateId], references: [id])
+
+  @@index([tenantId])
+  @@index([candidateId])
+  @@map("notes")
+}
+
+model ActivityLog {
+  id          String       @id @default(cuid())
+  tenantId    String
+  userId      String?
+  companyId   String?
+  vacancyId   String?
+  candidateId String?
+  type        ActivityType
+  entity      String?
+  entityId    String?
+  description String
+  metadata    Json?
+  createdAt   DateTime     @default(now())
+
+  user      User?      @relation(fields: [userId], references: [id])
+  company   Company?   @relation(fields: [companyId], references: [id])
+  vacancy   Vacancy?   @relation(fields: [vacancyId], references: [id])
+  candidate Candidate? @relation(fields: [candidateId], references: [id])
+
+  @@index([tenantId, createdAt])
+  @@index([companyId])
+  @@index([vacancyId])
+  @@map("activity_logs")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType @default(INFO)
+  title     String
+  message   String
+  link      String?
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+  @@map("notifications")
+}
+
+// ─── Automations & Integrations ───────────────────────────────────────────────
+
+model AutomationRule {
+  id        String            @id @default(cuid())
+  tenantId  String
+  name      String
+  trigger   AutomationTrigger
+  actions   Json
+  isActive  Boolean           @default(true)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  logs AutomationLog[]
+
+  @@index([tenantId, trigger])
+  @@map("automation_rules")
+}
+
+model AutomationLog {
+  id        String   @id @default(cuid())
+  ruleId    String
+  status    String
+  input     Json?
+  output    Json?
+  error     String?
+  createdAt DateTime @default(now())
+
+  rule AutomationRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+
+  @@index([ruleId])
+  @@map("automation_logs")
+}
+
+model Integration {
+  id        String              @id @default(cuid())
+  tenantId  String
+  provider  IntegrationProvider
+  config    Json
+  isActive  Boolean             @default(false)
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+
+  @@unique([tenantId, provider])
+  @@map("integrations")
+}
+
+model SystemConfig {
+  id        String   @id @default(cuid())
+  tenantId  String
+  key       String
+  value     Json
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, key])
+  @@map("system_configs")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  tenantId  String
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  oldValue  Json?
+  newValue  Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, createdAt])
+  @@index([entity, entityId])
+  @@map("audit_logs")
+}

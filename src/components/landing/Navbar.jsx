@@ -140,12 +140,24 @@ export default function Navbar() {
           </div>
         </div>
 
-        <Link
-          to="/contacto"
-          className="hidden md:inline-flex kova-btn-primary text-sm font-semibold px-4 py-2.5 rounded-lg transition-all text-white hover:opacity-95"
-        >
-          Hablar con un experto
-        </Link>
+        <div className="hidden md:flex items-center gap-3">
+          <a
+            href={import.meta.env.VITE_DASHBOARD_URL ?? 'http://localhost:3001/login'}
+            className="text-sm font-medium transition-colors px-3 py-2 rounded-lg border"
+            style={{
+              color: onLandingHero ? 'rgba(255,255,255,0.85)' : BRAND.navy,
+              borderColor: onLandingHero ? 'rgba(255,255,255,0.25)' : KOVA.border,
+            }}
+          >
+            Iniciar sesión
+          </a>
+          <Link
+            to="/contacto"
+            className="inline-flex kova-btn-primary text-sm font-semibold px-4 py-2.5 rounded-lg transition-all text-white hover:opacity-95"
+          >
+            Hablar con un experto
+          </Link>
+        </div>
       </div>
     </nav>
   );
