@@ -1,7 +1,7 @@
 [build]
-buildCommand = "npm run build"
+buildCommand = "npm ci && cd apps/dashboard && npm ci && npm run build:all"
 
 [deploy]
-startCommand = "npm run start"
+startCommand = "cd apps/dashboard && npm run db:deploy && npm run start"
 healthcheckPath = "/api/health"
-healthcheckTimeout = 120
+healthcheckTimeout = 300

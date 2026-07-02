@@ -9,11 +9,9 @@ const landingLinks = [
   ['Quiénes somos', '/quienes-somos'],
 ];
 
-// Producción: /login en este dominio redirige al dashboard (server/index.js).
-// Desarrollo local: abre el dashboard en localhost:3001.
+// Misma URL en producción (/login). Solo localhost en desarrollo local del dashboard.
 const DASHBOARD_LOGIN_URL =
-  import.meta.env.VITE_DASHBOARD_URL ??
-  (import.meta.env.DEV ? 'http://localhost:3001/login' : '/login');
+  import.meta.env.DEV ? 'http://localhost:3001/login' : '/login';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
