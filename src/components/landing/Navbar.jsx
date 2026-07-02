@@ -9,6 +9,14 @@ const landingLinks = [
   ['Quiénes somos', '/quienes-somos'],
 ];
 
+// URL del dashboard (servicio Next.js en Railway).
+// - Producción: usa VITE_DASHBOARD_URL (configúrala en el servicio de la landing en Railway).
+// - Desarrollo local: cae en localhost solo cuando corres `npm run dev`.
+// Nunca redirige a localhost en el sitio desplegado.
+const DASHBOARD_LOGIN_URL =
+  import.meta.env.VITE_DASHBOARD_URL ??
+  (import.meta.env.DEV ? 'http://localhost:3001/login' : '/login');
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [recursosOpen, setRecursosOpen] = useState(false);
@@ -142,7 +150,7 @@ export default function Navbar() {
 
         <div className="hidden md:flex items-center gap-3">
           <a
-            href={import.meta.env.VITE_DASHBOARD_URL ?? 'http://localhost:3001/login'}
+            href={DASHBOARD_LOGIN_URL}
             className="text-sm font-medium transition-colors px-3 py-2 rounded-lg border"
             style={{
               color: onLandingHero ? 'rgba(255,255,255,0.85)' : BRAND.navy,
