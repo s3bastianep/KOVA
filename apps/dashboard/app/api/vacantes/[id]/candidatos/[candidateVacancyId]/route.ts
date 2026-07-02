@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { ActivityType, PipelineStage, TaskPriority } from '@prisma/client';
 import { getUserFromRequest, unauthorized, companyWhereForUser } from '../../../../../../lib/auth';
 import { prisma } from '../../../../../../lib/prisma';
+import { recordStageAutomation } from '../../../../../../lib/automations';
 import { isMockMode } from '../../../../../../lib/mock';
 
 export const dynamic = 'force-dynamic';
@@ -180,7 +181,20 @@ export async function PATCH(
       });
     }
 
-    return { updated, task };
+    const emailResult = await recordStageAutomation(tx, {
+      tenantId: user.tenantId,
+      userId: user.id,
+      companyId: candidateVacancy.vacancy.companyId,
+      vacancyId: candidateVacancy.vacancy.id,
+      candidateId: candidateVacancy.candidate.id,
+      consultantId: candidateVacancy.vacancy.consultantId ?? user.id,
+      candidateName: `${candidateVacancy.candidate.firstName} ${candidateVacancy.candidate.lastName}`,
+      vacancyTitle: candidateVacancy.vacancy.title,
+      targetStage,
+      rejectReason,
+    });
+
+    return { updated, task, emailResult };
   });
 
   return Response.json({
@@ -189,7 +203,7 @@ export async function PATCH(
     automation: {
       activity: description,
       task: result.task?.title ?? null,
-      email: targetStage === 'REJECTED' ? 'Correo de agradecimiento registrado para envío' : null,
+      email: result.emailResult.email ?? null,
     },
   });
 }

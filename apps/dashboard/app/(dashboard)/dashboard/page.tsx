@@ -18,6 +18,25 @@ type TodayItem = {
   candidateId?: string;
 };
 
+type MyDay = {
+  interviews: number;
+  candidatesToReview: number;
+  testsToGrade: number;
+  clientsWaiting: number;
+  tasks: number;
+  proposals: number;
+};
+
+type ProcessSummary = {
+  id: string;
+  title: string;
+  company: string;
+  status: string;
+  candidates: number;
+  daysOpen: number;
+  trafficLight: string;
+};
+
 type FunnelItem = { stage: string; count: number };
 
 function KpiCard({ label, value, icon: Icon, accent }: { label: string; value: number | string; icon: React.ElementType; accent?: string }) {
@@ -78,6 +97,17 @@ export default function DashboardPage() {
   const recruitmentFunnel = (data?.recruitmentFunnel ?? []) as FunnelItem[];
   const commercialFunnel = (data?.commercialFunnel ?? []) as FunnelItem[];
   const alerts = (data?.alerts ?? []) as { id: string; title: string; status: string }[];
+  const myDay = (data?.myDay ?? {}) as MyDay;
+  const processes = (data?.processes ?? []) as ProcessSummary[];
+
+  const myDayItems = [
+    { label: 'entrevistas', count: myDay.interviews ?? 0, href: '/entrevistas' },
+    { label: 'candidatos pendientes por revisar', count: myDay.candidatesToReview ?? 0, href: '/candidatos' },
+    { label: 'pruebas por calificar', count: myDay.testsToGrade ?? 0, href: '/evaluaciones' },
+    { label: 'clientes esperando candidatos', count: myDay.clientsWaiting ?? 0, href: '/procesos' },
+    { label: 'tareas pendientes', count: myDay.tasks ?? 0, href: '/tareas' },
+    { label: 'propuestas comerciales por enviar', count: myDay.proposals ?? 0, href: '/crm' },
+  ];
 
   return (
     <div className="space-y-8">
@@ -90,6 +120,41 @@ export default function DashboardPage() {
         <p className="text-sm text-slate-500">Cargando...</p>
       ) : (
         <>
+          <div className="kova-card p-6">
+            <h2 className="font-heading font-semibold mb-1" style={{ color: 'var(--kova-navy)' }}>Mi día</h2>
+            <p className="text-xs text-slate-400 mb-4">Hoy tienes:</p>
+            <ul className="grid sm:grid-cols-2 gap-2">
+              {myDayItems.map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="flex items-center gap-2 p-3 rounded-lg border border-slate-100 hover:bg-slate-50 text-sm">
+                    <span className="font-heading font-bold text-lg w-8" style={{ color: 'var(--kova-blue)' }}>{item.count}</span>
+                    <span style={{ color: 'var(--kova-navy)' }}>{item.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {processes.length > 0 && (
+            <div className="kova-card p-6">
+              <h2 className="font-heading font-semibold mb-4" style={{ color: 'var(--kova-navy)' }}>Mis procesos</h2>
+              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                {processes.map((p) => (
+                  <Link key={p.id} href={`/procesos/${p.id}`} className="p-4 rounded-lg border border-slate-100 hover:bg-slate-50 block">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-xs text-slate-400">{p.company}</p>
+                        <p className="font-medium text-sm" style={{ color: 'var(--kova-navy)' }}>{p.title}</p>
+                      </div>
+                      <span>{p.trafficLight === 'red' ? '🔴' : p.trafficLight === 'yellow' ? '🟡' : '🟢'}</span>
+                    </div>
+                    <p className="text-xs text-slate-500 mt-2">{p.daysOpen} días · {p.candidates} candidatos · {p.status.replace(/_/g, ' ')}</p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
             <KpiCard label="Clientes activos" value={kpis.activeClients ?? 0} icon={Building2} accent="#E6FAF3" />
             <KpiCard label="Procesos abiertos" value={kpis.activeProcesses ?? kpis.activeVacancies ?? 0} icon={GitBranch} />

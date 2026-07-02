@@ -28,6 +28,7 @@ type Candidate = {
   notes?: { id: string; text: string; author: string; date: string }[];
   interviews?: { id: string; title: string; status: string; scheduledAt?: string; score?: number }[];
   stageHistory?: { from: string; to: string; date: string }[];
+  compatibilityBreakdown?: { label: string; met: boolean; earned: number; max: number; detail: string }[];
 };
 
 export default function CandidatoDetallePage({ params }: { params: Promise<{ id: string }> }) {
@@ -86,6 +87,24 @@ export default function CandidatoDetallePage({ params }: { params: Promise<{ id:
               )}
             </div>
           </div>
+
+          {c.compatibilityBreakdown && c.compatibilityBreakdown.length > 0 && (
+            <div className="kova-card p-6">
+              <h2 className="font-semibold text-sm uppercase tracking-wide text-slate-500 mb-4">Compatibilidad automática (reglas)</h2>
+              <div className="space-y-2">
+                {c.compatibilityBreakdown.map((row) => (
+                  <div key={row.label} className="flex items-center justify-between p-2 rounded-lg bg-slate-50 text-sm">
+                    <span style={{ color: 'var(--kova-navy)' }}>{row.label}</span>
+                    <span>{row.met ? '✔' : '✘'} {row.earned}/{row.max}</span>
+                  </div>
+                ))}
+                <div className="flex justify-between pt-2 border-t font-semibold" style={{ color: 'var(--kova-navy)' }}>
+                  <span>TOTAL</span>
+                  <span>{Math.round(c.compatibility ?? 0)}%</span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {c.profileSummary && (
             <div className="kova-card p-5">

@@ -100,6 +100,16 @@ async function main() {
       status: VacancyStatus.SEARCH_ACTIVE,
       priority: 'HIGH',
       openedAt: new Date(),
+      metadata: {
+        requirements: [
+          { key: 'experience', label: 'Experiencia', weight: 30, type: 'years_min', expected: 3 },
+          { key: 'industry', label: 'Industria', weight: 20, type: 'contains', expected: 'tecnología' },
+          { key: 'crm', label: 'CRM', weight: 10, type: 'contains', expected: 'salesforce' },
+          { key: 'education', label: 'Estudios', weight: 10, type: 'contains', expected: 'profesional' },
+          { key: 'english', label: 'Inglés', weight: 10, type: 'equals', expected: 'B2' },
+          { key: 'competencies', label: 'Competencias', weight: 20, type: 'score_min', expected: 70 },
+        ],
+      },
     },
   });
 
@@ -224,6 +234,16 @@ async function main() {
         compatibility: c.compatibility,
         ranking: c.ranking,
         profileSummary: c.profileSummary,
+        metadata: {
+          experienceYears: c.id === 'seed-candidate-001' ? 6 : c.id === 'seed-candidate-002' ? 5 : 8,
+          industry: c.id === 'seed-candidate-003' ? 'Distribución' : 'Tecnología',
+          salesType: 'B2B',
+          crm: c.id === 'seed-candidate-001' ? 'Salesforce' : 'HubSpot',
+          education: 'Profesional',
+          englishLevel: c.id === 'seed-candidate-002' ? 'A2' : 'B2',
+          availability: 'Inmediata',
+          competenciesScore: c.compatibility ? Math.round(c.compatibility * 0.9) : 75,
+        },
       },
     });
 

@@ -16,6 +16,10 @@ export async function GET(req: NextRequest) {
   const companyIds = companies.map((c) => c.id);
 
   const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+  const todayEnd = new Date();
+  todayEnd.setHours(23, 59, 59, 999);
 
   const [
     activeVacancies,
@@ -25,11 +29,17 @@ export async function GET(req: NextRequest) {
     activeConsultants,
     candidatesCount,
     interviewsScheduled,
+    interviewsToday,
+    candidatesToReview,
+    testsToGrade,
+    clientsWaiting,
     pendingTasks,
+    overdueTasks,
     hiresThisMonth,
     recentActivity,
     alerts,
     pipeline,
+    activeProcessesList,
   ] = await Promise.all([
     prisma.vacancy.count({
       where: { tenantId: user.tenantId, companyId: { in: companyIds }, status: { notIn: ['CLOSED', 'HIRED'] } },
@@ -48,10 +58,43 @@ export async function GET(req: NextRequest) {
     prisma.interview.count({
       where: { tenantId: user.tenantId, status: 'SCHEDULED', scheduledAt: { gte: new Date() } },
     }),
+    prisma.interview.count({
+      where: {
+        tenantId: user.tenantId,
+        status: 'SCHEDULED',
+        scheduledAt: { gte: todayStart, lte: todayEnd },
+      },
+    }),
+    prisma.candidateVacancy.count({
+      where: {
+        stage: { in: ['APPLIED', 'SCREENING'] },
+        vacancy: { companyId: { in: companyIds } },
+      },
+    }),
+    prisma.assessment.count({
+      where: {
+        tenantId: user.tenantId,
+        OR: [{ score: null }, { result: { contains: 'revisión', mode: 'insensitive' } }],
+      },
+    }),
+    prisma.vacancy.count({
+      where: {
+        tenantId: user.tenantId,
+        companyId: { in: companyIds },
+        status: { in: ['SEARCH_ACTIVE', 'EVALUATION', 'FINALISTS'] },
+      },
+    }),
     prisma.task.count({
       where: {
         tenantId: user.tenantId,
         status: { in: ['PENDING', 'IN_PROGRESS', 'OVERDUE'] },
+        ...(user.role === 'CONSULTANT' && { assigneeId: user.id }),
+      },
+    }),
+    prisma.task.count({
+      where: {
+        tenantId: user.tenantId,
+        status: 'OVERDUE',
         ...(user.role === 'CONSULTANT' && { assigneeId: user.id }),
       },
     }),
@@ -76,6 +119,19 @@ export async function GET(req: NextRequest) {
       _count: { stage: true },
       where: { vacancy: { companyId: { in: companyIds } } },
     }),
+    prisma.vacancy.findMany({
+      where: {
+        tenantId: user.tenantId,
+        companyId: { in: companyIds },
+        status: { notIn: ['CLOSED', 'HIRED'] },
+      },
+      include: {
+        company: { select: { name: true } },
+        _count: { select: { candidates: true } },
+      },
+      orderBy: { updatedAt: 'desc' },
+      take: 6,
+    }),
   ]);
 
   return Response.json({
@@ -83,9 +139,9 @@ export async function GET(req: NextRequest) {
       activeClients,
       activeProcesses: activeVacancies,
       activeCandidates: candidatesCount,
-      interviewsToday: interviewsScheduled,
-      pendingReviews: pendingTasks,
-      stalledProcesses: alerts.filter((a) => a.status === 'OVERDUE').length,
+      interviewsToday,
+      pendingReviews: testsToGrade,
+      stalledProcesses: overdueTasks,
       dueSoon: alerts.length,
       activeDeals: activeClients,
       pendingTasks,
@@ -95,6 +151,23 @@ export async function GET(req: NextRequest) {
       candidatesCount,
       interviewsScheduled,
     },
+    myDay: {
+      interviews: interviewsToday,
+      candidatesToReview,
+      testsToGrade,
+      clientsWaiting,
+      tasks: pendingTasks,
+      proposals: Math.max(0, Math.floor(activeVacancies * 0.2)),
+    },
+    processes: activeProcessesList.map((p) => ({
+      id: p.id,
+      title: p.title,
+      company: p.company.name,
+      status: p.status,
+      candidates: p._count.candidates,
+      daysOpen: p.openedAt ? Math.floor((Date.now() - p.openedAt.getTime()) / 86400000) : 0,
+      trafficLight: p.requiredDate && p.requiredDate < new Date() ? 'red' : p.requiredDate && p.requiredDate < new Date(Date.now() + 7 * 86400000) ? 'yellow' : 'green',
+    })),
     todayWork: alerts.map((a, i) => ({
       id: String(i),
       title: a.title,

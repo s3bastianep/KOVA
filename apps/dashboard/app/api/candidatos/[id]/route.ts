@@ -71,6 +71,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     vacancyId: primary?.vacancy.id,
     companyName: primary?.vacancy.company?.name,
     profileSummary: candidate.profileSummary,
+    compatibilityBreakdown: (candidate.metadata as { compatibilityBreakdown?: unknown[] })?.compatibilityBreakdown ?? [],
     experiences: candidate.experiences.map((e) => ({
       id: e.id,
       company: e.company,
