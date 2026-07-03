@@ -19,13 +19,13 @@ export function PageHeader({
 }: PageHeaderProps) {
   return (
     <div className="flex flex-wrap items-start justify-between gap-4">
-      <div className="flex items-center gap-3.5">
+      <div className="flex items-center gap-3">
         {Icon && (
           <div
-            className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-sm"
+            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
             style={{ background: accent, color: tone }}
           >
-            <Icon className="w-5 h-5" />
+            <Icon className="w-[18px] h-[18px]" />
           </div>
         )}
         <div>

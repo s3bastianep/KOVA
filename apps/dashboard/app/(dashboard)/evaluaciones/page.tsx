@@ -468,29 +468,6 @@ function DonutChart({ buckets }: { buckets: { label: string; count: number; pct:
   );
 }
 
-function Sparkline({ points }: { points: number[] }) {
-  if (points.length < 2) {
-    return <div className="h-8 flex items-center"><span className="text-[10px] text-slate-300">—</span></div>;
-  }
-  const w = 80, h = 32, pad = 3;
-  const min = Math.min(...points), max = Math.max(...points);
-  const range = max - min || 1;
-  const coords = points.map((p, i) => {
-    const x = pad + (i / (points.length - 1)) * (w - pad * 2);
-    const y = h - pad - ((p - min) / range) * (h - pad * 2);
-    return { x, y };
-  });
-  const path = coords.map((c, i) => `${i === 0 ? 'M' : 'L'}${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ');
-  const last = coords[coords.length - 1];
-  const color = scoreColor(points[points.length - 1]);
-  return (
-    <svg width={w} height={h} className="overflow-visible">
-      <path d={path} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx={last.x} cy={last.y} r="2.5" fill={color} />
-    </svg>
-  );
-}
-
 function StageTimeline({ currentIndex }: { currentIndex: number }) {
   return (
     <span className="inline-flex items-center gap-1.5 text-[11px] px-2 py-0.5 rounded-full font-medium" style={{ background: '#EEF2FA', color: 'var(--kova-blue)' }}>
@@ -557,11 +534,10 @@ function ProcessCard({ process, allTestPcts, isOpen, openCandidate, openTest, on
           {/* Tabla de candidatos */}
           <div className="rounded-xl border border-slate-200 bg-white overflow-x-auto">
             <div className="min-w-[720px]">
-              <div className="grid grid-cols-[1.6fr_1.1fr_0.8fr_0.9fr_0.9fr_1.1fr_auto] gap-2 px-4 py-2.5 border-b border-slate-100 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+              <div className="grid grid-cols-[1.6fr_1.1fr_0.8fr_0.9fr_1.1fr_auto] gap-2 px-4 py-2.5 border-b border-slate-100 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
                 <span>Candidato</span>
                 <span>Etapa actual</span>
                 <span>Promedio</span>
-                <span>Evolución</span>
                 <span>Pruebas</span>
                 <span>Última actividad</span>
                 <span />
@@ -602,16 +578,13 @@ function CandidateRow({ candidate, stageIndex, allTestPcts, isOpen, openTest, on
   const color = scoreColor(candidate.avgScore);
   const q = qualitative(candidate.avgScore, false);
   const initials = candidate.candidateName.split(' ').slice(0, 2).map((w) => w[0]).join('');
-  const evolution = [...candidate.tests]
-    .sort((a, b) => new Date(a.completedAt ?? 0).getTime() - new Date(b.completedAt ?? 0).getTime())
-    .map((t) => Math.round((t.score / t.maxScore) * 100));
   const completed = candidate.tests.filter((t) => !isPending(t)).length;
   const lastTest = [...candidate.tests].sort((a, b) => new Date(b.completedAt ?? 0).getTime() - new Date(a.completedAt ?? 0).getTime())[0];
 
   return (
     <div className={`border-b border-slate-50 last:border-0 ${isOpen ? 'bg-slate-50/50' : ''}`}>
       <button type="button" onClick={onToggle}
-        className="w-full grid grid-cols-[1.6fr_1.1fr_0.8fr_0.9fr_0.9fr_1.1fr_auto] gap-2 items-center px-4 py-3 text-left hover:bg-slate-50/60 transition-colors">
+        className="w-full grid grid-cols-[1.6fr_1.1fr_0.8fr_0.9fr_1.1fr_auto] gap-2 items-center px-4 py-3 text-left hover:bg-slate-50/60 transition-colors">
         {/* Candidato */}
         <div className="flex items-center gap-2.5 min-w-0">
           <span className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0" style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}>
@@ -629,8 +602,6 @@ function CandidateRow({ candidate, stageIndex, allTestPcts, isOpen, openTest, on
           <p className="text-sm font-bold leading-none" style={{ color }}>{candidate.avgScore}%</p>
           <p className="text-[10px] font-medium" style={{ color: q.color }}>{q.label}</p>
         </div>
-        {/* Evolución */}
-        <div><Sparkline points={evolution} /></div>
         {/* Pruebas */}
         <div>
           <p className="text-sm font-semibold" style={{ color: 'var(--kova-navy)' }}>{completed}/{candidate.testCount}</p>

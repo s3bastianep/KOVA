@@ -67,8 +67,8 @@ export default function ProcesosPage() {
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-sm" style={{ background: '#EEF2FA', color: 'var(--kova-blue)' }}>
-            <GitBranch className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#EEF2FA', color: 'var(--kova-blue)' }}>
+            <GitBranch className="w-[18px] h-[18px]" />
           </div>
           <div>
             <h1 className="font-heading text-2xl font-bold leading-tight" style={{ color: 'var(--kova-navy)' }}>Procesos</h1>

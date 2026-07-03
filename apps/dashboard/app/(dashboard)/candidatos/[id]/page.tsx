@@ -212,7 +212,7 @@ function CandidateReport({ c }: { c: Candidate }) {
   return (
     <div className="print-area kova-card overflow-hidden">
       {/* ── Cabecera ── */}
-      <div className="px-6 lg:px-8 pt-6">
+      <div className="report-head px-6 lg:px-8 pt-6">
         <div className="flex items-center justify-between mb-4">
           <span className="text-xs text-slate-400">
             Informe de evaluación · <span className="text-slate-600 font-medium">{c.vacancyTitle ?? 'Proceso'}</span>
@@ -260,7 +260,7 @@ function CandidateReport({ c }: { c: Candidate }) {
         </div>
       </div>
 
-      <div className="p-6 lg:p-8 space-y-5" style={{ background: '#FBFBFD' }}>
+      <div className="report-body p-6 lg:p-8 space-y-5" style={{ background: '#FBFBFD' }}>
         {/* ── KPIs ── */}
         <div id="sec-resumen" className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 print-block scroll-mt-24">
           <KpiDonut label="Puntaje Kova" value={r.metrics.puntajeKova} caption={r.affinity} />
@@ -272,7 +272,7 @@ function CandidateReport({ c }: { c: Candidate }) {
         {/* ── Análisis predictivo + Fortalezas ── */}
         <div id="sec-analisis" className="grid lg:grid-cols-5 gap-5 print-block scroll-mt-24">
           <div className="lg:col-span-3 rounded-2xl p-6 text-white relative overflow-hidden" style={{ background: 'linear-gradient(150deg, #0E1834 0%, #16224A 100%)' }}>
-            <div className="absolute -bottom-16 -right-10 w-56 h-56 rounded-full opacity-20 blur-3xl pointer-events-none" style={{ background: VIOLET }} />
+            <div className="absolute -bottom-16 -right-10 w-56 h-56 rounded-full opacity-20 blur-3xl pointer-events-none no-print" style={{ background: VIOLET }} />
             <p className="text-[11px] font-bold uppercase tracking-wide text-white/50 mb-2">Análisis predictivo Kova</p>
             <RadarChart data={r.radar} />
             <div className="mt-4 rounded-xl p-3.5 flex gap-3 items-start" style={{ background: 'rgba(124,58,237,0.22)', border: '1px solid rgba(124,58,237,0.35)' }}>
