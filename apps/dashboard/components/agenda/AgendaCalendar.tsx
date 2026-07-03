@@ -23,6 +23,7 @@ import {
   Plus,
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
+import { useToast } from '@/components/ui/Toast';
 import {
   type AgendaItem,
   type AgendaStatus,
@@ -89,6 +90,7 @@ type CalendarView = 'month' | 'week' | 'list';
 
 export function AgendaCalendar() {
   const today = new Date();
+  const toast = useToast();
   const [cursor, setCursor] = useState({ year: today.getFullYear(), month: today.getMonth() });
   const [view, setView] = useState<CalendarView>('month');
   const [modal, setModal] = useState<ModalMode>(null);
@@ -96,6 +98,8 @@ export function AgendaCalendar() {
   const [reasonText, setReasonText] = useState('');
   const [rescheduleDate, setRescheduleDate] = useState('');
   const [newAppointment, setNewAppointment] = useState<NewAppointment>(EMPTY_APPOINTMENT);
+  const [typeFilter, setTypeFilter] = useState<string | null>(null);
+  const [filterOpen, setFilterOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const monthStr = monthKey(cursor.year, cursor.month);
@@ -110,8 +114,13 @@ export function AgendaCalendar() {
     queryFn: () => dashboardApi.solicitudes('REQUESTED'),
   });
 
-  const items = (data?.items ?? []) as AgendaItem[];
+  const allItems = (data?.items ?? []) as AgendaItem[];
   const pendingRequests = (pendingData?.requests ?? []) as AgendaRequest[];
+
+  const items = useMemo(
+    () => (typeFilter ? allItems.filter((i) => i.type === typeFilter) : allItems),
+    [allItems, typeFilter],
+  );
 
   const byDay = useMemo(() => {
     const map = new Map<string, AgendaItem[]>();
@@ -127,16 +136,16 @@ export function AgendaCalendar() {
 
   const typeCounts = useMemo(() => {
     const map = new Map<string, number>();
-    for (const it of items) map.set(it.type, (map.get(it.type) ?? 0) + 1);
+    for (const it of allItems) map.set(it.type, (map.get(it.type) ?? 0) + 1);
     return [...map.entries()].sort((a, b) => b[1] - a[1]);
-  }, [items]);
+  }, [allItems]);
 
   const summary = useMemo(() => {
-    const canceladas = items.filter((i) => i.status === 'CANCELLED' || i.status === 'REJECTED').length;
-    const reprogramadas = items.filter((i) => i.moveCount > 0).length;
-    const confirmadas = items.filter((i) => i.status === 'PENDING' || i.status === 'COMPLETED').length;
-    return { total: items.length, confirmadas, pendientes: pendingRequests.length, reprogramadas, canceladas };
-  }, [items, pendingRequests.length]);
+    const canceladas = allItems.filter((i) => i.status === 'CANCELLED' || i.status === 'REJECTED').length;
+    const reprogramadas = allItems.filter((i) => i.moveCount > 0).length;
+    const confirmadas = allItems.filter((i) => i.status === 'PENDING' || i.status === 'COMPLETED').length;
+    return { total: allItems.length, confirmadas, pendientes: pendingRequests.length, reprogramadas, canceladas };
+  }, [allItems, pendingRequests.length]);
 
   const weekDays = useMemo(() => {
     const ref = view === 'week'
@@ -424,9 +433,42 @@ export function AgendaCalendar() {
               </button>
             ))}
           </div>
-          <button type="button" className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors text-slate-600">
-            <Filter className="w-3.5 h-3.5 text-slate-400" /> Filtros
-          </button>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setFilterOpen((o) => !o)}
+              className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl border transition-colors ${typeFilter ? 'border-[var(--kova-blue)] bg-blue-50 text-[var(--kova-blue)]' : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'}`}
+            >
+              <Filter className={`w-3.5 h-3.5 ${typeFilter ? '' : 'text-slate-400'}`} /> {typeFilter ?? 'Filtros'}
+              {typeFilter && <X className="w-3 h-3" onClick={(e) => { e.stopPropagation(); setTypeFilter(null); setFilterOpen(false); }} />}
+            </button>
+            {filterOpen && (
+              <>
+                <div className="fixed inset-0 z-30" onClick={() => setFilterOpen(false)} />
+                <div className="absolute right-0 mt-1.5 z-40 w-52 rounded-xl border border-slate-200 bg-white shadow-lg p-1 max-h-72 overflow-auto">
+                  <p className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wide text-slate-400">Filtrar por tipo</p>
+                  <button
+                    type="button"
+                    onClick={() => { setTypeFilter(null); setFilterOpen(false); }}
+                    className={`w-full text-left px-3 py-2 rounded-lg text-sm ${typeFilter === null ? 'bg-blue-50 text-[var(--kova-blue)] font-medium' : 'text-slate-600 hover:bg-slate-50'}`}
+                  >
+                    Todos los tipos
+                  </button>
+                  {Object.keys(AGENDA_TYPE_STYLES).map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => { setTypeFilter(t); setFilterOpen(false); }}
+                      className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm ${typeFilter === t ? 'bg-blue-50 text-[var(--kova-blue)] font-medium' : 'text-slate-600 hover:bg-slate-50'}`}
+                    >
+                      <span className="w-2 h-2 rounded-full shrink-0" style={{ background: agendaTypeStyle(t).dot }} />
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
           <button
             type="button"
             onClick={openCreate}
@@ -654,7 +696,11 @@ export function AgendaCalendar() {
               <p className="text-xs text-slate-500 mt-0.5">Conecta tu calendario para recibir recordatorios y evitar conflictos.</p>
             </div>
           </div>
-          <button type="button" className="mt-3 w-full inline-flex items-center justify-center gap-2 text-xs font-medium px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors text-slate-600">
+          <button
+            type="button"
+            onClick={() => toast('Integración con Google/Outlook Calendar disponible próximamente', 'info')}
+            className="mt-3 w-full inline-flex items-center justify-center gap-2 text-xs font-medium px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors text-slate-600"
+          >
             <CalendarDays className="w-3.5 h-3.5 text-slate-400" /> Conectar calendario
           </button>
         </div>

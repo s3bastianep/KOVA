@@ -32,7 +32,9 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}): Prom
     },
   });
 
-  if (res.status === 401 && typeof window !== 'undefined') {
+  const isAuthRequest = path.startsWith('/auth/login');
+
+  if (res.status === 401 && typeof window !== 'undefined' && !isAuthRequest) {
     localStorage.removeItem('kova_access_token');
     localStorage.removeItem('kova_refresh_token');
     window.location.href = '/login';
@@ -78,6 +80,18 @@ export const dashboardApi = {
     }),
   candidates: (vacancyId?: string) =>
     apiFetch<unknown[]>(`/candidatos${vacancyId ? `?vacancyId=${vacancyId}` : ''}`),
+  createCandidate: (body: {
+    vacancyId: string;
+    firstName: string;
+    lastName: string;
+    email?: string;
+    phone?: string;
+    city?: string;
+    source?: string;
+  }) => apiFetch<{ ok: boolean; id?: string; compatibility?: number }>('/candidatos', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  }),
   candidate: (id: string) => apiFetch<Record<string, unknown>>(`/candidatos/${id}`),
   discoveries: () => apiFetch<unknown[]>('/discovery'),
   tasks: () => apiFetch<unknown[]>('/tareas'),

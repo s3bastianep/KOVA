@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
 
   if (isMockMode()) {
     if (String(email).toLowerCase() !== MOCK_USER.email || password !== DEMO_PASSWORD) {
-      return Response.json({ message: 'Credenciales inválidas' }, { status: 401 });
+      return Response.json({ message: 'Correo o contraseña incorrectos' }, { status: 401 });
     }
     const authUser = {
       id: MOCK_USER.id,
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
   try {
     const user = await prisma.user.findFirst({ where: { email: String(email).toLowerCase() } });
     if (!user) {
-      return Response.json({ message: 'Credenciales inválidas' }, { status: 401 });
+      return Response.json({ message: 'Correo o contraseña incorrectos' }, { status: 401 });
     }
 
     if (user.lockedUntil && user.lockedUntil > new Date()) {
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
           lockedUntil: attempts >= MAX_FAILED_ATTEMPTS ? new Date(Date.now() + LOCK_DURATION_MS) : null,
         },
       });
-      return Response.json({ message: 'Credenciales inválidas' }, { status: 401 });
+      return Response.json({ message: 'Correo o contraseña incorrectos' }, { status: 401 });
     }
 
     await prisma.user.update({

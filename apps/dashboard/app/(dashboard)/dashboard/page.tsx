@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import {
@@ -89,8 +90,15 @@ export default function DashboardPage() {
   const recentActivity = (data?.recentActivity ?? []) as ActivityLog[];
   const evalProcesses = (evalData?.processes ?? []) as ProcessEvalGroup[];
 
-  const user = getStoredUser();
-  const firstName = user?.firstName ?? 'Consultor';
+  // El saludo y el nombre dependen de la hora local y de localStorage, que no
+  // existen en el servidor. Se calculan tras el montaje para evitar el error de
+  // hidratación de React (#418).
+  const [greet, setGreet] = useState<string | null>(null);
+  const [firstName, setFirstName] = useState('');
+  useEffect(() => {
+    setGreet(greeting());
+    setFirstName(getStoredUser()?.firstName ?? '');
+  }, []);
 
   const totalCandidatesEval = evalProcesses.reduce((s, p) => s + p.candidateCount, 0);
   const totalTests = evalProcesses.reduce((s, p) => s + p.testCount, 0);
@@ -144,7 +152,7 @@ export default function DashboardPage() {
     <div className="space-y-5">
       <div>
         <h1 className="font-heading text-2xl font-bold" style={{ color: 'var(--kova-navy)' }}>
-          {greeting()}, {firstName}
+          {greet ?? 'Hola'}{firstName ? `, ${firstName}` : ''}
         </h1>
         <p className="text-sm text-slate-500 mt-0.5">Este es el resumen de tu operación hoy.</p>
       </div>

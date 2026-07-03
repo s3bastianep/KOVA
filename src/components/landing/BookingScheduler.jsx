@@ -256,10 +256,12 @@ export default function BookingScheduler({ alternateContact = null }) {
 
           <div className="space-y-4 max-w-md">
             <div>
-              <label className={labelClass} style={{ color: BRAND.navy }}>
+              <label htmlFor="booking-nombre" className={labelClass} style={{ color: BRAND.navy }}>
                 Nombre completo
               </label>
               <input
+                id="booking-nombre"
+                name="nombre"
                 type="text"
                 value={form.nombre}
                 onChange={(e) => setForm({ ...form, nombre: e.target.value })}
@@ -270,10 +272,12 @@ export default function BookingScheduler({ alternateContact = null }) {
               />
             </div>
             <div>
-              <label className={labelClass} style={{ color: BRAND.navy }}>
+              <label htmlFor="booking-correo" className={labelClass} style={{ color: BRAND.navy }}>
                 Correo corporativo
               </label>
               <input
+                id="booking-correo"
+                name="email"
                 type="email"
                 value={form.correo}
                 onChange={(e) => setForm({ ...form, correo: e.target.value })}
@@ -284,10 +288,12 @@ export default function BookingScheduler({ alternateContact = null }) {
               />
             </div>
             <div>
-              <label className={labelClass} style={{ color: BRAND.navy }}>
+              <label htmlFor="booking-telefono" className={labelClass} style={{ color: BRAND.navy }}>
                 Teléfono o WhatsApp
               </label>
               <input
+                id="booking-telefono"
+                name="tel"
                 type="tel"
                 value={form.telefono}
                 onChange={(e) => setForm({ ...form, telefono: e.target.value })}
@@ -298,10 +304,12 @@ export default function BookingScheduler({ alternateContact = null }) {
               />
             </div>
             <div>
-              <label className={labelClass} style={{ color: BRAND.navy }}>
+              <label htmlFor="booking-empresa" className={labelClass} style={{ color: BRAND.navy }}>
                 Empresa
               </label>
               <input
+                id="booking-empresa"
+                name="organization"
                 type="text"
                 value={form.empresa}
                 onChange={(e) => setForm({ ...form, empresa: e.target.value })}

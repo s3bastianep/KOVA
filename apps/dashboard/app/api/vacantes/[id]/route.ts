@@ -39,5 +39,17 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   });
 
   if (!vacancy) return Response.json({ message: 'Vacante no encontrada' }, { status: 404 });
-  return Response.json(vacancy);
+
+  // Unifica el puntaje: si el registro de la relación no tiene compatibilidad/ranking,
+  // usa el del candidato para que coincida con la lista de candidatos.
+  const normalized = {
+    ...vacancy,
+    candidates: vacancy.candidates.map((cv) => ({
+      ...cv,
+      compatibility: cv.candidate?.compatibility ?? 0,
+      ranking: cv.ranking ?? cv.candidate?.ranking ?? undefined,
+    })),
+  };
+
+  return Response.json(normalized);
 }

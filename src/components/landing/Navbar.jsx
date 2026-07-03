@@ -118,7 +118,7 @@ export default function Navbar() {
             <button type="button" className="flex items-center gap-1 text-sm font-medium transition-colors"
               style={{ color: onGuia ? BRAND.blue : navMuted, fontWeight: onGuia ? 600 : 500 }}
             >
-              Blog
+              Guías
               <ChevronDown className="w-3.5 h-3.5" />
             </button>
             {recursosOpen && (

@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import { stageLabel, stageMoveOptions, stageStepLabel, stageStyle } from '@/lib/stages';
+import { processStatusLabel, processProgress } from '@/lib/process-status';
 import { RejectModal } from '@/components/ui/RejectModal';
 import { useToast } from '@/components/ui/Toast';
 
@@ -179,17 +180,34 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
                     <Building2 className="w-4 h-4" /> {p.company.name}
                   </Link>
                 )}
-                <h1 className="font-heading text-xl font-bold" style={{ color: 'var(--kova-navy)' }}>
-                  {p.title}
-                </h1>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h1 className="font-heading text-xl font-bold" style={{ color: 'var(--kova-navy)' }}>
+                    {p.title}
+                  </h1>
+                  {p.status && (
+                    <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">
+                      {processStatusLabel(p.status)}
+                    </span>
+                  )}
+                </div>
                 <p className="text-sm text-slate-500 mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
                   {p.city && <span className="inline-flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> {p.city}</span>}
                   {p.modality && <span>{p.modality}</span>}
                 </p>
               </div>
-              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-50 border border-slate-100">
-                <Briefcase className="w-4 h-4 text-slate-400" />
-                <span className="text-xs font-medium text-slate-600">Solicitud de contratación</span>
+              <div className="flex flex-col items-end gap-2">
+                <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-50 border border-slate-100">
+                  <Briefcase className="w-4 h-4 text-slate-400" />
+                  <span className="text-xs font-medium text-slate-600">Solicitud de contratación</span>
+                </div>
+                {p.status && (
+                  <div className="flex items-center gap-2 w-40">
+                    <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${processProgress(p.status)}%`, background: 'var(--kova-blue)' }} />
+                    </div>
+                    <span className="text-[10px] font-semibold text-slate-500">{processProgress(p.status)}%</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -231,6 +249,18 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
                     </li>
                   ))}
                 </ul>
+              </div>
+            )}
+
+            {!profile.objective && skills.length === 0 && conditions.length === 0 && (
+              <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/70 px-4 py-3 flex items-start gap-3">
+                <Briefcase className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>Perfil del cargo pendiente</p>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Este proceso aún no tiene definido el objetivo, las habilidades ni las condiciones del cargo. Complétalos en el discovery para habilitar la evaluación de candidatos.
+                  </p>
+                </div>
               </div>
             )}
           </div>

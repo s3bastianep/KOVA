@@ -975,9 +975,18 @@ function QuestionPicker({
   );
 }
 
-function FieldLabel({ label, required }: { label: string; required?: boolean }) {
+function fieldId(label: string) {
+  return 'np-' + label
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+function FieldLabel({ label, htmlFor, required }: { label: string; htmlFor?: string; required?: boolean }) {
   return (
-    <label className="text-sm font-medium block mb-1.5" style={{ color: 'var(--kova-navy)' }}>
+    <label htmlFor={htmlFor} className="text-sm font-medium block mb-1.5" style={{ color: 'var(--kova-navy)' }}>
       {label}
       {required && <span className="text-red-400 ml-0.5">*</span>}
     </label>
@@ -989,12 +998,13 @@ function Field({ label, value, onChange, placeholder, type = 'text', icon: Icon,
   icon?: ComponentType<{ className?: string }>; required?: boolean;
 }) {
   const filled = value.trim().length > 0;
+  const id = fieldId(label);
   return (
     <div>
-      <FieldLabel label={label} required={required} />
+      <FieldLabel label={label} htmlFor={id} required={required} />
       <div className={`flex items-center gap-2 px-3.5 rounded-xl border bg-white transition-all focus-within:ring-2 focus-within:ring-[var(--kova-ring)] focus-within:border-[var(--kova-blue)] ${filled ? 'border-slate-200' : 'border-slate-200'}`}>
         {Icon && <Icon className="w-4 h-4 text-slate-400 shrink-0" />}
-        <input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
+        <input id={id} name={id} type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
           className="w-full py-2.5 text-sm bg-transparent outline-none" />
         {required && filled && <Check className="w-4 h-4 shrink-0" style={{ color: 'var(--kova-green)' }} />}
       </div>
@@ -1005,10 +1015,11 @@ function Field({ label, value, onChange, placeholder, type = 'text', icon: Icon,
 function TextArea({ label, value, onChange, placeholder }: {
   label: string; value: string; onChange: (v: string) => void; placeholder?: string;
 }) {
+  const id = fieldId(label);
   return (
     <div>
-      <FieldLabel label={label} />
-      <textarea value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} rows={3}
+      <FieldLabel label={label} htmlFor={id} />
+      <textarea id={id} name={id} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} rows={3}
         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--kova-ring)] focus:border-[var(--kova-blue)] resize-none transition-all" />
     </div>
   );
@@ -1018,12 +1029,13 @@ function SelectField({ label, value, onChange, options, placeholder, icon: Icon,
   label: string; value: string; onChange: (v: string) => void; options: string[]; placeholder?: string;
   icon?: ComponentType<{ className?: string }>; required?: boolean;
 }) {
+  const id = fieldId(label);
   return (
     <div>
-      <FieldLabel label={label} required={required} />
+      <FieldLabel label={label} htmlFor={id} required={required} />
       <div className="flex items-center gap-2 px-3.5 rounded-xl border border-slate-200 bg-white transition-all focus-within:ring-2 focus-within:ring-[var(--kova-ring)] focus-within:border-[var(--kova-blue)]">
         {Icon && <Icon className="w-4 h-4 text-slate-400 shrink-0" />}
-        <select value={value} onChange={(e) => onChange(e.target.value)}
+        <select id={id} name={id} value={value} onChange={(e) => onChange(e.target.value)}
           className="w-full py-2.5 text-sm bg-transparent outline-none">
           {placeholder && <option value="">{placeholder}</option>}
           {options.map((o) => <option key={o} value={o}>{o}</option>)}

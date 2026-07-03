@@ -1,14 +1,14 @@
 'use client';
 
 import { useMemo, useState, useEffect, Suspense } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
   MapPin, Building2, Users, Star, Upload, Plus, Search, Filter, ChevronDown,
   ChevronLeft, ChevronRight, List, LayoutGrid, Calendar, ClipboardList,
   Clock, Bell, MoreHorizontal, BarChart3, X, ArrowDownUp, Check,
-  Mail, Copy, Archive, Sparkles,
+  Mail, Copy, Archive, Sparkles, Loader2,
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import { stageLabel } from '@/lib/stages';
@@ -96,6 +96,7 @@ function CandidatosContent() {
   const toast = useToast();
   const { data, isLoading } = useQuery({ queryKey: ['candidates'], queryFn: () => dashboardApi.candidates() });
   const list = (data as CandidateRow[]) ?? [];
+  const [newOpen, setNewOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [view, setView] = useState<'list' | 'grid'>('list');
   const [processFilter, setProcessFilter] = useState<string | null>(null);
@@ -209,11 +210,18 @@ function CandidatosContent() {
           >
             <Upload className="w-4 h-4" /> Importar CV
           </button>
-          <Link href="/procesos/nuevo" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white shadow-sm hover:-translate-y-0.5 transition-all" style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}>
+          <button type="button" onClick={() => setNewOpen(true)} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white shadow-sm hover:-translate-y-0.5 transition-all" style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}>
             <Plus className="w-4 h-4" /> Nuevo candidato
-          </Link>
+          </button>
         </div>
       </div>
+
+      {newOpen && (
+        <NewCandidateModal
+          onClose={() => setNewOpen(false)}
+          onCreated={(name) => { setNewOpen(false); toast(`Candidato ${name} agregado`); }}
+        />
+      )}
 
       {/* Filtros */}
       <div className="flex flex-wrap items-center gap-2">
@@ -291,6 +299,130 @@ function CandidatosContent() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+type VacancyOption = { id: string; title: string; company?: { name?: string } | null };
+
+function NewCandidateModal({ onClose, onCreated }: { onClose: () => void; onCreated: (name: string) => void }) {
+  const queryClient = useQueryClient();
+  const { data: vacData, isLoading: loadingVacancies } = useQuery({
+    queryKey: ['vacancies'],
+    queryFn: () => dashboardApi.vacancies(),
+  });
+  const vacancies = (vacData as VacancyOption[]) ?? [];
+
+  const [form, setForm] = useState({ vacancyId: '', firstName: '', lastName: '', email: '', phone: '', city: '', source: 'Manual' });
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!form.vacancyId && vacancies.length > 0) {
+      setForm((f) => ({ ...f, vacancyId: vacancies[0].id }));
+    }
+  }, [vacancies, form.vacancyId]);
+
+  const mutation = useMutation({
+    mutationFn: () => dashboardApi.createCandidate({
+      vacancyId: form.vacancyId,
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
+      email: form.email.trim() || undefined,
+      phone: form.phone.trim() || undefined,
+      city: form.city.trim() || undefined,
+      source: form.source,
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['candidates'] });
+      queryClient.invalidateQueries({ queryKey: ['vacancy', form.vacancyId] });
+      onCreated(`${form.firstName.trim()} ${form.lastName.trim()}`.trim());
+    },
+    onError: (e) => setError(e instanceof Error ? e.message : 'No se pudo crear el candidato'),
+  });
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    if (!form.vacancyId) { setError('Selecciona el proceso al que pertenece el candidato.'); return; }
+    if (!form.firstName.trim() || !form.lastName.trim()) { setError('Nombre y apellido son obligatorios.'); return; }
+    mutation.mutate();
+  };
+
+  const inputCls = 'w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm bg-white outline-none focus:ring-2 focus:ring-[var(--kova-ring)] focus:border-[var(--kova-blue)] transition-all';
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={() => !mutation.isPending && onClose()}>
+      <form onSubmit={submit} className="w-full max-w-lg kova-card p-6 space-y-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h3 className="font-heading font-bold text-lg" style={{ color: 'var(--kova-navy)' }}>Nuevo candidato</h3>
+            <p className="text-sm text-slate-500 mt-0.5">Agrega un candidato a un proceso de selección.</p>
+          </div>
+          <button type="button" onClick={onClose} className="p-1 text-slate-400 hover:text-slate-600"><X className="w-5 h-5" /></button>
+        </div>
+
+        <div>
+          <label htmlFor="nc-vacancy" className="text-xs font-semibold uppercase tracking-wide text-slate-400 block mb-1.5">Proceso *</label>
+          <select
+            id="nc-vacancy"
+            name="vacancyId"
+            value={form.vacancyId}
+            onChange={(e) => setForm((f) => ({ ...f, vacancyId: e.target.value }))}
+            className={inputCls}
+            disabled={loadingVacancies}
+          >
+            {loadingVacancies && <option value="">Cargando procesos...</option>}
+            {!loadingVacancies && vacancies.length === 0 && <option value="">No hay procesos disponibles</option>}
+            {vacancies.map((v) => (
+              <option key={v.id} value={v.id}>{v.title}{v.company?.name ? ` · ${v.company.name}` : ''}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-3">
+          <div>
+            <label htmlFor="nc-first" className="text-xs font-semibold uppercase tracking-wide text-slate-400 block mb-1.5">Nombre *</label>
+            <input id="nc-first" name="firstName" autoComplete="given-name" value={form.firstName} onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))} className={inputCls} />
+          </div>
+          <div>
+            <label htmlFor="nc-last" className="text-xs font-semibold uppercase tracking-wide text-slate-400 block mb-1.5">Apellido *</label>
+            <input id="nc-last" name="lastName" autoComplete="family-name" value={form.lastName} onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))} className={inputCls} />
+          </div>
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-3">
+          <div>
+            <label htmlFor="nc-email" className="text-xs font-semibold uppercase tracking-wide text-slate-400 block mb-1.5">Correo</label>
+            <input id="nc-email" name="email" type="email" autoComplete="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} className={inputCls} />
+          </div>
+          <div>
+            <label htmlFor="nc-phone" className="text-xs font-semibold uppercase tracking-wide text-slate-400 block mb-1.5">Teléfono</label>
+            <input id="nc-phone" name="phone" type="tel" autoComplete="tel" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} className={inputCls} />
+          </div>
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-3">
+          <div>
+            <label htmlFor="nc-city" className="text-xs font-semibold uppercase tracking-wide text-slate-400 block mb-1.5">Ciudad</label>
+            <input id="nc-city" name="city" autoComplete="address-level2" value={form.city} onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))} className={inputCls} />
+          </div>
+          <div>
+            <label htmlFor="nc-source" className="text-xs font-semibold uppercase tracking-wide text-slate-400 block mb-1.5">Fuente</label>
+            <select id="nc-source" name="source" value={form.source} onChange={(e) => setForm((f) => ({ ...f, source: e.target.value }))} className={inputCls}>
+              {['Manual', 'LinkedIn', 'Referido', 'Computrabajo', 'Base de datos'].map((s) => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </div>
+        </div>
+
+        {error && <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</p>}
+
+        <div className="flex justify-end gap-2 pt-1">
+          <button type="button" onClick={onClose} disabled={mutation.isPending} className="text-sm px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50">Cancelar</button>
+          <button type="submit" disabled={mutation.isPending || !form.vacancyId} className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl text-white font-semibold disabled:opacity-50" style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}>
+            {mutation.isPending ? <><Loader2 className="w-4 h-4 animate-spin" /> Guardando...</> : <><Plus className="w-4 h-4" /> Agregar candidato</>}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

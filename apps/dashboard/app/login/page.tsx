@@ -22,7 +22,8 @@ export default function LoginPage() {
       saveSession(data);
       router.push('/dashboard');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al iniciar sesión');
+      const msg = err instanceof Error ? err.message : '';
+      setError(msg && msg !== 'Unauthorized' ? msg : 'Correo o contraseña incorrectos');
     } finally {
       setLoading(false);
     }
@@ -41,25 +42,25 @@ export default function LoginPage() {
           <p className="text-sm text-slate-500">Ingresa a tu panel de reclutamiento</p>
         </div>
 
-        {error && <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{error}</div>}
+        {error && <div role="alert" className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{error}</div>}
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--kova-navy)' }}>Correo</label>
+            <label htmlFor="login-email" className="block text-sm font-medium mb-1.5" style={{ color: 'var(--kova-navy)' }}>Correo</label>
             <div className="flex items-center gap-2 px-3.5 rounded-xl border bg-white focus-within:ring-2 focus-within:ring-[var(--kova-ring)] focus-within:border-[var(--kova-blue)] transition-all" style={{ borderColor: 'var(--kova-border)' }}>
               <Mail className="w-4 h-4 text-slate-400 shrink-0" />
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full py-3 text-sm outline-none bg-transparent" />
+              <input id="login-email" name="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full py-3 text-sm outline-none bg-transparent" />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--kova-navy)' }}>Contraseña</label>
+            <label htmlFor="login-password" className="block text-sm font-medium mb-1.5" style={{ color: 'var(--kova-navy)' }}>Contraseña</label>
             <div className="flex items-center gap-2 px-3.5 rounded-xl border bg-white focus-within:ring-2 focus-within:ring-[var(--kova-ring)] focus-within:border-[var(--kova-blue)] transition-all" style={{ borderColor: 'var(--kova-border)' }}>
               <Lock className="w-4 h-4 text-slate-400 shrink-0" />
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full py-3 text-sm outline-none bg-transparent" />
+              <input id="login-password" name="password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full py-3 text-sm outline-none bg-transparent" />
             </div>
           </div>
-          <label className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer select-none">
-            <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="rounded accent-[var(--kova-blue)]" />
+          <label htmlFor="login-remember" className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer select-none">
+            <input id="login-remember" name="remember" type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="rounded accent-[var(--kova-blue)]" />
             Recordar sesión
           </label>
         </div>
