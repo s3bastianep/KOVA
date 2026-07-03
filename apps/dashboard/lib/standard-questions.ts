@@ -16,6 +16,25 @@ export type StandardQuestionDef = {
 
 export const SKILLS_QUESTION_ID = 'skills';
 
+/** Habilidades comerciales evaluadas — mismas del formulario del puesto comercial */
+export const COMMERCIAL_SKILLS = [
+  'Prospección',
+  'Cierre de ventas',
+  'Negociación',
+  'Presentación comercial',
+  'Manejo de objeciones',
+  'Cuentas clave',
+  'Venta consultiva',
+  'Gestión de pipeline',
+  'Liderazgo comercial',
+  'Postventa',
+  'Inteligencia emocional',
+  'Trabajo en equipo',
+  'Análisis de mercado',
+  'Pricing',
+  'Fidelización',
+];
+
 /** Catálogo único: lo que el asesor elige aquí sale igual en el formulario del aspirante */
 export const STANDARD_QUESTIONS: StandardQuestionDef[] = [
   // Perfil del cargo
@@ -72,23 +91,7 @@ export const STANDARD_QUESTIONS: StandardQuestionDef[] = [
     category: 'Competencias',
     inputType: 'multiselect',
     matchType: 'in_list',
-    options: [
-      'Prospección',
-      'Cierre de ventas',
-      'Negociación',
-      'Presentación comercial',
-      'Manejo de objeciones',
-      'Cuentas clave',
-      'Venta consultiva',
-      'Gestión de pipeline',
-      'Liderazgo comercial',
-      'Postventa',
-      'Inteligencia emocional',
-      'Trabajo en equipo',
-      'Análisis de mercado',
-      'Pricing',
-      'Fidelización',
-    ],
+    options: COMMERCIAL_SKILLS,
     defaultWeight: 30,
     maxSelections: 6,
     weightPerItem: 5,
