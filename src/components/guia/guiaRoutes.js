@@ -43,7 +43,7 @@ export const GUIAS = [
 ];
 
 export function isGuiaPath(pathname) {
-  return pathname.startsWith('/guia-');
+  return pathname === '/guias' || pathname.startsWith('/guia-');
 }
 
 export function getRelatedGuides(currentPath, limit) {

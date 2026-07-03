@@ -115,12 +115,14 @@ export default function Navbar() {
           )}
 
           <div className="relative" onMouseEnter={() => setRecursosOpen(true)} onMouseLeave={() => setRecursosOpen(false)}>
-            <button type="button" className="flex items-center gap-1 text-sm font-medium transition-colors"
+            <Link
+              to="/guias"
+              className="flex items-center gap-1 text-sm font-medium transition-colors"
               style={{ color: onGuia ? BRAND.blue : navMuted, fontWeight: onGuia ? 600 : 500 }}
             >
               Guías
               <ChevronDown className="w-3.5 h-3.5" />
-            </button>
+            </Link>
             {recursosOpen && (
               <div className="absolute top-full left-0 pt-2 w-72">
                 <div className="rounded-xl py-2 bg-white overflow-hidden" style={{ border: '1px solid #E2E6ED', boxShadow: '0 8px 24px rgba(15,31,61,0.08)' }}>

@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import ScrollToTop from './components/ScrollToTop';
 import Landing from './pages/Landing';
+import Guias from './pages/Guias';
 import GuiaContratarComercial from './pages/GuiaContratarComercial';
 import GuiaEvaluacionComercial from './pages/GuiaEvaluacionComercial';
 import GuiaPsicometricasVsComercial from './pages/GuiaPsicometricasVsComercial';
@@ -21,6 +22,7 @@ function App() {
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/guias" element={<Guias />} />
           <Route path="/guia-contratar-comercial" element={<GuiaContratarComercial />} />
           <Route path="/guia-evaluacion-comercial" element={<GuiaEvaluacionComercial />} />
           <Route path="/guia-psicometricas-vs-comercial" element={<GuiaPsicometricasVsComercial />} />
