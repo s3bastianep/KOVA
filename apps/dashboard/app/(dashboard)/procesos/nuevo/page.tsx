@@ -7,7 +7,11 @@ import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import {
   STANDARD_QUESTIONS,
+  SKILLS_QUESTION_ID,
+  defaultExpectedForQuestion,
   defaultSelectedQuestions,
+  parseMultiValue,
+  serializeMultiValue,
   type SelectedStandardQuestion,
 } from '@/lib/standard-questions';
 import { selectedToRequirements } from '@/lib/standard-questions';
@@ -70,7 +74,29 @@ export default function NuevoProcesoPage() {
   const updateRequirement = (index: number, field: 'expected' | 'weight', value: string | number) => {
     setForm((f) => {
       const requirements = [...f.requirements] as SelectedStandardQuestion[];
-      requirements[index] = { ...requirements[index], [field]: value };
+      const current = requirements[index];
+      if (current.id === SKILLS_QUESTION_ID && field === 'weight') return f;
+      requirements[index] = { ...current, [field]: value };
+      return { ...f, requirements };
+    });
+  };
+
+  const toggleSkillExpected = (index: number, skill: string) => {
+    setForm((f) => {
+      const requirements = [...f.requirements] as SelectedStandardQuestion[];
+      const current = requirements[index];
+      const selected = parseMultiValue(current.expected);
+      const exists = selected.includes(skill);
+      const next = exists
+        ? selected.filter((s) => s !== skill)
+        : selected.length >= 6
+          ? selected
+          : [...selected, skill];
+      requirements[index] = {
+        ...current,
+        expected: serializeMultiValue(next),
+        weight: 30,
+      };
       return { ...f, requirements };
     });
   };
@@ -89,7 +115,7 @@ export default function NuevoProcesoPage() {
       const entry: SelectedStandardQuestion = {
         id: questionId,
         weight: def.defaultWeight,
-        expected: def.inputType === 'number' ? Number(def.placeholder ?? 0) : (def.options?.[0] ?? ''),
+        expected: defaultExpectedForQuestion(def),
       };
       return {
         ...f,
@@ -221,70 +247,93 @@ export default function NuevoProcesoPage() {
         {step === 3 && (
           <>
             <Field label="Nombre del cargo" value={form.title} onChange={(v) => update('title', v)} placeholder="Ejecutivo Comercial B2B" />
-            <TextArea label="Objetivo del cargo" value={form.objective} onChange={(v) => update('objective', v)} />
-            <TextArea label="Funciones" value={form.functions} onChange={(v) => update('functions', v)} />
-            <TextArea label="Responsabilidades" value={form.responsibilities} onChange={(v) => update('responsibilities', v)} />
-            <TextArea label="KPIs" value={form.kpis} onChange={(v) => update('kpis', v)} />
+            <p className="text-sm text-slate-500">
+              Elige las preguntas de selección para este cargo. <strong>Las mismas aparecerán en el formulario del aspirante.</strong>
+            </p>
+            <QuestionPicker
+              selectedIds={form.selectedQuestionIds}
+              onToggle={toggleQuestion}
+              highlightCategories={['Perfil del cargo']}
+            />
           </>
         )}
 
         {step === 4 && (
           <>
             <p className="text-sm text-slate-500">
-              Escoge las preguntas estándar del cargo. Los aspirantes responderán las mismas en el formulario de postulación.
+              Para cada pregunta, elige el <strong>valor esperado</strong> y el <strong>peso %</strong>. El aspirante verá las mismas opciones.
             </p>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {STANDARD_QUESTIONS.map((q) => {
-                const active = form.selectedQuestionIds.includes(q.id);
-                return (
-                  <button
-                    key={q.id}
-                    type="button"
-                    onClick={() => toggleQuestion(q.id)}
-                    className={`text-xs px-3 py-1.5 rounded-full border ${active ? 'border-[var(--kova-blue)] bg-blue-50 text-[var(--kova-blue)]' : 'border-slate-200 text-slate-600'}`}
-                  >
-                    {active ? '✓ ' : ''}{q.label}
-                  </button>
-                );
-              })}
-            </div>
             <div className="space-y-3">
               {form.requirements.map((req, i) => {
                 const def = STANDARD_QUESTIONS.find((q) => q.id === req.id);
+                if (!def) return null;
+                const isSkills = req.id === SKILLS_QUESTION_ID;
+                const selectedSkills = parseMultiValue(req.expected);
                 return (
-                  <div key={req.id} className="grid sm:grid-cols-3 gap-2 p-3 rounded-lg bg-slate-50">
-                    <div>
-                      <span className="text-sm font-medium block" style={{ color: 'var(--kova-navy)' }}>{def?.label ?? req.id}</span>
-                      <span className="text-[10px] text-slate-400">{def?.category}</span>
+                  <div key={req.id} className="p-3 rounded-lg bg-slate-50 space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <span className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>{def.label}</span>
+                        <span className="text-[10px] text-slate-400 ml-2">{def.category}</span>
+                      </div>
+                      {isSkills && (
+                        <span className="text-xs font-medium text-[var(--kova-blue)] whitespace-nowrap">30% total</span>
+                      )}
                     </div>
-                    {def?.inputType === 'select' ? (
-                      <select
-                        value={String(req.expected)}
-                        onChange={(e) => updateRequirement(i, 'expected', e.target.value)}
-                        className="px-2 py-1.5 rounded border border-slate-200 text-sm"
-                      >
-                        {(def.options ?? []).map((o) => <option key={o} value={o}>{o}</option>)}
-                      </select>
+                    {isSkills ? (
+                      <>
+                        <p className="text-xs text-slate-500">
+                          Elige hasta 6 habilidades requeridas. Cada una suma 5% en compatibilidad.
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {def.options.map((skill) => {
+                            const active = selectedSkills.includes(skill);
+                            const disabled = !active && selectedSkills.length >= 6;
+                            return (
+                              <button
+                                key={skill}
+                                type="button"
+                                disabled={disabled}
+                                onClick={() => toggleSkillExpected(i, skill)}
+                                className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                                  active
+                                    ? 'border-[var(--kova-blue)] bg-blue-50 text-[var(--kova-blue)]'
+                                    : disabled
+                                      ? 'border-slate-100 text-slate-300 cursor-not-allowed'
+                                      : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                                }`}
+                              >
+                                {active ? '✓ ' : ''}{skill}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <p className="text-xs text-slate-400">
+                          {selectedSkills.length}/6 seleccionadas · {selectedSkills.length * 5}% posibles
+                        </p>
+                      </>
                     ) : (
-                      <input
-                        type={def?.inputType === 'number' ? 'number' : 'text'}
-                        value={String(req.expected)}
-                        onChange={(e) => updateRequirement(i, 'expected', def?.inputType === 'number' ? Number(e.target.value) : e.target.value)}
-                        className="px-2 py-1.5 rounded border border-slate-200 text-sm"
-                        placeholder={def?.placeholder}
-                      />
+                      <div className="grid sm:grid-cols-2 gap-2">
+                        <select
+                          value={String(req.expected)}
+                          onChange={(e) => updateRequirement(i, 'expected', e.target.value)}
+                          className="px-2 py-2 rounded border border-slate-200 text-sm"
+                        >
+                          {def.options.map((o) => <option key={o} value={o}>{o}</option>)}
+                        </select>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            min={0}
+                            max={100}
+                            value={req.weight}
+                            onChange={(e) => updateRequirement(i, 'weight', Number(e.target.value))}
+                            className="w-16 px-2 py-2 rounded border border-slate-200 text-sm"
+                          />
+                          <span className="text-xs text-slate-400">% peso</span>
+                        </div>
+                      </div>
                     )}
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        min={0}
-                        max={100}
-                        value={req.weight}
-                        onChange={(e) => updateRequirement(i, 'weight', Number(e.target.value))}
-                        className="w-16 px-2 py-1.5 rounded border border-slate-200 text-sm"
-                      />
-                      <span className="text-xs text-slate-400">% peso</span>
-                    </div>
                   </div>
                 );
               })}
@@ -353,6 +402,44 @@ export default function NuevoProcesoPage() {
           </button>
         )}
       </div>
+    </div>
+  );
+}
+
+function QuestionPicker({
+  selectedIds,
+  onToggle,
+  highlightCategories,
+}: {
+  selectedIds: string[];
+  onToggle: (id: string) => void;
+  highlightCategories?: string[];
+}) {
+  const categories = [...new Set(STANDARD_QUESTIONS.map((q) => q.category))];
+  return (
+    <div className="space-y-4">
+      {categories.map((cat) => (
+        <div key={cat}>
+          <p className={`text-xs font-semibold uppercase mb-2 ${highlightCategories?.includes(cat) ? 'text-[var(--kova-blue)]' : 'text-slate-400'}`}>
+            {cat}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {STANDARD_QUESTIONS.filter((q) => q.category === cat).map((q) => {
+              const active = selectedIds.includes(q.id);
+              return (
+                <button
+                  key={q.id}
+                  type="button"
+                  onClick={() => onToggle(q.id)}
+                  className={`text-xs px-3 py-1.5 rounded-full border ${active ? 'border-[var(--kova-blue)] bg-blue-50 text-[var(--kova-blue)]' : 'border-slate-200 text-slate-600'}`}
+                >
+                  {active ? '✓ ' : ''}{q.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

@@ -54,10 +54,10 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       id: s.id,
       label: def?.label ?? s.id,
       category: def?.category ?? 'General',
-      inputType: def?.inputType ?? 'text',
+      inputType: def?.inputType ?? 'select',
       options: def?.options ?? [],
-      placeholder: def?.placeholder,
       helpText: def?.helpText,
+      maxSelections: def?.maxSelections,
     };
   });
 

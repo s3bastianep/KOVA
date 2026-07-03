@@ -1,5 +1,5 @@
-export type QuestionInputType = 'number' | 'select' | 'text';
-export type QuestionMatchType = 'years_min' | 'contains' | 'equals' | 'min_score';
+export type QuestionInputType = 'select' | 'multiselect';
+export type QuestionMatchType = 'years_min' | 'contains' | 'equals' | 'in_list';
 
 export type StandardQuestionDef = {
   id: string;
@@ -7,23 +7,92 @@ export type StandardQuestionDef = {
   category: string;
   inputType: QuestionInputType;
   matchType: QuestionMatchType;
-  options?: string[];
+  options: string[];
   defaultWeight: number;
-  placeholder?: string;
   helpText?: string;
+  maxSelections?: number;
+  weightPerItem?: number;
 };
 
-/** Preguntas estándar reutilizables: mismas en perfil del cargo y formulario del aspirante */
+export const SKILLS_QUESTION_ID = 'skills';
+
+/** Catálogo único: lo que el asesor elige aquí sale igual en el formulario del aspirante */
 export const STANDARD_QUESTIONS: StandardQuestionDef[] = [
+  // Perfil del cargo
+  {
+    id: 'job_objective',
+    label: 'Objetivo del cargo',
+    category: 'Perfil del cargo',
+    inputType: 'select',
+    matchType: 'equals',
+    options: ['Incrementar ventas', 'Abrir nuevos mercados', 'Liderar equipo comercial', 'Recuperar cartera', 'Lanzar producto nuevo'],
+    defaultWeight: 10,
+  },
+  {
+    id: 'main_functions',
+    label: 'Funciones principales',
+    category: 'Perfil del cargo',
+    inputType: 'select',
+    matchType: 'contains',
+    options: ['Prospección', 'Cierre de ventas', 'Negociación', 'Cuentas clave', 'Postventa', 'Gestión de pipeline'],
+    defaultWeight: 10,
+  },
+  {
+    id: 'responsibilities',
+    label: 'Responsabilidades clave',
+    category: 'Perfil del cargo',
+    inputType: 'select',
+    matchType: 'contains',
+    options: ['Meta individual', 'Gestión de cartera', 'Reporte a gerencia', 'Capacitación de equipo', 'Estrategia comercial'],
+    defaultWeight: 8,
+  },
+  {
+    id: 'kpi_focus',
+    label: 'KPI principal',
+    category: 'Perfil del cargo',
+    inputType: 'select',
+    matchType: 'equals',
+    options: ['Facturación mensual', 'Tasa de cierre', 'Nuevos clientes', 'Ticket promedio', 'Retención de cartera'],
+    defaultWeight: 8,
+  },
+  // Requisitos / compatibilidad
   {
     id: 'experience_years',
     label: 'Años de experiencia en ventas',
     category: 'Experiencia',
-    inputType: 'number',
+    inputType: 'select',
     matchType: 'years_min',
+    options: ['1', '2', '3', '4', '5', '6', '7', '8', '10'],
+    defaultWeight: 20,
+    helpText: 'Mínimo exigido para el cargo',
+  },
+  {
+    id: SKILLS_QUESTION_ID,
+    label: 'Habilidades',
+    category: 'Competencias',
+    inputType: 'multiselect',
+    matchType: 'in_list',
+    options: [
+      'Prospección',
+      'Cierre de ventas',
+      'Negociación',
+      'Presentación comercial',
+      'Manejo de objeciones',
+      'Cuentas clave',
+      'Venta consultiva',
+      'Gestión de pipeline',
+      'Liderazgo comercial',
+      'Postventa',
+      'Inteligencia emocional',
+      'Trabajo en equipo',
+      'Análisis de mercado',
+      'Pricing',
+      'Fidelización',
+    ],
     defaultWeight: 30,
-    placeholder: '3',
-    helpText: 'Mínimo de años exigidos para el cargo',
+    maxSelections: 6,
+    weightPerItem: 5,
+    helpText: 'Elige hasta 6 habilidades requeridas (5% cada una, 30% total)',
   },
   {
     id: 'industry',
@@ -32,7 +101,7 @@ export const STANDARD_QUESTIONS: StandardQuestionDef[] = [
     inputType: 'select',
     matchType: 'contains',
     options: ['Tecnología', 'Software', 'Consumo masivo', 'Distribución', 'Servicios', 'Salud', 'Finanzas', 'Retail'],
-    defaultWeight: 20,
+    defaultWeight: 15,
   },
   {
     id: 'sales_type',
@@ -41,7 +110,7 @@ export const STANDARD_QUESTIONS: StandardQuestionDef[] = [
     inputType: 'select',
     matchType: 'contains',
     options: ['B2B', 'B2C', 'Inside sales', 'Field sales', 'Consultiva'],
-    defaultWeight: 15,
+    defaultWeight: 10,
   },
   {
     id: 'crm',
@@ -59,7 +128,7 @@ export const STANDARD_QUESTIONS: StandardQuestionDef[] = [
     inputType: 'select',
     matchType: 'contains',
     options: ['Técnico', 'Tecnólogo', 'Profesional', 'Especialización', 'Maestría'],
-    defaultWeight: 10,
+    defaultWeight: 5,
   },
   {
     id: 'english_level',
@@ -68,16 +137,16 @@ export const STANDARD_QUESTIONS: StandardQuestionDef[] = [
     inputType: 'select',
     matchType: 'equals',
     options: ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'],
-    defaultWeight: 10,
+    defaultWeight: 5,
   },
   {
     id: 'city',
     label: 'Ciudad de residencia',
     category: 'Ubicación',
-    inputType: 'text',
+    inputType: 'select',
     matchType: 'contains',
+    options: ['Bogotá', 'Medellín', 'Cali', 'Barranquilla', 'Cartagena', 'Bucaramanga', 'Otra'],
     defaultWeight: 5,
-    placeholder: 'Bogotá',
   },
   {
     id: 'availability',
@@ -92,36 +161,74 @@ export const STANDARD_QUESTIONS: StandardQuestionDef[] = [
     id: 'ticket_avg',
     label: 'Ticket promedio manejado (millones COP)',
     category: 'Experiencia',
-    inputType: 'number',
+    inputType: 'select',
     matchType: 'years_min',
+    options: ['1', '5', '10', '20', '50', '100'],
     defaultWeight: 10,
-    placeholder: '10',
-    helpText: 'Valor mínimo de ticket que debe manejar el candidato',
   },
   {
     id: 'team_leadership',
-    label: 'Personas a cargo (máximo lideradas)',
+    label: 'Personas lideradas',
     category: 'Competencias',
-    inputType: 'number',
+    inputType: 'select',
     matchType: 'years_min',
+    options: ['0', '1', '3', '5', '10', '15'],
     defaultWeight: 10,
-    placeholder: '0',
+  },
+  {
+    id: 'hiring_reason',
+    label: 'Motivo de contratación',
+    category: 'Necesidad',
+    inputType: 'select',
+    matchType: 'equals',
+    options: ['Crecimiento', 'Reemplazo', 'Nuevo producto', 'Expansión regional', 'Reestructuración'],
+    defaultWeight: 5,
+  },
+  {
+    id: 'commercial_model',
+    label: 'Modelo comercial',
+    category: 'Discovery',
+    inputType: 'select',
+    matchType: 'contains',
+    options: ['B2B consultivo', 'Inside sales', 'Field sales', 'E-commerce', 'Canal indirecto', 'Suscripción'],
+    defaultWeight: 5,
   },
 ];
 
 export type SelectedStandardQuestion = {
   id: string;
   weight: number;
-  expected: string | number;
+  expected: string;
 };
 
 export function getQuestionById(id: string) {
   return STANDARD_QUESTIONS.find((q) => q.id === id);
 }
 
+export function parseMultiValue(value: string | string[] | undefined): string[] {
+  if (Array.isArray(value)) return value.map((v) => String(v).trim()).filter(Boolean);
+  if (!value) return [];
+  return String(value)
+    .split(',')
+    .map((v) => v.trim())
+    .filter(Boolean);
+}
+
+export function serializeMultiValue(values: string[]): string {
+  return values.join(',');
+}
+
+export function defaultExpectedForQuestion(def: StandardQuestionDef): string {
+  if (def.id === SKILLS_QUESTION_ID) {
+    return serializeMultiValue(def.options.slice(0, 3));
+  }
+  return def.options[0];
+}
+
 export function defaultSelectedQuestions(): SelectedStandardQuestion[] {
   return [
     'experience_years',
+    SKILLS_QUESTION_ID,
     'industry',
     'sales_type',
     'crm',
@@ -130,11 +237,7 @@ export function defaultSelectedQuestions(): SelectedStandardQuestion[] {
     'availability',
   ].map((id) => {
     const q = getQuestionById(id)!;
-    return {
-      id,
-      weight: q.defaultWeight,
-      expected: q.inputType === 'number' ? Number(q.placeholder ?? 0) : (q.options?.[0] ?? ''),
-    };
+    return { id, weight: q.defaultWeight, expected: defaultExpectedForQuestion(q) };
   });
 }
 
@@ -155,13 +258,12 @@ export function standardQuestionsFromMetadata(metadata: unknown): SelectedStanda
   if (!metadata || typeof metadata !== 'object') return defaultSelectedQuestions();
   const sq = (metadata as { standardQuestions?: SelectedStandardQuestion[] }).standardQuestions;
   if (Array.isArray(sq) && sq.length > 0) return sq;
-  const reqs = (metadata as { requirements?: { key: string; weight: number; expected: string | number; label?: string }[] }).requirements;
+  const reqs = (metadata as { requirements?: { key: string; weight: number; expected: string | number }[] }).requirements;
   if (Array.isArray(reqs) && reqs.length > 0) {
-    return reqs.map((r) => ({ id: r.key, weight: r.weight, expected: r.expected }));
+    return reqs.map((r) => ({ id: r.key, weight: r.weight, expected: String(r.expected) }));
   }
   return defaultSelectedQuestions();
 }
 
-export function answersToProfile(answers: Record<string, string | number>): Record<string, string | number> {
-  return { ...answers };
-}
+export const PROFILE_QUESTION_IDS = STANDARD_QUESTIONS.filter((q) => q.category === 'Perfil del cargo').map((q) => q.id);
+export const REQUIREMENT_QUESTION_IDS = STANDARD_QUESTIONS.filter((q) => q.category !== 'Perfil del cargo').map((q) => q.id);

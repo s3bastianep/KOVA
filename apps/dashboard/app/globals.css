@@ -39,3 +39,42 @@ body {
 .kova-btn-primary:hover {
   background: #E63228;
 }
+
+/* ─── Impresión / descarga PDF ─── */
+@media print {
+  @page {
+    margin: 14mm;
+    size: A4;
+  }
+
+  body {
+    background: #ffffff !important;
+  }
+
+  /* Ocultar todo lo que no sea el informe */
+  .no-print,
+  aside,
+  header {
+    display: none !important;
+  }
+
+  /* Expandir el contenedor principal para ocupar toda la hoja */
+  main {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .print-area {
+    box-shadow: none !important;
+  }
+
+  .print-area .kova-card {
+    box-shadow: none !important;
+    border-color: #d7dce5 !important;
+    break-inside: avoid;
+  }
+
+  .print-block {
+    break-inside: avoid;
+  }
+}

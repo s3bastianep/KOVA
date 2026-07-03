@@ -1,7 +1,16 @@
 import { NextRequest } from 'next/server';
 import { getUserFromRequest, unauthorized } from '../../../../lib/auth';
 import { prisma } from '../../../../lib/prisma';
-import { isMockMode, getMockCandidate } from '../../../../lib/mock';
+import { isMockMode, getMockCandidate, MOCK_ASSESSMENTS } from '../../../../lib/mock';
+
+const ASSESSMENT_TYPE_LABELS: Record<string, string> = {
+  COMMERCIAL: 'Prueba Comercial',
+  TECHNICAL: 'Prueba Técnica',
+  BEHAVIORAL: 'Prueba Conductual',
+  ROLE_PLAY: 'Role Play',
+};
+
+const FINALIST_STAGES = ['CLIENT_REVIEW', 'OFFER', 'HIRED'];
 
 export const dynamic = 'force-dynamic';
 
@@ -21,9 +30,29 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   if (isMockMode()) {
     const candidate = getMockCandidate(id);
     if (!candidate) return Response.json({ message: 'Candidato no encontrado' }, { status: 404 });
+    const assessments = MOCK_ASSESSMENTS.filter((a) => a.candidateId === id).map((a) => ({
+      id: a.id,
+      type: a.type,
+      competency: a.competency,
+      score: a.score,
+      maxScore: a.maxScore,
+      result: a.result,
+      comments: a.comments,
+      date: a.completedAt,
+    }));
     return Response.json({
       ...candidate,
       vacancyTitle: candidate.vacancies[0]?.vacancy.title,
+      assessments,
+      activities: [
+        { id: 'a1', description: 'Candidato agregado al proceso', type: 'CREATE', date: new Date(Date.now() - 6 * 86400000).toISOString() },
+        { id: 'a2', description: 'Compatibilidad calculada automáticamente', type: 'AUTO_GENERATED', date: new Date(Date.now() - 6 * 86400000).toISOString() },
+        { id: 'a3', description: 'Prueba comercial enviada', type: 'UPDATE', date: new Date(Date.now() - 3 * 86400000).toISOString() },
+        { id: 'a4', description: 'Movido a Entrevista', type: 'STAGE_CHANGE', date: new Date(Date.now() - 2 * 86400000).toISOString() },
+      ],
+      educations: [{ id: 'ed1', institution: 'Universidad Nacional', degree: 'Administración de Empresas', year: 2018 }],
+      evaluatedCount: 8,
+      finalistCount: 2,
     });
   }
 
@@ -53,6 +82,17 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   if (!candidate) return Response.json({ message: 'Candidato no encontrado' }, { status: 404 });
 
   const primary = candidate.vacancies[0];
+
+  let evaluatedCount = 0;
+  let finalistCount = 0;
+  if (primary?.vacancy.id) {
+    [evaluatedCount, finalistCount] = await Promise.all([
+      prisma.candidateVacancy.count({ where: { vacancyId: primary.vacancy.id } }),
+      prisma.candidateVacancy.count({
+        where: { vacancyId: primary.vacancy.id, stage: { in: FINALIST_STAGES as never } },
+      }),
+    ]);
+  }
 
   return Response.json({
     id: candidate.id,
@@ -101,5 +141,35 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       to: h.toStage,
       date: h.createdAt.toISOString(),
     })),
+    assessments: candidate.assessments.map((a) => ({
+      id: a.id,
+      type: ASSESSMENT_TYPE_LABELS[a.type] ?? a.type,
+      competency: a.title,
+      score: a.score,
+      maxScore: a.maxScore,
+      result: a.result,
+      comments: a.comments,
+      date: a.completedAt?.toISOString() ?? a.createdAt.toISOString(),
+    })),
+    educations: candidate.educations.map((e) => ({
+      id: e.id,
+      institution: e.institution,
+      degree: [e.degree, e.field].filter(Boolean).join(' · '),
+      year: e.year,
+    })),
+    documents: candidate.documents.map((d) => ({
+      id: d.id,
+      name: d.name,
+      type: d.type,
+      date: d.createdAt.toISOString(),
+    })),
+    activities: candidate.activities.map((a) => ({
+      id: a.id,
+      description: a.description,
+      type: a.type,
+      date: a.createdAt.toISOString(),
+    })),
+    evaluatedCount,
+    finalistCount,
   });
 }

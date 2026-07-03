@@ -82,12 +82,21 @@ export const dashboardApi = {
   tasks: () => apiFetch<unknown[]>('/tareas'),
   jobProfiles: () => apiFetch<unknown[]>('/perfiles'),
   interviews: () => apiFetch<unknown[]>('/entrevistas'),
-  assessments: () => apiFetch<unknown[]>('/evaluaciones'),
+  assessments: () => apiFetch<{ processes: unknown[]; totalTests: number }>('/evaluaciones'),
   finalists: () => apiFetch<Record<string, unknown>>('/finalistas'),
   onboarding: () => apiFetch<Record<string, unknown>>('/onboarding'),
   academia: () => apiFetch<unknown[]>('/academia'),
   crm: () => apiFetch<unknown[]>('/crm'),
   calendar: () => apiFetch<unknown[]>('/calendario'),
+  agenda: (month: string) => apiFetch<{ month: string; items: unknown[] }>(`/agenda?month=${month}`),
+  updateAgendaItem: (
+    itemKey: string,
+    body: { action: 'status'; status: 'PENDING' | 'COMPLETED' | 'CANCELLED'; reason?: string } | { action: 'reschedule'; newDate: string; reason: string },
+  ) =>
+    apiFetch<{ ok: boolean; item: unknown }>(`/agenda/${encodeURIComponent(itemKey)}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
   documents: () => apiFetch<unknown[]>('/documentos'),
   reports: () => apiFetch<Record<string, unknown>>('/reportes'),
 };

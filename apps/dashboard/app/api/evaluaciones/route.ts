@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { getUserFromRequest, unauthorized } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode, MOCK_ASSESSMENTS, ASSESSMENT_TYPE_LABELS } from '../../../lib/mock';
+import { groupAssessmentsByProcess, parseMistakesFromComments, type AssessmentRecord } from '../../../lib/evaluations';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,23 +30,37 @@ function mapAssessment(a: {
   createdAt: Date;
   completedAt: Date | null;
   candidate: { firstName: string; lastName: string; id: string };
-  vacancy?: { title: string } | null;
-}) {
+  vacancy?: { id: string; title: string; company?: { name: string } | null } | null;
+}): AssessmentRecord {
   const mins = durationMinutes(a.createdAt, a.completedAt);
+  const mistakes = parseMistakesFromComments(a.comments);
+  let comments = a.comments ?? undefined;
+  try {
+    if (comments && comments.startsWith('{')) {
+      const parsed = JSON.parse(comments) as { feedback?: string };
+      comments = parsed.feedback ?? comments;
+    }
+  } catch {
+    // mantener texto original
+  }
+
   return {
     id: a.id,
     candidateId: a.candidate.id,
     candidateName: `${a.candidate.firstName} ${a.candidate.lastName}`,
-    vacancyTitle: a.vacancy?.title ?? null,
+    vacancyId: a.vacancy?.id,
+    vacancyTitle: a.vacancy?.title ?? undefined,
+    companyName: a.vacancy?.company?.name,
     type: ASSESSMENT_TYPE_LABELS[a.type] ?? a.title,
     competency: a.title,
     score: a.score ?? 0,
     maxScore: a.maxScore,
     result: a.result ?? 'Pendiente',
-    durationMinutes: mins,
+    durationMinutes: mins ?? undefined,
     durationLabel: formatDuration(mins),
-    completedAt: a.completedAt?.toISOString() ?? null,
-    comments: a.comments,
+    completedAt: a.completedAt?.toISOString() ?? undefined,
+    comments,
+    mistakes,
   };
 }
 
@@ -53,25 +68,29 @@ export async function GET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
 
+  let items: AssessmentRecord[];
+
   if (isMockMode()) {
-    return Response.json(
-      MOCK_ASSESSMENTS.map((a) => ({
-        ...a,
-        durationLabel: a.durationMinutes < 60
-          ? `${a.durationMinutes} min`
-          : `${Math.floor(a.durationMinutes / 60)}h ${a.durationMinutes % 60}min`,
-      })),
-    );
+    items = MOCK_ASSESSMENTS.map((a) => ({
+      ...a,
+      mistakes: a.mistakes ?? [],
+      durationLabel: a.durationMinutes < 60
+        ? `${a.durationMinutes} min`
+        : `${Math.floor(a.durationMinutes / 60)}h ${a.durationMinutes % 60}min`,
+    }));
+  } else {
+    const assessments = await prisma.assessment.findMany({
+      where: { tenantId: user.tenantId, completedAt: { not: null } },
+      include: {
+        candidate: { select: { id: true, firstName: true, lastName: true } },
+        vacancy: { select: { id: true, title: true, company: { select: { name: true } } } },
+      },
+      orderBy: { completedAt: 'desc' },
+    }).catch(() => []);
+
+    items = assessments.map(mapAssessment);
   }
 
-  const assessments = await prisma.assessment.findMany({
-    where: { tenantId: user.tenantId },
-    include: {
-      candidate: { select: { id: true, firstName: true, lastName: true } },
-      vacancy: { select: { title: true } },
-    },
-    orderBy: { completedAt: 'desc' },
-  }).catch(() => []);
-
-  return Response.json(assessments.map(mapAssessment));
+  const processes = groupAssessmentsByProcess(items);
+  return Response.json({ processes, totalTests: items.length });
 }

@@ -7,10 +7,10 @@ type FormQuestion = {
   id: string;
   label: string;
   category: string;
-  inputType: 'number' | 'select' | 'text';
+  inputType: 'select' | 'multiselect';
   options: string[];
-  placeholder?: string;
   helpText?: string;
+  maxSelections?: number;
 };
 
 export default function PostularPage({ params }: { params: Promise<{ id: string }> }) {
@@ -19,7 +19,7 @@ export default function PostularPage({ params }: { params: Promise<{ id: string 
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
   const [done, setDone] = useState<{ compatibility: number; message: string } | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -36,10 +36,16 @@ export default function PostularPage({ params }: { params: Promise<{ id: string 
     setLoading(true);
     setError('');
     try {
+      const normalizedAnswers = Object.fromEntries(
+        Object.entries(answers).map(([key, value]) => [
+          key,
+          Array.isArray(value) ? value.join(',') : value,
+        ]),
+      );
       const res = await fetch(`/api/procesos/${id}/postulacion`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, lastName, email, phone, answers }),
+        body: JSON.stringify({ firstName, lastName, email, phone, answers: normalizedAnswers }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message ?? 'Error al postular');
@@ -93,25 +99,57 @@ export default function PostularPage({ params }: { params: Promise<{ id: string 
                 {q.label}
                 <span className="text-slate-400 font-normal text-xs ml-1">({q.category})</span>
               </label>
-              {q.inputType === 'select' ? (
+              {q.inputType === 'multiselect' ? (
+                <>
+                  <p className="text-xs text-slate-500 mb-2">
+                    Selecciona hasta {q.maxSelections ?? 6} opciones{q.id === 'skills' ? ' (5% por cada coincidencia)' : ''}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {(q.options ?? []).map((option) => {
+                      const selected = Array.isArray(answers[q.id]) ? answers[q.id] as string[] : [];
+                      const active = selected.includes(option);
+                      const max = q.maxSelections ?? 6;
+                      const disabled = !active && selected.length >= max;
+                      return (
+                        <button
+                          key={option}
+                          type="button"
+                          disabled={disabled}
+                          onClick={() => {
+                            setAnswers((prev) => {
+                              const current = Array.isArray(prev[q.id]) ? (prev[q.id] as string[]) : [];
+                              const next = active
+                                ? current.filter((item) => item !== option)
+                                : current.length >= max
+                                  ? current
+                                  : [...current, option];
+                              return { ...prev, [q.id]: next };
+                            });
+                          }}
+                          className={`text-xs px-3 py-1.5 rounded-full border ${
+                            active
+                              ? 'border-[var(--kova-blue)] bg-blue-50 text-[var(--kova-blue)]'
+                              : disabled
+                                ? 'border-slate-100 text-slate-300 cursor-not-allowed'
+                                : 'border-slate-200 text-slate-600'
+                          }`}
+                        >
+                          {active ? '✓ ' : ''}{option}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
                 <select
-                  value={answers[q.id] ?? ''}
+                  value={typeof answers[q.id] === 'string' ? answers[q.id] as string : ''}
                   onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))}
                   required
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm"
+                  className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm bg-white"
                 >
                   <option value="">Seleccionar...</option>
                   {q.options.map((o) => <option key={o} value={o}>{o}</option>)}
                 </select>
-              ) : (
-                <input
-                  type={q.inputType === 'number' ? 'number' : 'text'}
-                  value={answers[q.id] ?? ''}
-                  onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))}
-                  placeholder={q.placeholder}
-                  required
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm"
-                />
               )}
               {q.helpText && <p className="text-xs text-slate-400 mt-1">{q.helpText}</p>}
             </div>

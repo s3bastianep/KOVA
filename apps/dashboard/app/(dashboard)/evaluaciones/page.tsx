@@ -1,16 +1,14 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { Clock, ChevronDown, ChevronUp, User } from 'lucide-react';
+import { Briefcase, ChevronDown, ChevronUp, Clock, User, AlertTriangle, Building2 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
+import type { CandidateEvalGroup, ProcessEvalGroup } from '@/lib/evaluations';
 
 type Assessment = {
   id: string;
-  candidateId?: string;
-  candidateName: string;
-  vacancyTitle?: string;
   type: string;
   competency: string;
   score: number;
@@ -20,6 +18,7 @@ type Assessment = {
   durationLabel?: string;
   completedAt?: string;
   comments?: string;
+  mistakes?: string[];
 };
 
 function resultStyle(result: string) {
@@ -45,111 +44,231 @@ function formatDuration(mins?: number, label?: string) {
 }
 
 export default function EvaluacionesPage() {
-  const { data, isLoading } = useQuery({ queryKey: ['assessments'], queryFn: dashboardApi.assessments });
-  const items = (data as Assessment[]) ?? [];
-  const [open, setOpen] = useState<string | null>(null);
+  const { data, isLoading } = useQuery({
+    queryKey: ['assessments'],
+    queryFn: () => dashboardApi.assessments(),
+  });
 
-  const byCandidate = useMemo(() => {
-    const map = new Map<string, { name: string; candidateId?: string; tests: Assessment[] }>();
-    for (const a of items) {
-      const key = a.candidateName;
-      if (!map.has(key)) map.set(key, { name: key, candidateId: a.candidateId, tests: [] });
-      map.get(key)!.tests.push(a);
-    }
-    return Array.from(map.values()).map((g) => {
-      const totalDuration = g.tests.reduce((s, t) => s + (t.durationMinutes ?? 0), 0);
-      const avgScore = Math.round(g.tests.reduce((s, t) => s + (t.score / t.maxScore) * 100, 0) / g.tests.length);
-      return { ...g, totalDuration, avgScore };
-    });
-  }, [items]);
+  const processes = (data?.processes ?? []) as ProcessEvalGroup[];
+  const [openProcess, setOpenProcess] = useState<string | null>(null);
+  const [openCandidate, setOpenCandidate] = useState<string | null>(null);
+
+  const toggleProcess = (id: string) => {
+    setOpenProcess((prev) => (prev === id ? null : id));
+    setOpenCandidate(null);
+  };
+
+  const toggleCandidate = (key: string) => {
+    setOpenCandidate((prev) => (prev === key ? null : key));
+  };
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="font-heading text-2xl font-bold" style={{ color: 'var(--kova-navy)' }}>Evaluaciones</h1>
-        <p className="text-sm text-slate-500">Resultados, puntajes y tiempo de cada prueba por candidato.</p>
+        <p className="text-sm text-slate-500">
+          Resultados por proceso de selección — candidatos evaluados, puntajes y errores por prueba.
+        </p>
       </div>
 
       {isLoading ? (
         <p className="text-sm text-slate-500">Cargando...</p>
-      ) : items.length === 0 ? (
+      ) : processes.length === 0 ? (
         <div className="kova-card p-8 text-center text-slate-400 text-sm">No hay evaluaciones registradas.</div>
       ) : (
         <div className="space-y-4">
-          {byCandidate.map((group) => (
-            <div key={group.name} className="kova-card overflow-hidden">
-              <button
-                type="button"
-                onClick={() => setOpen(open === group.name ? null : group.name)}
-                className="w-full p-5 flex items-center gap-4 text-left hover:bg-slate-50 transition-colors"
-              >
-                <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0" style={{ background: '#EEF2FA' }}>
-                  <User className="w-5 h-5" style={{ color: 'var(--kova-blue)' }} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  {group.candidateId ? (
-                    <Link
-                      href={`/candidatos/${group.candidateId}`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="font-semibold hover:underline"
-                      style={{ color: 'var(--kova-navy)' }}
-                    >
-                      {group.name}
-                    </Link>
-                  ) : (
-                    <h3 className="font-semibold" style={{ color: 'var(--kova-navy)' }}>{group.name}</h3>
-                  )}
-                  <p className="text-xs text-slate-500">
-                    {group.tests.length} prueba{group.tests.length !== 1 ? 's' : ''} · Promedio {group.avgScore}% · Tiempo total {formatDuration(group.totalDuration)}
-                  </p>
-                </div>
-                <div className="text-right shrink-0 hidden sm:block">
-                  <span className="font-heading font-bold text-xl" style={{ color: scoreColor(group.avgScore, 100) }}>{group.avgScore}%</span>
-                  <p className="text-xs text-slate-400">promedio</p>
-                </div>
-                {open === group.name ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
-              </button>
-
-              {open === group.name && (
-                <div className="border-t border-slate-100">
-                  {group.tests.map((a) => (
-                    <div key={a.id} className="px-5 py-4 border-b border-slate-50 last:border-0">
-                      <div className="flex flex-wrap items-start justify-between gap-3">
-                        <div>
-                          <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>{a.type}</p>
-                          <p className="text-xs text-slate-500">{a.competency}{a.vacancyTitle ? ` · ${a.vacancyTitle}` : ''}</p>
-                          {a.completedAt && (
-                            <p className="text-xs text-slate-400 mt-1">
-                              Completada: {new Date(a.completedAt).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' })}
-                            </p>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-4 shrink-0">
-                          <div className="text-center">
-                            <span className="font-heading font-bold text-lg" style={{ color: scoreColor(a.score, a.maxScore) }}>
-                              {a.score}/{a.maxScore}
-                            </span>
-                            <p className="text-xs text-slate-400">puntaje</p>
-                          </div>
-                          <div className="text-center">
-                            <span className="inline-flex items-center gap-1 text-sm font-medium text-slate-600">
-                              <Clock className="w-3.5 h-3.5" />
-                              {formatDuration(a.durationMinutes, a.durationLabel)}
-                            </span>
-                            <p className="text-xs text-slate-400">duración</p>
-                          </div>
-                          <span className="text-xs px-2 py-1 rounded-full" style={resultStyle(a.result)}>{a.result}</span>
-                        </div>
-                      </div>
-                      {a.comments && (
-                        <p className="text-sm text-slate-600 mt-3 p-3 rounded-lg bg-slate-50">{a.comments}</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+          {processes.map((process) => (
+            <ProcessCard
+              key={process.vacancyId}
+              process={process}
+              isOpen={openProcess === process.vacancyId}
+              openCandidate={openCandidate}
+              onToggle={() => toggleProcess(process.vacancyId)}
+              onToggleCandidate={toggleCandidate}
+            />
           ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ProcessCard({
+  process,
+  isOpen,
+  openCandidate,
+  onToggle,
+  onToggleCandidate,
+}: {
+  process: ProcessEvalGroup;
+  isOpen: boolean;
+  openCandidate: string | null;
+  onToggle: () => void;
+  onToggleCandidate: (key: string) => void;
+}) {
+  return (
+    <div className="kova-card overflow-hidden">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="w-full p-5 flex items-center gap-4 text-left hover:bg-slate-50 transition-colors"
+      >
+        <div className="w-11 h-11 rounded-lg flex items-center justify-center shrink-0" style={{ background: '#EEF2FA' }}>
+          <Briefcase className="w-5 h-5" style={{ color: 'var(--kova-blue)' }} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <Link
+            href={`/procesos/${process.vacancyId}`}
+            onClick={(e) => e.stopPropagation()}
+            className="font-heading font-semibold hover:underline"
+            style={{ color: 'var(--kova-navy)' }}
+          >
+            {process.vacancyTitle}
+          </Link>
+          {process.companyName && (
+            <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+              <Building2 className="w-3 h-3" />
+              {process.companyName}
+            </p>
+          )}
+          <p className="text-xs text-slate-500 mt-1">
+            {process.candidateCount} candidato{process.candidateCount !== 1 ? 's' : ''} evaluado{process.candidateCount !== 1 ? 's' : ''}
+            {' · '}{process.testCount} prueba{process.testCount !== 1 ? 's' : ''}
+            {' · '}Promedio {process.avgScore}%
+          </p>
+        </div>
+        <div className="text-right shrink-0 hidden sm:block">
+          <span className="font-heading font-bold text-xl" style={{ color: scoreColor(process.avgScore, 100) }}>
+            {process.avgScore}%
+          </span>
+          <p className="text-xs text-slate-400">promedio proceso</p>
+        </div>
+        {isOpen ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
+      </button>
+
+      {isOpen && (
+        <div className="border-t border-slate-100 bg-slate-50/50">
+          {process.candidates.map((candidate) => {
+            const key = `${process.vacancyId}-${candidate.candidateId ?? candidate.candidateName}`;
+            return (
+              <CandidateRow
+                key={key}
+                candidate={candidate}
+                isOpen={openCandidate === key}
+                onToggle={() => onToggleCandidate(key)}
+              />
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CandidateRow({
+  candidate,
+  isOpen,
+  onToggle,
+}: {
+  candidate: CandidateEvalGroup;
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <div className="border-b border-slate-100 last:border-0">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="w-full px-5 py-4 flex items-center gap-4 text-left hover:bg-white transition-colors"
+      >
+        <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 ml-2" style={{ background: '#EEF2FA' }}>
+          <User className="w-4 h-4" style={{ color: 'var(--kova-blue)' }} />
+        </div>
+        <div className="flex-1 min-w-0">
+          {candidate.candidateId ? (
+            <Link
+              href={`/candidatos/${candidate.candidateId}`}
+              onClick={(e) => e.stopPropagation()}
+              className="text-sm font-semibold hover:underline"
+              style={{ color: 'var(--kova-navy)' }}
+            >
+              {candidate.candidateName}
+            </Link>
+          ) : (
+            <span className="text-sm font-semibold" style={{ color: 'var(--kova-navy)' }}>{candidate.candidateName}</span>
+          )}
+          <p className="text-xs text-slate-500">
+            {candidate.testCount} prueba{candidate.testCount !== 1 ? 's' : ''} · Promedio {candidate.avgScore}% · {formatDuration(candidate.totalDuration)}
+          </p>
+        </div>
+        <span className="font-heading font-bold text-lg shrink-0" style={{ color: scoreColor(candidate.avgScore, 100) }}>
+          {candidate.avgScore}%
+        </span>
+        {isOpen ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+      </button>
+
+      {isOpen && (
+        <div className="px-5 pb-4 pl-16 space-y-3">
+          {candidate.tests.map((a) => (
+            <TestDetail key={a.id} test={a as Assessment} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TestDetail({ test }: { test: Assessment }) {
+  const hasMistakes = (test.mistakes?.length ?? 0) > 0;
+
+  return (
+    <div className="kova-card p-4 bg-white">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>{test.type}</p>
+          <p className="text-xs text-slate-500">{test.competency}</p>
+          {test.completedAt && (
+            <p className="text-xs text-slate-400 mt-1">
+              {new Date(test.completedAt).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' })}
+            </p>
+          )}
+        </div>
+        <div className="flex items-center gap-4 shrink-0">
+          <div className="text-center">
+            <span className="font-heading font-bold text-lg" style={{ color: scoreColor(test.score, test.maxScore) }}>
+              {test.score}/{test.maxScore}
+            </span>
+            <p className="text-xs text-slate-400">puntaje</p>
+          </div>
+          <div className="text-center">
+            <span className="inline-flex items-center gap-1 text-sm font-medium text-slate-600">
+              <Clock className="w-3.5 h-3.5" />
+              {formatDuration(test.durationMinutes, test.durationLabel)}
+            </span>
+            <p className="text-xs text-slate-400">duración</p>
+          </div>
+          <span className="text-xs px-2 py-1 rounded-full" style={resultStyle(test.result)}>{test.result}</span>
+        </div>
+      </div>
+
+      {test.comments && (
+        <p className="text-sm text-slate-600 mt-3 p-3 rounded-lg bg-slate-50">{test.comments}</p>
+      )}
+
+      {hasMistakes && (
+        <div className="mt-3 p-3 rounded-lg border border-red-100" style={{ background: '#FFF5F5' }}>
+          <p className="text-xs font-semibold uppercase tracking-wide flex items-center gap-1.5 mb-2" style={{ color: 'var(--kova-coral)' }}>
+            <AlertTriangle className="w-3.5 h-3.5" />
+            En qué se equivocó
+          </p>
+          <ul className="space-y-1.5">
+            {test.mistakes!.map((mistake, i) => (
+              <li key={i} className="text-sm text-slate-700 flex gap-2">
+                <span className="text-red-400 shrink-0">✗</span>
+                {mistake}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>

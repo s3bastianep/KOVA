@@ -102,11 +102,13 @@ async function main() {
       openedAt: new Date(),
       metadata: {
         standardQuestions: [
-          { id: 'experience_years', weight: 30, expected: 3 },
-          { id: 'industry', weight: 20, expected: 'Tecnología' },
+          { id: 'experience_years', weight: 20, expected: '3' },
+          { id: 'skills', weight: 30, expected: 'Prospección,Cierre de ventas,Negociación,Presentación comercial' },
+          { id: 'industry', weight: 15, expected: 'Tecnología' },
+          { id: 'sales_type', weight: 10, expected: 'B2B' },
           { id: 'crm', weight: 10, expected: 'Salesforce' },
-          { id: 'education', weight: 10, expected: 'Profesional' },
-          { id: 'english_level', weight: 10, expected: 'B2' },
+          { id: 'education', weight: 5, expected: 'Profesional' },
+          { id: 'english_level', weight: 5, expected: 'B2' },
           { id: 'availability', weight: 5, expected: 'Inmediata' },
         ],
       },
@@ -236,13 +238,20 @@ async function main() {
         profileSummary: c.profileSummary,
         metadata: {
           standardAnswers: {
-            experience_years: c.id === 'seed-candidate-001' ? 6 : c.id === 'seed-candidate-002' ? 5 : 8,
+            experience_years: c.id === 'seed-candidate-001' ? '6' : c.id === 'seed-candidate-002' ? '5' : '8',
+            skills:
+              c.id === 'seed-candidate-001'
+                ? 'Prospección,Cierre de ventas,Negociación,Presentación comercial,Manejo de objeciones'
+                : c.id === 'seed-candidate-002'
+                  ? 'Prospección,Cierre de ventas,Negociación'
+                  : 'Prospección,Negociación,Cuentas clave',
             industry: c.id === 'seed-candidate-003' ? 'Distribución' : 'Tecnología',
             sales_type: 'B2B',
             crm: c.id === 'seed-candidate-001' ? 'Salesforce' : 'HubSpot',
             education: 'Profesional',
             english_level: c.id === 'seed-candidate-002' ? 'A2' : 'B2',
             availability: 'Inmediata',
+            city: 'Bogotá',
           },
         },
       },
@@ -288,12 +297,12 @@ async function main() {
   }
 
   const assessments = [
-    { id: 'seed-assessment-001', candidateId: 'seed-candidate-001', vacancyId: vacancy.id, type: AssessmentType.COMMERCIAL, title: 'Venta consultiva', score: 90, result: 'Aprobado', minutes: 42, comments: 'Excelente manejo de objeciones y cierre consultivo.' },
-    { id: 'seed-assessment-002', candidateId: 'seed-candidate-001', vacancyId: vacancy.id, type: AssessmentType.ROLE_PLAY, title: 'Negociación', score: 85, result: 'Aprobado', minutes: 28, comments: 'Buen manejo de la negociación, reforzar propuesta de valor.' },
-    { id: 'seed-assessment-003', candidateId: 'seed-candidate-002', vacancyId: vacancy.id, type: AssessmentType.BEHAVIORAL, title: 'Resiliencia', score: 78, result: 'Aprobado', minutes: 35, comments: 'Responde bien bajo presión. Comunicación clara.' },
-    { id: 'seed-assessment-004', candidateId: 'seed-candidate-002', vacancyId: vacancy.id, type: AssessmentType.COMMERCIAL, title: 'Prospección', score: 82, result: 'Aprobado', minutes: 38, comments: 'Buena estructura de prospección B2B.' },
-    { id: 'seed-assessment-005', candidateId: 'seed-candidate-003', vacancyId: vacancy2.id, type: AssessmentType.COMMERCIAL, title: 'Planeación', score: 72, result: 'En revisión', minutes: 55, comments: 'Plan comercial sólido pero le falta profundidad en KPIs.' },
-    { id: 'seed-assessment-006', candidateId: 'seed-candidate-003', vacancyId: vacancy2.id, type: AssessmentType.TECHNICAL, title: 'Gestión de equipos', score: 68, result: 'En revisión', minutes: 47, comments: 'Experiencia relevante, validar liderazgo en campo.' },
+    { id: 'seed-assessment-001', candidateId: 'seed-candidate-001', vacancyId: vacancy.id, type: AssessmentType.COMMERCIAL, title: 'Venta consultiva', score: 90, result: 'Aprobado', minutes: 42, comments: JSON.stringify({ feedback: 'Excelente manejo de objeciones y cierre consultivo.', mistakes: ['Pregunta 7: No detalló el proceso de calificación de prospectos BANT'] }) },
+    { id: 'seed-assessment-002', candidateId: 'seed-candidate-001', vacancyId: vacancy.id, type: AssessmentType.ROLE_PLAY, title: 'Negociación', score: 85, result: 'Aprobado', minutes: 28, comments: JSON.stringify({ feedback: 'Buen manejo de la negociación, reforzar propuesta de valor.', mistakes: ['Escenario 2: Cedió descuento antes de validar necesidad', 'Escenario 4: Propuesta de valor genérica'] }) },
+    { id: 'seed-assessment-003', candidateId: 'seed-candidate-002', vacancyId: vacancy.id, type: AssessmentType.BEHAVIORAL, title: 'Resiliencia', score: 78, result: 'Aprobado', minutes: 35, comments: JSON.stringify({ feedback: 'Responde bien bajo presión. Comunicación clara.', mistakes: ['Pregunta 3: Ejemplo de rechazo sin acción concreta', 'Pregunta 8: Tendencia a culpar al mercado'] }) },
+    { id: 'seed-assessment-004', candidateId: 'seed-candidate-002', vacancyId: vacancy.id, type: AssessmentType.COMMERCIAL, title: 'Prospección', score: 82, result: 'Aprobado', minutes: 38, comments: JSON.stringify({ feedback: 'Buena estructura de prospección B2B.', mistakes: ['Pregunta 5: Canales limitados a LinkedIn', 'Pregunta 9: No midió tasa de conversión'] }) },
+    { id: 'seed-assessment-005', candidateId: 'seed-candidate-003', vacancyId: vacancy2.id, type: AssessmentType.COMMERCIAL, title: 'Planeación', score: 72, result: 'En revisión', minutes: 55, comments: JSON.stringify({ feedback: 'Plan comercial sólido pero le falta profundidad en KPIs.', mistakes: ['Pregunta 2: KPIs sin metas numéricas', 'Pregunta 6: Sin plan de contingencia', 'Pregunta 10: Proyección sin respaldo histórico'] }) },
+    { id: 'seed-assessment-006', candidateId: 'seed-candidate-003', vacancyId: vacancy2.id, type: AssessmentType.TECHNICAL, title: 'Gestión de equipos', score: 68, result: 'En revisión', minutes: 47, comments: JSON.stringify({ feedback: 'Experiencia relevante, validar liderazgo en campo.', mistakes: ['Pregunta 4: Sin método de coaching 1:1', 'Pregunta 7: Indicadores incompletos', 'Pregunta 11: Sin plan de retención'] }) },
   ];
 
   for (const a of assessments) {

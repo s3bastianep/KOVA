@@ -1,11 +1,16 @@
 import type { QuestionMatchType } from './standard-questions';
-import { standardQuestionsFromMetadata, selectedToRequirements } from './standard-questions';
+import {
+  getQuestionById,
+  parseMultiValue,
+  standardQuestionsFromMetadata,
+  selectedToRequirements,
+} from './standard-questions';
 
 export type RequirementRule = {
   key: string;
   label: string;
   weight: number;
-  type: QuestionMatchType | 'years_min' | 'contains' | 'equals' | 'score_min';
+  type: QuestionMatchType | 'years_min' | 'contains' | 'equals';
   expected: string | number;
 };
 
@@ -42,7 +47,7 @@ function evaluateRule(
   let detail = '';
   const matchType = rule.type;
 
-  if (matchType === 'years_min' || matchType === 'min_score') {
+  if (matchType === 'years_min') {
     const num = Number(actual ?? 0);
     const min = Number(rule.expected);
     met = num >= min;
@@ -55,6 +60,29 @@ function evaluateRule(
   } else if (matchType === 'equals') {
     met = normalize(actual) === normalize(rule.expected);
     detail = met ? String(actual) : `Esperado: ${rule.expected}`;
+  } else if (matchType === 'in_list') {
+    const expectedList = parseMultiValue(String(rule.expected ?? ''));
+    const actualList = parseMultiValue(actual == null ? '' : String(actual));
+    const def = getQuestionById(rule.key);
+    const perItem = def?.weightPerItem ?? (expectedList.length > 0 ? max / expectedList.length : 0);
+    const matches = expectedList.filter((expected) =>
+      actualList.some((item) => normalize(item) === normalize(expected)),
+    ).length;
+    const earned = Math.round(matches * perItem);
+    met = expectedList.length > 0 && matches === expectedList.length;
+    detail =
+      expectedList.length > 0
+        ? `${matches}/${expectedList.length} habilidades (${earned}/${max}%)`
+        : 'Sin habilidades configuradas';
+    return {
+      key: rule.key,
+      label: rule.label,
+      weight: rule.weight,
+      met,
+      earned,
+      max,
+      detail,
+    };
   } else {
     const expected = normalize(rule.expected);
     const actualNorm = normalize(actual);
@@ -63,8 +91,8 @@ function evaluateRule(
   }
 
   const partial =
-    matchType === 'min_score' && !met
-      ? Math.min(max, Math.round((Number(actual ?? 0) / Number(rule.expected || 1)) * max))
+    matchType === 'years_min' && !met && Number(rule.expected) > 0
+      ? Math.min(max, Math.round((Number(actual ?? 0) / Number(rule.expected)) * max))
       : 0;
 
   return {
@@ -128,8 +156,14 @@ export function profileFromCandidate(candidate: {
 
 export function compatibilityFromVacancyAndAnswers(
   vacancyMetadata: unknown,
-  answers: Record<string, string | number>,
+  answers: Record<string, string | number | string[]>,
 ) {
+  const normalized = Object.fromEntries(
+    Object.entries(answers).map(([key, value]) => [
+      key,
+      Array.isArray(value) ? value.join(',') : value,
+    ]),
+  ) as Record<string, string | number>;
   const requirements = requirementsFromMetadata(vacancyMetadata);
-  return calculateCompatibility(requirements, answers);
+  return calculateCompatibility(requirements, normalized);
 }
