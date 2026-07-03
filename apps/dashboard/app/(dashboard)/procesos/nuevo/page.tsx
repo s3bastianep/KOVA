@@ -119,6 +119,14 @@ const PIPELINE_STAGE_HELP: Record<string, { goal: string; advances: string; stal
   },
 };
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+function isValidEmail(v: string) {
+  return EMAIL_RE.test(v.trim());
+}
+function isValidPhone(v: string) {
+  return v.replace(/\D/g, '').length >= 7;
+}
+
 export default function NuevoProcesoPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
@@ -155,6 +163,30 @@ export default function NuevoProcesoPage() {
   });
 
   const update = (key: string, value: unknown) => setForm((f) => ({ ...f, [key]: value }));
+
+  // Valida los campos obligatorios de cada paso antes de permitir avanzar o crear.
+  const validateStep = (s: number): string => {
+    if (s === 0) {
+      if (!form.companyName.trim()) return 'Ingresa el nombre de la empresa.';
+      if (!form.contact.trim()) return 'Ingresa el contacto principal.';
+      if (!isValidEmail(form.email)) return 'Ingresa un correo válido (ej. nombre@empresa.com).';
+      if (!isValidPhone(form.phone)) return 'Ingresa un teléfono válido (mínimo 7 dígitos).';
+    }
+    if (s === 3 && form.titles.length === 0) {
+      return 'Selecciona al menos un cargo a buscar.';
+    }
+    return '';
+  };
+
+  const goNext = () => {
+    const msg = validateStep(step);
+    if (msg) {
+      setError(msg);
+      return;
+    }
+    setError('');
+    setStep((s) => Math.min(STEPS.length - 1, s + 1));
+  };
 
   const updateRequirement = (index: number, field: 'expected' | 'weight', value: string | number) => {
     setForm((f) => {
@@ -269,6 +301,13 @@ export default function NuevoProcesoPage() {
   };
 
   const finish = async () => {
+    const step0Error = validateStep(0);
+    const step3Error = validateStep(3);
+    if (step0Error || step3Error) {
+      setError(step0Error || step3Error);
+      setStep(step0Error ? 0 : 3);
+      return;
+    }
     setLoading(true);
     setError('');
     try {
@@ -684,7 +723,7 @@ export default function NuevoProcesoPage() {
           <ArrowLeft className="w-4 h-4" /> Anterior
         </button>
         {step < STEPS.length - 1 ? (
-          <button type="button" onClick={() => setStep((s) => s + 1)} disabled={loading}
+          <button type="button" onClick={goNext} disabled={loading}
             className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold rounded-xl text-white shadow-sm hover:-translate-y-0.5 transition-all"
             style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}>
             Siguiente <ArrowRight className="w-4 h-4" />

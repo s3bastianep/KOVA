@@ -203,29 +203,45 @@ export default function BookingScheduler({ alternateContact = null }) {
                       <Loader2 className="w-5 h-5 animate-spin" style={{ color: BRAND.blue }} />
                     </div>
                   ) : slots.length ? (
-                    <div className="grid grid-cols-2 md:grid-cols-1 gap-1.5 max-h-[17rem] overflow-y-auto pr-0.5">
-                      {slots.map((slot) => (
+                    <>
+                      <div className="grid grid-cols-2 md:grid-cols-1 gap-1.5 max-h-[17rem] overflow-y-auto pr-0.5">
+                        {slots.map((slot) => {
+                          const isSelected = selectedTime === slot;
+                          return (
+                            <button
+                              key={slot}
+                              type="button"
+                              aria-label={`Seleccionar horario ${slot}`}
+                              aria-pressed={isSelected}
+                              onClick={() => {
+                                setSelectedTime(slot);
+                                setError('');
+                              }}
+                              className="text-[13px] font-medium py-2 px-3 rounded-lg transition-colors text-center border hover:border-[#1A3FAA] hover:bg-[#EEF2FA]"
+                              style={{
+                                color: isSelected ? BRAND.blue : BRAND.navy,
+                                background: isSelected ? '#EEF2FA' : KOVA.surface,
+                                borderColor: isSelected ? BRAND.blue : KOVA.borderSoft,
+                              }}
+                            >
+                              {slot}
+                            </button>
+                          );
+                        })}
+                      </div>
+                      {selectedTime && (
                         <button
-                          key={slot}
                           type="button"
-                          aria-label={`Seleccionar horario ${slot}`}
-                          aria-pressed={selectedTime === slot}
                           onClick={() => {
-                            setSelectedTime(slot);
                             setStep('details');
                             setError('');
                           }}
-                          className="text-[13px] font-medium py-2 px-3 rounded-lg transition-colors text-center border hover:border-[#1A3FAA] hover:bg-[#EEF2FA]"
-                          style={{
-                            color: BRAND.navy,
-                            background: KOVA.surface,
-                            borderColor: KOVA.borderSoft,
-                          }}
+                          className="kova-btn-primary mt-3 w-full font-semibold text-[13px] py-2.5 rounded-lg text-white"
                         >
-                          {slot}
+                          Continuar con {selectedTime}
                         </button>
-                      ))}
-                    </div>
+                      )}
+                    </>
                   ) : (
                     <p className="text-[13px] leading-relaxed py-4" style={{ color: KOVA.muted }}>
                       Sin horarios. Prueba otro día laboral.
