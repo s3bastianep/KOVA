@@ -17,7 +17,7 @@ function mapCandidate(c: {
   source: string | null;
   compatibility: number | null;
   ranking: number | null;
-  vacancies: { stage: string; source?: string | null; ranking?: number | null; vacancy: { title: string } }[];
+  vacancies: { stage: string; source?: string | null; ranking?: number | null; vacancy: { title: string; company?: { name: string } | null } }[];
 }) {
   const primary = c.vacancies[0];
   return {
@@ -33,6 +33,7 @@ function mapCandidate(c: {
     ranking: c.ranking ?? primary?.ranking,
     currentStage: primary?.stage,
     vacancyTitle: primary?.vacancy.title,
+    companyName: primary?.vacancy.company?.name ?? undefined,
   };
 }
 
@@ -45,6 +46,7 @@ export async function GET(req: NextRequest) {
       MOCK_CANDIDATES.map((c) => ({
         ...c,
         vacancyTitle: c.vacancies[0]?.vacancy.title,
+        companyName: c.vacancies[0]?.vacancy.company?.name,
       })),
     );
   }
@@ -58,7 +60,7 @@ export async function GET(req: NextRequest) {
     },
     include: {
       vacancies: {
-        include: { vacancy: { select: { id: true, title: true } } },
+        include: { vacancy: { select: { id: true, title: true, company: { select: { name: true } } } } },
         orderBy: { updatedAt: 'desc' },
         take: 1,
       },

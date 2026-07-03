@@ -152,7 +152,7 @@ export const MOCK_CANDIDATES = [
     compatibility: 92,
     currentStage: 'INTERVIEW',
     source: 'LinkedIn',
-    vacancies: [{ vacancy: { id: 'seed-vacancy-001', title: 'Ejecutivo Comercial B2B' } }],
+    vacancies: [{ vacancy: { id: 'seed-vacancy-001', title: 'Ejecutivo Comercial B2B', company: { name: 'TechSales Colombia SAS' } } }],
   },
   {
     id: 'c2',
@@ -166,7 +166,7 @@ export const MOCK_CANDIDATES = [
     compatibility: 87,
     currentStage: 'ASSESSMENT',
     source: 'Referido',
-    vacancies: [{ vacancy: { id: 'seed-vacancy-001', title: 'Ejecutivo Comercial B2B' } }],
+    vacancies: [{ vacancy: { id: 'seed-vacancy-001', title: 'Ejecutivo Comercial B2B', company: { name: 'TechSales Colombia SAS' } } }],
   },
   {
     id: 'c3',
@@ -180,7 +180,7 @@ export const MOCK_CANDIDATES = [
     compatibility: 78,
     currentStage: 'SCREENING',
     source: 'Computrabajo',
-    vacancies: [{ vacancy: { id: 'seed-vacancy-002', title: 'Gerente Comercial Regional' } }],
+    vacancies: [{ vacancy: { id: 'seed-vacancy-002', title: 'Gerente Comercial Regional', company: { name: 'Distribuidora Andina' } } }],
   },
 ];
 

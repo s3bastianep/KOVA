@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { ChevronRight, MapPin, Briefcase, Star } from 'lucide-react';
+import { ChevronRight, MapPin, Briefcase, Star, Building2 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import { stageLabel } from '@/lib/stages';
 
@@ -19,6 +19,7 @@ type CandidateRow = {
   ranking?: number;
   currentStage?: string;
   vacancyTitle?: string;
+  companyName?: string;
 };
 
 export default function CandidatosPage() {
@@ -68,11 +69,18 @@ export default function CandidatosPage() {
                   )}
                 </div>
                 <p className="text-sm text-slate-500 truncate">{c.email ?? '—'}</p>
+                {c.companyName && (
+                  <p className="text-xs mt-1 inline-flex items-center gap-1 font-medium" style={{ color: 'var(--kova-blue)' }}>
+                    <Building2 className="w-3.5 h-3.5" />
+                    Postula a {c.companyName}
+                    {c.vacancyTitle && <span className="text-slate-400 font-normal">· {c.vacancyTitle}</span>}
+                  </p>
+                )}
                 <div className="flex flex-wrap gap-3 mt-1 text-xs text-slate-400">
                   {c.city && (
                     <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3" /> {c.city}</span>
                   )}
-                  {c.vacancyTitle && (
+                  {!c.companyName && c.vacancyTitle && (
                     <span className="inline-flex items-center gap-1"><Briefcase className="w-3 h-3" /> {c.vacancyTitle}</span>
                   )}
                   {c.source && <span>Fuente: {c.source}</span>}

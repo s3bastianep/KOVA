@@ -10,34 +10,123 @@
   --kova-blue-mid: #2D5BE3;
   --kova-green: #00B27A;
   --kova-coral: #FF3B30;
-  --kova-surface: #F8F9FB;
-  --kova-border: #E2E6ED;
+  --kova-surface: #F5F7FB;
+  --kova-border: #E9EDF3;
+  --kova-ring: rgba(45, 91, 227, 0.15);
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  background: var(--kova-surface);
-  color: #3D3D3D;
+  background:
+    radial-gradient(1200px 600px at 100% -10%, rgba(45, 91, 227, 0.05), transparent 60%),
+    var(--kova-surface);
+  color: #2B3244;
+  letter-spacing: -0.006em;
 }
 
 .font-heading {
   font-family: 'Sora', 'Inter', sans-serif;
+  letter-spacing: -0.02em;
 }
 
+/* ─── Tarjetas ─── */
 .kova-card {
-  @apply bg-white border rounded-xl;
+  @apply bg-white border rounded-2xl;
   border-color: var(--kova-border);
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 1px 2px rgba(15, 31, 61, 0.04), 0 6px 20px -6px rgba(15, 31, 61, 0.08);
 }
 
+/* Tarjeta interactiva: aplica hover suave */
+.kova-card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.kova-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(15, 31, 61, 0.05), 0 16px 40px -12px rgba(15, 31, 61, 0.16);
+  border-color: #D6DEEA;
+}
+
+/* ─── Botones ─── */
 .kova-btn-primary {
   background: var(--kova-coral);
   color: white;
-  box-shadow: 0 4px 14px rgba(255, 59, 48, 0.28);
+  box-shadow: 0 6px 16px -4px rgba(255, 59, 48, 0.4);
+  transition: filter 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+.kova-btn-primary:hover {
+  filter: brightness(0.94);
+  transform: translateY(-1px);
+}
+.kova-btn-primary:active {
+  transform: translateY(0);
 }
 
-.kova-btn-primary:hover {
-  background: #E63228;
+.kova-gradient {
+  background: linear-gradient(135deg, var(--kova-navy) 0%, var(--kova-blue) 100%);
+}
+
+/* ─── Foco accesible ─── */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: none;
+}
+
+/* ─── Scrollbar moderna ─── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+  background-clip: padding-box;
+}
+
+::selection {
+  background: rgba(45, 91, 227, 0.18);
+}
+
+/* ─── Animaciones utilitarias ─── */
+@keyframes kova-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.kova-animate-in {
+  animation: kova-fade-up 0.35s ease both;
+}
+
+@keyframes kova-shimmer {
+  100% { transform: translateX(100%); }
+}
+.kova-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #EEF1F6;
+}
+.kova-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  animation: kova-shimmer 1.4s infinite;
 }
 
 /* ─── Impresión / descarga PDF ─── */
