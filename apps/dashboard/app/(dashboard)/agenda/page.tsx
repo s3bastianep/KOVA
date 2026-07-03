@@ -8,7 +8,7 @@ export default function AgendaPage() {
       <div>
         <h1 className="font-heading text-2xl font-bold" style={{ color: 'var(--kova-navy)' }}>Agenda</h1>
         <p className="text-sm text-slate-500 mt-1">
-          Calendario de actividades — arrastra para reprogramar, marca estado y registra el motivo de cada cambio.
+          Revisa solicitudes de la página pública, acepta o rechaza citas, y gestiona el calendario con arrastre y reprogramación.
         </p>
       </div>
       <AgendaCalendar />

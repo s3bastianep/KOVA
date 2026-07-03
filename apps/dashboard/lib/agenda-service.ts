@@ -1,6 +1,11 @@
 import { prisma } from './prisma';
 import { isMockMode, MOCK_CALENDAR, MOCK_TASKS, MOCK_INTERVIEWS } from './mock';
+import { getMockRequestAgendaStates, seedMockAgendaRequests } from './agenda-request-service';
 import type { AgendaItem, AgendaMoveEntry, AgendaStatus } from './agenda';
+
+if (isMockMode()) {
+  seedMockAgendaRequests();
+}
 
 type StoredState = {
   itemKey: string;
@@ -122,6 +127,22 @@ async function loadStoredStates(tenantId: string): Promise<Map<string, StoredSta
         map.set(key.slice(tenantId.length + 1), value);
       }
     }
+    for (const stored of getMockRequestAgendaStates(tenantId)) {
+      map.set(stored.itemKey, {
+        itemKey: stored.itemKey,
+        title: stored.title,
+        type: stored.type,
+        scheduledAt: stored.scheduledAt,
+        endAt: stored.endAt,
+        status: stored.status,
+        statusReason: stored.statusReason,
+        companyName: stored.companyName,
+        contactName: stored.contactName,
+        purpose: stored.purpose,
+        notes: stored.notes,
+        moveHistory: stored.moveHistory,
+      });
+    }
     return map;
   }
 
@@ -163,6 +184,25 @@ export async function listAgendaItems(tenantId: string, year: number, month: num
 
   if (isMockMode()) {
     items = baseMockItems().map((item) => applyStored(item, storedMap.get(item.itemKey)));
+    for (const stored of getMockRequestAgendaStates(tenantId)) {
+      if (items.some((i) => i.itemKey === stored.itemKey)) continue;
+      items.push({
+        id: stored.itemKey,
+        itemKey: stored.itemKey,
+        title: stored.title,
+        type: stored.type,
+        date: stored.scheduledAt,
+        endDate: stored.endAt,
+        status: stored.status,
+        statusReason: stored.statusReason,
+        moveHistory: stored.moveHistory,
+        moveCount: stored.moveHistory.length,
+        companyName: stored.companyName,
+        contactName: stored.contactName,
+        purpose: stored.purpose,
+        notes: stored.notes,
+      });
+    }
   } else {
     const monthStart = new Date(year, month, 1);
     const monthEnd = new Date(year, month + 1, 0, 23, 59, 59);
@@ -253,6 +293,27 @@ export async function listAgendaItems(tenantId: string, year: number, month: num
 }
 
 async function findItemBase(tenantId: string, itemKey: string): Promise<Omit<AgendaItem, 'moveCount'> | null> {
+  if (itemKey.startsWith('req-')) {
+    const stored = (await loadStoredStates(tenantId)).get(itemKey);
+    if (stored) {
+      return {
+        id: itemKey,
+        itemKey,
+        title: stored.title,
+        type: stored.type,
+        date: stored.scheduledAt,
+        endDate: stored.endAt,
+        status: stored.status,
+        statusReason: stored.statusReason,
+        moveHistory: stored.moveHistory,
+        companyName: stored.companyName,
+        contactName: stored.contactName,
+        purpose: stored.purpose,
+        notes: stored.notes,
+      };
+    }
+  }
+
   const all = baseMockItems();
   const found = all.find((i) => i.itemKey === itemKey);
   if (found) return found;

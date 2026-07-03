@@ -78,7 +78,7 @@ app.post('/api/bookings', async (req, res) => {
     correo: correo.trim().toLowerCase(),
     telefono: telefono.trim(),
     empresa: empresa.trim(),
-    status: 'confirmed',
+    status: 'pending',
     createdAt: new Date().toISOString(),
   };
 
@@ -91,6 +91,7 @@ app.post('/api/bookings', async (req, res) => {
       time: booking.time,
       nombre: booking.nombre,
     },
+    message: 'Solicitud enviada. Te confirmaremos pronto.',
   });
 });
 

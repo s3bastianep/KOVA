@@ -1090,3 +1090,27 @@ model AgendaState {
   @@index([tenantId, scheduledAt])
   @@map("agenda_states")
 }
+
+model AgendaRequest {
+  id             String   @id @default(cuid())
+  tenantId       String
+  requesterName  String
+  requesterEmail String
+  requesterPhone String
+  companyName    String
+  type           String   @default("Consultoría")
+  scheduledAt    DateTime
+  endAt          DateTime?
+  purpose        String?  @db.Text
+  notes          String?  @db.Text
+  status         String   @default("REQUESTED")
+  statusReason   String?  @db.Text
+  moveHistory    Json     @default("[]")
+  agendaItemKey  String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([tenantId, status])
+  @@index([tenantId, scheduledAt])
+  @@map("agenda_requests")
+}

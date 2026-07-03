@@ -1,4 +1,4 @@
-export type AgendaStatus = 'PENDING' | 'COMPLETED' | 'CANCELLED';
+export type AgendaStatus = 'PENDING' | 'COMPLETED' | 'CANCELLED' | 'REJECTED';
 
 export type AgendaMoveEntry = {
   fromDate: string;
@@ -42,6 +42,7 @@ export const AGENDA_TYPE_STYLES: Record<string, AgendaTypeStyle> = {
   Seguimiento: { bg: '#FFF0EE', border: '#FF3B30', text: '#DC2626', dot: '#FF3B30' },
   Tarea: { bg: '#ECFEFF', border: '#0891B2', text: '#0E7490', dot: '#06B6D4' },
   Visita: { bg: '#FFF7ED', border: '#EA580C', text: '#C2410C', dot: '#F97316' },
+  Consultoría: { bg: '#EEF2FA', border: '#1A3FAA', text: '#1A3FAA', dot: '#1A3FAA' },
 };
 
 export function agendaTypeStyle(type: string): AgendaTypeStyle {
@@ -52,6 +53,7 @@ export const AGENDA_STATUS_LABELS: Record<AgendaStatus, string> = {
   PENDING: 'Pendiente',
   COMPLETED: 'Completada',
   CANCELLED: 'Cancelada',
+  REJECTED: 'Rechazada',
 };
 
 export function parseMonthParam(month?: string | null): { year: number; month: number } {

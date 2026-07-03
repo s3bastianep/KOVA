@@ -34,6 +34,39 @@ export async function checkBookingApi() {
 }
 
 export async function createBooking(payload) {
+  const dashboardBase = import.meta.env.VITE_DASHBOARD_URL?.replace(/\/login\/?$/, '') ?? '';
+
+  if (dashboardBase) {
+    let res;
+    try {
+      res = await fetch(`${dashboardBase}/api/solicitudes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    } catch {
+      throw new Error(API_UNAVAILABLE_MSG);
+    }
+
+    const contentType = res.headers.get('content-type') || '';
+    const data = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
+
+    if (!res.ok) {
+      throw new Error(data.message || data.error || 'No pudimos enviar la solicitud.');
+    }
+
+    return {
+      ok: true,
+      booking: {
+        id: data.request?.id,
+        date: payload.date,
+        time: payload.time,
+        nombre: payload.nombre,
+      },
+      message: data.message,
+    };
+  }
+
   let res;
   try {
     res = await fetch('/api/bookings', {

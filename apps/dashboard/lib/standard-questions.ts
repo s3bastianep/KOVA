@@ -35,6 +35,50 @@ export const COMMERCIAL_SKILLS = [
   'Fidelización',
 ];
 
+/** Cargos comerciales — selección múltiple en wizard de proceso */
+export const JOB_TITLE_OPTIONS = [
+  'Ejecutivo Comercial B2B',
+  'Ejecutivo Comercial B2C',
+  'Asesor Comercial',
+  'Ejecutivo de Cuentas Clave',
+  'Inside Sales',
+  'Field Sales',
+  'Business Developer / Hunter',
+  'Representante de Ventas',
+  'Gerente Comercial',
+  'Jefe de Ventas',
+  'Director Comercial',
+  'Líder Comercial',
+  'Customer Success / Postventa',
+  'Coordinador Comercial',
+];
+
+/** Discovery — facturación mensual en COP (millones) */
+export const REVENUE_RANGES = [
+  'Menos de 100 millones/mes',
+  '100 – 500 millones/mes',
+  '500 – 1.000 millones/mes',
+  '1.000 – 5.000 millones/mes',
+  '5.000 – 10.000 millones/mes',
+  '10.000 – 20.000 millones/mes',
+  '+ de 20.000 millones/mes',
+];
+
+/** Discovery — formas de venta (multiselect) */
+export const HOW_SELLS_OPTIONS = [
+  'B2B consultivo',
+  'Inside sales',
+  'Field sales',
+  'E-commerce',
+  'Canal indirecto',
+  'Suscripción',
+  'B2B',
+  'B2C',
+  'Venta consultiva',
+  'Televentas',
+  'Mayorista / distribución',
+];
+
 /** Catálogo único: lo que el asesor elige aquí sale igual en el formulario del aspirante */
 export const STANDARD_QUESTIONS: StandardQuestionDef[] = [
   // Perfil del cargo
@@ -162,12 +206,13 @@ export const STANDARD_QUESTIONS: StandardQuestionDef[] = [
   },
   {
     id: 'ticket_avg',
-    label: 'Ticket promedio manejado (millones COP)',
+    label: 'Ticket / facturación manejada',
     category: 'Experiencia',
     inputType: 'select',
     matchType: 'years_min',
-    options: ['1', '5', '10', '20', '50', '100'],
+    options: REVENUE_RANGES,
     defaultWeight: 10,
+    helpText: 'Rango mensual en millones COP',
   },
   {
     id: 'team_leadership',
@@ -270,3 +315,56 @@ export function standardQuestionsFromMetadata(metadata: unknown): SelectedStanda
 
 export const PROFILE_QUESTION_IDS = STANDARD_QUESTIONS.filter((q) => q.category === 'Perfil del cargo').map((q) => q.id);
 export const REQUIREMENT_QUESTION_IDS = STANDARD_QUESTIONS.filter((q) => q.category !== 'Perfil del cargo').map((q) => q.id);
+
+/** Grupos lógicos para el selector de preguntas al aspirante */
+export type QuestionGroupDef = {
+  id: string;
+  title: string;
+  description: string;
+  questionIds: string[];
+};
+
+export const QUESTION_GROUPS: QuestionGroupDef[] = [
+  {
+    id: 'experience',
+    title: 'Experiencia comercial',
+    description: 'Trayectoria, volumen de ventas, industria y canal',
+    questionIds: ['experience_years', 'ticket_avg', 'industry', 'sales_type'],
+  },
+  {
+    id: 'competencies',
+    title: 'Competencias',
+    description: 'Habilidades requeridas y liderazgo de equipo',
+    questionIds: [SKILLS_QUESTION_ID, 'team_leadership'],
+  },
+  {
+    id: 'profile',
+    title: 'Alineación con el cargo',
+    description: 'Objetivo, funciones y KPIs del rol',
+    questionIds: ['job_objective', 'main_functions', 'responsibilities', 'kpi_focus'],
+  },
+  {
+    id: 'formation',
+    title: 'Formación e idiomas',
+    description: 'Estudios y nivel de inglés',
+    questionIds: ['education', 'english_level'],
+  },
+  {
+    id: 'logistics',
+    title: 'Ubicación y disponibilidad',
+    description: 'Ciudad de residencia e ingreso',
+    questionIds: ['city', 'availability'],
+  },
+  {
+    id: 'tools',
+    title: 'Herramientas',
+    description: 'CRM y stack comercial',
+    questionIds: ['crm'],
+  },
+  {
+    id: 'other',
+    title: 'Otros (opcional)',
+    description: 'Criterios adicionales',
+    questionIds: ['hiring_reason', 'commercial_model'],
+  },
+];

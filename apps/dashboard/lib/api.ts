@@ -87,11 +87,30 @@ export const dashboardApi = {
   onboarding: () => apiFetch<Record<string, unknown>>('/onboarding'),
   academia: () => apiFetch<unknown[]>('/academia'),
   crm: () => apiFetch<unknown[]>('/crm'),
+  clientJourney: () => apiFetch<{ clients: unknown[] }>('/clientes-journey'),
+  updateClientJourney: (companyId: string, body: { action: 'advance' | 'hold'; reason?: string }) =>
+    apiFetch<{ ok: boolean; client: unknown }>('/clientes-journey', {
+      method: 'PATCH',
+      body: JSON.stringify({ companyId, ...body }),
+    }),
   calendar: () => apiFetch<unknown[]>('/calendario'),
   agenda: (month: string) => apiFetch<{ month: string; items: unknown[] }>(`/agenda?month=${month}`),
+  solicitudes: (status?: string) =>
+    apiFetch<{ requests: unknown[] }>(`/solicitudes${status ? `?status=${status}` : ''}`),
+  updateSolicitud: (
+    id: string,
+    body:
+      | { action: 'accept'; reason?: string }
+      | { action: 'reject'; reason: string }
+      | { action: 'reschedule'; newDate: string; reason: string },
+  ) =>
+    apiFetch<{ ok: boolean; request?: unknown; item?: unknown }>(`/solicitudes/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
   updateAgendaItem: (
     itemKey: string,
-    body: { action: 'status'; status: 'PENDING' | 'COMPLETED' | 'CANCELLED'; reason?: string } | { action: 'reschedule'; newDate: string; reason: string },
+    body: { action: 'status'; status: 'PENDING' | 'COMPLETED' | 'CANCELLED' | 'REJECTED'; reason?: string } | { action: 'reschedule'; newDate: string; reason: string },
   ) =>
     apiFetch<{ ok: boolean; item: unknown }>(`/agenda/${encodeURIComponent(itemKey)}`, {
       method: 'PATCH',

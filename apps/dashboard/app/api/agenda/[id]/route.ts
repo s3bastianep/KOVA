@@ -16,7 +16,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   try {
     if (action === 'status') {
       const { status, reason } = body as { status: AgendaStatus; reason?: string };
-      if (!['PENDING', 'COMPLETED', 'CANCELLED'].includes(status)) {
+      if (!['PENDING', 'COMPLETED', 'CANCELLED', 'REJECTED'].includes(status)) {
         return Response.json({ message: 'Estado inválido' }, { status: 400 });
       }
       const item = await updateAgendaStatus(user.tenantId, decodeURIComponent(itemKey), status, reason);

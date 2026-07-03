@@ -11,6 +11,11 @@ import {
   History,
   GripVertical,
   AlertCircle,
+  Mail,
+  Phone,
+  Building2,
+  User,
+  CalendarClock,
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import {
@@ -28,9 +33,30 @@ import {
 
 const WEEKDAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
+function toLocalDatetimeInput(iso: string) {
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+type AgendaRequest = {
+  id: string;
+  requesterName: string;
+  requesterEmail: string;
+  requesterPhone: string;
+  companyName: string;
+  type: string;
+  scheduledAt: string;
+  endAt?: string;
+  purpose?: string;
+  status: string;
+  moveHistory: { fromDate: string; toDate: string; reason: string }[];
+};
+
 type ModalMode =
   | { type: 'detail'; item: AgendaItem }
   | { type: 'reason'; item: AgendaItem; action: 'cancel' | 'reschedule'; targetDate?: string }
+  | { type: 'request'; request: AgendaRequest; action: 'reject' | 'reschedule' }
   | null;
 
 export function AgendaCalendar() {
@@ -39,6 +65,7 @@ export function AgendaCalendar() {
   const [modal, setModal] = useState<ModalMode>(null);
   const [dragItem, setDragItem] = useState<AgendaItem | null>(null);
   const [reasonText, setReasonText] = useState('');
+  const [rescheduleDate, setRescheduleDate] = useState('');
   const queryClient = useQueryClient();
 
   const monthStr = monthKey(cursor.year, cursor.month);
@@ -48,7 +75,13 @@ export function AgendaCalendar() {
     queryFn: () => dashboardApi.agenda(monthStr),
   });
 
+  const { data: pendingData } = useQuery({
+    queryKey: ['solicitudes', 'REQUESTED'],
+    queryFn: () => dashboardApi.solicitudes('REQUESTED'),
+  });
+
   const items = (data?.items ?? []) as AgendaItem[];
+  const pendingRequests = (pendingData?.requests ?? []) as AgendaRequest[];
 
   const byDay = useMemo(() => {
     const map = new Map<string, AgendaItem[]>();
@@ -73,6 +106,23 @@ export function AgendaCalendar() {
       queryClient.invalidateQueries({ queryKey: ['agenda'] });
       setModal(null);
       setReasonText('');
+    },
+  });
+
+  const solicitudMutation = useMutation({
+    mutationFn: (payload: {
+      id: string;
+      body:
+        | { action: 'accept'; reason?: string }
+        | { action: 'reject'; reason: string }
+        | { action: 'reschedule'; newDate: string; reason: string };
+    }) => dashboardApi.updateSolicitud(payload.id, payload.body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['agenda'] });
+      queryClient.invalidateQueries({ queryKey: ['solicitudes'] });
+      setModal(null);
+      setReasonText('');
+      setRescheduleDate('');
     },
   });
 
@@ -116,6 +166,31 @@ export function AgendaCalendar() {
     }
   };
 
+  const submitRequestAction = () => {
+    if (!modal || modal.type !== 'request') return;
+
+    if (modal.action === 'reject') {
+      if (!reasonText.trim()) return;
+      solicitudMutation.mutate({
+        id: modal.request.id,
+        body: { action: 'reject', reason: reasonText.trim() },
+      });
+      return;
+    }
+
+    if (modal.action === 'reschedule') {
+      if (!rescheduleDate || !reasonText.trim()) return;
+      solicitudMutation.mutate({
+        id: modal.request.id,
+        body: { action: 'reschedule', newDate: new Date(rescheduleDate).toISOString(), reason: reasonText.trim() },
+      });
+    }
+  };
+
+  const acceptRequest = (request: AgendaRequest) => {
+    solicitudMutation.mutate({ id: request.id, body: { action: 'accept' } });
+  };
+
   const setStatus = (item: AgendaItem, status: AgendaStatus) => {
     if (status === 'CANCELLED') {
       setModal({ type: 'reason', item, action: 'cancel' });
@@ -127,6 +202,90 @@ export function AgendaCalendar() {
 
   return (
     <div className="space-y-4">
+      {/* Solicitudes pendientes */}
+      <div className="kova-card p-4">
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <div>
+            <h3 className="text-sm font-semibold" style={{ color: 'var(--kova-navy)' }}>Solicitudes pendientes</h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Citas solicitadas desde la página pública. Acepta para agendar, rechaza con motivo o reprograma si el horario no sirve.
+            </p>
+          </div>
+          <span className="text-xs px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100 shrink-0">
+            {pendingRequests.length} pendiente{pendingRequests.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+
+        {pendingRequests.length === 0 ? (
+          <p className="text-sm text-slate-400 text-center py-4">No hay solicitudes por revisar.</p>
+        ) : (
+          <div className="grid sm:grid-cols-2 gap-3">
+            {pendingRequests.map((req) => (
+              <div key={req.id} className="rounded-lg border border-slate-200 p-3 space-y-2 bg-slate-50/50">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>{req.requesterName}</p>
+                    <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+                      <Building2 className="w-3 h-3" /> {req.companyName}
+                    </p>
+                  </div>
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                    Por revisar
+                  </span>
+                </div>
+                <div className="text-xs text-slate-600 space-y-1">
+                  <p className="flex items-center gap-1.5"><Mail className="w-3 h-3 text-slate-400" /> {req.requesterEmail}</p>
+                  <p className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-slate-400" /> {req.requesterPhone}</p>
+                  <p className="flex items-center gap-1.5">
+                    <CalendarClock className="w-3 h-3 text-slate-400" />
+                    {new Date(req.scheduledAt).toLocaleDateString('es-CO', { weekday: 'short', day: 'numeric', month: 'short' })}
+                    {' · '}
+                    {formatAgendaTime(req.scheduledAt)}
+                  </p>
+                </div>
+                {req.moveHistory.length > 0 && (
+                  <p className="text-[10px] text-amber-700">Reprogramada {req.moveHistory.length} vez</p>
+                )}
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  <button
+                    type="button"
+                    disabled={solicitudMutation.isPending}
+                    onClick={() => acceptRequest(req)}
+                    className="text-xs px-2.5 py-1.5 rounded-lg text-white disabled:opacity-50"
+                    style={{ background: 'var(--kova-green)' }}
+                  >
+                    Aceptar
+                  </button>
+                  <button
+                    type="button"
+                    disabled={solicitudMutation.isPending}
+                    onClick={() => {
+                      setModal({ type: 'request', request: req, action: 'reschedule' });
+                      setRescheduleDate(toLocalDatetimeInput(req.scheduledAt));
+                      setReasonText('');
+                    }}
+                    className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white"
+                  >
+                    Reprogramar
+                  </button>
+                  <button
+                    type="button"
+                    disabled={solicitudMutation.isPending}
+                    onClick={() => {
+                      setModal({ type: 'request', request: req, action: 'reject' });
+                      setReasonText('');
+                    }}
+                    className="text-xs px-2.5 py-1.5 rounded-lg border border-red-200 text-red-600 bg-white"
+                  >
+                    Rechazar
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
@@ -275,6 +434,20 @@ export function AgendaCalendar() {
                 onClose={() => setModal(null)}
               />
             )}
+            {modal.type === 'request' && (
+              <RequestActionPanel
+                request={modal.request}
+                action={modal.action}
+                reason={reasonText}
+                rescheduleDate={rescheduleDate}
+                loading={solicitudMutation.isPending}
+                error={solicitudMutation.error instanceof Error ? solicitudMutation.error.message : ''}
+                onReasonChange={setReasonText}
+                onRescheduleDateChange={setRescheduleDate}
+                onSubmit={submitRequestAction}
+                onClose={() => setModal(null)}
+              />
+            )}
           </div>
         </div>
       )}
@@ -293,26 +466,29 @@ function ActivityChip({
 }) {
   const style = agendaTypeStyle(item.type);
   const dim = item.status !== 'PENDING';
+  const rejected = item.status === 'REJECTED';
 
   return (
     <button
       type="button"
-      draggable
+      draggable={!rejected}
       onDragStart={(e) => {
+        if (rejected) return;
         e.dataTransfer.effectAllowed = 'move';
         onDragStart();
       }}
       onClick={onClick}
-      className={`w-full text-left text-[10px] leading-tight px-1.5 py-1 rounded truncate flex items-center gap-0.5 border-l-2 ${dim ? 'opacity-60' : ''}`}
+      className={`w-full text-left text-[10px] leading-tight px-1.5 py-1 rounded truncate flex items-center gap-0.5 border-l-2 ${dim ? 'opacity-70' : ''}`}
       style={{
-        background: style.bg,
-        borderLeftColor: style.border,
-        color: style.text,
-        textDecoration: item.status === 'CANCELLED' ? 'line-through' : undefined,
+        background: rejected ? '#FEF2F2' : style.bg,
+        borderLeftColor: rejected ? '#DC2626' : style.border,
+        color: rejected ? '#DC2626' : style.text,
+        textDecoration: item.status === 'CANCELLED' || rejected ? 'line-through' : undefined,
       }}
       title={item.title}
     >
       {item.status === 'COMPLETED' && <Check className="w-2.5 h-2.5 shrink-0" />}
+      {rejected && <X className="w-2.5 h-2.5 shrink-0" />}
       {item.moveCount > 0 && <History className="w-2.5 h-2.5 shrink-0 opacity-70" />}
       <span className="truncate">{formatAgendaTime(item.date)} {item.title}</span>
     </button>
@@ -356,11 +532,22 @@ function DetailPanel({
         </button>
       </div>
 
-      {(item.companyName || item.vacancyTitle) && (
-        <p className="text-sm text-slate-600">
-          {item.companyName}
-          {item.vacancyTitle && ` · ${item.vacancyTitle}`}
-        </p>
+      {(item.companyName || item.vacancyTitle || item.contactName) && (
+        <div className="text-sm text-slate-600 space-y-1">
+          {item.contactName && (
+            <p className="flex items-center gap-1.5"><User className="w-3.5 h-3.5 text-slate-400" /> {item.contactName}</p>
+          )}
+          {item.companyName && (
+            <p className="flex items-center gap-1.5"><Building2 className="w-3.5 h-3.5 text-slate-400" /> {item.companyName}{item.vacancyTitle ? ` · ${item.vacancyTitle}` : ''}</p>
+          )}
+        </div>
+      )}
+
+      {item.notes && (
+        <div>
+          <p className="text-xs font-semibold uppercase text-slate-400 mb-1">Contacto</p>
+          <p className="text-sm text-slate-600">{item.notes}</p>
+        </div>
       )}
 
       {item.purpose && (
@@ -430,6 +617,95 @@ function DetailPanel({
           className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg border border-red-200 text-red-600 disabled:opacity-40"
         >
           <X className="w-3.5 h-3.5" /> Cancelada
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function RequestActionPanel({
+  request,
+  action,
+  reason,
+  rescheduleDate,
+  loading,
+  error,
+  onReasonChange,
+  onRescheduleDateChange,
+  onSubmit,
+  onClose,
+}: {
+  request: AgendaRequest;
+  action: 'reject' | 'reschedule';
+  reason: string;
+  rescheduleDate: string;
+  loading: boolean;
+  error: string;
+  onReasonChange: (v: string) => void;
+  onRescheduleDateChange: (v: string) => void;
+  onSubmit: () => void;
+  onClose: () => void;
+}) {
+  const title = action === 'reject' ? 'Rechazar solicitud' : 'Reprogramar solicitud';
+
+  return (
+    <div className="p-5 space-y-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h3 className="font-heading font-semibold" style={{ color: 'var(--kova-navy)' }}>{title}</h3>
+          <p className="text-sm text-slate-500 mt-1">{request.requesterName} · {request.companyName}</p>
+        </div>
+        <button type="button" onClick={onClose} className="p-1 text-slate-400 hover:text-slate-600">
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+
+      <div className="rounded-lg bg-slate-50 p-3 text-xs text-slate-600 space-y-1">
+        <p><strong>Correo:</strong> {request.requesterEmail}</p>
+        <p><strong>Teléfono:</strong> {request.requesterPhone}</p>
+        <p><strong>Fecha solicitada:</strong> {new Date(request.scheduledAt).toLocaleString('es-CO')}</p>
+      </div>
+
+      {action === 'reschedule' && (
+        <div>
+          <label className="text-xs font-semibold uppercase text-slate-400">Nueva fecha y hora</label>
+          <input
+            type="datetime-local"
+            value={rescheduleDate}
+            onChange={(e) => onRescheduleDateChange(e.target.value)}
+            className="mt-1 w-full px-3 py-2 rounded-lg border border-slate-200 text-sm"
+          />
+        </div>
+      )}
+
+      <div>
+        <label className="text-xs font-semibold uppercase text-slate-400">
+          {action === 'reject' ? 'Motivo del rechazo' : 'Motivo del cambio'}
+        </label>
+        <textarea
+          value={reason}
+          onChange={(e) => onReasonChange(e.target.value)}
+          rows={3}
+          placeholder={action === 'reject' ? 'Ej: No tenemos disponibilidad en ese horario...' : 'Ej: Ese día tenemos agenda llena, proponemos otro horario...'}
+          className="mt-1 w-full px-3 py-2 rounded-lg border border-slate-200 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-100"
+          autoFocus
+        />
+      </div>
+
+      {error && <p className="text-sm text-red-600">{error}</p>}
+
+      <div className="flex justify-end gap-2">
+        <button type="button" onClick={onClose} disabled={loading} className="text-sm px-4 py-2 rounded-lg border border-slate-200">
+          Volver
+        </button>
+        <button
+          type="button"
+          onClick={onSubmit}
+          disabled={loading || !reason.trim() || (action === 'reschedule' && !rescheduleDate)}
+          className="text-sm px-4 py-2 rounded-lg text-white disabled:opacity-50"
+          style={{ background: action === 'reject' ? '#DC2626' : 'var(--kova-blue)' }}
+        >
+          {loading ? 'Guardando...' : 'Confirmar'}
         </button>
       </div>
     </div>

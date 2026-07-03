@@ -118,7 +118,7 @@ export default function BookingScheduler({ alternateContact = null }) {
           <Check className="w-6 h-6" style={{ color: BRAND.greenDark }} strokeWidth={2.5} />
         </div>
         <h2 className="font-heading font-semibold text-lg mb-2" style={{ color: BRAND.navy }}>
-          Cita confirmada
+          Solicitud enviada
         </h2>
         <p className="text-sm capitalize mb-1" style={{ color: KOVA.body }}>
           {format(new Date(`${confirmed.date}T12:00:00`), "EEEE d 'de' MMMM", { locale: es })}
@@ -126,7 +126,7 @@ export default function BookingScheduler({ alternateContact = null }) {
           {confirmed.time}
         </p>
         <p className="text-[13px]" style={{ color: KOVA.muted }}>
-          Recibirás confirmación por correo. Un consultor de Kova te acompañará en la sesión.
+          Revisaremos tu solicitud y te confirmaremos por correo. Un consultor de Kova te acompañará en la sesión.
         </p>
       </div>
     );
@@ -327,7 +327,7 @@ export default function BookingScheduler({ alternateContact = null }) {
             disabled={submitting}
             className="kova-btn-primary mt-6 max-w-md w-full font-semibold py-3 rounded-lg text-sm text-white disabled:opacity-50"
           >
-            {submitting ? 'Confirmando...' : 'Confirmar cita'}
+            {submitting ? 'Enviando...' : 'Enviar solicitud'}
           </button>
         </form>
       )}

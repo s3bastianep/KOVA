@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
@@ -8,6 +8,10 @@ import { dashboardApi } from '@/lib/api';
 import {
   STANDARD_QUESTIONS,
   SKILLS_QUESTION_ID,
+  JOB_TITLE_OPTIONS,
+  REVENUE_RANGES,
+  HOW_SELLS_OPTIONS,
+  QUESTION_GROUPS,
   defaultExpectedForQuestion,
   defaultSelectedQuestions,
   parseMultiValue,
@@ -31,8 +35,75 @@ const DEFAULT_PIPELINE = [
 ];
 
 const STAGE_OPTIONS = [
-  'Filtro de hoja de vida', 'Entrevista RH', 'Prueba Comercial', 'Psicotécnica', 'Role Play', 'Entrevista Cliente',
+  {
+    label: 'Filtro de hoja de vida',
+    stage: 'Postulados → Preseleccionados',
+    purpose: 'Revisión inicial para decidir si el candidato entra al proceso.',
+  },
+  {
+    label: 'Entrevista RH',
+    stage: 'Preseleccionados → Pruebas',
+    purpose: 'Validación cultural, motivación, salario y disponibilidad.',
+  },
+  {
+    label: 'Prueba Comercial',
+    stage: 'Pruebas → Entrevista RH',
+    purpose: 'Evalúa habilidades comerciales antes de entrevistar.',
+  },
+  {
+    label: 'Psicotécnica',
+    stage: 'Pruebas → Entrevista RH',
+    purpose: 'Complementa el diagnóstico del perfil.',
+  },
+  {
+    label: 'Role Play',
+    stage: 'Pruebas → Entrevista Cliente',
+    purpose: 'Simulación comercial para validar desempeño real.',
+  },
+  {
+    label: 'Entrevista Cliente',
+    stage: 'Entrevista RH → Finalistas',
+    purpose: 'Validación final con la empresa antes de shortlist.',
+  },
 ];
+
+const PIPELINE_STAGE_HELP: Record<string, { goal: string; advances: string; stalled: string }> = {
+  Postulados: {
+    goal: 'Entrada de candidatos.',
+    advances: 'Avanza cuando el perfil básico encaja con la vacante.',
+    stalled: 'No avanza si falta información o no cumple mínimos.',
+  },
+  Preseleccionados: {
+    goal: 'Filtro consultor / RH.',
+    advances: 'Avanza cuando pasa el primer filtro.',
+    stalled: 'Queda aquí si requiere revisión o contacto pendiente.',
+  },
+  Pruebas: {
+    goal: 'Evaluaciones comerciales y técnicas.',
+    advances: 'Avanza cuando completa pruebas con resultado suficiente.',
+    stalled: 'No avanza si no presenta pruebas o el resultado no cumple.',
+  },
+  'Entrevista RH': {
+    goal: 'Entrevista interna.',
+    advances: 'Avanza si la entrevista confirma fit y disponibilidad.',
+    stalled: 'Queda pendiente si falta entrevista, feedback o validación.',
+  },
+  'Entrevista Cliente': {
+    goal: 'Revisión por el cliente.',
+    advances: 'Avanza si el cliente lo aprueba como finalista.',
+    stalled: 'No avanza si el cliente lo descarta o pide más información.',
+  },
+  Finalistas: {
+    goal: 'Shortlist final.',
+    advances: 'Avanza cuando hay decisión de contratación.',
+    stalled: 'Queda aquí mientras el cliente decide.',
+  },
+  Contratado: {
+    goal: 'Cierre exitoso.',
+    advances: 'Es la etapa final del proceso.',
+    stalled: 'No requiere avance adicional.',
+  },
+};
 
 export default function NuevoProcesoPage() {
   const router = useRouter();
@@ -47,7 +118,7 @@ export default function NuevoProcesoPage() {
     city: 'Bogotá',
     whatSells: '',
     revenue: '',
-    howSells: '',
+    howSells: [] as string[],
     market: '',
     competitors: '',
     commercialModel: '',
@@ -55,7 +126,7 @@ export default function NuevoProcesoPage() {
     headcount: '1',
     startDate: '',
     urgency: 'MEDIUM',
-    title: '',
+    titles: [] as string[],
     objective: '',
     functions: '',
     responsibilities: '',
@@ -125,6 +196,57 @@ export default function NuevoProcesoPage() {
     });
   };
 
+  const toggleGroup = (questionIds: string[], select: boolean) => {
+    setForm((f) => {
+      if (select) {
+        const toAdd = questionIds.filter((id) => !f.selectedQuestionIds.includes(id));
+        const newEntries = toAdd.map((id) => {
+          const def = STANDARD_QUESTIONS.find((q) => q.id === id)!;
+          return { id, weight: def.defaultWeight, expected: defaultExpectedForQuestion(def) };
+        });
+        return {
+          ...f,
+          requirements: [...f.requirements, ...newEntries],
+          selectedQuestionIds: [...f.selectedQuestionIds, ...toAdd],
+        };
+      }
+      return {
+        ...f,
+        requirements: f.requirements.filter((r) => !questionIds.includes(r.id)),
+        selectedQuestionIds: f.selectedQuestionIds.filter((id) => !questionIds.includes(id)),
+      };
+    });
+  };
+
+  const applyRecommendedQuestions = () => {
+    const recommended = defaultSelectedQuestions();
+    setForm((f) => ({
+      ...f,
+      requirements: recommended,
+      selectedQuestionIds: recommended.map((q) => q.id),
+    }));
+  };
+
+  const toggleTitle = (option: string) => {
+    setForm((f) => {
+      const selected = f.titles;
+      const next = selected.includes(option)
+        ? selected.filter((s) => s !== option)
+        : [...selected, option];
+      return { ...f, titles: next };
+    });
+  };
+
+  const toggleHowSells = (option: string) => {
+    setForm((f) => {
+      const selected = f.howSells;
+      const next = selected.includes(option)
+        ? selected.filter((s) => s !== option)
+        : [...selected, option];
+      return { ...f, howSells: next };
+    });
+  };
+
   const toggleStage = (s: string) => {
     setForm((f) => ({
       ...f,
@@ -142,7 +264,7 @@ export default function NuevoProcesoPage() {
         email: form.email,
         phone: form.phone,
         city: form.city,
-        title: form.title,
+        title: serializeMultiValue(form.titles),
         objective: form.objective,
         functions: form.functions,
         responsibilities: form.responsibilities,
@@ -154,7 +276,7 @@ export default function NuevoProcesoPage() {
         discovery: {
           whatSells: form.whatSells,
           revenue: form.revenue,
-          howSells: form.howSells,
+          howSells: serializeMultiValue(form.howSells),
           market: form.market,
           competitors: form.competitors,
           commercialModel: form.commercialModel,
@@ -168,7 +290,7 @@ export default function NuevoProcesoPage() {
         standardQuestions: form.requirements,
         requirements: selectedToRequirements(form.requirements),
         pipeline: form.pipeline,
-        tests: form.tests,
+        tests: form.stages,
         checklistTasks: [
           'Buscar candidatos',
           'Contactar candidatos',
@@ -176,7 +298,7 @@ export default function NuevoProcesoPage() {
           'Agendar entrevistas',
           'Presentar finalistas',
         ],
-        summary: `Proceso ${form.title} para ${form.companyName}`,
+        summary: `Proceso ${serializeMultiValue(form.titles) || 'comercial'} para ${form.companyName}`,
       });
       router.push(`/procesos/${result.id}`);
     } catch (e) {
@@ -227,8 +349,20 @@ export default function NuevoProcesoPage() {
         {step === 1 && (
           <>
             <Field label="¿Qué vende?" value={form.whatSells} onChange={(v) => update('whatSells', v)} />
-            <Field label="¿Cuánto vende?" value={form.revenue} onChange={(v) => update('revenue', v)} placeholder="Facturación anual / ticket promedio" />
-            <Field label="¿Cómo vende?" value={form.howSells} onChange={(v) => update('howSells', v)} placeholder="B2B consultivo, inside sales..." />
+            <SelectField
+              label="¿Cuánto vende?"
+              value={form.revenue}
+              onChange={(v) => update('revenue', v)}
+              options={REVENUE_RANGES}
+              placeholder="Seleccionar rango de facturación mensual"
+            />
+            <ChipMultiField
+              label="¿Cómo vende?"
+              hint="Selecciona una o más formas de venta"
+              options={HOW_SELLS_OPTIONS}
+              selected={form.howSells}
+              onToggle={toggleHowSells}
+            />
             <Field label="Mercado" value={form.market} onChange={(v) => update('market', v)} />
             <Field label="Competidores" value={form.competitors} onChange={(v) => update('competitors', v)} />
             <Field label="Modelo comercial" value={form.commercialModel} onChange={(v) => update('commercialModel', v)} />
@@ -246,25 +380,58 @@ export default function NuevoProcesoPage() {
 
         {step === 3 && (
           <>
-            <Field label="Nombre del cargo" value={form.title} onChange={(v) => update('title', v)} placeholder="Ejecutivo Comercial B2B" />
-            <p className="text-sm text-slate-500">
-              Elige las preguntas de selección para este cargo. <strong>Las mismas aparecerán en el formulario del aspirante.</strong>
-            </p>
-            <QuestionPicker
-              selectedIds={form.selectedQuestionIds}
-              onToggle={toggleQuestion}
-              highlightCategories={['Perfil del cargo']}
+            <div className="rounded-lg bg-blue-50/60 border border-blue-100 px-4 py-3">
+              <p className="text-sm text-slate-700">
+                Describe el cargo que buscas. Esta información queda en el perfil interno del proceso.
+              </p>
+            </div>
+            <ChipMultiField
+              label="Nombre del cargo"
+              hint="Selecciona uno o más cargos a buscar"
+              options={JOB_TITLE_OPTIONS}
+              selected={form.titles}
+              onToggle={toggleTitle}
             />
+            <TextArea label="Objetivo del cargo" value={form.objective} onChange={(v) => update('objective', v)} placeholder="Ej. Incrementar ventas en el segmento enterprise..." />
+            <TextArea label="Funciones principales" value={form.functions} onChange={(v) => update('functions', v)} placeholder="Prospección, cierre, gestión de cartera..." />
+            <TextArea label="Responsabilidades clave" value={form.responsibilities} onChange={(v) => update('responsibilities', v)} placeholder="Meta individual, reporte semanal, capacitación..." />
+            <Field label="KPI principal" value={form.kpis} onChange={(v) => update('kpis', v)} placeholder="Facturación mensual, tasa de cierre..." />
           </>
         )}
 
         {step === 4 && (
           <>
-            <p className="text-sm text-slate-500">
-              Para cada pregunta, elige el <strong>valor esperado</strong> y el <strong>peso %</strong>. El aspirante verá las mismas opciones.
-            </p>
-            <div className="space-y-3">
-              {form.requirements.map((req, i) => {
+            <div className="rounded-lg bg-blue-50/60 border border-blue-100 px-4 py-3 space-y-1">
+              <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>Requisitos del aspirante</p>
+              <p className="text-xs text-slate-600">
+                Paso 1 — Elige qué preguntas responderán los candidatos. Paso 2 — Define el valor ideal y cuánto pesa en compatibilidad.
+              </p>
+            </div>
+
+            <QuestionPicker
+              selectedIds={form.selectedQuestionIds}
+              onToggle={toggleQuestion}
+              onToggleGroup={toggleGroup}
+              onApplyRecommended={applyRecommendedQuestions}
+            />
+
+            <div className="border-t border-slate-200 pt-4 space-y-3">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>
+                  Valores esperados y pesos
+                </p>
+                <span className="text-xs text-slate-400">
+                  {form.requirements.length} pregunta{form.requirements.length !== 1 ? 's' : ''} ·{' '}
+                  {form.requirements.reduce((s, r) => s + r.weight, 0)}% total
+                </span>
+              </div>
+              {form.requirements.length === 0 ? (
+                <p className="text-sm text-slate-400 py-4 text-center rounded-lg bg-slate-50">
+                  Selecciona al menos una pregunta arriba para configurar los requisitos.
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {form.requirements.map((req, i) => {
                 const def = STANDARD_QUESTIONS.find((q) => q.id === req.id);
                 if (!def) return null;
                 const isSkills = req.id === SKILLS_QUESTION_ID;
@@ -336,35 +503,110 @@ export default function NuevoProcesoPage() {
                     )}
                   </div>
                 );
-              })}
+                  })}
+                </div>
+              )}
+              {form.requirements.length > 0 && (
+                <p className="text-xs text-slate-400">
+                  Peso total: {form.requirements.reduce((s, r) => s + r.weight, 0)}% — idealmente 100%
+                </p>
+              )}
             </div>
-            <p className="text-xs text-slate-400">
-              Peso total: {form.requirements.reduce((s, r) => s + r.weight, 0)}% — idealmente 100%
-            </p>
           </>
         )}
 
         {step === 5 && (
           <>
-            <p className="text-sm text-slate-500 mb-2">¿Qué etapas tendrá el proceso?</p>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {STAGE_OPTIONS.map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => toggleStage(s)}
-                  className={`text-xs px-3 py-1.5 rounded-full border ${form.stages.includes(s) ? 'border-[var(--kova-blue)] bg-blue-50 text-[var(--kova-blue)]' : 'border-slate-200'}`}
-                >
-                  {form.stages.includes(s) ? '✓ ' : ''}{s}
-                </button>
-              ))}
+            <div className="rounded-lg bg-blue-50/60 border border-blue-100 px-4 py-3 space-y-1">
+              <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>Proceso de selección</p>
+              <p className="text-xs text-slate-600">
+                Este paso define el tablero donde vivirán los candidatos. No se avanza solo por llenar esta pantalla:
+                cada candidato avanza cuando apruebas o completas la etapa en su tarjeta.
+              </p>
             </div>
-            <div className="space-y-1">
+
+            <div className="grid sm:grid-cols-3 gap-3">
+              <div className="rounded-lg border border-green-100 bg-green-50 px-3 py-2">
+                <p className="text-xs font-semibold text-green-700">Avanza</p>
+                <p className="text-xs text-green-700/80 mt-1">Cuando cumple la etapa, pasa al siguiente paso del pipeline.</p>
+              </div>
+              <div className="rounded-lg border border-amber-100 bg-amber-50 px-3 py-2">
+                <p className="text-xs font-semibold text-amber-700">No avanza todavía</p>
+                <p className="text-xs text-amber-700/80 mt-1">Queda en la misma etapa si falta prueba, entrevista o feedback.</p>
+              </div>
+              <div className="rounded-lg border border-red-100 bg-red-50 px-3 py-2">
+                <p className="text-xs font-semibold text-red-700">Se descarta</p>
+                <p className="text-xs text-red-700/80 mt-1">Sale del flujo activo con motivo registrado.</p>
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>Automatizaciones / evaluaciones activas</p>
+                <span className="text-xs text-slate-400">{form.stages.length} seleccionadas</span>
+              </div>
+              <div className="grid sm:grid-cols-2 gap-2">
+                {STAGE_OPTIONS.map((option) => {
+                  const active = form.stages.includes(option.label);
+                  return (
+                    <button
+                      key={option.label}
+                      type="button"
+                      onClick={() => toggleStage(option.label)}
+                      className={`text-left rounded-lg border p-3 transition-colors ${
+                        active ? 'border-[var(--kova-blue)] bg-blue-50' : 'border-slate-200 bg-white hover:border-slate-300'
+                      }`}
+                    >
+                      <div className="flex items-start gap-2">
+                        <span
+                          className={`mt-0.5 w-5 h-5 rounded-full border flex items-center justify-center text-[10px] ${
+                            active ? 'bg-[var(--kova-blue)] border-[var(--kova-blue)] text-white' : 'border-slate-300 text-transparent'
+                          }`}
+                        >
+                          ✓
+                        </span>
+                        <div>
+                          <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>{option.label}</p>
+                          <p className="text-[11px] text-[var(--kova-blue)] mt-0.5">{option.stage}</p>
+                          <p className="text-xs text-slate-500 mt-1">{option.purpose}</p>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div>
+                <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>Pipeline del candidato</p>
+                <p className="text-xs text-slate-500">
+                  Este es el orden visible en el tablero. En la vista del proceso podrás arrastrar candidatos o usar acciones
+                  de avanzar, mover o descartar.
+                </p>
+              </div>
               {form.pipeline.map((stage, i) => (
-                <div key={stage} className="flex items-center gap-2 text-sm p-2 rounded bg-slate-50">
-                  <span className="text-slate-400 w-5">{i + 1}</span>
-                  <span style={{ color: 'var(--kova-navy)' }}>{stage}</span>
-                  {i < form.pipeline.length - 1 && <ArrowRight className="w-3 h-3 text-slate-300 ml-auto" />}
+                <div key={stage} className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <div className="flex items-start gap-3">
+                    <span className="w-6 h-6 rounded-full bg-white border border-slate-200 flex items-center justify-center text-xs text-slate-500 shrink-0">
+                      {i + 1}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>{stage}</p>
+                        {i < form.pipeline.length - 1 && <ArrowRight className="w-3.5 h-3.5 text-slate-300" />}
+                      </div>
+                      <p className="text-xs text-slate-500 mt-1">{PIPELINE_STAGE_HELP[stage]?.goal}</p>
+                      <div className="grid sm:grid-cols-2 gap-2 mt-2">
+                        <p className="text-[11px] text-green-700 bg-white rounded border border-green-100 px-2 py-1">
+                          <strong>Avanza:</strong> {PIPELINE_STAGE_HELP[stage]?.advances}
+                        </p>
+                        <p className="text-[11px] text-amber-700 bg-white rounded border border-amber-100 px-2 py-1">
+                          <strong>No avanza:</strong> {PIPELINE_STAGE_HELP[stage]?.stalled}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -372,14 +614,7 @@ export default function NuevoProcesoPage() {
         )}
 
         {step === 6 && (
-          <div className="space-y-3 text-sm">
-            <p><strong>Empresa:</strong> {form.companyName || '—'}</p>
-            <p><strong>Cargo:</strong> {form.title || '—'}</p>
-            <p><strong>Ciudad:</strong> {form.city}</p>
-            <p><strong>Requisitos:</strong> {form.requirements.length} criterios con pesos configurables</p>
-            <p><strong>Pipeline:</strong> {form.pipeline.join(' → ')}</p>
-            <p className="text-slate-500">Al crear, el sistema generará tareas, checklist y calculará compatibilidad por reglas.</p>
-          </div>
+          <ProcessSummary form={form} />
         )}
 
         {error && <p className="text-sm text-red-600">{error}</p>}
@@ -396,7 +631,7 @@ export default function NuevoProcesoPage() {
             Siguiente <ArrowRight className="w-4 h-4" />
           </button>
         ) : (
-          <button type="button" onClick={finish} disabled={loading || !form.companyName || !form.title}
+          <button type="button" onClick={finish} disabled={loading || !form.companyName || form.titles.length === 0}
             className="px-4 py-2 text-sm rounded-lg text-white disabled:opacity-50" style={{ background: 'var(--kova-green)' }}>
             {loading ? 'Creando...' : 'Crear proceso'}
           </button>
@@ -406,40 +641,276 @@ export default function NuevoProcesoPage() {
   );
 }
 
-function QuestionPicker({
-  selectedIds,
-  onToggle,
-  highlightCategories,
-}: {
-  selectedIds: string[];
-  onToggle: (id: string) => void;
-  highlightCategories?: string[];
+const URGENCY_LABELS: Record<string, string> = {
+  LOW: 'Baja',
+  MEDIUM: 'Media',
+  HIGH: 'Alta',
+  URGENT: 'Urgente',
+};
+
+function dash(value: string | undefined | null) {
+  return value?.trim() ? value : '—';
+}
+
+function ProcessSummary({ form }: {
+  form: {
+    companyName: string;
+    contact: string;
+    email: string;
+    phone: string;
+    city: string;
+    whatSells: string;
+    revenue: string;
+    howSells: string[];
+    market: string;
+    competitors: string;
+    commercialModel: string;
+    whyHiring: string;
+    headcount: string;
+    startDate: string;
+    urgency: string;
+    titles: string[];
+    objective: string;
+    functions: string;
+    responsibilities: string;
+    kpis: string;
+    requirements: SelectedStandardQuestion[];
+    pipeline: string[];
+    stages: string[];
+  };
 }) {
-  const categories = [...new Set(STANDARD_QUESTIONS.map((q) => q.category))];
+  const totalWeight = form.requirements.reduce((s, r) => s + r.weight, 0);
+
   return (
     <div className="space-y-4">
-      {categories.map((cat) => (
-        <div key={cat}>
-          <p className={`text-xs font-semibold uppercase mb-2 ${highlightCategories?.includes(cat) ? 'text-[var(--kova-blue)]' : 'text-slate-400'}`}>
-            {cat}
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {STANDARD_QUESTIONS.filter((q) => q.category === cat).map((q) => {
-              const active = selectedIds.includes(q.id);
+      <div className="rounded-lg bg-blue-50/60 border border-blue-100 px-4 py-3">
+        <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>Resumen de la búsqueda</p>
+        <p className="text-xs text-slate-600 mt-0.5">
+          Revisa todo lo configurado antes de crear el proceso. Puedes volver atrás para editar cualquier paso.
+        </p>
+      </div>
+
+      <SummarySection title="Empresa cliente" step={1}>
+        <SummaryGrid>
+          <SummaryItem label="Empresa" value={dash(form.companyName)} highlight />
+          <SummaryItem label="Contacto" value={dash(form.contact)} />
+          <SummaryItem label="Correo" value={dash(form.email)} />
+          <SummaryItem label="Teléfono" value={dash(form.phone)} />
+          <SummaryItem label="Ciudad" value={dash(form.city)} />
+        </SummaryGrid>
+      </SummarySection>
+
+      <SummarySection title="Discovery comercial" step={2}>
+        <SummaryGrid>
+          <SummaryItem label="¿Qué vende?" value={dash(form.whatSells)} span={2} />
+          <SummaryItem label="¿Cuánto vende?" value={dash(form.revenue)} highlight />
+          <SummaryItem
+            label="¿Cómo vende?"
+            value={form.howSells.length > 0 ? form.howSells.join(', ') : '—'}
+            span={2}
+          />
+          <SummaryItem label="Mercado" value={dash(form.market)} />
+          <SummaryItem label="Competidores" value={dash(form.competitors)} />
+          <SummaryItem label="Modelo comercial" value={dash(form.commercialModel)} />
+        </SummaryGrid>
+      </SummarySection>
+
+      <SummarySection title="Necesidad de contratación" step={3}>
+        <SummaryGrid>
+          <SummaryItem label="¿Por qué contrata?" value={dash(form.whyHiring)} span={2} />
+          <SummaryItem label="Personas a contratar" value={dash(form.headcount)} />
+          <SummaryItem label="Fecha de ingreso" value={form.startDate ? new Date(form.startDate + 'T12:00:00').toLocaleDateString('es-CO') : '—'} />
+          <SummaryItem label="Urgencia" value={URGENCY_LABELS[form.urgency] ?? form.urgency} highlight />
+        </SummaryGrid>
+      </SummarySection>
+
+      <SummarySection title="Perfil del cargo" step={4}>
+        <SummaryGrid>
+          <SummaryItem label="Cargo(s)" value={form.titles.length > 0 ? form.titles.join(', ') : '—'} highlight span={2} />
+          <SummaryItem label="Objetivo" value={dash(form.objective)} span={2} />
+          <SummaryItem label="Funciones principales" value={dash(form.functions)} span={2} />
+          <SummaryItem label="Responsabilidades" value={dash(form.responsibilities)} span={2} />
+          <SummaryItem label="KPI principal" value={dash(form.kpis)} span={2} />
+        </SummaryGrid>
+      </SummarySection>
+
+      <SummarySection title="Requisitos del aspirante" step={5} badge={`${form.requirements.length} criterios · ${totalWeight}%`}>
+        {form.requirements.length === 0 ? (
+          <p className="text-xs text-slate-400">Sin requisitos configurados.</p>
+        ) : (
+          <div className="space-y-2">
+            {form.requirements.map((req) => {
+              const def = STANDARD_QUESTIONS.find((q) => q.id === req.id);
+              if (!def) return null;
+              const isSkills = req.id === SKILLS_QUESTION_ID;
+              const expected = isSkills ? parseMultiValue(req.expected).join(', ') : String(req.expected);
               return (
-                <button
-                  key={q.id}
-                  type="button"
-                  onClick={() => onToggle(q.id)}
-                  className={`text-xs px-3 py-1.5 rounded-full border ${active ? 'border-[var(--kova-blue)] bg-blue-50 text-[var(--kova-blue)]' : 'border-slate-200 text-slate-600'}`}
-                >
-                  {active ? '✓ ' : ''}{q.label}
-                </button>
+                <div key={req.id} className="flex items-start justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2 text-xs">
+                  <div className="min-w-0">
+                    <p className="font-medium" style={{ color: 'var(--kova-navy)' }}>{def.label}</p>
+                    <p className="text-slate-500 mt-0.5 truncate">Esperado: {expected || '—'}</p>
+                  </div>
+                  <span className="shrink-0 font-semibold text-[var(--kova-blue)]">{req.weight}%</span>
+                </div>
               );
             })}
           </div>
+        )}
+      </SummarySection>
+
+      <SummarySection title="Proceso de selección" step={6}>
+        <SummaryGrid>
+          <SummaryItem
+            label="Automatizaciones activas"
+            value={form.stages.length > 0 ? form.stages.join(', ') : 'Ninguna seleccionada'}
+            span={2}
+          />
+        </SummaryGrid>
+        <div className="mt-3 flex flex-wrap items-center gap-1.5">
+          {form.pipeline.map((stage, i) => (
+            <span key={stage} className="inline-flex items-center gap-1.5">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 font-medium">{stage}</span>
+              {i < form.pipeline.length - 1 && <ArrowRight className="w-3 h-3 text-slate-300" />}
+            </span>
+          ))}
         </div>
-      ))}
+      </SummarySection>
+
+      <p className="text-xs text-slate-400 pt-1">
+        Al crear, el sistema generará tareas, checklist y calculará compatibilidad según los requisitos configurados.
+      </p>
+    </div>
+  );
+}
+
+function SummarySection({ title, step, badge, children }: {
+  title: string;
+  step: number;
+  badge?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="rounded-lg border border-slate-200 overflow-hidden">
+      <div className="flex items-center justify-between gap-2 px-4 py-2.5 bg-slate-50 border-b border-slate-200">
+        <div className="flex items-center gap-2">
+          <span className="w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center text-white" style={{ background: 'var(--kova-blue)' }}>
+            {step}
+          </span>
+          <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>{title}</p>
+        </div>
+        {badge && <span className="text-[10px] text-slate-400">{badge}</span>}
+      </div>
+      <div className="px-4 py-3">{children}</div>
+    </div>
+  );
+}
+
+function SummaryGrid({ children }: { children: ReactNode }) {
+  return <div className="grid sm:grid-cols-2 gap-x-4 gap-y-2">{children}</div>;
+}
+
+function SummaryItem({ label, value, highlight, span }: {
+  label: string;
+  value: string;
+  highlight?: boolean;
+  span?: number;
+}) {
+  return (
+    <div className={span === 2 ? 'sm:col-span-2' : undefined}>
+      <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wide">{label}</p>
+      <p className={`text-sm mt-0.5 ${highlight ? 'font-semibold' : ''}`} style={{ color: 'var(--kova-navy)' }}>
+        {value}
+      </p>
+    </div>
+  );
+}
+
+function QuestionPicker({
+  selectedIds,
+  onToggle,
+  onToggleGroup,
+  onApplyRecommended,
+}: {
+  selectedIds: string[];
+  onToggle: (id: string) => void;
+  onToggleGroup: (questionIds: string[], select: boolean) => void;
+  onApplyRecommended: () => void;
+}) {
+  return (
+    <div className="space-y-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+          Preguntas para el formulario del aspirante
+        </p>
+        <div className="flex items-center gap-2">
+          <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+            {selectedIds.length} seleccionada{selectedIds.length !== 1 ? 's' : ''}
+          </span>
+          <button
+            type="button"
+            onClick={onApplyRecommended}
+            className="text-xs px-2.5 py-1 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50"
+          >
+            Pack recomendado
+          </button>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        {QUESTION_GROUPS.map((group) => {
+          const questions = group.questionIds
+            .map((id) => STANDARD_QUESTIONS.find((q) => q.id === id))
+            .filter(Boolean) as typeof STANDARD_QUESTIONS;
+          const selectedInGroup = questions.filter((q) => selectedIds.includes(q.id)).length;
+          const allSelected = selectedInGroup === questions.length;
+          const someSelected = selectedInGroup > 0 && !allSelected;
+
+          return (
+            <div
+              key={group.id}
+              className={`rounded-lg border p-3 transition-colors ${
+                someSelected || allSelected ? 'border-blue-200 bg-blue-50/30' : 'border-slate-200 bg-white'
+              }`}
+            >
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>{group.title}</p>
+                  <p className="text-xs text-slate-500">{group.description}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onToggleGroup(group.questionIds, !allSelected)}
+                  className="text-[11px] shrink-0 px-2 py-1 rounded border border-slate-200 text-slate-500 hover:bg-white"
+                >
+                  {allSelected ? 'Quitar todas' : 'Marcar todas'}
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {questions.map((q) => {
+                  const active = selectedIds.includes(q.id);
+                  return (
+                    <button
+                      key={q.id}
+                      type="button"
+                      onClick={() => onToggle(q.id)}
+                      className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+                        active
+                          ? 'border-[var(--kova-blue)] bg-white text-[var(--kova-blue)] font-medium'
+                          : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
+                      }`}
+                    >
+                      {active ? '✓ ' : ''}{q.label}
+                    </button>
+                  );
+                })}
+              </div>
+              {selectedInGroup > 0 && (
+                <p className="text-[10px] text-slate-400 mt-1.5">{selectedInGroup}/{questions.length} en este grupo</p>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -468,16 +939,54 @@ function TextArea({ label, value, onChange, placeholder }: {
   );
 }
 
-function SelectField({ label, value, onChange, options }: {
-  label: string; value: string; onChange: (v: string) => void; options: string[];
+function SelectField({ label, value, onChange, options, placeholder }: {
+  label: string; value: string; onChange: (v: string) => void; options: string[]; placeholder?: string;
 }) {
   return (
     <div>
       <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">{label}</label>
       <select value={value} onChange={(e) => onChange(e.target.value)}
         className="mt-1 w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100">
+        {placeholder && <option value="">{placeholder}</option>}
         {options.map((o) => <option key={o} value={o}>{o}</option>)}
       </select>
+    </div>
+  );
+}
+
+function ChipMultiField({ label, hint, options, selected, onToggle }: {
+  label: string;
+  hint?: string;
+  options: string[];
+  selected: string[];
+  onToggle: (option: string) => void;
+}) {
+  return (
+    <div>
+      <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">{label}</label>
+      {hint && <p className="text-xs text-slate-400 mt-0.5">{hint}</p>}
+      <div className="flex flex-wrap gap-2 mt-2">
+        {options.map((option) => {
+          const active = selected.includes(option);
+          return (
+            <button
+              key={option}
+              type="button"
+              onClick={() => onToggle(option)}
+              className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                active
+                  ? 'border-[var(--kova-blue)] bg-blue-50 text-[var(--kova-blue)]'
+                  : 'border-slate-200 text-slate-600 hover:border-slate-300'
+              }`}
+            >
+              {active ? '✓ ' : ''}{option}
+            </button>
+          );
+        })}
+      </div>
+      {selected.length > 0 && (
+        <p className="text-xs text-slate-400 mt-1.5">{selected.length} seleccionada{selected.length !== 1 ? 's' : ''}</p>
+      )}
     </div>
   );
 }
