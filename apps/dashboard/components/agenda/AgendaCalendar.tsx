@@ -419,7 +419,7 @@ export function AgendaCalendar() {
           </h2>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center rounded-xl border border-slate-200 bg-white p-0.5 text-xs font-medium">
             {([['month', 'Mes'], ['week', 'Semana'], ['list', 'Lista']] as [CalendarView, string][]).map(([v, label]) => (
               <button

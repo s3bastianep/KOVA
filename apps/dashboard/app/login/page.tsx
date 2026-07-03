@@ -38,7 +38,7 @@ export default function LoginPage() {
         </div>
 
         <div>
-          <h2 className="font-heading text-2xl font-bold mb-1" style={{ color: 'var(--kova-navy)' }}>Bienvenido de nuevo</h2>
+          <h1 className="font-heading text-2xl font-bold mb-1" style={{ color: 'var(--kova-navy)' }}>Bienvenido de nuevo</h1>
           <p className="text-sm text-slate-500">Ingresa a tu panel de reclutamiento</p>
         </div>
 

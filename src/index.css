@@ -57,11 +57,13 @@
     font-size: 16px;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    overflow-x: hidden;
   }
 
   body {
     @apply bg-background text-foreground font-body antialiased;
     color: #3D3D3D;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4 {
