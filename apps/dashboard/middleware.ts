@@ -8,6 +8,7 @@ const APP_PREFIXES = [
   '/postular',
   '/dashboard',
   '/empresas',
+  '/clientes',
   '/vacantes',
   '/procesos',
   '/pipeline-comercial',
