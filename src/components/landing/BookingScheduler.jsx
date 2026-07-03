@@ -44,6 +44,18 @@ export default function BookingScheduler({ alternateContact = null }) {
 
   const selectedDateKey = selectedDate ? formatDateKey(selectedDate) : null;
 
+  // Nombres accesibles para los botones de día del calendario, p. ej.
+  // "Seleccionar 15 de julio de 2026", de modo que puedan ubicarse por rol.
+  const calendarLabels = useMemo(
+    () => ({
+      labelDay: (day, modifiers = {}) => {
+        const human = format(day, "d 'de' MMMM 'de' yyyy", { locale: es });
+        return modifiers.disabled ? `${human} (no disponible)` : `Seleccionar ${human}`;
+      },
+    }),
+    [],
+  );
+
   useEffect(() => {
     checkBookingApi().then(setApiReady);
   }, []);
@@ -164,6 +176,7 @@ export default function BookingScheduler({ alternateContact = null }) {
                 selected={selectedDate}
                 onSelect={handleSelectDate}
                 locale={es}
+                labels={calendarLabels}
                 fromDate={today}
                 toDate={maxDate}
                 disabled={(date) => !isSelectableDay(date, today, maxDate)}
@@ -195,6 +208,8 @@ export default function BookingScheduler({ alternateContact = null }) {
                         <button
                           key={slot}
                           type="button"
+                          aria-label={`Seleccionar horario ${slot}`}
+                          aria-pressed={selectedTime === slot}
                           onClick={() => {
                             setSelectedTime(slot);
                             setStep('details');
