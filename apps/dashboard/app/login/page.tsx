@@ -7,8 +7,8 @@ import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('consultor@kova.co');
-  const [password, setPassword] = useState('Kova2026!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(true);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -68,10 +68,6 @@ export default function LoginPage() {
         <button type="submit" disabled={loading} className="w-full py-3 rounded-xl font-semibold text-sm text-white inline-flex items-center justify-center gap-2 disabled:opacity-60 transition-all" style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}>
           {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Ingresando...</> : <>Iniciar sesión <ArrowRight className="w-4 h-4" /></>}
         </button>
-
-        <div className="text-xs text-slate-400 text-center bg-slate-50 rounded-lg py-2 px-3">
-          Demo: <span className="font-medium text-slate-500">consultor@kova.co</span> / <span className="font-medium text-slate-500">Kova2026!</span>
-        </div>
       </form>
     </div>
   );

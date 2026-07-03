@@ -27,6 +27,20 @@ function isSelectableDay(date, minDate, maxDate) {
   return isBookableDateKey(formatDateKey(day));
 }
 
+// react-day-picker v8 no aplica aria-label a los botones de día, así que el
+// nombre accesible sale solo del número ("15"). Reemplazamos el contenido para
+// exponer un nombre claro, p. ej. "Seleccionar 15 de julio de 2026".
+function BookingDayContent({ date, activeModifiers = {} }) {
+  const human = format(date, "d 'de' MMMM 'de' yyyy", { locale: es });
+  const label = activeModifiers.disabled ? `${human} (no disponible)` : `Seleccionar ${human}`;
+  return (
+    <>
+      <span aria-hidden="true">{date.getDate()}</span>
+      <span className="sr-only">{label}</span>
+    </>
+  );
+}
+
 export default function BookingScheduler({ alternateContact = null }) {
   const today = useMemo(() => startOfDay(new Date()), []);
   const maxDate = useMemo(() => addDays(today, DAYS_AHEAD), [today]);
@@ -43,18 +57,6 @@ export default function BookingScheduler({ alternateContact = null }) {
   const [apiReady, setApiReady] = useState(null);
 
   const selectedDateKey = selectedDate ? formatDateKey(selectedDate) : null;
-
-  // Nombres accesibles para los botones de día del calendario, p. ej.
-  // "Seleccionar 15 de julio de 2026", de modo que puedan ubicarse por rol.
-  const calendarLabels = useMemo(
-    () => ({
-      labelDay: (day, modifiers = {}) => {
-        const human = format(day, "d 'de' MMMM 'de' yyyy", { locale: es });
-        return modifiers.disabled ? `${human} (no disponible)` : `Seleccionar ${human}`;
-      },
-    }),
-    [],
-  );
 
   useEffect(() => {
     checkBookingApi().then(setApiReady);
@@ -176,7 +178,7 @@ export default function BookingScheduler({ alternateContact = null }) {
                 selected={selectedDate}
                 onSelect={handleSelectDate}
                 locale={es}
-                labels={calendarLabels}
+                components={{ DayContent: BookingDayContent }}
                 fromDate={today}
                 toDate={maxDate}
                 disabled={(date) => !isSelectableDay(date, today, maxDate)}
