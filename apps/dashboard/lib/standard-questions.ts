@@ -16,7 +16,7 @@ export type StandardQuestionDef = {
 
 export const SKILLS_QUESTION_ID = 'skills';
 
-/** Habilidades comerciales evaluadas — mismas del formulario del puesto comercial */
+/** Habilidades comerciales evaluadas - mismas del formulario del puesto comercial */
 export const COMMERCIAL_SKILLS = [
   'Prospección',
   'Cierre de ventas',
@@ -35,7 +35,7 @@ export const COMMERCIAL_SKILLS = [
   'Fidelización',
 ];
 
-/** Cargos comerciales — selección múltiple en wizard de proceso */
+/** Cargos comerciales - selección múltiple en wizard de proceso */
 export const JOB_TITLE_OPTIONS = [
   'Ejecutivo Comercial B2B',
   'Ejecutivo Comercial B2C',
@@ -53,18 +53,18 @@ export const JOB_TITLE_OPTIONS = [
   'Coordinador Comercial',
 ];
 
-/** Discovery — facturación mensual en COP (millones) */
+/** Discovery - facturación mensual en COP (millones) */
 export const REVENUE_RANGES = [
   'Menos de 100 millones/mes',
-  '100 – 500 millones/mes',
-  '500 – 1.000 millones/mes',
-  '1.000 – 5.000 millones/mes',
-  '5.000 – 10.000 millones/mes',
-  '10.000 – 20.000 millones/mes',
+  '100 - 500 millones/mes',
+  '500 - 1.000 millones/mes',
+  '1.000 - 5.000 millones/mes',
+  '5.000 - 10.000 millones/mes',
+  '10.000 - 20.000 millones/mes',
   '+ de 20.000 millones/mes',
 ];
 
-/** Discovery — formas de venta (multiselect) */
+/** Discovery - formas de venta (multiselect) */
 export const HOW_SELLS_OPTIONS = [
   'B2B consultivo',
   'Inside sales',

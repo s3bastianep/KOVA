@@ -31,7 +31,7 @@ function InfoRow({ icon: Icon, label, value }: { icon: React.ElementType; label:
       <Icon className="w-4 h-4 mt-0.5 text-slate-400 shrink-0" />
       <div>
         <p className="text-xs text-slate-400 uppercase tracking-wide">{label}</p>
-        <p className="text-sm" style={{ color: 'var(--kova-navy)' }}>{value ?? '—'}</p>
+        <p className="text-sm" style={{ color: 'var(--kova-navy)' }}>{value ?? '-'}</p>
       </div>
     </div>
   );
@@ -48,8 +48,8 @@ export default function EmpresaDetallePage({ params }: { params: Promise<{ id: s
 
   return (
     <div className="space-y-6">
-      <Link href="/empresas" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700">
-        <ArrowLeft className="w-4 h-4" /> Volver a empresas
+      <Link href="/clientes" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700">
+        <ArrowLeft className="w-4 h-4" /> Volver a clientes
       </Link>
 
       {isLoading ? (
@@ -64,7 +64,7 @@ export default function EmpresaDetallePage({ params }: { params: Promise<{ id: s
             </div>
             <div>
               <h1 className="font-heading text-2xl font-bold" style={{ color: 'var(--kova-navy)' }}>{company.name}</h1>
-              <p className="text-sm text-slate-500">{company.sector ?? '—'} · {company.industry ?? '—'}</p>
+              <p className="text-sm text-slate-500">{company.sector ?? '-'} · {company.industry ?? '-'}</p>
             </div>
             <span className="ml-auto inline-block px-3 py-1 rounded-full text-xs font-medium bg-slate-100">{company.status}</span>
           </div>

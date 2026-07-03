@@ -37,15 +37,15 @@ export default function ConfiguracionPage() {
         <div className="grid sm:grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-xs text-slate-400">Nombre</p>
-            <p style={{ color: 'var(--kova-navy)' }}>{user ? `${user.firstName} ${user.lastName}` : '—'}</p>
+            <p style={{ color: 'var(--kova-navy)' }}>{user ? `${user.firstName} ${user.lastName}` : '-'}</p>
           </div>
           <div>
             <p className="text-xs text-slate-400">Correo</p>
-            <p style={{ color: 'var(--kova-navy)' }}>{user?.email ?? '—'}</p>
+            <p style={{ color: 'var(--kova-navy)' }}>{user?.email ?? '-'}</p>
           </div>
           <div>
             <p className="text-xs text-slate-400">Rol</p>
-            <p style={{ color: 'var(--kova-navy)' }}>{user ? (ROLE_LABELS[user.role] ?? user.role) : '—'}</p>
+            <p style={{ color: 'var(--kova-navy)' }}>{user ? (ROLE_LABELS[user.role] ?? user.role) : '-'}</p>
           </div>
         </div>
       </div>

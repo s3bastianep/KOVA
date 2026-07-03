@@ -82,7 +82,7 @@ function baseMockItems(): Omit<AgendaItem, 'moveCount'>[] {
     items.push({
       id: `iv-${iv.id}`,
       itemKey: `iv-${iv.id}`,
-      title: `Entrevista — ${iv.candidateName}`,
+      title: `Entrevista - ${iv.candidateName}`,
       type: 'Entrevista',
       date: iv.scheduledAt,
       status: iv.status === 'COMPLETED' ? 'COMPLETED' : 'PENDING',
@@ -167,7 +167,7 @@ async function loadStoredStates(tenantId: string): Promise<Map<string, StoredSta
       });
     }
   } catch {
-    // Tabla aún no migrada — continuar con datos base
+    // Tabla aún no migrada - continuar con datos base
   }
 
   return map;

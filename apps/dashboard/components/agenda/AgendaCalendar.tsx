@@ -927,7 +927,7 @@ function DetailPanel({
             {d.toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })}
             {' · '}
             {formatAgendaTime(item.date)}
-            {item.endDate && ` – ${formatAgendaTime(item.endDate)}`}
+            {item.endDate && ` - ${formatAgendaTime(item.endDate)}`}
           </p>
         </div>
         <button type="button" onClick={onClose} className="p-1 text-slate-400 hover:text-slate-600">
@@ -966,7 +966,7 @@ function DetailPanel({
           {AGENDA_STATUS_LABELS[item.status]}
         </span>
         {item.statusReason && (
-          <span className="text-xs text-slate-400">— {item.statusReason}</span>
+          <span className="text-xs text-slate-400">- {item.statusReason}</span>
         )}
       </div>
 

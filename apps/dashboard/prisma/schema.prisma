@@ -1,4 +1,4 @@
-// Kova Talent OS — Database Schema
+// Kova Talent OS - Database Schema
 // Multi-tenant: all client data isolated by companyId / tenantId
 
 generator client {
@@ -198,7 +198,7 @@ model User {
   status          UserStatus @default(ACTIVE)
   avatarUrl       String?
   phone           String?
-  companyId       String?    // For CLIENT role — linked company
+  companyId       String?    // For CLIENT role - linked company
   failedAttempts  Int        @default(0)
   lockedUntil     DateTime?
   emailVerified   Boolean    @default(false)

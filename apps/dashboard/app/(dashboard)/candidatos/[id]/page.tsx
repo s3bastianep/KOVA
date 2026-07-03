@@ -331,9 +331,9 @@ function CandidateReport({ c }: { c: Candidate }) {
               ))}
             </div>
             <div className="grid grid-cols-4 gap-3 mt-5 pt-4 border-t" style={{ borderColor: 'var(--kova-border)' }}>
-              <FooterStat label="Evaluados" value={r.evaluated || '—'} />
+              <FooterStat label="Evaluados" value={r.evaluated || '-'} />
               <FooterStat label="En terna" value={c.finalistCount ?? 0} />
-              <FooterStat label="Percentil" value={r.percentile ? `${r.percentile}º` : '—'} sub={r.percentile ? 'Top' : undefined} />
+              <FooterStat label="Percentil" value={r.percentile ? `${r.percentile}º` : '-'} sub={r.percentile ? 'Top' : undefined} />
               <FooterStat label="Riesgo" value={r.risk} tone={r.risk === 'Bajo' ? 'green' : r.risk === 'Medio' ? 'amber' : 'red'} />
             </div>
           </div>
@@ -371,10 +371,10 @@ function CandidateReport({ c }: { c: Candidate }) {
           </InfoCard>
           <InfoCard title="Contacto">
             <div className="space-y-2">
-              <p className="text-sm flex items-center gap-2" style={{ color: 'var(--kova-navy)' }}><Mail className="w-4 h-4 text-slate-400" /> {c.email ?? '—'}</p>
-              <p className="text-sm flex items-center gap-2" style={{ color: 'var(--kova-navy)' }}><Phone className="w-4 h-4 text-slate-400" /> {c.phone ?? '—'}</p>
-              <p className="text-sm flex items-center gap-2" style={{ color: 'var(--kova-navy)' }}><MapPin className="w-4 h-4 text-slate-400" /> {c.city ?? '—'}</p>
-              <p className="text-xs text-slate-400 pt-1">Fuente: {c.source ?? '—'} · Estado: {c.status}</p>
+              <p className="text-sm flex items-center gap-2" style={{ color: 'var(--kova-navy)' }}><Mail className="w-4 h-4 text-slate-400" /> {c.email ?? '-'}</p>
+              <p className="text-sm flex items-center gap-2" style={{ color: 'var(--kova-navy)' }}><Phone className="w-4 h-4 text-slate-400" /> {c.phone ?? '-'}</p>
+              <p className="text-sm flex items-center gap-2" style={{ color: 'var(--kova-navy)' }}><MapPin className="w-4 h-4 text-slate-400" /> {c.city ?? '-'}</p>
+              <p className="text-xs text-slate-400 pt-1">Fuente: {c.source ?? '-'} · Estado: {c.status}</p>
             </div>
           </InfoCard>
           <InfoCard title="Formación académica">

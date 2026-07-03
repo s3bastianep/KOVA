@@ -51,12 +51,12 @@ function evaluateRule(
     const num = Number(actual ?? 0);
     const min = Number(rule.expected);
     met = num >= min;
-    detail = met ? `${num} (mín. ${min})` : `${num} — requiere ${min}+`;
+    detail = met ? `${num} (mín. ${min})` : `${num} - requiere ${min}+`;
   } else if (matchType === 'equals' && rule.key === 'english_level') {
     met = englishMeets(String(actual ?? ''), String(rule.expected));
     detail = met
       ? `${actual} (req. ${rule.expected})`
-      : `${actual ?? '—'} — requiere ${rule.expected}+`;
+      : `${actual ?? '-'} - requiere ${rule.expected}+`;
   } else if (matchType === 'equals') {
     met = normalize(actual) === normalize(rule.expected);
     detail = met ? String(actual) : `Esperado: ${rule.expected}`;
@@ -102,7 +102,7 @@ function evaluateRule(
       met = expectedList.some((expected) => actualList.some((item) => matches(item, expected)));
       detail = met
         ? actualList.join(', ')
-        : `${actualList.join(', ')} — esperado: ${rule.expected}`;
+        : `${actualList.join(', ')} - esperado: ${rule.expected}`;
     }
   }
 

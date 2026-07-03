@@ -3,7 +3,8 @@ import { ActivityType, PipelineStage, TaskPriority } from '@prisma/client';
 import { getUserFromRequest, unauthorized, companyWhereForUser } from '../../../../../../lib/auth';
 import { prisma } from '../../../../../../lib/prisma';
 import { recordStageAutomation } from '../../../../../../lib/automations';
-import { isMockMode } from '../../../../../../lib/mock';
+import { isMockMode, getMockCandidateStage, setMockCandidateStage } from '../../../../../../lib/mock';
+import { PIPELINE_STAGES, stageIndex } from '../../../../../../lib/stages';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,13 +55,24 @@ export async function PATCH(
   const action = body.action as 'advance' | 'move' | 'reject' | undefined;
 
   if (isMockMode()) {
-    return Response.json({
-      ok: true,
-      automation: {
-        activity: 'Actividad registrada',
-        task: action === 'reject' ? null : 'Próxima tarea creada automáticamente',
-      },
-    });
+    if (action === 'move' && typeof body.stage === 'string') {
+      setMockCandidateStage(candidateVacancyId, body.stage);
+      return Response.json({ ok: true, stage: body.stage });
+    }
+    if (action === 'advance') {
+      const current = getMockCandidateStage(candidateVacancyId, 'SCREENING');
+      const idx = stageIndex(current);
+      const next = idx >= 0 && idx < PIPELINE_STAGES.length - 1
+        ? PIPELINE_STAGES[idx + 1]
+        : current;
+      setMockCandidateStage(candidateVacancyId, next);
+      return Response.json({ ok: true, stage: next });
+    }
+    if (action === 'reject') {
+      setMockCandidateStage(candidateVacancyId, 'REJECTED');
+      return Response.json({ ok: true, stage: 'REJECTED' });
+    }
+    return Response.json({ ok: true, message: 'Acción inválida' }, { status: 400 });
   }
 
   const companies = await prisma.company.findMany({

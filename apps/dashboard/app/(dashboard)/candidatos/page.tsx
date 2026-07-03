@@ -8,11 +8,12 @@ import {
   MapPin, Building2, Users, Star, Upload, Plus, Search, Filter, ChevronDown,
   ChevronLeft, ChevronRight, List, LayoutGrid, Calendar, ClipboardList,
   Clock, Bell, MoreHorizontal, BarChart3, X, ArrowDownUp, Check,
-  Mail, Copy, Archive,
+  Mail, Copy, Archive, Sparkles,
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import { stageLabel } from '@/lib/stages';
 import { useToast } from '@/components/ui/Toast';
+import { candidateMatchesSkills, SKILL_CATALOG } from '@/lib/candidate-skills';
 
 const PAGE_SIZE = 10;
 
@@ -33,6 +34,7 @@ type CandidateRow = {
   vacancyTitle?: string;
   companyName?: string;
   scores?: Scores;
+  skills?: string[];
 };
 
 function statusBadge(status: string, stage?: string) {
@@ -70,7 +72,7 @@ type SortKey = 'compatibility' | 'ranking' | 'name' | 'recent';
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: 'compatibility', label: 'Compatibilidad' },
   { value: 'ranking', label: 'Ranking' },
-  { value: 'name', label: 'Nombre (A–Z)' },
+  { value: 'name', label: 'Nombre (A-Z)' },
   { value: 'recent', label: 'Más recientes' },
 ];
 
@@ -99,6 +101,7 @@ function CandidatosContent() {
   const [processFilter, setProcessFilter] = useState<string | null>(null);
   const [stageFilter, setStageFilter] = useState<string | null>(null);
   const [compatFilter, setCompatFilter] = useState<string | null>(null);
+  const [skillsFilter, setSkillsFilter] = useState<string[]>([]);
   const [sort, setSort] = useState<SortKey>('compatibility');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZE);
@@ -125,13 +128,29 @@ function CandidatosContent() {
     return Array.from(set, (value) => ({ value, label: stageLabel(value) }));
   }, [list]);
 
-  const hasFilters = !!(search || processFilter || stageFilter || compatFilter);
+  const skillOptions = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const skill of SKILL_CATALOG) counts.set(skill, 0);
+    for (const c of list) {
+      for (const s of c.skills ?? []) {
+        counts.set(s, (counts.get(s) ?? 0) + 1);
+      }
+    }
+    return SKILL_CATALOG.map((skill) => ({
+      value: skill,
+      label: skill,
+      count: counts.get(skill) ?? 0,
+    }));
+  }, [list]);
+
+  const hasFilters = !!(search || processFilter || stageFilter || compatFilter || skillsFilter.length > 0);
 
   const clearFilters = () => {
     setSearch('');
     setProcessFilter(null);
     setStageFilter(null);
     setCompatFilter(null);
+    setSkillsFilter([]);
   };
 
   const filtered = useMemo(() => {
@@ -148,6 +167,7 @@ function CandidatosContent() {
         const pct = Math.round(c.compatibility ?? 0);
         if (compatFilter === '0' ? pct >= 70 : pct < Number(compatFilter)) return false;
       }
+      if (!candidateMatchesSkills(c.skills, skillsFilter)) return false;
       return true;
     });
 
@@ -160,9 +180,9 @@ function CandidatosContent() {
       }
     });
     return arr;
-  }, [list, search, processFilter, stageFilter, compatFilter, sort]);
+  }, [list, search, processFilter, stageFilter, compatFilter, skillsFilter, sort]);
 
-  useEffect(() => setPage(1), [search, processFilter, stageFilter, compatFilter, sort, pageSize]);
+  useEffect(() => setPage(1), [search, processFilter, stageFilter, compatFilter, skillsFilter, sort, pageSize]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const safePage = Math.min(page, totalPages);
@@ -178,7 +198,7 @@ function CandidatosContent() {
           </div>
           <div>
             <h1 className="font-heading text-2xl font-bold leading-tight" style={{ color: 'var(--kova-navy)' }}>Candidatos</h1>
-            <p className="text-sm text-slate-500 mt-0.5">Gestiona y evalúa candidatos en tus procesos de selección.</p>
+            <p className="text-sm text-slate-500 mt-0.5">Base de talento comercial: filtra por habilidades para reutilizar candidatos en nuevas búsquedas.</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -203,6 +223,7 @@ function CandidatosContent() {
         </div>
         <FilterDropdown icon={Building2} allLabel="Todos los procesos" options={processOptions} value={processFilter} onChange={setProcessFilter} />
         <FilterDropdown icon={Filter} allLabel="Todas las etapas" options={stageOptions} value={stageFilter} onChange={setStageFilter} />
+        <SkillsFilterDropdown options={skillOptions} value={skillsFilter} onChange={setSkillsFilter} />
         <FilterDropdown icon={BarChart3} allLabel="Compatibilidad" options={COMPAT_OPTIONS} value={compatFilter} onChange={setCompatFilter} />
         {hasFilters && (
           <button type="button" onClick={clearFilters} className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 bg-white hover:bg-slate-50 transition-colors">
@@ -244,7 +265,7 @@ function CandidatosContent() {
       ) : (
         <div className={view === 'grid' ? 'grid md:grid-cols-2 gap-4' : 'space-y-4'}>
           {paginated.map((c) => (
-            <CandidateCard key={c.id} c={c} onArchive={() => toast('Candidato archivado')} />
+            <CandidateCard key={c.id} c={c} highlightSkills={skillsFilter} onArchive={() => toast('Candidato archivado')} />
           ))}
         </div>
       )}
@@ -266,9 +287,76 @@ function CandidatosContent() {
             >
               {[10, 20, 50].map((n) => <option key={n} value={n}>{n}</option>)}
             </select>
-            por página · {(safePage - 1) * pageSize + 1}–{Math.min(safePage * pageSize, filtered.length)} de {filtered.length}
+            por página · {(safePage - 1) * pageSize + 1}-{Math.min(safePage * pageSize, filtered.length)} de {filtered.length}
           </div>
         </div>
+      )}
+    </div>
+  );
+}
+
+function SkillsFilterDropdown({
+  options,
+  value,
+  onChange,
+}: {
+  options: { value: string; label: string; count: number }[];
+  value: string[];
+  onChange: (v: string[]) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const active = value.length > 0;
+  const label = active
+    ? value.length === 1 ? value[0] : `${value.length} habilidades`
+    : 'Habilidades';
+
+  const toggle = (skill: string) => {
+    onChange(value.includes(skill) ? value.filter((s) => s !== skill) : [...value, skill]);
+  };
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className={`inline-flex items-center gap-2 rounded-xl border px-3.5 py-2.5 text-sm transition-colors whitespace-nowrap ${active ? 'border-[var(--kova-blue)] bg-blue-50 text-[var(--kova-blue)] font-medium' : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'}`}
+      >
+        <Sparkles className={`w-4 h-4 ${active ? '' : 'text-slate-400'}`} />
+        {label}
+        <ChevronDown className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-180' : ''} ${active ? '' : 'text-slate-400'}`} />
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-30" onClick={() => setOpen(false)} />
+          <div className="absolute left-0 mt-1.5 z-40 w-72 max-h-80 overflow-auto rounded-xl border border-slate-200 bg-white shadow-lg p-1">
+            <p className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+              Filtra por habilidades (debe tener todas)
+            </p>
+            {value.length > 0 && (
+              <button
+                type="button"
+                onClick={() => onChange([])}
+                className="w-full text-left px-3 py-1.5 mb-1 text-xs text-[var(--kova-blue)] hover:bg-blue-50 rounded-lg"
+              >
+                Limpiar selección
+              </button>
+            )}
+            {options.map((o) => (
+              <button
+                key={o.value}
+                type="button"
+                onClick={() => toggle(o.value)}
+                className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-left text-sm transition-colors ${value.includes(o.value) ? 'bg-blue-50 text-[var(--kova-blue)] font-medium' : 'text-slate-600 hover:bg-slate-50'}`}
+              >
+                <span className="truncate">{o.label}</span>
+                <span className="flex items-center gap-1.5 shrink-0">
+                  <span className="text-[10px] text-slate-400">{o.count}</span>
+                  {value.includes(o.value) && <Check className="w-3.5 h-3.5" />}
+                </span>
+              </button>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
@@ -337,7 +425,7 @@ function MenuItem({ children, selected, onClick }: { children: React.ReactNode; 
   );
 }
 
-function CandidateCard({ c, onArchive }: { c: CandidateRow; onArchive: () => void }) {
+function CandidateCard({ c, highlightSkills, onArchive }: { c: CandidateRow; highlightSkills?: string[]; onArchive: () => void }) {
   const compat = Math.round(c.compatibility ?? 0);
   const sb = statusBadge(c.status, c.currentStage);
   const stg = stageBadge(c.currentStage);
@@ -364,11 +452,34 @@ function CandidateCard({ c, onArchive }: { c: CandidateRow; onArchive: () => voi
               </span>
             )}
           </div>
-          <p className="text-xs text-slate-400 truncate mt-0.5">{c.email ?? '—'}</p>
+          <p className="text-xs text-slate-400 truncate mt-0.5">{c.email ?? '-'}</p>
           <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-1.5 text-[10px] text-slate-400">
             {c.city && <span className="inline-flex items-center gap-0.5"><MapPin className="w-2.5 h-2.5" /> {c.city}</span>}
             {c.source && <span>· Fuente: {c.source}</span>}
           </div>
+          {(c.skills?.length ?? 0) > 0 && (
+            <div className="flex flex-wrap gap-1 mt-2">
+              {c.skills!.slice(0, 4).map((s) => {
+                const hit = highlightSkills?.includes(s);
+                return (
+                  <span
+                    key={s}
+                    className="text-[9px] px-1.5 py-0.5 rounded-md font-medium truncate max-w-[120px]"
+                    style={{
+                      color: hit ? 'var(--kova-blue)' : '#64748B',
+                      background: hit ? '#EEF2FA' : '#F1F5F9',
+                    }}
+                    title={s}
+                  >
+                    {s}
+                  </span>
+                );
+              })}
+              {c.skills!.length > 4 && (
+                <span className="text-[9px] px-1.5 py-0.5 rounded-md text-slate-400 bg-slate-50">+{c.skills!.length - 4}</span>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

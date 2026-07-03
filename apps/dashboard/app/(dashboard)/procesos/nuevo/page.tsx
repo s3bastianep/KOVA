@@ -462,7 +462,7 @@ export default function NuevoProcesoPage() {
             <div className="rounded-lg bg-blue-50/60 border border-blue-100 px-4 py-3 space-y-1">
               <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>Requisitos del aspirante</p>
               <p className="text-xs text-slate-600">
-                Paso 1 — Elige qué preguntas responderán los candidatos. Paso 2 — Define el valor ideal y cuánto pesa en compatibilidad.
+                Paso 1 - Elige qué preguntas responderán los candidatos. Paso 2 - Define el valor ideal y cuánto pesa en compatibilidad.
               </p>
             </div>
 
@@ -566,7 +566,7 @@ export default function NuevoProcesoPage() {
               )}
               {form.requirements.length > 0 && (
                 <p className="text-xs text-slate-400">
-                  Peso total: {form.requirements.reduce((s, r) => s + r.weight, 0)}% — idealmente 100%
+                  Peso total: {form.requirements.reduce((s, r) => s + r.weight, 0)}% - idealmente 100%
                 </p>
               )}
             </div>
@@ -709,7 +709,7 @@ const URGENCY_LABELS: Record<string, string> = {
 };
 
 function dash(value: string | undefined | null) {
-  return value?.trim() ? value : '—';
+  return value?.trim() ? value : '-';
 }
 
 function ProcessSummary({ form }: {
@@ -766,7 +766,7 @@ function ProcessSummary({ form }: {
           <SummaryItem label="¿Cuánto vende?" value={dash(form.revenue)} highlight />
           <SummaryItem
             label="¿Cómo vende?"
-            value={form.howSells.length > 0 ? form.howSells.join(', ') : '—'}
+            value={form.howSells.length > 0 ? form.howSells.join(', ') : '-'}
             span={2}
           />
           <SummaryItem label="Mercado" value={dash(form.market)} />
@@ -779,14 +779,14 @@ function ProcessSummary({ form }: {
         <SummaryGrid>
           <SummaryItem label="¿Por qué contrata?" value={dash(form.whyHiring)} span={2} />
           <SummaryItem label="Personas a contratar" value={dash(form.headcount)} />
-          <SummaryItem label="Fecha de ingreso" value={form.startDate ? new Date(form.startDate + 'T12:00:00').toLocaleDateString('es-CO') : '—'} />
+          <SummaryItem label="Fecha de ingreso" value={form.startDate ? new Date(form.startDate + 'T12:00:00').toLocaleDateString('es-CO') : '-'} />
           <SummaryItem label="Urgencia" value={URGENCY_LABELS[form.urgency] ?? form.urgency} highlight />
         </SummaryGrid>
       </SummarySection>
 
       <SummarySection title="Perfil del cargo" step={4}>
         <SummaryGrid>
-          <SummaryItem label="Cargo(s)" value={form.titles.length > 0 ? form.titles.join(', ') : '—'} highlight span={2} />
+          <SummaryItem label="Cargo(s)" value={form.titles.length > 0 ? form.titles.join(', ') : '-'} highlight span={2} />
           <SummaryItem label="Objetivo" value={dash(form.objective)} span={2} />
           <SummaryItem label="Funciones principales" value={dash(form.functions)} span={2} />
           <SummaryItem label="Responsabilidades" value={dash(form.responsibilities)} span={2} />
@@ -808,7 +808,7 @@ function ProcessSummary({ form }: {
                 <div key={req.id} className="flex items-start justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2 text-xs">
                   <div className="min-w-0">
                     <p className="font-medium" style={{ color: 'var(--kova-navy)' }}>{def.label}</p>
-                    <p className="text-slate-500 mt-0.5 truncate">Esperado: {expected || '—'}</p>
+                    <p className="text-slate-500 mt-0.5 truncate">Esperado: {expected || '-'}</p>
                   </div>
                   <span className="shrink-0 font-semibold text-[var(--kova-blue)]">{req.weight}%</span>
                 </div>

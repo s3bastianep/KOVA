@@ -73,30 +73,16 @@ export function Sidebar() {
         </Link>
       </nav>
 
-      {/* Tarjeta versión + logout */}
-      <div className="p-3 relative">
-        <div className="rounded-2xl p-4 relative overflow-hidden border border-white/10" style={{ background: 'linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))' }}>
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center font-heading font-bold text-sm shrink-0" style={{ background: 'linear-gradient(135deg, var(--kova-blue), #6D5BE3)' }}>
-              K
-            </div>
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-white">KOVA Talent OS</p>
-              <p className="text-[10px] text-white/50">v1.0 · Reclutamiento comercial</p>
-            </div>
-          </div>
-          <p className="text-[10px] text-white/60 mt-2.5 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--kova-green)' }} /> Sistema operativo
-          </p>
-          <button
-            type="button"
-            onClick={logout}
-            className="mt-3 w-full flex items-center justify-between gap-2 text-[11px] text-white/70 hover:text-white pt-3 border-t border-white/10 transition-colors"
-          >
-            Cerrar sesión
-            <LogOut className="w-3.5 h-3.5" />
-          </button>
-        </div>
+      {/* Cerrar sesión */}
+      <div className="p-3 relative border-t border-white/10">
+        <button
+          type="button"
+          onClick={logout}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors"
+        >
+          <LogOut className="w-[18px] h-[18px] shrink-0" />
+          Cerrar sesión
+        </button>
       </div>
     </aside>
   );

@@ -115,10 +115,10 @@ export default function DashboardPage() {
   // Distribución de puntajes por candidato
   const distribution = (() => {
     const buckets = [
-      { label: '90 – 100', min: 90, max: 100, count: 0, color: 'var(--kova-green)' },
-      { label: '70 – 89', min: 70, max: 89, count: 0, color: '#2D5BE3' },
-      { label: '50 – 69', min: 50, max: 69, count: 0, color: '#F59E0B' },
-      { label: '0 – 49', min: 0, max: 49, count: 0, color: 'var(--kova-coral)' },
+      { label: '90 - 100', min: 90, max: 100, count: 0, color: 'var(--kova-green)' },
+      { label: '70 - 89', min: 70, max: 89, count: 0, color: '#2D5BE3' },
+      { label: '50 - 69', min: 50, max: 69, count: 0, color: '#F59E0B' },
+      { label: '0 - 49', min: 0, max: 49, count: 0, color: 'var(--kova-coral)' },
     ];
     for (const p of evalProcesses) for (const c of p.candidates) {
       const b = buckets.find((x) => c.avgScore >= x.min && c.avgScore <= x.max);
@@ -128,7 +128,7 @@ export default function DashboardPage() {
     return { buckets: buckets.map((b) => ({ ...b, pct: Math.round((b.count / total) * 100) })), total: buckets.reduce((s, b) => s + b.count, 0) };
   })();
 
-  // Pipeline 8 etapas — conteos derivados
+  // Pipeline 8 etapas - conteos derivados
   const stageCounts = [
     kpis.activeProcesses ?? processes.length,
     kpis.activeProcesses ?? processes.length,

@@ -76,7 +76,7 @@ export const MOCK_DASHBOARD = {
     },
   ],
   alerts: [
-    { id: '1', title: 'Proceso sin actividad — Distribuidora Andina', status: 'OVERDUE', dueDate: new Date(Date.now() - 86400000).toISOString() },
+    { id: '1', title: 'Proceso sin actividad - Distribuidora Andina', status: 'OVERDUE', dueDate: new Date(Date.now() - 86400000).toISOString() },
     { id: '2', title: 'Entrevista mañana con Ana Gómez', status: 'PENDING', dueDate: new Date(Date.now() + 86400000).toISOString() },
   ],
 };
@@ -103,6 +103,30 @@ export const MOCK_COMPANIES = [
     status: 'ACTIVE',
     email: 'comercial@andina.co',
     phone: '+57 310 987 6543',
+    consultants: [{ consultant: { id: '1', firstName: 'María', lastName: 'Consultora', email: 'consultor@kova.co' } }],
+    _count: { vacancies: 1, contacts: 2 },
+  },
+  {
+    id: 'seed-company-003',
+    name: 'Innovatech Solutions',
+    sector: 'Tecnología',
+    industry: 'SaaS',
+    city: 'Bogotá',
+    status: 'ACTIVE',
+    email: 'hr@innovatech.co',
+    phone: '+57 320 555 8899',
+    consultants: [{ consultant: { id: '1', firstName: 'María', lastName: 'Consultora', email: 'consultor@kova.co' } }],
+    _count: { vacancies: 1, contacts: 1 },
+  },
+  {
+    id: 'seed-company-004',
+    name: 'Logística Total SAS',
+    sector: 'Logística',
+    industry: 'Transporte',
+    city: 'Cali',
+    status: 'PAUSED',
+    email: 'talento@logisticatotal.co',
+    phone: '+57 315 444 2211',
     consultants: [{ consultant: { id: '1', firstName: 'María', lastName: 'Consultora', email: 'consultor@kova.co' } }],
     _count: { vacancies: 1, contacts: 2 },
   },
@@ -200,6 +224,7 @@ export const MOCK_CANDIDATES = [
     compatibility: 92,
     currentStage: 'INTERVIEW',
     source: 'LinkedIn',
+    skills: ['Prospección', 'Negociación', 'Cierre de ventas', 'Venta consultiva', 'Gestión de pipeline'],
     scores: { experiencia: 100, habilidades: 95, educacion: 85, cultura: 90 },
     vacancies: [{ vacancy: { id: 'seed-vacancy-001', title: 'Ejecutivo Comercial B2B', company: { name: 'TechSales Colombia SAS' } } }],
   },
@@ -215,6 +240,7 @@ export const MOCK_CANDIDATES = [
     compatibility: 87,
     currentStage: 'ASSESSMENT',
     source: 'Referido',
+    skills: ['Negociación', 'Presentación comercial', 'Manejo de objeciones', 'Inteligencia emocional', 'Trabajo en equipo'],
     scores: { experiencia: 85, habilidades: 80, educacion: 75, cultura: 85 },
     vacancies: [{ vacancy: { id: 'seed-vacancy-001', title: 'Ejecutivo Comercial B2B', company: { name: 'TechSales Colombia SAS' } } }],
   },
@@ -230,6 +256,7 @@ export const MOCK_CANDIDATES = [
     compatibility: 78,
     currentStage: 'SCREENING',
     source: 'Computrabajo',
+    skills: ['Liderazgo comercial', 'Cuentas clave', 'Análisis de mercado', 'Negociación', 'Pricing'],
     scores: { experiencia: 90, habilidades: 80, educacion: 70, cultura: 72 },
     vacancies: [{ vacancy: { id: 'seed-vacancy-002', title: 'Gerente Comercial Regional', company: { name: 'Distribuidora Andina' } } }],
   },
@@ -516,7 +543,7 @@ export const MOCK_CRM = [
 export const MOCK_CALENDAR = [
   {
     id: 'cal1',
-    title: 'Discovery comercial — Distribuidora Andina',
+    title: 'Discovery comercial - Distribuidora Andina',
     type: 'Discovery',
     date: new Date(Date.now() + 1 * 86400000 + 10 * 3600000).toISOString(),
     endDate: new Date(Date.now() + 1 * 86400000 + 11 * 3600000).toISOString(),
@@ -534,7 +561,7 @@ export const MOCK_CALENDAR = [
   },
   {
     id: 'cal2',
-    title: 'Presentación de finalistas — TechSales',
+    title: 'Presentación de finalistas - TechSales',
     type: 'Reunión cliente',
     date: new Date(Date.now() + 2 * 86400000 + 14 * 3600000).toISOString(),
     endDate: new Date(Date.now() + 2 * 86400000 + 15 * 3600000).toISOString(),
@@ -551,7 +578,7 @@ export const MOCK_CALENDAR = [
   },
   {
     id: 'cal3',
-    title: 'Seguimiento post-entrevista — TechSales',
+    title: 'Seguimiento post-entrevista - TechSales',
     type: 'Llamada',
     date: new Date(Date.now() + 3 * 86400000 + 9 * 3600000).toISOString(),
     endDate: new Date(Date.now() + 3 * 86400000 + 9.5 * 3600000).toISOString(),
@@ -567,7 +594,7 @@ export const MOCK_CALENDAR = [
   },
   {
     id: 'cal4',
-    title: 'Entrevista cliente — Ana Gómez',
+    title: 'Entrevista cliente - Ana Gómez',
     type: 'Entrevista cliente',
     date: new Date(Date.now() + 4 * 86400000 + 11 * 3600000).toISOString(),
     endDate: new Date(Date.now() + 4 * 86400000 + 12 * 3600000).toISOString(),
@@ -578,13 +605,13 @@ export const MOCK_CALENDAR = [
     contactRole: 'Gerente Comercial',
     contactPhone: '+57 300 123 4567',
     contactEmail: 'contacto@techsales.co',
-    location: 'Presencial — TechSales',
+    location: 'Presencial - TechSales',
     purpose: 'Entrevista final del candidato Ana Gómez con el cliente. Coordinar llegada 15 min antes.',
     notes: 'Candidata: Ana Gómez · Tel. +57 320 555 8899',
   },
   {
     id: 'cal5',
-    title: 'Aprobación perfil de cargo — Distribuidora Andina',
+    title: 'Aprobación perfil de cargo - Distribuidora Andina',
     type: 'Reunión cliente',
     date: new Date(Date.now() + 5 * 86400000 + 16 * 3600000).toISOString(),
     endDate: new Date(Date.now() + 5 * 86400000 + 17 * 3600000).toISOString(),
@@ -600,7 +627,7 @@ export const MOCK_CALENDAR = [
   },
   {
     id: 'cal6',
-    title: 'WhatsApp — confirmar agenda role play',
+    title: 'WhatsApp - confirmar agenda role play',
     type: 'Seguimiento',
     date: new Date(Date.now() + 6 * 3600000).toISOString(),
     endDate: new Date(Date.now() + 6.5 * 3600000).toISOString(),
@@ -724,20 +751,24 @@ export function getMockVacancy(id: string) {
     },
     nextActivity: { title: 'Presentación finalistas', date: new Date(Date.now() + 2 * 86400000).toISOString() },
     pipelineStages: stages.map((s, i) => ({ ...s, order: i })),
-    candidates: candidates.map((c, i) => ({
-      id: `cv-${c.id}`,
-      stage: i === 0 ? 'INTERVIEW' : i === 1 ? 'ASSESSMENT' : 'SCREENING',
-      ranking: i + 1,
-      compatibility: c.compatibility ?? 85,
-      candidate: {
-        id: c.id,
-        firstName: c.firstName,
-        lastName: c.lastName,
-        email: c.email,
-        phone: c.phone,
-        city: c.city,
-      },
-    })),
+    candidates: candidates.map((c) => {
+      const cvId = `cv-${c.id}`;
+      const defaultStage = c.currentStage ?? 'SCREENING';
+      return {
+        id: cvId,
+        stage: getMockCandidateStage(cvId, defaultStage),
+        ranking: c.ranking ?? 1,
+        compatibility: c.compatibility ?? 85,
+        candidate: {
+          id: c.id,
+          firstName: c.firstName,
+          lastName: c.lastName,
+          email: c.email,
+          phone: c.phone,
+          city: c.city,
+        },
+      };
+    }),
     interviews: [
       { id: 'iv1', candidateName: 'Juan Pérez', scheduledAt: new Date(Date.now() + 86400000).toISOString(), status: 'SCHEDULED', type: 'Virtual', score: null },
       { id: 'iv2', candidateName: 'Ana Gómez', scheduledAt: new Date(Date.now() - 86400000).toISOString(), status: 'COMPLETED', type: 'Presencial', score: 8.5 },
@@ -795,6 +826,112 @@ export function getMockCompany(id: string) {
       { id: 'a1', type: 'CREATE', description: `Empresa "${base.name}" creada`, createdAt: new Date(Date.now() - 7 * 86400000).toISOString() },
     ],
   };
+}
+
+export function getMockClients() {
+  const hireHistory: Record<string, { date: string; role: string; candidate: string }[]> = {
+    'seed-company-001': [
+      { date: new Date(Date.now() - 45 * 86400000).toISOString(), role: 'Asesor Comercial Senior', candidate: 'Laura Méndez' },
+      { date: new Date(Date.now() - 210 * 86400000).toISOString(), role: 'Ejecutivo B2B', candidate: 'Pedro Salazar' },
+    ],
+    'seed-company-002': [
+      { date: new Date(Date.now() - 120 * 86400000).toISOString(), role: 'Jefe de Zona', candidate: 'Diego Ramírez' },
+    ],
+    'seed-company-003': [],
+    'seed-company-004': [
+      { date: new Date(Date.now() - 240 * 86400000).toISOString(), role: 'Coordinador de Rutas', candidate: 'Sandra Ortiz' },
+    ],
+  };
+
+  const followUps: Record<string, { lastActivity: string; lastNote: string; nextTitle: string; nextDate: string }> = {
+    'seed-company-001': {
+      lastActivity: new Date(Date.now() - 1 * 86400000).toISOString(),
+      lastNote: 'Seguimiento a propuesta de servicio.',
+      nextTitle: 'Presentación de finalistas',
+      nextDate: new Date(Date.now() + 2 * 86400000).toISOString(),
+    },
+    'seed-company-002': {
+      lastActivity: new Date(Date.now() - 3 * 86400000).toISOString(),
+      lastNote: 'Discovery inicial completado.',
+      nextTitle: 'Entrevista final con cliente',
+      nextDate: new Date(Date.now() + 5 * 86400000).toISOString(),
+    },
+    'seed-company-003': {
+      lastActivity: new Date(Date.now() - 7 * 86400000).toISOString(),
+      lastNote: 'Enviada propuesta comercial.',
+      nextTitle: 'Revisar candidatos nuevos',
+      nextDate: new Date(Date.now() + 1 * 86400000).toISOString(),
+    },
+    'seed-company-004': {
+      lastActivity: new Date(Date.now() - 30 * 86400000).toISOString(),
+      lastNote: 'Proceso pausado por reestructuración interna.',
+      nextTitle: 'Retomar proceso',
+      nextDate: new Date(Date.now() + 14 * 86400000).toISOString(),
+    },
+  };
+
+  const relationshipSince: Record<string, string> = {
+    'seed-company-001': new Date(Date.now() - 540 * 86400000).toISOString(),
+    'seed-company-002': new Date(Date.now() - 360 * 86400000).toISOString(),
+    'seed-company-003': new Date(Date.now() - 90 * 86400000).toISOString(),
+    'seed-company-004': new Date(Date.now() - 400 * 86400000).toISOString(),
+  };
+
+  return MOCK_COMPANIES.map((co) => {
+    const processes = MOCK_VACANCIES.filter((v) => v.company.id === co.id).map((v) => ({
+      id: v.id,
+      title: v.title,
+      status: v.status,
+      candidates: v._count?.candidates ?? 0,
+      progress: v.progress,
+      city: v.city,
+      createdAt: v.createdAt,
+      nextActionTitle: v.nextActionTitle,
+      nextActionDetail: v.nextActionDetail,
+    }));
+    const active = processes.filter((p) => !['CLOSED', 'HIRED', 'PAUSED'].includes(p.status));
+    const hires = hireHistory[co.id] ?? [];
+    const lastHire = hires[0] ?? null;
+    const fu = followUps[co.id];
+    const consultant = co.consultants?.[0]?.consultant;
+
+    return {
+      id: co.id,
+      name: co.name,
+      sector: co.sector,
+      industry: co.industry,
+      city: co.city,
+      status: co.status,
+      email: co.email,
+      phone: co.phone,
+      primaryContact: co.id === 'seed-company-001' ? 'Carlos Restrepo' : co.id === 'seed-company-002' ? 'Laura Méndez' : undefined,
+      consultantName: consultant ? `${consultant.firstName} ${consultant.lastName}` : 'María Consultora',
+      processes,
+      activeProcesses: active,
+      activeProcessCount: active.length,
+      totalProcesses: processes.length,
+      totalHires: hires.length,
+      lastHireDate: lastHire?.date ?? null,
+      lastHireRole: lastHire?.role ?? null,
+      lastHireCandidate: lastHire?.candidate ?? null,
+      hireHistory: hires,
+      lastActivityDate: fu?.lastActivity,
+      lastActivityNote: fu?.lastNote,
+      nextFollowUpDate: fu?.nextDate,
+      nextFollowUpTitle: fu?.nextTitle,
+      relationshipSince: relationshipSince[co.id],
+    };
+  });
+}
+
+const mockCandidateStageOverrides: Record<string, string> = {};
+
+export function getMockCandidateStage(candidateVacancyId: string, fallback: string) {
+  return mockCandidateStageOverrides[candidateVacancyId] ?? fallback;
+}
+
+export function setMockCandidateStage(candidateVacancyId: string, stage: string) {
+  mockCandidateStageOverrides[candidateVacancyId] = stage;
 }
 
 export function isMockMode() {

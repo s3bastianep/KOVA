@@ -70,7 +70,7 @@ export async function runCandidateAddedAutomation(
       userId: opts.consultantId,
       type: 'TASK',
       title: 'Nuevo candidato en proceso',
-      message: `${opts.candidateName} — compatibilidad ${total}%`,
+      message: `${opts.candidateName} - compatibilidad ${total}%`,
       link: `/procesos/${opts.vacancyId}`,
     },
   });
@@ -100,7 +100,7 @@ export async function recordStageAutomation(
         userId: opts.consultantId,
         type: 'INFO',
         title: 'Candidato descartado',
-        message: `${opts.candidateName} — ${opts.rejectReason ?? 'Sin motivo'}`,
+        message: `${opts.candidateName} - ${opts.rejectReason ?? 'Sin motivo'}`,
         link: `/candidatos/${opts.candidateId}`,
       },
     });

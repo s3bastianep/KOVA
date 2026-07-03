@@ -1,6 +1,7 @@
 import {
   LayoutDashboard,
   Briefcase,
+  Building2,
   GitBranch,
   Users,
   CalendarDays,
@@ -59,6 +60,7 @@ export const NAV_ITEMS: NavItem[] = NAV_GROUPS.flatMap((g) => g.items);
 export const NAV_MAIN: NavItem[] = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/crm', label: 'CRM Comercial', icon: Briefcase },
+  { href: '/clientes', label: 'Clientes', icon: Building2 },
   { href: '/procesos', label: 'Procesos de Selección', icon: GitBranch },
   { href: '/candidatos', label: 'Candidatos', icon: Users },
   { href: '/agenda', label: 'Agenda', icon: CalendarDays },

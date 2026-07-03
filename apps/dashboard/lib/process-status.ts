@@ -14,7 +14,7 @@ export const PROCESS_STATUS_LABELS: Record<string, string> = {
 };
 
 export function processStatusLabel(status?: string | null) {
-  if (!status) return '—';
+  if (!status) return '-';
   return PROCESS_STATUS_LABELS[status] ?? status;
 }
 

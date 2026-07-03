@@ -16,9 +16,9 @@ export const dynamic = 'force-dynamic';
 
 function formatPeriod(start?: Date | null, end?: Date | null, isCurrent?: boolean) {
   const fmt = (d: Date) => d.toLocaleDateString('es-CO', { month: 'short', year: 'numeric' });
-  if (!start) return '—';
+  if (!start) return '-';
   const endStr = isCurrent || !end ? 'Actualidad' : fmt(end);
-  return `${fmt(start)} – ${endStr}`;
+  return `${fmt(start)} - ${endStr}`;
 }
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

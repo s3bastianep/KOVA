@@ -191,7 +191,7 @@ export async function updateClientJourney(
     history.push({
       stageId: meta.currentStageId!,
       action: 'hold',
-      reason: reason?.trim() || 'Sin avance — requiere más trabajo en esta etapa',
+      reason: reason?.trim() || 'Sin avance - requiere más trabajo en esta etapa',
       at: now,
     });
     meta = { ...meta, history };

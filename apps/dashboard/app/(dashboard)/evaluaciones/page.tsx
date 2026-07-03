@@ -7,7 +7,7 @@ import {
   Briefcase, ChevronDown, ChevronRight, Clock, AlertTriangle,
   CheckCircle2, Users, ClipboardList, TrendingUp, TrendingDown, Filter, Calendar,
   Download, ClipboardCheck, Award, X, Video, LineChart, Wrench, Activity,
-  Settings, HelpCircle, Send,
+  Settings, Send,
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -56,7 +56,7 @@ function scoreTrack(score: number, max = 100) {
 
 function formatDuration(mins?: number, label?: string) {
   if (label) return label;
-  if (mins == null) return '—';
+  if (mins == null) return '-';
   if (mins < 60) return `${mins} min`;
   const h = Math.floor(mins / 60);
   const m = mins % 60;
@@ -90,7 +90,7 @@ function processState(avg: number): { label: string; bg: string; color: string }
 }
 
 function relativeTime(iso?: string) {
-  if (!iso) return '—';
+  if (!iso) return '-';
   const diff = Math.round((Date.now() - new Date(iso).getTime()) / 3600000);
   const timeStr = new Date(iso).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
   if (diff < 24 && new Date(iso).getDate() === new Date().getDate()) return `Hoy, ${timeStr}`;
@@ -161,9 +161,9 @@ export default function EvaluacionesPage() {
 
   const scoreDistribution = useMemo(() => {
     const buckets = [
-      { label: '90–100', min: 90, max: 100, count: 0, color: 'var(--kova-green)' },
-      { label: '70–89', min: 70, max: 89, count: 0, color: '#2D5BE3' },
-      { label: '50–69', min: 50, max: 69, count: 0, color: '#F59E0B' },
+      { label: '90-100', min: 90, max: 100, count: 0, color: 'var(--kova-green)' },
+      { label: '70-89', min: 70, max: 89, count: 0, color: '#2D5BE3' },
+      { label: '50-69', min: 50, max: 69, count: 0, color: '#F59E0B' },
       { label: '<50', min: 0, max: 49, count: 0, color: 'var(--kova-coral)' },
     ];
     for (const p of processes)
@@ -206,7 +206,7 @@ export default function EvaluacionesPage() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <PageHeader
           title="Evaluaciones"
-          subtitle="Resultados por proceso de selección — candidatos evaluados, puntajes y errores por prueba."
+          subtitle="Resultados por proceso de selección - candidatos evaluados, puntajes y errores por prueba."
           icon={ClipboardCheck}
           accent="#F3E8FF"
           tone="#7C3AED"
@@ -266,15 +266,6 @@ export default function EvaluacionesPage() {
             ))
           )}
 
-          {!isLoading && processes.length > 0 && (
-            <div className="rounded-2xl px-5 py-3.5 flex items-center justify-center gap-2 text-sm" style={{ background: '#F3E8FF' }}>
-              <HelpCircle className="w-4 h-4" style={{ color: '#7C3AED' }} />
-              <span className="text-slate-600">¿Necesitas ayuda para entender estos resultados?</span>
-              <Link href="/documentos" className="font-semibold hover:underline inline-flex items-center gap-1" style={{ color: '#7C3AED' }}>
-                Consulta nuestra guía de evaluaciones <ArrowRightMini />
-              </Link>
-            </div>
-          )}
         </div>
 
         {/* Sidebar */}
@@ -357,10 +348,6 @@ export default function EvaluacionesPage() {
       </div>
     </div>
   );
-}
-
-function ArrowRightMini() {
-  return <ChevronRight className="w-3.5 h-3.5" />;
 }
 
 function StatCard({ icon: Icon, label, value, hint, tint, color, trend }: {
@@ -536,7 +523,7 @@ function ProcessCard({ process, allTestPcts, isOpen, openCandidate, openTest, on
           {/* Tabla de candidatos */}
           <div className="rounded-xl border border-slate-200 bg-white overflow-x-auto">
             <div className="min-w-[720px]">
-              <div className="grid grid-cols-[1.6fr_1.1fr_0.8fr_0.9fr_1.1fr_auto] gap-2 px-4 py-2.5 border-b border-slate-100 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+              <div className="grid grid-cols-[1.6fr_1.1fr_0.8fr_0.9fr_1.1fr_20px] gap-2 px-4 py-2.5 border-b border-slate-100 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
                 <span>Candidato</span>
                 <span>Etapa actual</span>
                 <span>Promedio</span>
@@ -586,7 +573,7 @@ function CandidateRow({ candidate, stageIndex, allTestPcts, isOpen, openTest, on
   return (
     <div className={`border-b border-slate-50 last:border-0 ${isOpen ? 'bg-slate-50/50' : ''}`}>
       <button type="button" onClick={onToggle}
-        className="w-full grid grid-cols-[1.6fr_1.1fr_0.8fr_0.9fr_1.1fr_auto] gap-2 items-center px-4 py-3 text-left hover:bg-slate-50/60 transition-colors">
+        className="w-full grid grid-cols-[1.6fr_1.1fr_0.8fr_0.9fr_1.1fr_20px] gap-2 items-center px-4 py-3 text-left hover:bg-slate-50/60 transition-colors">
         {/* Candidato */}
         <div className="flex items-center gap-2.5 min-w-0">
           <span className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0" style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}>
@@ -612,7 +599,7 @@ function CandidateRow({ candidate, stageIndex, allTestPcts, isOpen, openTest, on
         {/* Última actividad */}
         <div className="min-w-0">
           <p className="text-[11px] font-medium truncate" style={{ color: 'var(--kova-navy)' }}>{relativeTime(lastTest?.completedAt)}</p>
-          <p className="text-[10px] text-slate-400 truncate">{lastTest?.type ?? '—'}</p>
+          <p className="text-[10px] text-slate-400 truncate">{lastTest?.type ?? '-'}</p>
         </div>
         <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform justify-self-end ${isOpen ? 'rotate-180' : ''}`} />
       </button>
@@ -621,7 +608,7 @@ function CandidateRow({ candidate, stageIndex, allTestPcts, isOpen, openTest, on
         <div className="px-4 pb-4">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-2 mt-1">Detalle de evaluaciones</p>
           <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
-            <div className="grid grid-cols-[1.3fr_1fr_0.9fr_0.9fr_0.6fr_0.9fr_0.7fr_auto] gap-2 px-4 py-2 bg-slate-50 border-b border-slate-100 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+            <div className="grid grid-cols-[1.3fr_1fr_0.9fr_0.9fr_0.6fr_0.9fr_0.7fr_20px] gap-2 px-4 py-2 bg-slate-50 border-b border-slate-100 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
               <span>Prueba</span>
               <span className="hidden sm:block">Categoría</span>
               <span>Puntaje</span>
@@ -665,7 +652,7 @@ function TestRow({ test, allTestPcts, isExpanded, onToggle }: { test: Assessment
   return (
     <div className="border-b border-slate-50 last:border-0">
       <button type="button" onClick={onToggle}
-        className="w-full grid grid-cols-[1.3fr_1fr_0.9fr_0.9fr_0.6fr_0.9fr_0.7fr_auto] gap-2 items-center px-4 py-3 text-left hover:bg-slate-50/60 transition-colors">
+        className="w-full grid grid-cols-[1.3fr_1fr_0.9fr_0.9fr_0.6fr_0.9fr_0.7fr_20px] gap-2 items-center px-4 py-3 text-left hover:bg-slate-50/60 transition-colors">
         <div className="flex items-center gap-2 min-w-0">
           <span className="w-6 h-6 rounded-md flex items-center justify-center shrink-0" style={{ background: scoreTrack(test.score, test.maxScore) }}>
             <Icon className="w-3.5 h-3.5" style={{ color }} />
@@ -674,7 +661,7 @@ function TestRow({ test, allTestPcts, isExpanded, onToggle }: { test: Assessment
         </div>
         <p className="hidden sm:block text-xs text-slate-500 truncate">{test.competency}</p>
         {pending ? (
-          <span className="text-xs text-slate-300">—</span>
+          <span className="text-xs text-slate-300">-</span>
         ) : (
           <div className="min-w-0">
             <p className="text-xs font-bold" style={{ color }}>{pct}%</p>
@@ -686,9 +673,9 @@ function TestRow({ test, allTestPcts, isExpanded, onToggle }: { test: Assessment
         <span className="inline-flex items-center gap-1 text-[11px] font-medium min-w-0" style={{ color: q.color }}>
           <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: q.color }} /> {q.label}
         </span>
-        <span className="hidden md:block text-xs text-slate-500">{pending ? '—' : perc}</span>
-        <span className="hidden md:block text-xs text-slate-500 truncate">{pending ? '—' : relativeTime(test.completedAt)}</span>
-        <span className="hidden lg:block text-xs text-slate-500 whitespace-nowrap">{pending ? '—' : formatDuration(test.durationMinutes, test.durationLabel)}</span>
+        <span className="hidden md:block text-xs text-slate-500">{pending ? '-' : perc}</span>
+        <span className="hidden md:block text-xs text-slate-500 truncate">{pending ? '-' : relativeTime(test.completedAt)}</span>
+        <span className="hidden lg:block text-xs text-slate-500 whitespace-nowrap">{pending ? '-' : formatDuration(test.durationMinutes, test.durationLabel)}</span>
         {pending ? (
           <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-1 rounded-lg justify-self-end" style={{ background: '#EEF2FA', color: 'var(--kova-blue)' }}>
             <Send className="w-3 h-3" /> Enviar

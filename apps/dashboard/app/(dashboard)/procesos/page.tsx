@@ -199,7 +199,7 @@ export default function ProcesosPage() {
           {filtered.length > PAGE_SIZE && (
             <div className="flex items-center justify-between pt-1">
               <p className="text-xs text-slate-400">
-                {(safePage - 1) * PAGE_SIZE + 1}–{Math.min(safePage * PAGE_SIZE, filtered.length)} de {filtered.length} procesos
+                {(safePage - 1) * PAGE_SIZE + 1}-{Math.min(safePage * PAGE_SIZE, filtered.length)} de {filtered.length} procesos
               </p>
               <div className="flex items-center gap-1">
                 <button type="button" disabled={safePage <= 1} onClick={() => setPage((p) => p - 1)} className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-50 disabled:opacity-40"><ChevronLeft className="w-4 h-4" /></button>

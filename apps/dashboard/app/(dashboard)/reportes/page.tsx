@@ -180,7 +180,7 @@ export default function ReportesPage() {
                         </div>
                       </td>
                       <td className="py-3 text-center text-slate-600">{c.vacancies}</td>
-                      <td className="py-3 text-center text-slate-600">{c.candidates ?? '—'}</td>
+                      <td className="py-3 text-center text-slate-600">{c.candidates ?? '-'}</td>
                       <td className="py-3 text-center text-slate-600">{c.hires}</td>
                       <td className="py-3">
                         <div className="flex items-center justify-end gap-2">

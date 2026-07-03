@@ -2,9 +2,26 @@ import { NextRequest } from 'next/server';
 import { getUserFromRequest, unauthorized } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode, MOCK_CANDIDATES } from '../../../lib/mock';
+import { normalizeSkillList } from '../../../lib/candidate-skills';
 import { runCandidateAddedAutomation } from '../../../lib/automations';
 
 export const dynamic = 'force-dynamic';
+
+function extractSkills(c: {
+  id: string;
+  metadata?: unknown;
+  skills?: string[];
+  assessments?: { title?: string | null }[];
+}) {
+  if (Array.isArray(c.skills) && c.skills.length > 0) return normalizeSkillList(c.skills);
+  const meta = c.metadata as { skills?: string[] } | null | undefined;
+  if (Array.isArray(meta?.skills) && meta.skills.length > 0) return normalizeSkillList(meta.skills);
+  const fromAssessments = (c.assessments ?? [])
+    .map((a) => a.title)
+    .filter((x): x is string => !!x);
+  if (fromAssessments.length > 0) return normalizeSkillList(fromAssessments);
+  return [];
+}
 
 function mapCandidate(c: {
   id: string;
@@ -17,6 +34,9 @@ function mapCandidate(c: {
   source: string | null;
   compatibility: number | null;
   ranking: number | null;
+  metadata?: unknown;
+  skills?: string[];
+  assessments?: { title?: string | null }[];
   vacancies: { stage: string; source?: string | null; ranking?: number | null; vacancy: { title: string; company?: { name: string } | null } }[];
 }) {
   const primary = c.vacancies[0];
@@ -34,6 +54,7 @@ function mapCandidate(c: {
     currentStage: primary?.stage,
     vacancyTitle: primary?.vacancy.title,
     companyName: primary?.vacancy.company?.name ?? undefined,
+    skills: extractSkills(c),
     scores: deriveScores(c.compatibility ?? 0, c.id),
   };
 }
@@ -62,6 +83,7 @@ export async function GET(req: NextRequest) {
         ...c,
         vacancyTitle: c.vacancies[0]?.vacancy.title,
         companyName: c.vacancies[0]?.vacancy.company?.name,
+        skills: extractSkills(c),
         scores: c.scores ?? deriveScores(c.compatibility ?? 0, c.id),
       })),
     );
@@ -80,11 +102,12 @@ export async function GET(req: NextRequest) {
         orderBy: { updatedAt: 'desc' },
         take: 1,
       },
+      assessments: { select: { title: true }, take: 20 },
     },
     orderBy: [{ ranking: 'asc' }, { updatedAt: 'desc' }],
   });
 
-  return Response.json(candidates.map(mapCandidate));
+  return Response.json(candidates.map((c) => mapCandidate(c)));
 }
 
 export async function POST(req: NextRequest) {

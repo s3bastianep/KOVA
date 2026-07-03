@@ -14,7 +14,7 @@ export default function TareasPage() {
             <div key={t.id} className="kova-card p-4 flex justify-between">
               <div>
                 <p className="font-medium" style={{ color: 'var(--kova-navy)' }}>{t.title}</p>
-                <p className="text-xs text-slate-500">{t.company?.name ?? '—'}</p>
+                <p className="text-xs text-slate-500">{t.company?.name ?? '-'}</p>
               </div>
               <span className="text-xs px-2 py-1 rounded-full bg-slate-100">{t.status}</span>
             </div>
