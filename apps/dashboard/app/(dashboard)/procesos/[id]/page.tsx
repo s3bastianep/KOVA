@@ -13,6 +13,7 @@ import { dashboardApi } from '@/lib/api';
 import { Tabs } from '@/components/ui/Tabs';
 import { processStatusLabel, processProgress } from '@/lib/process-status';
 import { stageLabel } from '@/lib/stages';
+import { CLIENT_JOURNEY_STAGES } from '@/lib/client-journey';
 
 type Proceso = {
   id: string;
@@ -49,6 +50,24 @@ function scoreColor(pct: number) {
   if (pct >= 80) return 'var(--kova-green)';
   if (pct >= 70) return '#B7791F';
   return 'var(--kova-coral)';
+}
+
+function clientStageIndexForProcess(status?: string | null) {
+  const map: Record<string, number> = {
+    DRAFT: 0,
+    DISCOVERY_PENDING: 0,
+    DISCOVERY: 0,
+    PROFILE_BUILDING: 1,
+    APPROVAL_PENDING: 1,
+    SEARCH_ACTIVE: 2,
+    EVALUATION: 3,
+    FINALISTS: 5,
+    OFFER: 7,
+    HIRED: 7,
+    CLOSED: 7,
+    PAUSED: 3,
+  };
+  return Math.max(0, Math.min(CLIENT_JOURNEY_STAGES.length - 1, map[status ?? ''] ?? 0));
 }
 
 export default function ProcesoDetallePage({ params }: { params: Promise<{ id: string }> }) {
@@ -88,6 +107,7 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
   const p = data as Proceso | undefined;
   const progress = p?.progress ?? processProgress(p?.status);
   const candidates = p?.candidates ?? [];
+  const currentClientStageIndex = clientStageIndexForProcess(p?.status);
 
   const pipelineByStage = useMemo(() => {
     const map = new Map<string, typeof candidates>();
@@ -102,7 +122,7 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
 
   const tabs = [
     { id: 'resumen', label: 'Resumen' },
-    { id: 'pipeline', label: 'Pipeline', count: candidates.length },
+    { id: 'pipeline', label: 'Pipeline candidatos', count: candidates.length },
     { id: 'candidatos', label: 'Candidatos', count: candidates.length },
     { id: 'entrevistas', label: 'Entrevistas', count: p?.interviews?.length },
     { id: 'pruebas', label: 'Pruebas', count: p?.assessments?.length },
@@ -164,6 +184,65 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
             </div>
           </div>
 
+          <div className="kova-card p-4">
+            <div className="flex flex-wrap items-end justify-between gap-3 mb-4">
+              <div>
+                <h2 className="font-heading text-base font-bold" style={{ color: 'var(--kova-navy)' }}>
+                  Etapas primero con el cliente
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Este es el flujo del servicio antes y durante la presentación de candidatos.
+                </p>
+              </div>
+              <span className="text-xs px-2.5 py-1 rounded-full bg-blue-50" style={{ color: 'var(--kova-blue)' }}>
+                Etapa {currentClientStageIndex + 1} de {CLIENT_JOURNEY_STAGES.length}
+              </span>
+            </div>
+            <div className="grid md:grid-cols-4 xl:grid-cols-8 gap-2">
+              {CLIENT_JOURNEY_STAGES.map((stage, idx) => {
+                const done = idx < currentClientStageIndex;
+                const active = idx === currentClientStageIndex;
+                return (
+                  <div
+                    key={stage.id}
+                    className={`min-h-[88px] rounded-xl border p-3 flex flex-col justify-between transition-all ${
+                      active
+                        ? 'border-[var(--kova-blue)] bg-blue-50 shadow-sm'
+                        : done
+                          ? 'border-green-200 bg-green-50'
+                          : 'border-slate-100 bg-slate-50'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span
+                        className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+                        style={
+                          active
+                            ? { background: 'var(--kova-blue)', color: '#fff' }
+                            : done
+                              ? { background: 'var(--kova-green)', color: '#fff' }
+                              : { background: '#E2E8F0', color: '#64748B' }
+                        }
+                      >
+                        {stage.order}
+                      </span>
+                      {done && <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: 'var(--kova-green)' }} />}
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Etapa {stage.order}</p>
+                      <p
+                        className="text-[11px] leading-tight font-semibold mt-0.5"
+                        style={{ color: active ? 'var(--kova-navy)' : done ? '#047857' : '#64748B' }}
+                      >
+                        {stage.label}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           <Tabs tabs={tabs} active={tab} onChange={(t) => setTab(t as TabId)} />
 
           {automationMessage && (
@@ -184,7 +263,7 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
               <div className="kova-card p-5 border-2 border-dashed border-blue-100">
                 <h3 className="text-xs font-semibold uppercase text-slate-400 mb-2">Formulario de postulación</h3>
                 <p className="text-sm text-slate-600 mb-3">
-                  Comparte este enlace con aspirantes. Responderán las mismas preguntas estándar del cargo y el sistema calculará compatibilidad automáticamente.
+                  Cuando el cliente apruebe el perfil, comparte este enlace con aspirantes. Responderán las preguntas estándar del cargo y verás su compatibilidad.
                 </p>
                 <code className="text-xs block p-2 rounded bg-slate-50 text-slate-600 break-all">
                   {typeof window !== 'undefined' ? `${window.location.origin}/postular/${p.id}` : `/postular/${p.id}`}

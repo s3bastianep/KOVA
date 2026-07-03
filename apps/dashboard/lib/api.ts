@@ -108,6 +108,21 @@ export const dashboardApi = {
       method: 'PATCH',
       body: JSON.stringify(body),
     }),
+  createAgendaItem: (body: {
+    title: string;
+    type: string;
+    scheduledAt: string;
+    endAt?: string;
+    companyName?: string;
+    contactName?: string;
+    location?: string;
+    purpose?: string;
+    notes?: string;
+  }) =>
+    apiFetch<{ ok: boolean; item: unknown }>('/agenda', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
   updateAgendaItem: (
     itemKey: string,
     body: { action: 'status'; status: 'PENDING' | 'COMPLETED' | 'CANCELLED' | 'REJECTED'; reason?: string } | { action: 'reschedule'; newDate: string; reason: string },

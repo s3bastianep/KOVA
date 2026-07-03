@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import {
-  TrendingUp, Building2, ArrowRight, Clock, Check, Pause, ChevronRight,
+  TrendingUp, Building2, ArrowRight, Clock, Check, Pause,
   MessageSquare, Phone, Mail, Users,
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
@@ -101,42 +101,37 @@ export default function PipelineComercialPage() {
       </div>
 
       {/* Stepper global */}
-      <div className="kova-card p-3 overflow-x-auto">
-        <div className="flex items-start gap-1 min-w-[900px]">
-          {CLIENT_JOURNEY_STAGES.map((stage, idx) => {
+      <div className="kova-card p-3">
+        <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5">
+          {CLIENT_JOURNEY_STAGES.map((stage) => {
             const count = clientsByStage[stage.id]?.length ?? 0;
             return (
-              <div key={stage.id} className="flex items-start flex-1 min-w-0">
-                <div className="flex-1 text-center px-1">
-                  <div
-                    className="mx-auto w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-white mb-1"
-                    style={{ background: stage.color }}
-                  >
-                    {stage.order}
-                  </div>
-                  <p className="text-[9px] font-semibold leading-tight" style={{ color: 'var(--kova-navy)' }}>{stage.shortLabel}</p>
-                  <span className="text-[9px] text-slate-400">{count} cliente{count !== 1 ? 's' : ''}</span>
+              <div key={stage.id} className="flex flex-col items-center text-center px-0.5">
+                <div
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-white mb-1 shrink-0"
+                  style={{ background: stage.color }}
+                >
+                  {stage.order}
                 </div>
-                {idx < CLIENT_JOURNEY_STAGES.length - 1 && (
-                  <ChevronRight className="w-3 h-3 text-slate-300 mt-2 shrink-0" />
-                )}
+                <p className="text-[9px] font-semibold leading-tight line-clamp-2" style={{ color: 'var(--kova-navy)' }}>{stage.shortLabel}</p>
+                <span className="text-[9px] text-slate-400 mt-0.5">{count} cliente{count !== 1 ? 's' : ''}</span>
               </div>
             );
           })}
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-4 gap-4 flex-1 min-h-0">
+      <div className="grid lg:grid-cols-[1fr_300px] gap-4 flex-1 min-h-0">
         {/* Kanban por etapa */}
-        <div className="lg:col-span-3 kova-card p-3 overflow-hidden flex flex-col min-h-[480px]">
+        <div className="kova-card p-3 flex flex-col min-h-[480px] min-w-0">
           {isLoading ? (
             <p className="text-sm text-slate-400 p-4">Cargando clientes...</p>
           ) : (
-            <div className="flex gap-2 overflow-x-auto flex-1 min-h-0 pb-1">
+            <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-2 flex-1 min-h-0">
               {CLIENT_JOURNEY_STAGES.map((stage) => {
                 const stageClients = clientsByStage[stage.id] ?? [];
                 return (
-                  <div key={stage.id} className="flex-1 min-w-[155px] flex flex-col">
+                  <div key={stage.id} className="flex flex-col min-w-0">
                     <div
                       className="rounded-t-lg px-2 py-2 mb-1.5"
                       style={{ background: stage.bg, borderTop: `3px solid ${stage.color}` }}
@@ -149,7 +144,7 @@ export default function PipelineComercialPage() {
                           {stageClients.length}
                         </span>
                       </div>
-                      <p className="text-[10px] font-semibold mt-1 leading-tight" style={{ color: 'var(--kova-navy)' }}>{stage.shortLabel}</p>
+                      <p className="text-[10px] font-semibold mt-1 leading-tight line-clamp-2" style={{ color: 'var(--kova-navy)' }}>{stage.shortLabel}</p>
                     </div>
                     <div className="space-y-1.5 flex-1 overflow-y-auto px-0.5">
                       {stageClients.length === 0 ? (
@@ -292,13 +287,13 @@ function ClientCard({
       <p className="text-[9px] text-slate-300 mt-1 flex items-center gap-0.5">
         <Clock className="w-2.5 h-2.5" /> {client.daysInStage}d en etapa
       </p>
-      <div className="flex gap-1 mt-2" onClick={(e) => e.stopPropagation()}>
+      <div className="flex flex-col gap-1 mt-2" onClick={(e) => e.stopPropagation()}>
         {!isFinal && (
           <button
             type="button"
             disabled={loading}
             onClick={onAdvance}
-            className="flex-1 text-[9px] py-1 rounded border border-green-200 text-green-700 bg-green-50 hover:bg-green-100 disabled:opacity-50 flex items-center justify-center gap-0.5"
+            className="w-full text-[9px] py-1 rounded border border-green-200 text-green-700 bg-green-50 hover:bg-green-100 disabled:opacity-50 flex items-center justify-center gap-0.5"
           >
             <Check className="w-2.5 h-2.5" /> Avanzar
           </button>
@@ -307,7 +302,7 @@ function ClientCard({
           type="button"
           disabled={loading}
           onClick={onHold}
-          className="flex-1 text-[9px] py-1 rounded border border-amber-200 text-amber-700 bg-amber-50 hover:bg-amber-100 disabled:opacity-50 flex items-center justify-center gap-0.5"
+          className="w-full text-[9px] py-1 rounded border border-amber-200 text-amber-700 bg-amber-50 hover:bg-amber-100 disabled:opacity-50 flex items-center justify-center gap-0.5"
         >
           <Pause className="w-2.5 h-2.5" /> No avanzar
         </button>
@@ -342,9 +337,9 @@ function ClientDetailPanel({
       </div>
 
       {/* Stepper del cliente */}
-      <div className="space-y-1">
+      <div className="space-y-1.5">
         <p className="text-[10px] font-semibold uppercase text-slate-400">Progreso del servicio</p>
-        <div className="grid grid-cols-4 gap-1">
+        <div className="grid grid-cols-4 gap-1.5">
           {CLIENT_JOURNEY_STAGES.map((stage, idx) => {
             const done = idx < currentIdx;
             const active = idx === currentIdx;
@@ -352,12 +347,32 @@ function ClientDetailPanel({
               <div
                 key={stage.id}
                 title={stage.label}
-                className={`rounded px-1 py-1.5 text-center border ${active ? 'border-[var(--kova-blue)] bg-blue-50' : done ? 'border-green-200 bg-green-50' : 'border-slate-100 bg-slate-50'}`}
+                className={`rounded-lg px-1 py-2 flex flex-col items-center justify-start gap-1 min-h-[58px] text-center border transition-colors ${
+                  active
+                    ? 'border-[var(--kova-blue)] bg-blue-50'
+                    : done
+                      ? 'border-green-200 bg-green-50'
+                      : 'border-slate-100 bg-slate-50'
+                }`}
               >
-                <p className="text-[8px] font-bold" style={{ color: active ? 'var(--kova-blue)' : done ? 'var(--kova-green)' : '#94A3B8' }}>
+                <span
+                  className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0"
+                  style={
+                    active
+                      ? { background: 'var(--kova-blue)', color: '#fff' }
+                      : done
+                        ? { background: 'var(--kova-green)', color: '#fff' }
+                        : { background: '#E2E8F0', color: '#94A3B8' }
+                  }
+                >
                   {stage.order}
-                </p>
-                <p className="text-[7px] leading-tight mt-0.5 truncate" style={{ color: active ? 'var(--kova-navy)' : '#94A3B8' }}>{stage.shortLabel}</p>
+                </span>
+                <span
+                  className="text-[8px] leading-[1.15] font-medium line-clamp-2"
+                  style={{ color: active ? 'var(--kova-navy)' : done ? '#047857' : '#94A3B8' }}
+                >
+                  {stage.shortLabel}
+                </span>
               </div>
             );
           })}

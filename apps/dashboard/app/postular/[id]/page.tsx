@@ -209,36 +209,7 @@ export default function PostularPage({ params }: { params: Promise<{ id: string 
 
       <div className="max-w-5xl mx-auto px-4 -mt-20 pb-16">
         {/* Stepper */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-5">
-          <div className="flex items-start">
-            {STEPS.map((s, i) => {
-              const active = i === step;
-              const done = i < step;
-              return (
-                <div key={s.label} className="flex items-start flex-1 min-w-0">
-                  <div className="flex flex-col items-center flex-1 min-w-0">
-                    <div
-                      className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shrink-0 transition-all ${
-                        done ? 'text-white' : active ? 'text-white ring-4 ring-green-100' : 'text-slate-400 bg-slate-100'
-                      }`}
-                      style={done || active ? { background: 'var(--kova-green)' } : undefined}
-                    >
-                      {done ? <Check className="w-4 h-4" /> : i + 1}
-                    </div>
-                    <p className={`text-xs font-semibold mt-2 text-center truncate w-full ${active ? 'text-slate-800' : 'text-slate-400'}`}>{s.label}</p>
-                    <p className="text-[10px] text-slate-400 text-center truncate w-full hidden sm:block">{s.subtitle}</p>
-                    <div className={`h-1 w-full max-w-[80px] rounded-full mt-2 transition-all ${active ? '' : 'bg-transparent'}`} style={active ? { background: 'var(--kova-green)' } : undefined} />
-                  </div>
-                  {i < STEPS.length - 1 && (
-                    <div className="flex items-center pt-4 px-1 shrink-0">
-                      <div className={`w-full min-w-[24px] border-t-2 border-dashed ${done ? 'border-green-300' : 'border-slate-200'}`} />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        <FormStepper step={step} />
 
         {/* Dos columnas */}
         <div className="grid lg:grid-cols-[minmax(0,1fr)_300px] gap-5 items-start">
@@ -246,15 +217,9 @@ export default function PostularPage({ params }: { params: Promise<{ id: string 
           <form onSubmit={submit} className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8 space-y-5">
             {step === 0 && (
               <div className="space-y-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <h2 className="font-heading text-xl font-bold" style={{ color: 'var(--kova-navy)' }}>¡Empecemos con tus datos!</h2>
-                    <p className="text-sm text-slate-500 mt-1">Así podremos identificarte y mantenerte informado.</p>
-                  </div>
-                  <div className="hidden sm:flex items-center gap-1 shrink-0">
-                    <span className="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style={{ background: '#EEF2FA' }}>👤</span>
-                    <span className="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style={{ background: '#E6FAF3' }}>✉️</span>
-                  </div>
+                <div>
+                  <h2 className="font-heading text-xl font-bold" style={{ color: 'var(--kova-navy)' }}>¡Empecemos con tus datos!</h2>
+                  <p className="text-sm text-slate-500 mt-1">Así podremos identificarte y mantenerte informado.</p>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
@@ -442,6 +407,79 @@ export default function PostularPage({ params }: { params: Promise<{ id: string 
           <Lock className="w-3 h-3" />
           Tus datos se usan únicamente para este proceso de selección.
         </p>
+      </div>
+    </div>
+  );
+}
+
+function FormStepper({ step }: { step: number }) {
+  const pct = Math.round(((step + 1) / STEPS.length) * 100);
+
+  return (
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 sm:p-6 mb-5">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <p className="text-sm font-bold" style={{ color: 'var(--kova-navy)' }}>
+          Paso {step + 1} de {STEPS.length}
+          <span className="font-normal text-slate-500"> · {STEPS[step].label}</span>
+        </p>
+        <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ background: '#E6FAF3', color: '#047857' }}>
+          {pct}% completado
+        </span>
+      </div>
+
+      <div className="h-2.5 rounded-full bg-slate-100 overflow-hidden mb-5">
+        <div
+          className="h-full rounded-full transition-all duration-500"
+          style={{ width: `${pct}%`, background: 'var(--kova-green)' }}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {STEPS.map((s, i) => {
+          const active = i === step;
+          const done = i < step;
+          return (
+            <div
+              key={s.label}
+              className={`relative rounded-xl border-2 px-4 py-3.5 transition-all ${
+                active
+                  ? 'border-[var(--kova-green)] bg-[#F0FDF4] shadow-sm'
+                  : done
+                    ? 'border-green-200 bg-green-50/60'
+                    : 'border-slate-100 bg-slate-50'
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <span
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
+                  style={
+                    active
+                      ? { background: 'var(--kova-green)', color: '#fff' }
+                      : done
+                        ? { background: 'var(--kova-green)', color: '#fff' }
+                        : { background: '#E2E8F0', color: '#64748B' }
+                  }
+                >
+                  {done ? <Check className="w-4 h-4" /> : i + 1}
+                </span>
+                <div className="min-w-0 pt-0.5">
+                  <p
+                    className="text-sm font-bold leading-tight"
+                    style={{ color: active ? 'var(--kova-navy)' : done ? '#047857' : '#64748B' }}
+                  >
+                    {s.label}
+                  </p>
+                  <p className={`text-xs mt-0.5 leading-snug ${active ? 'text-slate-600' : 'text-slate-400'}`}>
+                    {s.subtitle}
+                  </p>
+                </div>
+              </div>
+              {active && (
+                <span className="absolute left-4 right-4 -bottom-[2px] h-1 rounded-full" style={{ background: 'var(--kova-green)' }} />
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

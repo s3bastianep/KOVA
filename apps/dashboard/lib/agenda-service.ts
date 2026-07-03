@@ -429,6 +429,59 @@ async function getOrInitState(tenantId: string, itemKey: string): Promise<Stored
   };
 }
 
+export async function createAgendaItem(
+  tenantId: string,
+  data: {
+    title: string;
+    type: string;
+    scheduledAt: string;
+    endAt?: string;
+    companyName?: string;
+    contactName?: string;
+    location?: string;
+    purpose?: string;
+    notes?: string;
+  },
+): Promise<AgendaItem> {
+  if (!data.title?.trim()) throw new Error('El título es obligatorio');
+  if (!data.scheduledAt) throw new Error('La fecha y hora son obligatorias');
+
+  const itemKey = `new-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const state: StoredState = {
+    itemKey,
+    title: data.title.trim(),
+    type: data.type || 'Reunión cliente',
+    scheduledAt: new Date(data.scheduledAt).toISOString(),
+    endAt: data.endAt ? new Date(data.endAt).toISOString() : undefined,
+    status: 'PENDING',
+    companyName: data.companyName?.trim() || undefined,
+    contactName: data.contactName?.trim() || undefined,
+    location: data.location?.trim() || undefined,
+    purpose: data.purpose?.trim() || undefined,
+    notes: data.notes?.trim() || undefined,
+    moveHistory: [],
+  };
+
+  await persistState(tenantId, state);
+
+  return {
+    id: itemKey,
+    itemKey,
+    title: state.title,
+    type: state.type,
+    date: state.scheduledAt,
+    endDate: state.endAt,
+    status: state.status,
+    moveHistory: [],
+    moveCount: 0,
+    companyName: state.companyName,
+    contactName: state.contactName,
+    location: state.location,
+    purpose: state.purpose,
+    notes: state.notes,
+  };
+}
+
 export async function updateAgendaStatus(
   tenantId: string,
   itemKey: string,

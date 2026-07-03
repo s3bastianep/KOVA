@@ -20,6 +20,7 @@ import {
   Filter,
   RefreshCw,
   Inbox,
+  Plus,
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import {
@@ -61,7 +62,28 @@ type ModalMode =
   | { type: 'detail'; item: AgendaItem }
   | { type: 'reason'; item: AgendaItem; action: 'cancel' | 'reschedule'; targetDate?: string }
   | { type: 'request'; request: AgendaRequest; action: 'reject' | 'reschedule' }
+  | { type: 'create' }
   | null;
+
+type NewAppointment = {
+  title: string;
+  type: string;
+  scheduledAt: string;
+  companyName: string;
+  contactName: string;
+  location: string;
+  purpose: string;
+};
+
+const EMPTY_APPOINTMENT: NewAppointment = {
+  title: '',
+  type: 'Reunión cliente',
+  scheduledAt: '',
+  companyName: '',
+  contactName: '',
+  location: '',
+  purpose: '',
+};
 
 type CalendarView = 'month' | 'week' | 'list';
 
@@ -73,6 +95,7 @@ export function AgendaCalendar() {
   const [dragItem, setDragItem] = useState<AgendaItem | null>(null);
   const [reasonText, setReasonText] = useState('');
   const [rescheduleDate, setRescheduleDate] = useState('');
+  const [newAppointment, setNewAppointment] = useState<NewAppointment>(EMPTY_APPOINTMENT);
   const queryClient = useQueryClient();
 
   const monthStr = monthKey(cursor.year, cursor.month);
@@ -163,6 +186,38 @@ export function AgendaCalendar() {
       setRescheduleDate('');
     },
   });
+
+  const createMutation = useMutation({
+    mutationFn: (payload: NewAppointment) =>
+      dashboardApi.createAgendaItem({
+        title: payload.title,
+        type: payload.type,
+        scheduledAt: new Date(payload.scheduledAt).toISOString(),
+        companyName: payload.companyName || undefined,
+        contactName: payload.contactName || undefined,
+        location: payload.location || undefined,
+        purpose: payload.purpose || undefined,
+      }),
+    onSuccess: (_res, payload) => {
+      const d = new Date(payload.scheduledAt);
+      setCursor({ year: d.getFullYear(), month: d.getMonth() });
+      queryClient.invalidateQueries({ queryKey: ['agenda'] });
+      setModal(null);
+      setNewAppointment(EMPTY_APPOINTMENT);
+    },
+  });
+
+  const openCreate = () => {
+    const base = new Date();
+    base.setHours(base.getHours() + 1, 0, 0, 0);
+    setNewAppointment({ ...EMPTY_APPOINTMENT, scheduledAt: toLocalDatetimeInput(base.toISOString()) });
+    setModal({ type: 'create' });
+  };
+
+  const submitCreate = () => {
+    if (!newAppointment.title.trim() || !newAppointment.scheduledAt) return;
+    createMutation.mutate(newAppointment);
+  };
 
   const monthLabel = new Date(cursor.year, cursor.month, 1).toLocaleDateString('es-CO', {
     month: 'long',
@@ -371,6 +426,14 @@ export function AgendaCalendar() {
           </div>
           <button type="button" className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors text-slate-600">
             <Filter className="w-3.5 h-3.5 text-slate-400" /> Filtros
+          </button>
+          <button
+            type="button"
+            onClick={openCreate}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-xl text-white shadow-sm hover:-translate-y-0.5 transition-all"
+            style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}
+          >
+            <Plus className="w-3.5 h-3.5" /> Nueva cita
           </button>
         </div>
       </div>
@@ -599,11 +662,21 @@ export function AgendaCalendar() {
 
       {/* Modal detalle / motivo */}
       {modal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={() => !mutation.isPending && setModal(null)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={() => !mutation.isPending && !createMutation.isPending && setModal(null)}>
           <div
             className="bg-white rounded-xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
+            {modal.type === 'create' && (
+              <CreatePanel
+                value={newAppointment}
+                loading={createMutation.isPending}
+                error={createMutation.error instanceof Error ? createMutation.error.message : ''}
+                onChange={setNewAppointment}
+                onSubmit={submitCreate}
+                onClose={() => setModal(null)}
+              />
+            )}
             {modal.type === 'detail' && (
               <DetailPanel
                 item={modal.item}
@@ -642,6 +715,136 @@ export function AgendaCalendar() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function CreatePanel({
+  value,
+  loading,
+  error,
+  onChange,
+  onSubmit,
+  onClose,
+}: {
+  value: NewAppointment;
+  loading: boolean;
+  error: string;
+  onChange: (v: NewAppointment) => void;
+  onSubmit: () => void;
+  onClose: () => void;
+}) {
+  const set = (patch: Partial<NewAppointment>) => onChange({ ...value, ...patch });
+
+  return (
+    <div className="p-5 space-y-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h3 className="font-heading font-semibold text-lg" style={{ color: 'var(--kova-navy)' }}>Nueva cita</h3>
+          <p className="text-sm text-slate-500 mt-0.5">Agenda una reunión, llamada o entrevista.</p>
+        </div>
+        <button type="button" onClick={onClose} className="p-1 text-slate-400 hover:text-slate-600">
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+
+      <div>
+        <label className="text-xs font-semibold uppercase text-slate-400">Título *</label>
+        <input
+          type="text"
+          value={value.title}
+          onChange={(e) => set({ title: e.target.value })}
+          placeholder="Ej: Reunión de discovery"
+          className="mt-1 w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
+          autoFocus
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="text-xs font-semibold uppercase text-slate-400">Tipo</label>
+          <select
+            value={value.type}
+            onChange={(e) => set({ type: e.target.value })}
+            className="mt-1 w-full px-3 py-2 rounded-lg border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
+          >
+            {Object.keys(AGENDA_TYPE_STYLES).map((t) => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="text-xs font-semibold uppercase text-slate-400">Fecha y hora *</label>
+          <input
+            type="datetime-local"
+            value={value.scheduledAt}
+            onChange={(e) => set({ scheduledAt: e.target.value })}
+            className="mt-1 w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="text-xs font-semibold uppercase text-slate-400">Empresa</label>
+          <input
+            type="text"
+            value={value.companyName}
+            onChange={(e) => set({ companyName: e.target.value })}
+            placeholder="Opcional"
+            className="mt-1 w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
+          />
+        </div>
+        <div>
+          <label className="text-xs font-semibold uppercase text-slate-400">Contacto</label>
+          <input
+            type="text"
+            value={value.contactName}
+            onChange={(e) => set({ contactName: e.target.value })}
+            placeholder="Opcional"
+            className="mt-1 w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="text-xs font-semibold uppercase text-slate-400">Lugar / enlace</label>
+        <input
+          type="text"
+          value={value.location}
+          onChange={(e) => set({ location: e.target.value })}
+          placeholder="Ej: Oficina, Google Meet..."
+          className="mt-1 w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
+        />
+      </div>
+
+      <div>
+        <label className="text-xs font-semibold uppercase text-slate-400">Objetivo / notas</label>
+        <textarea
+          value={value.purpose}
+          onChange={(e) => set({ purpose: e.target.value })}
+          rows={2}
+          placeholder="Opcional"
+          className="mt-1 w-full px-3 py-2 rounded-lg border border-slate-200 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-100"
+        />
+      </div>
+
+      {error && <p className="text-sm text-red-600">{error}</p>}
+
+      <div className="flex justify-end gap-2 pt-1">
+        <button type="button" onClick={onClose} disabled={loading} className="text-sm px-4 py-2 rounded-lg border border-slate-200">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          onClick={onSubmit}
+          disabled={loading || !value.title.trim() || !value.scheduledAt}
+          className="text-sm px-4 py-2 rounded-lg text-white disabled:opacity-50"
+          style={{ background: 'var(--kova-blue)' }}
+        >
+          {loading ? 'Guardando...' : 'Crear cita'}
+        </button>
+      </div>
     </div>
   );
 }

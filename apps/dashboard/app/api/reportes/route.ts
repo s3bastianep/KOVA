@@ -10,5 +10,17 @@ export async function GET(req: NextRequest) {
 
   if (isMockMode()) return Response.json(MOCK_REPORTS);
 
-  return Response.json({ avgTimeToHire: 0, avgTimePerStage: [], byConsultant: [], sources: [], hiresByMonth: [] });
+  return Response.json({
+    avgTimeToHire: 0,
+    avgTimeToHireDelta: 0,
+    hires6m: 0,
+    hires6mDelta: 0,
+    activeConsultants: 0,
+    activeConsultantsDelta: 0,
+    totalSources: 0,
+    avgTimePerStage: [],
+    byConsultant: [],
+    sources: [],
+    hiresByMonth: [],
+  });
 }
