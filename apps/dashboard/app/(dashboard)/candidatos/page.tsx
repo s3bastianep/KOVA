@@ -2,9 +2,10 @@
 
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { ChevronRight, MapPin, Briefcase, Star, Building2 } from 'lucide-react';
+import { ChevronRight, MapPin, Briefcase, Star, Building2, Users } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import { stageLabel } from '@/lib/stages';
+import { PageHeader } from '@/components/layout/PageHeader';
 
 type CandidateRow = {
   id: string;
@@ -28,10 +29,16 @@ export default function CandidatosPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-2xl font-bold" style={{ color: 'var(--kova-navy)' }}>Candidatos</h1>
-        <p className="text-sm text-slate-500">Haz clic en un candidato para ver su perfil completo.</p>
-      </div>
+      <PageHeader
+        title="Candidatos"
+        subtitle="Haz clic en un candidato para ver su perfil completo."
+        icon={Users}
+        accent="#F3E8FF"
+        tone="#7C3AED"
+      />
+      {list.length > 0 && (
+        <p className="text-xs text-slate-400 -mt-2">{list.length} candidato{list.length === 1 ? '' : 's'} registrado{list.length === 1 ? '' : 's'}</p>
+      )}
 
       {isLoading ? (
         <p className="text-sm text-slate-500">Cargando...</p>

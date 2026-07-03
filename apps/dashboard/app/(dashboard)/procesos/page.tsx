@@ -2,9 +2,10 @@
 
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { Plus } from 'lucide-react';
+import { Plus, GitBranch } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import { ProcessCard } from '@/components/proceso/ProcessCard';
+import { PageHeader } from '@/components/layout/PageHeader';
 
 type Proceso = {
   id: string;
@@ -26,22 +27,20 @@ export default function ProcesosPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="font-heading text-2xl font-bold" style={{ color: 'var(--kova-navy)' }}>Procesos</h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Cada proceso contiene todo: perfil, pipeline, candidatos, entrevistas, pruebas y cierre.
-          </p>
-        </div>
+      <PageHeader
+        title="Procesos"
+        subtitle="Cada proceso contiene todo: perfil, pipeline, candidatos, entrevistas, pruebas y cierre."
+        icon={GitBranch}
+      >
         <Link
           href="/procesos/nuevo"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white"
-          style={{ background: 'var(--kova-blue)' }}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white shadow-sm hover:-translate-y-0.5 transition-all"
+          style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}
         >
           <Plus className="w-4 h-4" />
           Nuevo proceso
         </Link>
-      </div>
+      </PageHeader>
 
       {isLoading ? (
         <p className="text-sm text-slate-500">Cargando...</p>

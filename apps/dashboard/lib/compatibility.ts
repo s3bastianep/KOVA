@@ -84,10 +84,26 @@ function evaluateRule(
       detail,
     };
   } else {
-    const expected = normalize(rule.expected);
-    const actualNorm = normalize(actual);
-    met = actualNorm.includes(expected) || expected.includes(actualNorm);
-    detail = met ? String(actual ?? 'Cumple') : `Esperado: ${rule.expected}`;
+    const expectedList = parseMultiValue(String(rule.expected ?? ''));
+    const actualList = parseMultiValue(actual == null ? '' : String(actual));
+    const matches = (item: string, target: string) => {
+      const a = normalize(item);
+      const b = normalize(target);
+      return a.includes(b) || b.includes(a);
+    };
+
+    if (expectedList.length === 0) {
+      met = actualList.length > 0;
+      detail = met ? actualList.join(', ') : 'Sin respuesta';
+    } else if (actualList.length === 0) {
+      met = false;
+      detail = `Esperado: ${rule.expected}`;
+    } else {
+      met = expectedList.some((expected) => actualList.some((item) => matches(item, expected)));
+      detail = met
+        ? actualList.join(', ')
+        : `${actualList.join(', ')} — esperado: ${rule.expected}`;
+    }
   }
 
   const partial =

@@ -1,9 +1,13 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { useState, type ReactNode, type ComponentType } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import {
+  ArrowLeft, ArrowRight, Check, Lightbulb, Building2, User, Mail, Phone, MapPin,
+  TrendingUp, HelpCircle, Briefcase, ClipboardCheck, GitBranch, FileCheck2,
+  type LucideIcon,
+} from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import {
   STANDARD_QUESTIONS,
@@ -28,6 +32,16 @@ const STEPS = [
   'Requisitos',
   'Proceso',
   'Resumen',
+];
+
+const STEP_META: { icon: LucideIcon; title: string; subtitle: string }[] = [
+  { icon: Building2, title: 'Información de la empresa', subtitle: 'Registra los datos principales de la empresa cliente.' },
+  { icon: TrendingUp, title: 'Discovery comercial', subtitle: 'Entiende qué y cómo vende la empresa.' },
+  { icon: HelpCircle, title: 'Necesidad de contratación', subtitle: 'Por qué y cuándo necesitan contratar.' },
+  { icon: Briefcase, title: 'Perfil del cargo', subtitle: 'Describe el cargo que buscas para el proceso.' },
+  { icon: ClipboardCheck, title: 'Requisitos del aspirante', subtitle: 'Elige y pondera lo que evaluará la compatibilidad.' },
+  { icon: GitBranch, title: 'Proceso de selección', subtitle: 'Define el pipeline y las evaluaciones activas.' },
+  { icon: FileCheck2, title: 'Resumen', subtitle: 'Revisa toda la solicitud antes de crearla.' },
 ];
 
 const DEFAULT_PIPELINE = [
@@ -308,41 +322,85 @@ export default function NuevoProcesoPage() {
     }
   };
 
+  const meta = STEP_META[step];
+  const StepIcon = meta.icon;
+
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6">
       <Link href="/procesos" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700">
         <ArrowLeft className="w-4 h-4" /> Cancelar
       </Link>
 
-      <div>
-        <h1 className="font-heading text-2xl font-bold" style={{ color: 'var(--kova-navy)' }}>Nueva solicitud de búsqueda</h1>
-        <p className="text-sm text-slate-500 mt-1">El sistema guía el flujo: cliente → perfil → requisitos → pipeline → automatizaciones.</p>
+      {/* Encabezado + caja de ayuda */}
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm" style={{ background: '#EEF2FA', color: 'var(--kova-blue)' }}>
+            <Briefcase className="w-5 h-5" />
+          </div>
+          <div>
+            <h1 className="font-heading text-2xl font-bold leading-tight" style={{ color: 'var(--kova-navy)' }}>Nueva solicitud de búsqueda</h1>
+            <p className="text-sm text-slate-500 mt-0.5">El sistema guía el flujo: cliente → perfil → requisitos → pipeline → automatizaciones.</p>
+          </div>
+        </div>
+        <div className="hidden md:flex items-start gap-2.5 rounded-2xl border border-slate-100 bg-white px-4 py-3 max-w-xs shadow-sm">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: '#FFF7E6', color: '#B7791F' }}>
+            <Lightbulb className="w-4 h-4" />
+          </div>
+          <div>
+            <p className="text-xs font-semibold" style={{ color: 'var(--kova-navy)' }}>¿Necesitas ayuda?</p>
+            <p className="text-[11px] text-slate-500 leading-snug mt-0.5">Sigue los pasos para crear una solicitud completa y efectiva.</p>
+          </div>
+        </div>
       </div>
 
-      <div className="flex gap-1 overflow-x-auto pb-2">
+      {/* Stepper con líneas conectoras */}
+      <div className="flex items-center overflow-x-auto pb-1">
         {STEPS.map((label, i) => (
-          <div key={label} className="flex items-center gap-1 shrink-0">
-            <div
-              className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${i <= step ? 'text-white' : 'text-slate-400 bg-slate-100'}`}
-              style={i <= step ? { background: 'var(--kova-blue)' } : undefined}
+          <div key={label} className="flex items-center shrink-0">
+            <button
+              type="button"
+              onClick={() => i <= step && setStep(i)}
+              className="flex items-center gap-2 group"
+              disabled={i > step}
             >
-              {i < step ? <Check className="w-3.5 h-3.5" /> : i + 1}
-            </div>
-            <span className={`text-[10px] hidden sm:inline ${i === step ? 'font-semibold' : 'text-slate-400'}`}>{label}</span>
+              <div
+                className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                  i < step ? 'text-white' : i === step ? 'text-white ring-4 ring-blue-100' : 'text-slate-400 bg-slate-100'
+                }`}
+                style={i <= step ? { background: 'var(--kova-blue)' } : undefined}
+              >
+                {i < step ? <Check className="w-3.5 h-3.5" /> : i + 1}
+              </div>
+              <span className={`text-xs hidden sm:inline whitespace-nowrap ${i === step ? 'font-semibold text-slate-700' : 'text-slate-400'}`}>{label}</span>
+            </button>
+            {i < STEPS.length - 1 && (
+              <div className={`h-0.5 w-6 sm:w-10 mx-1.5 rounded ${i < step ? 'bg-[var(--kova-blue)]' : 'bg-slate-200'}`} />
+            )}
           </div>
         ))}
       </div>
 
-      <div className="kova-card p-6 space-y-4">
+      <div className="kova-card p-6 sm:p-7 space-y-5">
+        {/* Cabecera de sección */}
+        <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#EEF2FA', color: 'var(--kova-blue)' }}>
+            <StepIcon className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="font-heading font-bold text-lg leading-tight" style={{ color: 'var(--kova-navy)' }}>{meta.title}</h2>
+            <p className="text-xs text-slate-500">{meta.subtitle}</p>
+          </div>
+        </div>
+
         {step === 0 && (
           <>
-            <Field label="Empresa" value={form.companyName} onChange={(v) => update('companyName', v)} placeholder="TechSales Colombia SAS" />
-            <Field label="Contacto principal" value={form.contact} onChange={(v) => update('contact', v)} />
+            <Field label="Empresa" value={form.companyName} onChange={(v) => update('companyName', v)} placeholder="TechSales Colombia SAS" icon={Building2} required />
+            <Field label="Contacto principal" value={form.contact} onChange={(v) => update('contact', v)} icon={User} required />
             <div className="grid sm:grid-cols-2 gap-4">
-              <Field label="Correo" value={form.email} onChange={(v) => update('email', v)} />
-              <Field label="Teléfono" value={form.phone} onChange={(v) => update('phone', v)} />
+              <Field label="Correo" value={form.email} onChange={(v) => update('email', v)} icon={Mail} type="email" required placeholder="ejemplo@empresa.com" />
+              <Field label="Teléfono" value={form.phone} onChange={(v) => update('phone', v)} icon={Phone} type="tel" required placeholder="+57 300 123 4567" />
             </div>
-            <Field label="Ciudad" value={form.city} onChange={(v) => update('city', v)} />
+            <SelectField label="Ciudad" value={form.city} onChange={(v) => update('city', v)} options={['Bogotá', 'Medellín', 'Cali', 'Barranquilla', 'Cartagena', 'Bucaramanga', 'Otra']} icon={MapPin} required />
           </>
         )}
 
@@ -622,18 +680,20 @@ export default function NuevoProcesoPage() {
 
       <div className="flex justify-between">
         <button type="button" onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0 || loading}
-          className="px-4 py-2 text-sm rounded-lg border border-slate-200 text-slate-600 disabled:opacity-40">
-          Anterior
+          className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 transition-colors">
+          <ArrowLeft className="w-4 h-4" /> Anterior
         </button>
         {step < STEPS.length - 1 ? (
           <button type="button" onClick={() => setStep((s) => s + 1)} disabled={loading}
-            className="px-4 py-2 text-sm rounded-lg text-white flex items-center gap-2" style={{ background: 'var(--kova-blue)' }}>
+            className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold rounded-xl text-white shadow-sm hover:-translate-y-0.5 transition-all"
+            style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}>
             Siguiente <ArrowRight className="w-4 h-4" />
           </button>
         ) : (
           <button type="button" onClick={finish} disabled={loading || !form.companyName || form.titles.length === 0}
-            className="px-4 py-2 text-sm rounded-lg text-white disabled:opacity-50" style={{ background: 'var(--kova-green)' }}>
-            {loading ? 'Creando...' : 'Crear proceso'}
+            className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold rounded-xl text-white shadow-sm hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 transition-all"
+            style={{ background: 'linear-gradient(135deg, var(--kova-green), #00996a)' }}>
+            {loading ? 'Creando...' : <><Check className="w-4 h-4" /> Crear proceso</>}
           </button>
         )}
       </div>
@@ -915,14 +975,29 @@ function QuestionPicker({
   );
 }
 
-function Field({ label, value, onChange, placeholder, type = 'text' }: {
+function FieldLabel({ label, required }: { label: string; required?: boolean }) {
+  return (
+    <label className="text-sm font-medium block mb-1.5" style={{ color: 'var(--kova-navy)' }}>
+      {label}
+      {required && <span className="text-red-400 ml-0.5">*</span>}
+    </label>
+  );
+}
+
+function Field({ label, value, onChange, placeholder, type = 'text', icon: Icon, required }: {
   label: string; value: string; onChange: (v: string) => void; placeholder?: string; type?: string;
+  icon?: ComponentType<{ className?: string }>; required?: boolean;
 }) {
+  const filled = value.trim().length > 0;
   return (
     <div>
-      <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">{label}</label>
-      <input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
-        className="mt-1 w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100" />
+      <FieldLabel label={label} required={required} />
+      <div className={`flex items-center gap-2 px-3.5 rounded-xl border bg-white transition-all focus-within:ring-2 focus-within:ring-[var(--kova-ring)] focus-within:border-[var(--kova-blue)] ${filled ? 'border-slate-200' : 'border-slate-200'}`}>
+        {Icon && <Icon className="w-4 h-4 text-slate-400 shrink-0" />}
+        <input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
+          className="w-full py-2.5 text-sm bg-transparent outline-none" />
+        {required && filled && <Check className="w-4 h-4 shrink-0" style={{ color: 'var(--kova-green)' }} />}
+      </div>
     </div>
   );
 }
@@ -932,24 +1007,28 @@ function TextArea({ label, value, onChange, placeholder }: {
 }) {
   return (
     <div>
-      <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">{label}</label>
+      <FieldLabel label={label} />
       <textarea value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} rows={3}
-        className="mt-1 w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 resize-none" />
+        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--kova-ring)] focus:border-[var(--kova-blue)] resize-none transition-all" />
     </div>
   );
 }
 
-function SelectField({ label, value, onChange, options, placeholder }: {
+function SelectField({ label, value, onChange, options, placeholder, icon: Icon, required }: {
   label: string; value: string; onChange: (v: string) => void; options: string[]; placeholder?: string;
+  icon?: ComponentType<{ className?: string }>; required?: boolean;
 }) {
   return (
     <div>
-      <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">{label}</label>
-      <select value={value} onChange={(e) => onChange(e.target.value)}
-        className="mt-1 w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100">
-        {placeholder && <option value="">{placeholder}</option>}
-        {options.map((o) => <option key={o} value={o}>{o}</option>)}
-      </select>
+      <FieldLabel label={label} required={required} />
+      <div className="flex items-center gap-2 px-3.5 rounded-xl border border-slate-200 bg-white transition-all focus-within:ring-2 focus-within:ring-[var(--kova-ring)] focus-within:border-[var(--kova-blue)]">
+        {Icon && <Icon className="w-4 h-4 text-slate-400 shrink-0" />}
+        <select value={value} onChange={(e) => onChange(e.target.value)}
+          className="w-full py-2.5 text-sm bg-transparent outline-none">
+          {placeholder && <option value="">{placeholder}</option>}
+          {options.map((o) => <option key={o} value={o}>{o}</option>)}
+        </select>
+      </div>
     </div>
   );
 }
@@ -963,7 +1042,7 @@ function ChipMultiField({ label, hint, options, selected, onToggle }: {
 }) {
   return (
     <div>
-      <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">{label}</label>
+      <label className="text-sm font-medium block" style={{ color: 'var(--kova-navy)' }}>{label}</label>
       {hint && <p className="text-xs text-slate-400 mt-0.5">{hint}</p>}
       <div className="flex flex-wrap gap-2 mt-2">
         {options.map((option) => {

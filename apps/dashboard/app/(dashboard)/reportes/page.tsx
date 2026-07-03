@@ -1,8 +1,9 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Clock, TrendingUp } from 'lucide-react';
+import { Clock, TrendingUp, BarChart3 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
+import { PageHeader } from '@/components/layout/PageHeader';
 
 type Reports = {
   avgTimeToHire: number;
@@ -39,10 +40,13 @@ export default function ReportesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-2xl font-bold" style={{ color: 'var(--kova-navy)' }}>Reportes</h1>
-        <p className="text-sm text-slate-500">Business intelligence del proceso de reclutamiento.</p>
-      </div>
+      <PageHeader
+        title="Reportes"
+        subtitle="Business intelligence del proceso de reclutamiento."
+        icon={BarChart3}
+        accent="#F3E8FF"
+        tone="#7C3AED"
+      />
 
       <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <div className="kova-card p-5">

@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { User, Shield, Bell, Building2 } from 'lucide-react';
+import { User, Shield, Bell, Building2, Settings } from 'lucide-react';
 import { getStoredUser, type AuthUser } from '@/lib/api';
+import { PageHeader } from '@/components/layout/PageHeader';
 
 const ROLE_LABELS: Record<string, string> = {
   SUPER_ADMIN: 'Super Administrador',
@@ -20,10 +21,13 @@ export default function ConfiguracionPage() {
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <div>
-        <h1 className="font-heading text-2xl font-bold" style={{ color: 'var(--kova-navy)' }}>Configuración</h1>
-        <p className="text-sm text-slate-500">Preferencias de la cuenta y del espacio de trabajo.</p>
-      </div>
+      <PageHeader
+        title="Configuración"
+        subtitle="Preferencias de la cuenta y del espacio de trabajo."
+        icon={Settings}
+        accent="#F1F5F9"
+        tone="#475569"
+      />
 
       <div className="kova-card p-6">
         <div className="flex items-center gap-2 mb-4">

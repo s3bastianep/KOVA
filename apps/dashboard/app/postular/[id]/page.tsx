@@ -64,9 +64,13 @@ export default function PostularPage({ params }: { params: Promise<{ id: string 
   }, [questions]);
 
   const step1Valid = firstName.trim() && lastName.trim() && /.+@.+\..+/.test(email);
-  const step2Valid = questions
-    .filter((q) => q.inputType === 'select')
-    .every((q) => typeof answers[q.id] === 'string' && (answers[q.id] as string).length > 0);
+  const step2Valid = questions.every((q) => {
+    if (q.inputType === 'multiselect') {
+      const selected = answers[q.id];
+      return Array.isArray(selected) && selected.length > 0;
+    }
+    return typeof answers[q.id] === 'string' && (answers[q.id] as string).length > 0;
+  });
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -296,11 +300,13 @@ function QuestionField({ q, answers, setAnswers }: {
     <div>
       <label className="text-sm font-medium block mb-1.5" style={{ color: 'var(--kova-navy)' }}>
         {q.label}
-        {!isMulti && <span className="text-red-400 ml-0.5">*</span>}
+        <span className="text-red-400 ml-0.5">*</span>
       </label>
       {isMulti ? (
         <>
-          <p className="text-xs text-slate-500 mb-2">Selecciona hasta {max} opciones ({selected.length}/{max})</p>
+          <p className="text-xs text-slate-500 mb-2">
+            Selecciona una o más opciones{max < 99 ? ` (máx. ${max})` : ''} · {selected.length} elegida{selected.length === 1 ? '' : 's'}
+          </p>
           <div className="flex flex-wrap gap-2">
             {(q.options ?? []).map((option) => {
               const active = selected.includes(option);
