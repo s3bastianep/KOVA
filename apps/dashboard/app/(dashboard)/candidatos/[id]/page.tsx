@@ -6,7 +6,6 @@ import Link from 'next/link';
 import {
   ArrowLeft,
   Download,
-  MoreHorizontal,
   Mail,
   Phone,
   MapPin,
@@ -153,7 +152,7 @@ function buildReport(c: Candidate) {
 
 type Report = ReturnType<typeof buildReport>;
 
-const TABS = ['Resumen', 'Análisis predictivo', 'Competencias', 'Fortalezas', 'Pruebas', 'Notas'];
+const TABS = ['Resumen', 'Análisis del perfil', 'Competencias', 'Fortalezas', 'Pruebas', 'Notas'];
 const TAB_ANCHORS = ['sec-resumen', 'sec-analisis', 'sec-competencias', 'sec-fortalezas', 'sec-pruebas', 'sec-notas'];
 
 export default function CandidatoDetallePage({ params }: { params: Promise<{ id: string }> }) {
@@ -179,9 +178,11 @@ export default function CandidatoDetallePage({ params }: { params: Promise<{ id:
             >
               <Download className="w-4 h-4" /> Descargar informe
             </button>
-            <button className="p-2 rounded-xl border border-slate-200 text-slate-400 hover:bg-slate-50 transition-colors">
-              <MoreHorizontal className="w-4 h-4" />
-            </button>
+            {c.email && (
+              <a href={`mailto:${c.email}`} className="p-2 rounded-xl border border-slate-200 text-slate-400 hover:bg-slate-50 transition-colors" title="Enviar correo">
+                <Mail className="w-4 h-4" />
+              </a>
+            )}
           </div>
         )}
       </div>
@@ -273,7 +274,7 @@ function CandidateReport({ c }: { c: Candidate }) {
         <div id="sec-analisis" className="grid lg:grid-cols-5 gap-5 print-block scroll-mt-24">
           <div className="lg:col-span-3 rounded-2xl p-6 text-white relative overflow-hidden" style={{ background: 'linear-gradient(150deg, #0E1834 0%, #16224A 100%)' }}>
             <div className="absolute -bottom-16 -right-10 w-56 h-56 rounded-full opacity-20 blur-3xl pointer-events-none no-print" style={{ background: VIOLET }} />
-            <p className="text-[11px] font-bold uppercase tracking-wide text-white/50 mb-2">Análisis predictivo Kova</p>
+            <p className="text-[11px] font-bold uppercase tracking-wide text-white/50 mb-2">Análisis del perfil</p>
             <RadarChart data={r.radar} />
             <div className="mt-4 rounded-xl p-3.5 flex gap-3 items-start" style={{ background: 'rgba(124,58,237,0.22)', border: '1px solid rgba(124,58,237,0.35)' }}>
               <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 text-white text-xs font-bold" style={{ background: VIOLET }}>K</div>
@@ -346,7 +347,7 @@ function CandidateReport({ c }: { c: Candidate }) {
               <span className="font-heading text-2xl font-bold" style={{ color: r.risk === 'Bajo' ? 'var(--kova-green)' : r.risk === 'Medio' ? '#D97706' : 'var(--kova-coral)' }}>{r.risk}</span>
             </div>
             <p className="text-sm text-slate-500 leading-relaxed">{r.riskDetail}</p>
-            <button className="mt-4 inline-flex items-center gap-1 text-sm font-semibold" style={{ color: VIOLET }}>
+            <button type="button" onClick={() => document.getElementById('sec-competencias')?.scrollIntoView({ behavior: 'smooth' })} className="mt-4 inline-flex items-center gap-1 text-sm font-semibold" style={{ color: VIOLET }}>
               Ver detalle de riesgos <ChevronRight className="w-4 h-4" />
             </button>
           </div>
@@ -356,7 +357,7 @@ function CandidateReport({ c }: { c: Candidate }) {
         <div className="flex items-center justify-between text-[11px] text-slate-400 px-1">
           <span className="flex items-center gap-1.5">
             <span className="w-4 h-4 rounded flex items-center justify-center text-white text-[9px] font-bold" style={{ background: 'var(--kova-navy)' }}>K</span>
-            Kova Intelligence
+            Kova Talent OS
           </span>
           <span>Generado el {generatedAt}</span>
         </div>

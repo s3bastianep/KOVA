@@ -1,6 +1,6 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import {
@@ -9,6 +9,8 @@ import {
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import { stageLabel } from '@/lib/stages';
+import { RejectModal } from '@/components/ui/RejectModal';
+import { useToast } from '@/components/ui/Toast';
 
 type JobProfile = {
   objective?: string;
@@ -84,6 +86,8 @@ function normalizeProfile(p: Proceso) {
 export default function ProcesoDetallePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const queryClient = useQueryClient();
+  const toast = useToast();
+  const [rejectTarget, setRejectTarget] = useState<{ id: string; name: string } | null>(null);
   const { data, isLoading, isError } = useQuery({
     queryKey: ['vacancy', id],
     queryFn: () => dashboardApi.vacancy(id),
@@ -97,11 +101,18 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
       candidateVacancyId: string;
       body: { action: 'advance' | 'reject'; reason?: string };
     }) => dashboardApi.updateProcessCandidate(id, candidateVacancyId, body),
-    onSuccess: () => {
+    onSuccess: (_, vars) => {
       queryClient.invalidateQueries({ queryKey: ['vacancy', id] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       queryClient.invalidateQueries({ queryKey: ['candidates'] });
+      if (vars.body.action === 'reject') {
+        toast('Candidato rechazado');
+        setRejectTarget(null);
+      } else {
+        toast('Candidato avanzado a la siguiente etapa');
+      }
     },
+    onError: () => toast('No se pudo actualizar el candidato', 'error'),
   });
 
   const p = data as Proceso | undefined;
@@ -125,17 +136,24 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
     candidateAction.mutate({ candidateVacancyId, body: { action: 'advance' } });
   }
 
-  function rejectCandidate(candidateVacancyId: string) {
-    const reason = window.prompt(
-      'Motivo de rechazo: Experiencia, Salario, Competencias, Ubicación u Otro',
-      'Competencias',
-    );
-    if (!reason) return;
-    candidateAction.mutate({ candidateVacancyId, body: { action: 'reject', reason } });
+  function rejectCandidate(candidateVacancyId: string, name: string) {
+    setRejectTarget({ id: candidateVacancyId, name });
+  }
+
+  function confirmReject(reason: string) {
+    if (!rejectTarget) return;
+    candidateAction.mutate({ candidateVacancyId: rejectTarget.id, body: { action: 'reject', reason } });
   }
 
   return (
     <div className="space-y-5 max-w-[960px]">
+      <RejectModal
+        open={!!rejectTarget}
+        candidateName={rejectTarget?.name}
+        loading={candidateAction.isPending}
+        onClose={() => setRejectTarget(null)}
+        onConfirm={confirmReject}
+      />
       <Link href="/procesos" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700">
         <ArrowLeft className="w-4 h-4" /> Volver a procesos
       </Link>
@@ -252,7 +270,7 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
                     rank={idx + 1}
                     busy={candidateAction.isPending}
                     onAdvance={() => advanceCandidate(c.id)}
-                    onReject={() => rejectCandidate(c.id)}
+                    onReject={() => rejectCandidate(c.id, `${c.candidate.firstName} ${c.candidate.lastName}`)}
                   />
                 ))}
               </div>

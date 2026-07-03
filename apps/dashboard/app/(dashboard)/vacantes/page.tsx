@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
 
-export default function VacantesRedirect() {
+export default function VacantesPage() {
   redirect('/procesos');
 }

@@ -4,10 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import {
   GitBranch, Users, Calendar, ClipboardCheck, TrendingUp,
-  ArrowRight, Filter, ChevronRight, Phone, ClipboardList,
+  ArrowRight, ChevronRight, Phone, ClipboardList,
   CheckCircle2, Circle, Activity,
 } from 'lucide-react';
-import { dashboardApi } from '@/lib/api';
+import { dashboardApi, getStoredUser } from '@/lib/api';
 import { CLIENT_JOURNEY_STAGES } from '@/lib/client-journey';
 import { processStatusLabel } from '@/lib/process-status';
 import type { ProcessEvalGroup } from '@/lib/evaluations';
@@ -89,6 +89,9 @@ export default function DashboardPage() {
   const recentActivity = (data?.recentActivity ?? []) as ActivityLog[];
   const evalProcesses = (evalData?.processes ?? []) as ProcessEvalGroup[];
 
+  const user = getStoredUser();
+  const firstName = user?.firstName ?? 'Consultor';
+
   const totalCandidatesEval = evalProcesses.reduce((s, p) => s + p.candidateCount, 0);
   const totalTests = evalProcesses.reduce((s, p) => s + p.testCount, 0);
   const avgScore = evalProcesses.length
@@ -137,27 +140,13 @@ export default function DashboardPage() {
     kpis.hiresThisMonth ?? 0,
   ];
 
-  const now = new Date();
-  const monthShort = now.toLocaleDateString('es-CO', { month: 'short' });
-
   return (
     <div className="space-y-5">
-      {/* Header */}
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="font-heading text-2xl font-bold flex items-center gap-2" style={{ color: 'var(--kova-navy)' }}>
-            ¡{greeting()}, María! <span className="text-xl">👋</span>
-          </h1>
-          <p className="text-sm text-slate-500 mt-0.5">Este es el resumen de tu operación hoy.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button type="button" className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-600 bg-white hover:bg-slate-50 transition-colors">
-            <Calendar className="w-3.5 h-3.5" /> 1 {monthShort} – 31 {monthShort} {now.getFullYear()}
-          </button>
-          <button type="button" className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-600 bg-white hover:bg-slate-50 transition-colors">
-            <Filter className="w-3.5 h-3.5" /> Filtros
-          </button>
-        </div>
+      <div>
+        <h1 className="font-heading text-2xl font-bold" style={{ color: 'var(--kova-navy)' }}>
+          {greeting()}, {firstName}
+        </h1>
+        <p className="text-sm text-slate-500 mt-0.5">Este es el resumen de tu operación hoy.</p>
       </div>
 
       {/* KPIs */}

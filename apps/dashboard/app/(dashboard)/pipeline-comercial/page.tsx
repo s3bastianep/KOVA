@@ -393,20 +393,21 @@ function ClientDetailPanel({
             type="button"
             disabled={loading}
             onClick={onAdvance}
-            className="flex-1 text-xs py-2 rounded-lg text-white disabled:opacity-50 flex items-center justify-center gap-1"
+            title={`Avanzar a ${nextStage.shortLabel}`}
+            className="flex-1 min-w-0 text-xs font-medium px-3 py-2.5 rounded-lg text-white disabled:opacity-50 inline-flex items-center justify-center gap-1.5 leading-tight transition-all hover:brightness-95 hover:-translate-y-0.5"
             style={{ background: 'var(--kova-green)' }}
           >
-            <Check className="w-3.5 h-3.5" />
-            Avanzar a {nextStage.shortLabel}
+            <Check className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">Avanzar a {nextStage.shortLabel}</span>
           </button>
         )}
         <button
           type="button"
           disabled={loading}
           onClick={onHold}
-          className="flex-1 text-xs py-2 rounded-lg border border-amber-200 text-amber-700 bg-amber-50 disabled:opacity-50 flex items-center justify-center gap-1"
+          className="shrink-0 text-xs font-medium px-3 py-2.5 rounded-lg border border-amber-200 text-amber-700 bg-amber-50 disabled:opacity-50 inline-flex items-center justify-center gap-1.5 leading-tight transition-colors hover:bg-amber-100"
         >
-          <Pause className="w-3.5 h-3.5" />
+          <Pause className="w-3.5 h-3.5 shrink-0" />
           No avanzar
         </button>
       </div>

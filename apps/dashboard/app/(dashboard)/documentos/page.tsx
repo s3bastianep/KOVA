@@ -4,12 +4,18 @@ import { useQuery } from '@tanstack/react-query';
 import { FileText, Download } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import { PageHeader } from '@/components/layout/PageHeader';
+import { useToast } from '@/components/ui/Toast';
 
 type Doc = { id: string; name: string; type: string; company: string; size: string; date: string };
 
 export default function DocumentosPage() {
+  const toast = useToast();
   const { data, isLoading } = useQuery({ queryKey: ['documents'], queryFn: dashboardApi.documents });
   const docs = (data as Doc[]) ?? [];
+
+  const download = (d: Doc) => {
+    toast(`Descarga iniciada: ${d.name}`, 'info');
+  };
 
   return (
     <div className="space-y-6">
@@ -35,7 +41,12 @@ export default function DocumentosPage() {
                 <p className="text-xs text-slate-400 mt-0.5">{d.type} · {d.company} · {d.size}</p>
               </div>
               <span className="text-xs text-slate-400 hidden sm:block">{new Date(d.date).toLocaleDateString()}</span>
-              <button className="w-9 h-9 rounded-lg flex items-center justify-center text-slate-400 hover:text-[var(--kova-blue)] hover:bg-blue-50 transition-colors">
+              <button
+                type="button"
+                onClick={() => download(d)}
+                className="w-9 h-9 rounded-lg flex items-center justify-center text-slate-400 hover:text-[var(--kova-blue)] hover:bg-blue-50 transition-colors"
+                title="Descargar"
+              >
                 <Download className="w-4 h-4" />
               </button>
             </div>
