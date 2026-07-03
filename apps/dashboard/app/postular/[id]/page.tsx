@@ -234,8 +234,8 @@ export default function PostularPage({ params }: { params: Promise<{ id: string 
                   </label>
                   <div className="flex flex-col sm:flex-row gap-3">
                     <div className="flex flex-1 items-center gap-0 rounded-xl border border-slate-200 bg-white overflow-hidden focus-within:border-[var(--kova-green)] focus-within:ring-2 focus-within:ring-green-50 transition-all">
-                      <span className="flex items-center gap-1.5 px-3 py-2.5 border-r border-slate-200 bg-slate-50 text-sm text-slate-600 shrink-0">
-                        🇨🇴 +57
+                      <span className="flex items-center gap-1.5 px-3 py-2.5 border-r border-slate-200 bg-slate-50 text-sm font-medium text-slate-600 shrink-0">
+                        CO +57
                       </span>
                       <Phone className="w-4 h-4 text-slate-400 ml-3 shrink-0" />
                       <input

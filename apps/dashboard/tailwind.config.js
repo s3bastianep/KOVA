@@ -15,8 +15,8 @@ module.exports = {
         },
       },
       fontFamily: {
-        heading: ['Sora', 'Inter', 'sans-serif'],
-        body: ['Inter', 'sans-serif'],
+        heading: ['var(--font-sora)', 'Sora', 'Inter', 'sans-serif'],
+        body: ['var(--font-inter)', 'Inter', 'sans-serif'],
       },
     },
   },
