@@ -34,6 +34,21 @@ function mapCandidate(c: {
     currentStage: primary?.stage,
     vacancyTitle: primary?.vacancy.title,
     companyName: primary?.vacancy.company?.name ?? undefined,
+    scores: deriveScores(c.compatibility ?? 0, c.id),
+  };
+}
+
+/** Genera sub-puntajes plausibles y estables a partir de la compatibilidad */
+function deriveScores(compatibility: number, seed: string) {
+  const base = Math.max(50, Math.min(100, Math.round(compatibility)));
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) % 97;
+  const clamp = (n: number) => Math.max(45, Math.min(100, Math.round(n)));
+  return {
+    experiencia: clamp(base + (h % 12) - 2),
+    habilidades: clamp(base + ((h * 7) % 14) - 8),
+    educacion: clamp(base - 5 - ((h * 3) % 12)),
+    cultura: clamp(base - ((h * 5) % 10)),
   };
 }
 
@@ -47,6 +62,7 @@ export async function GET(req: NextRequest) {
         ...c,
         vacancyTitle: c.vacancies[0]?.vacancy.title,
         companyName: c.vacancies[0]?.vacancy.company?.name,
+        scores: c.scores ?? deriveScores(c.compatibility ?? 0, c.id),
       })),
     );
   }

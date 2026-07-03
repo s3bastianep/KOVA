@@ -3,8 +3,9 @@
 import { use, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
-  User, Mail, Phone, Linkedin, MapPin, Briefcase, Building2, DollarSign,
-  MessageSquare, CheckCircle2, ChevronLeft, ChevronRight, Sparkles, Send, Loader2,
+  User, Mail, Phone, Linkedin, Briefcase, Building2, DollarSign,
+  MessageSquare, CheckCircle2, ChevronLeft, ChevronRight, Send, Loader2,
+  Lightbulb, Shield, Clock, Lock, Check,
 } from 'lucide-react';
 
 type FormQuestion = {
@@ -27,7 +28,54 @@ const SALARY_RANGES = [
   'A convenir',
 ];
 
-const STEPS = ['Tus datos', 'Tu perfil', 'Cuéntanos más'] as const;
+const STEPS = [
+  { label: 'Tus datos', subtitle: 'Información de contacto', next: 'Tu perfil' },
+  { label: 'Tu perfil', subtitle: 'Experiencia y habilidades', next: 'Cuéntanos más' },
+  { label: 'Cuéntanos más', subtitle: 'Información adicional', next: null },
+] as const;
+
+function computeProgressScore(
+  step: number,
+  firstName: string,
+  lastName: string,
+  email: string,
+  phone: string,
+  linkedin: string,
+  questions: FormQuestion[],
+  answers: Record<string, string | string[]>,
+  currentRole: string,
+  currentCompany: string,
+  salary: string,
+  motivation: string,
+) {
+  let score = 0;
+
+  if (firstName.trim()) score += 6;
+  if (lastName.trim()) score += 6;
+  if (/.+@.+\..+/.test(email)) score += 10;
+  if (phone.trim()) score += 6;
+  if (linkedin.trim()) score += 4;
+
+  if (questions.length > 0) {
+    const answered = questions.filter((q) => {
+      if (q.inputType === 'multiselect') {
+        const sel = answers[q.id];
+        return Array.isArray(sel) && sel.length > 0;
+      }
+      return typeof answers[q.id] === 'string' && (answers[q.id] as string).length > 0;
+    }).length;
+    score += Math.round((answered / questions.length) * 55);
+  } else if (step >= 1) {
+    score += 30;
+  }
+
+  if (currentRole.trim()) score += 4;
+  if (currentCompany.trim()) score += 3;
+  if (salary) score += 3;
+  if (motivation.trim()) score += 3;
+
+  return Math.min(100, score);
+}
 
 export default function PostularPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -62,6 +110,11 @@ export default function PostularPage({ params }: { params: Promise<{ id: string 
     }
     return groups;
   }, [questions]);
+
+  const progressScore = useMemo(
+    () => computeProgressScore(step, firstName, lastName, email, phone, linkedin, questions, answers, currentRole, currentCompany, salary, motivation),
+    [step, firstName, lastName, email, phone, linkedin, questions, answers, currentRole, currentCompany, salary, motivation],
+  );
 
   const step1Valid = firstName.trim() && lastName.trim() && /.+@.+\..+/.test(email);
   const step2Valid = questions.every((q) => {
@@ -106,7 +159,7 @@ export default function PostularPage({ params }: { params: Promise<{ id: string 
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-3 text-slate-500" style={{ background: 'var(--kova-navy)' }}>
+      <div className="min-h-screen flex flex-col items-center justify-center gap-3" style={{ background: 'linear-gradient(168deg, #0F1F3D, #1A2D4A)' }}>
         <Loader2 className="w-8 h-8 animate-spin text-white/80" />
         <p className="text-white/80 text-sm">Cargando formulario...</p>
       </div>
@@ -115,7 +168,7 @@ export default function PostularPage({ params }: { params: Promise<{ id: string 
 
   if (done) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6" style={{ background: 'var(--kova-navy)' }}>
+      <div className="min-h-screen flex items-center justify-center p-6" style={{ background: 'linear-gradient(168deg, #0F1F3D, #1A2D4A)' }}>
         <div className="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center space-y-5">
           <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center" style={{ background: 'rgba(0,178,122,0.12)' }}>
             <CheckCircle2 className="w-11 h-11" style={{ color: 'var(--kova-green)' }} />
@@ -135,153 +188,274 @@ export default function PostularPage({ params }: { params: Promise<{ id: string 
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header banner */}
-      <div className="px-4 pt-10 pb-24 text-center text-white" style={{ background: 'linear-gradient(135deg, var(--kova-navy), var(--kova-blue))' }}>
-        <div className="max-w-xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-xs font-medium mb-4">
+    <div className="min-h-screen bg-[#F4F6FA]">
+      {/* Header */}
+      <div className="relative overflow-hidden px-4 pt-10 pb-28 text-center text-white" style={{ background: 'linear-gradient(168deg, #0F1F3D 0%, #152238 50%, #1A2D4A 100%)' }}>
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute -top-20 left-1/4 w-96 h-96 rounded-full blur-3xl" style={{ background: 'var(--kova-blue-mid)' }} />
+          <div className="absolute -bottom-32 right-1/4 w-80 h-80 rounded-full blur-3xl" style={{ background: 'var(--kova-green)' }} />
+        </div>
+        <div className="relative max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-xs font-medium mb-4">
             <Building2 className="w-3.5 h-3.5" />
             {data?.companyName ?? 'Empresa'}
           </div>
-          <h1 className="font-heading text-3xl font-bold">{data?.title ?? 'Vacante'}</h1>
-          <p className="text-sm text-white/70 mt-2 flex items-center justify-center gap-1.5">
-            <Sparkles className="w-4 h-4" />
-            Completa el formulario y descubre tu compatibilidad al instante
+          <h1 className="font-heading text-3xl sm:text-4xl font-bold leading-tight">{data?.title ?? 'Vacante'}</h1>
+          <p className="text-sm text-white/70 mt-3 max-w-lg mx-auto">
+            Completa el formulario y descubre tu compatibilidad con el cargo al instante.
           </p>
         </div>
       </div>
 
-      <div className="max-w-xl mx-auto px-4 -mt-16 pb-16">
+      <div className="max-w-5xl mx-auto px-4 -mt-20 pb-16">
         {/* Stepper */}
-        <div className="bg-white rounded-2xl shadow-sm p-4 mb-4 flex items-center gap-2">
-          {STEPS.map((label, i) => (
-            <div key={label} className="flex-1 flex items-center gap-2">
-              <div className="flex flex-col items-center flex-1">
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                    i < step ? 'text-white' : i === step ? 'text-white ring-4 ring-blue-100' : 'text-slate-400 bg-slate-100'
-                  }`}
-                  style={i <= step ? { background: 'var(--kova-blue)' } : undefined}
-                >
-                  {i < step ? <CheckCircle2 className="w-4 h-4" /> : i + 1}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-5">
+          <div className="flex items-start">
+            {STEPS.map((s, i) => {
+              const active = i === step;
+              const done = i < step;
+              return (
+                <div key={s.label} className="flex items-start flex-1 min-w-0">
+                  <div className="flex flex-col items-center flex-1 min-w-0">
+                    <div
+                      className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shrink-0 transition-all ${
+                        done ? 'text-white' : active ? 'text-white ring-4 ring-green-100' : 'text-slate-400 bg-slate-100'
+                      }`}
+                      style={done || active ? { background: 'var(--kova-green)' } : undefined}
+                    >
+                      {done ? <Check className="w-4 h-4" /> : i + 1}
+                    </div>
+                    <p className={`text-xs font-semibold mt-2 text-center truncate w-full ${active ? 'text-slate-800' : 'text-slate-400'}`}>{s.label}</p>
+                    <p className="text-[10px] text-slate-400 text-center truncate w-full hidden sm:block">{s.subtitle}</p>
+                    <div className={`h-1 w-full max-w-[80px] rounded-full mt-2 transition-all ${active ? '' : 'bg-transparent'}`} style={active ? { background: 'var(--kova-green)' } : undefined} />
+                  </div>
+                  {i < STEPS.length - 1 && (
+                    <div className="flex items-center pt-4 px-1 shrink-0">
+                      <div className={`w-full min-w-[24px] border-t-2 border-dashed ${done ? 'border-green-300' : 'border-slate-200'}`} />
+                    </div>
+                  )}
                 </div>
-                <span className={`text-[10px] mt-1 text-center ${i === step ? 'font-semibold text-slate-700' : 'text-slate-400'}`}>{label}</span>
-              </div>
-              {i < STEPS.length - 1 && <div className={`h-0.5 flex-1 rounded ${i < step ? 'bg-blue-500' : 'bg-slate-100'}`} />}
-            </div>
-          ))}
+              );
+            })}
+          </div>
         </div>
 
-        <form onSubmit={submit} className="bg-white rounded-2xl shadow-sm p-6 space-y-5">
-          {/* STEP 1 — Datos */}
-          {step === 0 && (
-            <div className="space-y-4">
-              <SectionTitle icon={<User className="w-4 h-4" />} title="Tus datos de contacto" subtitle="Así te identificamos y contactamos" />
-              <div className="grid sm:grid-cols-2 gap-4">
-                <Field icon={<User className="w-4 h-4" />} label="Nombre" value={firstName} onChange={setFirstName} required />
-                <Field icon={<User className="w-4 h-4" />} label="Apellido" value={lastName} onChange={setLastName} required />
-              </div>
-              <Field icon={<Mail className="w-4 h-4" />} label="Correo" value={email} onChange={setEmail} type="email" required />
-              <Field icon={<Phone className="w-4 h-4" />} label="Teléfono / WhatsApp" value={phone} onChange={setPhone} type="tel" />
-              <Field icon={<Linkedin className="w-4 h-4" />} label="LinkedIn (opcional)" value={linkedin} onChange={setLinkedin} placeholder="https://linkedin.com/in/..." />
-            </div>
-          )}
-
-          {/* STEP 2 — Perfil */}
-          {step === 1 && (
-            <div className="space-y-6">
-              <SectionTitle icon={<Briefcase className="w-4 h-4" />} title="Tu perfil profesional" subtitle="Estas respuestas calculan tu compatibilidad" />
-              {groupedQuestions.length === 0 && (
-                <p className="text-sm text-slate-400 text-center py-6">Este proceso no requiere preguntas adicionales.</p>
-              )}
-              {groupedQuestions.map((group) => (
-                <div key={group.category} className="space-y-4">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 border-b border-slate-100 pb-1">{group.category}</p>
-                  {group.items.map((q) => (
-                    <QuestionField key={q.id} q={q} answers={answers} setAnswers={setAnswers} />
-                  ))}
+        {/* Dos columnas */}
+        <div className="grid lg:grid-cols-[minmax(0,1fr)_300px] gap-5 items-start">
+          {/* Formulario principal */}
+          <form onSubmit={submit} className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8 space-y-5">
+            {step === 0 && (
+              <div className="space-y-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h2 className="font-heading text-xl font-bold" style={{ color: 'var(--kova-navy)' }}>¡Empecemos con tus datos!</h2>
+                    <p className="text-sm text-slate-500 mt-1">Así podremos identificarte y mantenerte informado.</p>
+                  </div>
+                  <div className="hidden sm:flex items-center gap-1 shrink-0">
+                    <span className="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style={{ background: '#EEF2FA' }}>👤</span>
+                    <span className="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style={{ background: '#E6FAF3' }}>✉️</span>
+                  </div>
                 </div>
-              ))}
-            </div>
-          )}
 
-          {/* STEP 3 — Más info */}
-          {step === 2 && (
-            <div className="space-y-4">
-              <SectionTitle icon={<MessageSquare className="w-4 h-4" />} title="Cuéntanos un poco más" subtitle="Esto nos ayuda a conocerte mejor (opcional)" />
-              <Field icon={<Briefcase className="w-4 h-4" />} label="Cargo actual" value={currentRole} onChange={setCurrentRole} placeholder="Ej: Ejecutivo comercial" />
-              <Field icon={<Building2 className="w-4 h-4" />} label="Empresa actual" value={currentCompany} onChange={setCurrentCompany} placeholder="Ej: SoftCorp" />
-              <div>
-                <label className="text-sm font-medium mb-1.5 flex items-center gap-1.5" style={{ color: 'var(--kova-navy)' }}>
-                  <DollarSign className="w-4 h-4 text-slate-400" /> Expectativa salarial
-                </label>
-                <select
-                  value={salary}
-                  onChange={(e) => setSalary(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:border-[var(--kova-blue)] focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <Field icon={<User className="w-4 h-4" />} label="Nombre(s)" value={firstName} onChange={setFirstName} placeholder="Escribe tu nombre" required />
+                  <Field icon={<User className="w-4 h-4" />} label="Apellido(s)" value={lastName} onChange={setLastName} placeholder="Escribe tu apellido" required />
+                </div>
+                <Field icon={<Mail className="w-4 h-4" />} label="Correo electrónico" value={email} onChange={setEmail} type="email" placeholder="ejemplo@correo.com" required />
+
+                <div>
+                  <label className="text-sm font-medium mb-1.5 flex items-center gap-1.5" style={{ color: 'var(--kova-navy)' }}>
+                    Teléfono / WhatsApp
+                  </label>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <div className="flex flex-1 items-center gap-0 rounded-xl border border-slate-200 bg-white overflow-hidden focus-within:border-[var(--kova-green)] focus-within:ring-2 focus-within:ring-green-50 transition-all">
+                      <span className="flex items-center gap-1.5 px-3 py-2.5 border-r border-slate-200 bg-slate-50 text-sm text-slate-600 shrink-0">
+                        🇨🇴 +57
+                      </span>
+                      <Phone className="w-4 h-4 text-slate-400 ml-3 shrink-0" />
+                      <input
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="300 123 4567"
+                        className="flex-1 px-2 py-2.5 text-sm outline-none bg-transparent"
+                      />
+                    </div>
+                    <div className="sm:w-52 flex items-start gap-2 px-3 py-2.5 rounded-xl border shrink-0" style={{ background: '#F0FDF4', borderColor: '#BBF7D0' }}>
+                      <Phone className="w-4 h-4 shrink-0 mt-0.5" style={{ color: 'var(--kova-green)' }} />
+                      <p className="text-[11px] leading-snug" style={{ color: '#047857' }}>
+                        Te escribiremos por WhatsApp. Este número nos ayuda a contactarte más rápido.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <Field icon={<Linkedin className="w-4 h-4" />} label="LinkedIn (opcional)" value={linkedin} onChange={setLinkedin} placeholder="https://linkedin.com/in/tu-perfil" />
+                  <p className="text-[11px] text-slate-400 mt-1 ml-1">Comparte tu perfil para conocer más sobre tu experiencia profesional.</p>
+                </div>
+
+                <div className="flex items-start gap-3 p-4 rounded-xl" style={{ background: '#EEF2FA' }}>
+                  <Lightbulb className="w-5 h-5 shrink-0 mt-0.5" style={{ color: 'var(--kova-blue)' }} />
+                  <div>
+                    <p className="text-xs font-semibold" style={{ color: 'var(--kova-navy)' }}>Consejo</p>
+                    <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+                      Completa tus datos con información real y actualizada. Esto nos ayuda a evaluarte de forma justa y contactarte sin demoras.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {step === 1 && (
+              <div className="space-y-6">
+                <div>
+                  <h2 className="font-heading text-xl font-bold" style={{ color: 'var(--kova-navy)' }}>Cuéntanos sobre tu perfil</h2>
+                  <p className="text-sm text-slate-500 mt-1">Estas respuestas nos ayudan a calcular tu compatibilidad con el cargo.</p>
+                </div>
+                {groupedQuestions.length === 0 && (
+                  <p className="text-sm text-slate-400 text-center py-6">Este proceso no requiere preguntas adicionales.</p>
+                )}
+                {groupedQuestions.map((group) => (
+                  <div key={group.category} className="space-y-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 border-b border-slate-100 pb-2">{group.category}</p>
+                    {group.items.map((q) => (
+                      <QuestionField key={q.id} q={q} answers={answers} setAnswers={setAnswers} />
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {step === 2 && (
+              <div className="space-y-5">
+                <div>
+                  <h2 className="font-heading text-xl font-bold" style={{ color: 'var(--kova-navy)' }}>Un poco más sobre ti</h2>
+                  <p className="text-sm text-slate-500 mt-1">Información adicional que nos ayuda a conocerte mejor (opcional).</p>
+                </div>
+                <Field icon={<Briefcase className="w-4 h-4" />} label="Cargo actual" value={currentRole} onChange={setCurrentRole} placeholder="Ej: Ejecutivo comercial" />
+                <Field icon={<Building2 className="w-4 h-4" />} label="Empresa actual" value={currentCompany} onChange={setCurrentCompany} placeholder="Ej: SoftCorp" />
+                <div>
+                  <label className="text-sm font-medium mb-1.5 flex items-center gap-1.5" style={{ color: 'var(--kova-navy)' }}>
+                    <DollarSign className="w-4 h-4 text-slate-400" /> Expectativa salarial
+                  </label>
+                  <select
+                    value={salary}
+                    onChange={(e) => setSalary(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:border-[var(--kova-green)] focus:ring-2 focus:ring-green-50 outline-none transition-all"
+                  >
+                    <option value="">Prefiero no decir</option>
+                    {SALARY_RANGES.map((r) => <option key={r} value={r}>{r}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-1.5 flex items-center gap-1.5" style={{ color: 'var(--kova-navy)' }}>
+                    <MessageSquare className="w-4 h-4 text-slate-400" /> ¿Por qué te interesa este cargo?
+                  </label>
+                  <textarea
+                    value={motivation}
+                    onChange={(e) => setMotivation(e.target.value)}
+                    rows={4}
+                    maxLength={500}
+                    placeholder="Cuéntanos brevemente tu motivación..."
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:border-[var(--kova-green)] focus:ring-2 focus:ring-green-50 outline-none transition-all resize-none"
+                  />
+                  <p className="text-[11px] text-slate-400 mt-1 text-right">{motivation.length}/500</p>
+                </div>
+              </div>
+            )}
+
+            {error && (
+              <div className="text-sm text-red-600 bg-red-50 rounded-xl px-4 py-3 border border-red-100">{error}</div>
+            )}
+
+            {/* Navegación */}
+            <div className="flex items-center gap-3 pt-2 border-t border-slate-100">
+              {step > 0 ? (
+                <button
+                  type="button"
+                  onClick={() => setStep((s) => s - 1)}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
                 >
-                  <option value="">Prefiero no decir</option>
-                  {SALARY_RANGES.map((r) => <option key={r} value={r}>{r}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="text-sm font-medium mb-1.5 flex items-center gap-1.5" style={{ color: 'var(--kova-navy)' }}>
-                  <MessageSquare className="w-4 h-4 text-slate-400" /> ¿Por qué te interesa este cargo?
-                </label>
-                <textarea
-                  value={motivation}
-                  onChange={(e) => setMotivation(e.target.value)}
-                  rows={4}
-                  maxLength={500}
-                  placeholder="Cuéntanos brevemente tu motivación..."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:border-[var(--kova-blue)] focus:ring-2 focus:ring-blue-100 outline-none transition-all resize-none"
-                />
-                <p className="text-[11px] text-slate-400 mt-1 text-right">{motivation.length}/500</p>
+                  <ChevronLeft className="w-4 h-4" /> Atrás
+                </button>
+              ) : <div />}
+
+              {step < STEPS.length - 1 ? (
+                <button
+                  type="button"
+                  onClick={() => setStep((s) => s + 1)}
+                  disabled={(step === 0 && !step1Valid) || (step === 1 && !step2Valid)}
+                  className="ml-auto flex flex-col items-center gap-0.5 min-w-[160px] py-3 px-6 rounded-xl text-white font-semibold text-sm disabled:opacity-50 transition-all hover:-translate-y-0.5 shadow-sm"
+                  style={{ background: 'var(--kova-green)' }}
+                >
+                  <span className="inline-flex items-center gap-1.5">Continuar <ChevronRight className="w-4 h-4" /></span>
+                  {STEPS[step].next && <span className="text-[10px] font-normal text-white/80">Siguiente: {STEPS[step].next}</span>}
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="ml-auto inline-flex items-center justify-center gap-2 min-w-[180px] py-3 px-6 rounded-xl text-white font-semibold text-sm disabled:opacity-60 transition-all hover:-translate-y-0.5 shadow-sm"
+                  style={{ background: 'var(--kova-green)' }}
+                >
+                  {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Enviando...</> : <><Send className="w-4 h-4" /> Enviar postulación</>}
+                </button>
+              )}
+            </div>
+          </form>
+
+          {/* Barra lateral */}
+          <aside className="space-y-4 lg:sticky lg:top-6">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 text-center">
+              <ScoreRing value={progressScore} size="sm" />
+              <p className="text-sm font-semibold mt-3" style={{ color: 'var(--kova-navy)' }}>
+                {progressScore === 0 ? 'Compatibilidad inicial' : `${progressScore}% de avance`}
+              </p>
+              <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                Tu puntaje se actualiza a medida que completas el formulario.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+              <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--kova-navy)' }}>¿Por qué pedimos esta información?</h3>
+              <div className="space-y-3">
+                <WhyItem icon={<Shield className="w-4 h-4" />} title="Contacto seguro" text="Solo usamos tus datos para este proceso de selección." />
+                <WhyItem icon={<Clock className="w-4 h-4" />} title="Comunicación rápida" text="Te avisamos por correo o WhatsApp sobre tu avance." />
+                <WhyItem icon={<Lock className="w-4 h-4" />} title="Privacidad garantizada" text="Tu información no se comparte con terceros." />
               </div>
             </div>
-          )}
 
-          {error && (
-            <div className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</div>
-          )}
+            <div className="rounded-2xl border p-4 flex items-start gap-3" style={{ background: '#F0FDF4', borderColor: '#BBF7D0' }}>
+              <Shield className="w-5 h-5 shrink-0 mt-0.5" style={{ color: 'var(--kova-green)' }} />
+              <div>
+                <p className="text-xs font-semibold" style={{ color: '#047857' }}>Protección de datos</p>
+                <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
+                  Cumplimos con la Ley 1581 de 2012. Tus datos están protegidos y solo se usan para este proceso.
+                </p>
+              </div>
+            </div>
+          </aside>
+        </div>
 
-          {/* Nav buttons */}
-          <div className="flex items-center gap-3 pt-2">
-            {step > 0 && (
-              <button
-                type="button"
-                onClick={() => setStep((s) => s - 1)}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
-              >
-                <ChevronLeft className="w-4 h-4" /> Atrás
-              </button>
-            )}
-            {step < STEPS.length - 1 ? (
-              <button
-                type="button"
-                onClick={() => setStep((s) => s + 1)}
-                disabled={(step === 0 && !step1Valid) || (step === 1 && !step2Valid)}
-                className="flex-1 inline-flex items-center justify-center gap-1.5 py-3 rounded-xl text-white font-semibold text-sm disabled:opacity-50 transition-all"
-                style={{ background: 'var(--kova-blue)' }}
-              >
-                Continuar <ChevronRight className="w-4 h-4" />
-              </button>
-            ) : (
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl text-white font-semibold text-sm disabled:opacity-60 transition-all"
-                style={{ background: 'var(--kova-green)' }}
-              >
-                {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Enviando...</> : <><Send className="w-4 h-4" /> Enviar postulación</>}
-              </button>
-            )}
-          </div>
-        </form>
-
-        <p className="text-center text-xs text-slate-400 mt-4">
+        <p className="text-center text-xs text-slate-400 mt-6 flex items-center justify-center gap-1.5">
+          <Lock className="w-3 h-3" />
           Tus datos se usan únicamente para este proceso de selección.
         </p>
+      </div>
+    </div>
+  );
+}
+
+function WhyItem({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) {
+  return (
+    <div className="flex items-start gap-3">
+      <span className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: '#EEF2FA', color: 'var(--kova-blue)' }}>
+        {icon}
+      </span>
+      <div>
+        <p className="text-xs font-semibold" style={{ color: 'var(--kova-navy)' }}>{title}</p>
+        <p className="text-[11px] text-slate-400 mt-0.5 leading-relaxed">{text}</p>
       </div>
     </div>
   );
@@ -331,9 +505,9 @@ function QuestionField({ q, answers, setAnswers }: {
                       ? 'border-transparent text-white shadow-sm'
                       : disabled
                         ? 'border-slate-100 text-slate-300 cursor-not-allowed'
-                        : 'border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-blue-50/50'
+                        : 'border-slate-200 text-slate-600 hover:border-green-300 hover:bg-green-50/50'
                   }`}
-                  style={active ? { background: 'var(--kova-blue)' } : undefined}
+                  style={active ? { background: 'var(--kova-green)' } : undefined}
                 >
                   {active ? '✓ ' : ''}{option}
                 </button>
@@ -345,7 +519,7 @@ function QuestionField({ q, answers, setAnswers }: {
         <select
           value={typeof answers[q.id] === 'string' ? (answers[q.id] as string) : ''}
           onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))}
-          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:border-[var(--kova-blue)] focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:border-[var(--kova-green)] focus:ring-2 focus:ring-green-50 outline-none transition-all"
         >
           <option value="">Seleccionar...</option>
           {q.options.map((o) => <option key={o} value={o}>{o}</option>)}
@@ -356,60 +530,54 @@ function QuestionField({ q, answers, setAnswers }: {
   );
 }
 
-function SectionTitle({ icon, title, subtitle }: { icon: React.ReactNode; title: string; subtitle: string }) {
-  return (
-    <div className="flex items-start gap-3">
-      <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(45,91,227,0.1)', color: 'var(--kova-blue)' }}>
-        {icon}
-      </div>
-      <div>
-        <h2 className="font-heading font-bold text-lg leading-tight" style={{ color: 'var(--kova-navy)' }}>{title}</h2>
-        <p className="text-xs text-slate-500">{subtitle}</p>
-      </div>
-    </div>
-  );
-}
-
 function Field({ label, value, onChange, type = 'text', required, placeholder, icon }: {
   label: string; value: string; onChange: (v: string) => void; type?: string; required?: boolean; placeholder?: string; icon?: React.ReactNode;
 }) {
   return (
     <div>
-      <label className="text-sm font-medium mb-1.5 flex items-center gap-1.5" style={{ color: 'var(--kova-navy)' }}>
-        {icon && <span className="text-slate-400">{icon}</span>}
+      <label className="text-sm font-medium mb-1.5 block" style={{ color: 'var(--kova-navy)' }}>
         {label}
-        {required && <span className="text-red-400">*</span>}
+        {required && <span className="text-red-400 ml-0.5">*</span>}
       </label>
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        required={required}
-        placeholder={placeholder}
-        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:border-[var(--kova-blue)] focus:ring-2 focus:ring-blue-100 outline-none transition-all"
-      />
+      <div className="flex items-center gap-2 px-3.5 rounded-xl border border-slate-200 bg-white focus-within:border-[var(--kova-green)] focus-within:ring-2 focus-within:ring-green-50 transition-all">
+        {icon && <span className="text-slate-400 shrink-0">{icon}</span>}
+        <input
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          required={required}
+          placeholder={placeholder}
+          className="flex-1 py-2.5 text-sm outline-none bg-transparent"
+        />
+      </div>
     </div>
   );
 }
 
-function ScoreRing({ value }: { value: number }) {
-  const r = 46;
+function ScoreRing({ value, size = 'lg' }: { value: number; size?: 'sm' | 'lg' }) {
+  const r = size === 'sm' ? 38 : 46;
+  const dim = size === 'sm' ? 'w-24 h-24' : 'w-32 h-32';
+  const textSize = size === 'sm' ? 'text-2xl' : 'text-3xl';
   const c = 2 * Math.PI * r;
   const pct = Math.max(0, Math.min(100, value));
   const offset = c - (pct / 100) * c;
-  const color = pct >= 75 ? 'var(--kova-green)' : pct >= 50 ? '#F59E0B' : '#EF4444';
+  const color = pct >= 75 ? 'var(--kova-green)' : pct >= 50 ? '#F59E0B' : pct > 0 ? '#2D5BE3' : '#CBD5E1';
+  const cx = size === 'sm' ? 48 : 55;
+  const viewBox = size === 'sm' ? '0 0 96 96' : '0 0 110 110';
+  const sw = size === 'sm' ? 7 : 9;
+
   return (
-    <div className="relative w-32 h-32 mx-auto">
-      <svg className="w-32 h-32 -rotate-90" viewBox="0 0 110 110">
-        <circle cx="55" cy="55" r={r} fill="none" stroke="#F1F5F9" strokeWidth="9" />
+    <div className={`relative ${dim} mx-auto`}>
+      <svg className={`${dim} -rotate-90`} viewBox={viewBox}>
+        <circle cx={cx} cy={cx} r={r} fill="none" stroke="#F1F5F9" strokeWidth={sw} />
         <circle
-          cx="55" cy="55" r={r} fill="none" stroke={color} strokeWidth="9" strokeLinecap="round"
+          cx={cx} cy={cx} r={r} fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round"
           strokeDasharray={c} strokeDashoffset={offset}
-          style={{ transition: 'stroke-dashoffset 1s ease' }}
+          style={{ transition: 'stroke-dashoffset 0.6s ease' }}
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="font-heading text-3xl font-bold" style={{ color }}>{pct}%</span>
+        <span className={`font-heading ${textSize} font-bold`} style={{ color: pct > 0 ? color : '#94A3B8' }}>{pct}%</span>
       </div>
     </div>
   );

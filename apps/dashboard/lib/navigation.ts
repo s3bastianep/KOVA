@@ -8,9 +8,55 @@ import {
   BarChart3,
   FileText,
   Settings,
+  ListTodo,
+  Trophy,
+  type LucideIcon,
 } from 'lucide-react';
 
-export const NAV_ITEMS = [
+export type NavItem = { href: string; label: string; icon: LucideIcon };
+export type NavGroup = { title?: string; items: NavItem[] };
+
+export const NAV_GROUPS: NavGroup[] = [
+  {
+    items: [{ href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard }],
+  },
+  {
+    title: 'Comercial',
+    items: [
+      { href: '/crm', label: 'CRM Comercial', icon: Briefcase },
+    ],
+  },
+  {
+    title: 'Reclutamiento',
+    items: [
+      { href: '/procesos', label: 'Procesos de Selección', icon: GitBranch },
+      { href: '/candidatos', label: 'Candidatos', icon: Users },
+      { href: '/finalistas', label: 'Finalistas', icon: Trophy },
+      { href: '/evaluaciones', label: 'Evaluaciones', icon: ClipboardCheck },
+    ],
+  },
+  {
+    title: 'Gestión',
+    items: [
+      { href: '/agenda', label: 'Agenda', icon: CalendarDays },
+      { href: '/tareas', label: 'Tareas', icon: ListTodo },
+      { href: '/reportes', label: 'Reportes', icon: BarChart3 },
+      { href: '/documentos', label: 'Documentos', icon: FileText },
+    ],
+  },
+  {
+    title: 'Configuración',
+    items: [
+      { href: '/configuracion', label: 'Configuración', icon: Settings },
+    ],
+  },
+];
+
+/** Compatibilidad: lista plana de todos los ítems */
+export const NAV_ITEMS: NavItem[] = NAV_GROUPS.flatMap((g) => g.items);
+
+/** Menú principal plano (orden del diseño) */
+export const NAV_MAIN: NavItem[] = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/crm', label: 'CRM Comercial', icon: Briefcase },
   { href: '/procesos', label: 'Procesos de Selección', icon: GitBranch },

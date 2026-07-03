@@ -42,7 +42,7 @@ export default function LoginPage() {
 
         <div className="relative">
           <h1 className="font-heading text-4xl font-bold leading-tight mb-4">
-            Reclutamiento comercial<br />con evidencia e IA.
+            Reclutamiento comercial<br />con evidencia y criterio.
           </h1>
           <p className="text-white/60 text-base max-w-md leading-relaxed">
             Metodología, evaluación con evidencia y onboarding integrado en una sola plataforma.

@@ -16,6 +16,10 @@ import {
   Building2,
   User,
   CalendarClock,
+  CalendarDays,
+  Filter,
+  RefreshCw,
+  Inbox,
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import {
@@ -59,9 +63,12 @@ type ModalMode =
   | { type: 'request'; request: AgendaRequest; action: 'reject' | 'reschedule' }
   | null;
 
+type CalendarView = 'month' | 'week' | 'list';
+
 export function AgendaCalendar() {
   const today = new Date();
   const [cursor, setCursor] = useState({ year: today.getFullYear(), month: today.getMonth() });
+  const [view, setView] = useState<CalendarView>('month');
   const [modal, setModal] = useState<ModalMode>(null);
   const [dragItem, setDragItem] = useState<AgendaItem | null>(null);
   const [reasonText, setReasonText] = useState('');
@@ -94,6 +101,37 @@ export function AgendaCalendar() {
   }, [items]);
 
   const grid = useMemo(() => buildMonthGrid(cursor.year, cursor.month), [cursor]);
+
+  const typeCounts = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const it of items) map.set(it.type, (map.get(it.type) ?? 0) + 1);
+    return [...map.entries()].sort((a, b) => b[1] - a[1]);
+  }, [items]);
+
+  const summary = useMemo(() => {
+    const canceladas = items.filter((i) => i.status === 'CANCELLED' || i.status === 'REJECTED').length;
+    const reprogramadas = items.filter((i) => i.moveCount > 0).length;
+    const confirmadas = items.filter((i) => i.status === 'PENDING' || i.status === 'COMPLETED').length;
+    return { total: items.length, confirmadas, pendientes: pendingRequests.length, reprogramadas, canceladas };
+  }, [items, pendingRequests.length]);
+
+  const weekDays = useMemo(() => {
+    const ref = view === 'week'
+      ? (cursor.year === today.getFullYear() && cursor.month === today.getMonth() ? today : new Date(cursor.year, cursor.month, 1))
+      : today;
+    const start = new Date(ref);
+    start.setDate(ref.getDate() - ((ref.getDay() + 6) % 7));
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(start);
+      d.setDate(start.getDate() + i);
+      return d;
+    });
+  }, [view, cursor, today]);
+
+  const sortedItems = useMemo(
+    () => [...items].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
+    [items],
+  );
 
   const mutation = useMutation({
     mutationFn: (payload: {
@@ -132,6 +170,8 @@ export function AgendaCalendar() {
   });
 
   const goToday = () => setCursor({ year: today.getFullYear(), month: today.getMonth() });
+  const prevMonth = () => setCursor((c) => { const d = new Date(c.year, c.month - 1, 1); return { year: d.getFullYear(), month: d.getMonth() }; });
+  const nextMonth = () => setCursor((c) => { const d = new Date(c.year, c.month + 1, 1); return { year: d.getFullYear(), month: d.getMonth() }; });
 
   const handleDrop = (day: Date) => {
     if (!dragItem) return;
@@ -201,7 +241,9 @@ export function AgendaCalendar() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_300px] gap-4 items-start">
+      {/* Columna principal */}
+      <div className="space-y-4 min-w-0">
       {/* Solicitudes pendientes */}
       <div className="kova-card p-4">
         <div className="flex items-center justify-between gap-2 mb-3">
@@ -211,13 +253,23 @@ export function AgendaCalendar() {
               Citas solicitadas desde la página pública. Acepta para agendar, rechaza con motivo o reprograma si el horario no sirve.
             </p>
           </div>
-          <span className="text-xs px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100 shrink-0">
+          <span
+            className="text-xs px-2.5 py-1 rounded-full border shrink-0"
+            style={pendingRequests.length > 0
+              ? { background: '#FFF7E6', color: '#B45309', borderColor: '#FDE68A' }
+              : { background: '#F8FAFC', color: '#94A3B8', borderColor: '#E2E8F0' }}
+          >
             {pendingRequests.length} pendiente{pendingRequests.length !== 1 ? 's' : ''}
           </span>
         </div>
 
         {pendingRequests.length === 0 ? (
-          <p className="text-sm text-slate-400 text-center py-4">No hay solicitudes por revisar.</p>
+          <div className="flex flex-col items-center justify-center py-6 text-center">
+            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center mb-2">
+              <Inbox className="w-5 h-5 text-slate-300" />
+            </div>
+            <p className="text-sm text-slate-400">No hay solicitudes por revisar.</p>
+          </div>
         ) : (
           <div className="grid sm:grid-cols-2 gap-3">
             {pendingRequests.map((req) => (
@@ -288,63 +340,54 @@ export function AgendaCalendar() {
 
       {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() =>
-              setCursor((c) => {
-                const d = new Date(c.year, c.month - 1, 1);
-                return { year: d.getFullYear(), month: d.getMonth() };
-              })
-            }
-            className="p-2 rounded-lg border border-slate-200 hover:bg-white"
-          >
-            <ChevronLeft className="w-4 h-4" />
+        <div className="flex items-center gap-1.5">
+          <button type="button" onClick={goToday} className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors">
+            <CalendarDays className="w-3.5 h-3.5 text-slate-400" /> Hoy
           </button>
-          <h2 className="font-heading text-lg font-semibold capitalize min-w-[180px] text-center" style={{ color: 'var(--kova-navy)' }}>
+          <button type="button" onClick={prevMonth} className="w-8 h-8 rounded-lg border border-slate-200 bg-white flex items-center justify-center hover:bg-slate-50">
+            <ChevronLeft className="w-4 h-4 text-slate-500" />
+          </button>
+          <button type="button" onClick={nextMonth} className="w-8 h-8 rounded-lg border border-slate-200 bg-white flex items-center justify-center hover:bg-slate-50">
+            <ChevronRight className="w-4 h-4 text-slate-500" />
+          </button>
+          <h2 className="font-heading text-lg font-semibold capitalize ml-1" style={{ color: 'var(--kova-navy)' }}>
             {monthLabel}
           </h2>
-          <button
-            type="button"
-            onClick={() =>
-              setCursor((c) => {
-                const d = new Date(c.year, c.month + 1, 1);
-                return { year: d.getFullYear(), month: d.getMonth() };
-              })
-            }
-            className="p-2 rounded-lg border border-slate-200 hover:bg-white"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-          <button type="button" onClick={goToday} className="text-xs px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-white ml-1">
-            Hoy
-          </button>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {Object.entries(AGENDA_TYPE_STYLES).slice(0, 6).map(([type, style]) => (
-            <span key={type} className="inline-flex items-center gap-1.5 text-[10px] text-slate-500">
-              <span className="w-2 h-2 rounded-full" style={{ background: style.dot }} />
-              {type}
-            </span>
-          ))}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center rounded-xl border border-slate-200 bg-white p-0.5 text-xs font-medium">
+            {([['month', 'Mes'], ['week', 'Semana'], ['list', 'Lista']] as [CalendarView, string][]).map(([v, label]) => (
+              <button
+                key={v}
+                type="button"
+                onClick={() => setView(v)}
+                className={`px-3 py-1.5 rounded-lg transition-colors ${view === v ? 'text-white' : 'text-slate-500 hover:text-slate-700'}`}
+                style={view === v ? { background: 'var(--kova-blue)' } : undefined}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <button type="button" className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors text-slate-600">
+            <Filter className="w-3.5 h-3.5 text-slate-400" /> Filtros
+          </button>
         </div>
       </div>
 
       {/* Calendario */}
-      <div className="kova-card overflow-hidden">
-        <div className="grid grid-cols-7 border-b" style={{ borderColor: 'var(--kova-border)' }}>
-          {WEEKDAYS.map((d) => (
-            <div key={d} className="py-2 text-center text-xs font-semibold uppercase tracking-wide text-slate-400">
-              {d}
-            </div>
-          ))}
-        </div>
-
-        {isLoading ? (
-          <div className="p-12 text-center text-sm text-slate-400">Cargando agenda...</div>
-        ) : (
-          <div className="grid grid-cols-7 auto-rows-fr min-h-[520px] lg:min-h-[640px]">
+      {isLoading ? (
+        <div className="kova-card p-12 text-center text-sm text-slate-400">Cargando agenda...</div>
+      ) : view === 'month' ? (
+        <div className="kova-card overflow-hidden">
+          <div className="grid grid-cols-7 border-b" style={{ borderColor: 'var(--kova-border)' }}>
+            {WEEKDAYS.map((d) => (
+              <div key={d} className="py-2 text-center text-xs font-semibold uppercase tracking-wide text-slate-400">
+                {d}
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-7 auto-rows-fr min-h-[520px] lg:min-h-[600px]">
             {grid.map(({ date, inMonth }) => {
               const key = dateKey(date);
               const dayItems = byDay.get(key) ?? [];
@@ -363,13 +406,13 @@ export function AgendaCalendar() {
                     e.currentTarget.classList.remove('bg-blue-50/60');
                     handleDrop(date);
                   }}
-                  className={`border-r border-b min-h-[88px] lg:min-h-[108px] p-1.5 transition-colors ${inMonth ? 'bg-white' : 'bg-slate-50/80'}`}
+                  className={`border-r border-b min-h-[88px] lg:min-h-[100px] p-1.5 transition-colors ${inMonth ? 'bg-white' : 'bg-slate-50/70'}`}
                   style={{ borderColor: 'var(--kova-border)' }}
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span
-                      className={`text-xs font-medium w-6 h-6 flex items-center justify-center rounded-full ${
-                        isToday ? 'text-white' : inMonth ? 'text-slate-700' : 'text-slate-300'
+                      className={`text-xs font-semibold w-6 h-6 flex items-center justify-center rounded-full ${
+                        isToday ? 'text-white' : inMonth ? 'text-slate-600' : 'text-slate-300'
                       }`}
                       style={isToday ? { background: 'var(--kova-blue)' } : undefined}
                     >
@@ -381,7 +424,7 @@ export function AgendaCalendar() {
                   </div>
 
                   <div className="space-y-0.5">
-                    {dayItems.slice(0, 4).map((item) => (
+                    {dayItems.slice(0, 3).map((item) => (
                       <ActivityChip
                         key={item.itemKey}
                         item={item}
@@ -389,13 +432,13 @@ export function AgendaCalendar() {
                         onClick={() => setModal({ type: 'detail', item })}
                       />
                     ))}
-                    {dayItems.length > 4 && (
+                    {dayItems.length > 3 && (
                       <button
                         type="button"
                         className="text-[9px] text-slate-400 pl-1 hover:text-slate-600"
-                        onClick={() => setModal({ type: 'detail', item: dayItems[4] })}
+                        onClick={() => setModal({ type: 'detail', item: dayItems[3] })}
                       >
-                        +{dayItems.length - 4} más
+                        +{dayItems.length - 3} más
                       </button>
                     )}
                   </div>
@@ -403,7 +446,155 @@ export function AgendaCalendar() {
               );
             })}
           </div>
-        )}
+        </div>
+      ) : view === 'week' ? (
+        <div className="kova-card overflow-hidden">
+          <div className="grid grid-cols-7">
+            {weekDays.map((date) => {
+              const isToday = sameDay(date, today);
+              return (
+                <div key={dateKey(date)} className="py-2 text-center border-b border-r last:border-r-0" style={{ borderColor: 'var(--kova-border)' }}>
+                  <p className="text-[10px] uppercase tracking-wide text-slate-400">{WEEKDAYS[(date.getDay() + 6) % 7]}</p>
+                  <p className={`text-sm font-semibold mt-0.5 w-7 h-7 mx-auto flex items-center justify-center rounded-full ${isToday ? 'text-white' : 'text-slate-600'}`} style={isToday ? { background: 'var(--kova-blue)' } : undefined}>
+                    {date.getDate()}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+          <div className="grid grid-cols-7 min-h-[480px]">
+            {weekDays.map((date) => {
+              const dayItems = byDay.get(dateKey(date)) ?? [];
+              return (
+                <div
+                  key={dateKey(date)}
+                  onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('bg-blue-50/60'); }}
+                  onDragLeave={(e) => e.currentTarget.classList.remove('bg-blue-50/60')}
+                  onDrop={(e) => { e.preventDefault(); e.currentTarget.classList.remove('bg-blue-50/60'); handleDrop(date); }}
+                  className="border-r last:border-r-0 p-1.5 space-y-1"
+                  style={{ borderColor: 'var(--kova-border)' }}
+                >
+                  {dayItems.map((item) => (
+                    <ActivityChip key={item.itemKey} item={item} onDragStart={() => setDragItem(item)} onClick={() => setModal({ type: 'detail', item })} />
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        <div className="kova-card p-2">
+          {sortedItems.length === 0 ? (
+            <p className="text-sm text-slate-400 text-center py-10">No hay citas este mes.</p>
+          ) : (
+            <div className="divide-y" style={{ borderColor: 'var(--kova-border)' }}>
+              {sortedItems.map((item) => {
+                const style = agendaTypeStyle(item.type);
+                const rejected = item.status === 'REJECTED';
+                return (
+                  <button
+                    key={item.itemKey}
+                    type="button"
+                    onClick={() => setModal({ type: 'detail', item })}
+                    className="w-full flex items-center gap-3 px-3 py-3 text-left hover:bg-slate-50 rounded-lg transition-colors"
+                  >
+                    <div className="flex flex-col items-center w-12 shrink-0">
+                      <span className="text-[10px] uppercase text-slate-400">{new Date(item.date).toLocaleDateString('es-CO', { weekday: 'short' })}</span>
+                      <span className="text-lg font-bold leading-none" style={{ color: 'var(--kova-navy)' }}>{new Date(item.date).getDate()}</span>
+                    </div>
+                    <span className="w-1 self-stretch rounded-full" style={{ background: rejected ? '#DC2626' : style.dot }} />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium truncate" style={{ color: 'var(--kova-navy)', textDecoration: rejected || item.status === 'CANCELLED' ? 'line-through' : undefined }}>{item.title}</p>
+                      <p className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
+                        <Clock className="w-3 h-3" /> {formatAgendaTime(item.date)}
+                        {item.companyName && <><span className="text-slate-300">·</span> {item.companyName}</>}
+                      </p>
+                    </div>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full shrink-0" style={{ background: rejected ? '#FEF2F2' : style.bg, color: rejected ? '#DC2626' : style.text }}>{item.type}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+      </div>
+
+      {/* Barra lateral */}
+      <div className="space-y-4">
+        {/* Mini calendario */}
+        <div className="kova-card p-3">
+          <div className="flex items-center justify-between mb-2">
+            <button type="button" onClick={prevMonth} className="w-6 h-6 rounded-md flex items-center justify-center text-slate-400 hover:bg-slate-100"><ChevronLeft className="w-3.5 h-3.5" /></button>
+            <p className="text-xs font-semibold capitalize" style={{ color: 'var(--kova-navy)' }}>{monthLabel}</p>
+            <button type="button" onClick={nextMonth} className="w-6 h-6 rounded-md flex items-center justify-center text-slate-400 hover:bg-slate-100"><ChevronRight className="w-3.5 h-3.5" /></button>
+          </div>
+          <div className="grid grid-cols-7 gap-0.5 text-center">
+            {['L', 'M', 'M', 'J', 'V', 'S', 'D'].map((d, i) => (
+              <span key={i} className="text-[9px] text-slate-400 py-1">{d}</span>
+            ))}
+            {grid.map(({ date, inMonth }) => {
+              const isToday = sameDay(date, today);
+              const has = (byDay.get(dateKey(date))?.length ?? 0) > 0;
+              return (
+                <div key={dateKey(date)} className="relative py-1">
+                  <span className={`text-[10px] w-6 h-6 mx-auto flex items-center justify-center rounded-full ${isToday ? 'text-white font-semibold' : inMonth ? 'text-slate-600' : 'text-slate-300'}`} style={isToday ? { background: 'var(--kova-blue)' } : undefined}>
+                    {date.getDate()}
+                  </span>
+                  {has && !isToday && <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full" style={{ background: 'var(--kova-blue)' }} />}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Tipos de cita */}
+        <div className="kova-card p-4">
+          <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--kova-navy)' }}>Tipos de cita</h3>
+          {typeCounts.length === 0 ? (
+            <p className="text-xs text-slate-400">Sin citas este mes.</p>
+          ) : (
+            <div className="space-y-2">
+              {typeCounts.map(([type, count]) => (
+                <div key={type} className="flex items-center justify-between text-xs">
+                  <span className="flex items-center gap-2 text-slate-600">
+                    <span className="w-2.5 h-2.5 rounded-full" style={{ background: agendaTypeStyle(type).dot }} />
+                    {type}
+                  </span>
+                  <span className="font-semibold text-slate-500">{count}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Resumen del mes */}
+        <div className="kova-card p-4">
+          <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--kova-navy)' }}>Resumen del mes</h3>
+          <div className="space-y-2 text-xs">
+            <SummaryRow label="Total de citas" value={summary.total} strong />
+            <SummaryRow label="Confirmadas" value={summary.confirmadas} tone="var(--kova-green)" />
+            <SummaryRow label="Pendientes" value={summary.pendientes} tone="#B45309" />
+            <SummaryRow label="Reprogramadas" value={summary.reprogramadas} tone="#7C3AED" />
+            <SummaryRow label="Canceladas" value={summary.canceladas} tone="#DC2626" />
+          </div>
+        </div>
+
+        {/* Sincroniza tu calendario */}
+        <div className="kova-card p-4">
+          <div className="flex items-start gap-3">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#EEF2FA', color: 'var(--kova-blue)' }}>
+              <RefreshCw className="w-4 h-4" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold" style={{ color: 'var(--kova-navy)' }}>Sincroniza tu calendario</p>
+              <p className="text-xs text-slate-500 mt-0.5">Conecta tu calendario para recibir recordatorios y evitar conflictos.</p>
+            </div>
+          </div>
+          <button type="button" className="mt-3 w-full inline-flex items-center justify-center gap-2 text-xs font-medium px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors text-slate-600">
+            <CalendarDays className="w-3.5 h-3.5 text-slate-400" /> Conectar calendario
+          </button>
+        </div>
       </div>
 
       {/* Modal detalle / motivo */}
@@ -451,6 +642,15 @@ export function AgendaCalendar() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function SummaryRow({ label, value, tone, strong }: { label: string; value: number; tone?: string; strong?: boolean }) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className={strong ? 'font-medium text-slate-600' : 'text-slate-500'}>{label}</span>
+      <span className="font-semibold" style={{ color: value > 0 && tone ? tone : 'var(--kova-navy)' }}>{value}</span>
     </div>
   );
 }
