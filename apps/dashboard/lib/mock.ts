@@ -685,6 +685,23 @@ export function getMockVacancy(id: string) {
   const requiredDate = new Date(Date.now() + 21 * 86400000);
   const daysElapsed = 14;
   const daysRemaining = 21;
+  const jobProfiles: Record<string, { skills: string[]; conditions: string[]; objective: string }> = {
+    'Ejecutivo Comercial B2B': {
+      objective: 'Incrementar ventas B2B mediante prospección activa y cierre consultivo.',
+      skills: ['Prospección', 'Negociación', 'Cierre de ventas', 'Venta consultiva', 'Gestión de pipeline', 'Manejo de objeciones'],
+      conditions: ['Mínimo 3 años en ventas B2B', 'Experiencia en software o tecnología', 'Disponibilidad inmediata', 'Residencia en Bogotá o modalidad híbrida'],
+    },
+    'Gerente Comercial Regional': {
+      objective: 'Liderar el equipo comercial regional y cumplir metas de facturación.',
+      skills: ['Liderazgo comercial', 'Cuentas clave', 'Negociación', 'Pricing', 'Análisis de mercado', 'Fidelización'],
+      conditions: ['Mínimo 5 años en ventas', 'Experiencia liderando equipos (+5 personas)', 'Industria consumo masivo o distribución', 'Disponibilidad en 30 días'],
+    },
+  };
+  const profile = jobProfiles[base.title] ?? {
+    objective: 'Cumplir metas comerciales del cargo.',
+    skills: ['Prospección', 'Negociación', 'Cierre de ventas'],
+    conditions: ['Experiencia comercial comprobada', 'Disponibilidad para ingresar'],
+  };
   return {
     ...base,
     salaryMin: 3500000,
@@ -694,6 +711,7 @@ export function getMockVacancy(id: string) {
     urgency: 'Alta',
     requiredDate: requiredDate.toISOString(),
     description: 'Responsable de la prospección, negociación y cierre de nuevos clientes B2B, cumpliendo metas mensuales de ventas.',
+    jobProfile: profile,
     openedAt: openedAt.toISOString(),
     progress: 72,
     daysElapsed,

@@ -1,19 +1,37 @@
 'use client';
 
-import { use, useMemo, useState } from 'react';
+import { use } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import {
-  ArrowLeft, Building2, MapPin, Clock, Users, ChevronRight,
-  Calendar, ClipboardCheck, CheckCircle2, Circle, FileText,
-  MessageSquare, CheckSquare, StickyNote, BarChart3, Settings,
-  Phone, Mail, ArrowRight, XCircle,
+  ArrowLeft, Building2, MapPin, Briefcase, Users, CheckCircle2,
+  XCircle, ArrowRight, ChevronRight, ClipboardCheck,
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
-import { Tabs } from '@/components/ui/Tabs';
-import { processStatusLabel, processProgress } from '@/lib/process-status';
 import { stageLabel } from '@/lib/stages';
-import { CLIENT_JOURNEY_STAGES } from '@/lib/client-journey';
+
+type JobProfile = {
+  objective?: string;
+  skills?: string[];
+  conditions?: string[];
+  competencies?: { name: string }[];
+  experience?: unknown;
+};
+
+type ProcessCandidate = {
+  id: string;
+  stage: string;
+  ranking?: number;
+  compatibility?: number;
+  candidate: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email?: string;
+    phone?: string;
+    city?: string;
+  };
+};
 
 type Proceso = {
   id: string;
@@ -21,61 +39,51 @@ type Proceso = {
   status: string;
   city?: string;
   modality?: string;
-  openedAt?: string;
-  requiredDate?: string;
-  progress?: number;
-  daysElapsed?: number;
-  daysRemaining?: number;
+  description?: string;
   company?: { id: string; name: string };
-  stats?: { candidates: number; interviewed: number; finalists: number; hired: number };
-  nextActivity?: { title: string; date: string };
-  pipelineStages?: { stage: string; label: string; order: number }[];
-  candidates?: {
-    id: string; stage: string; compatibility?: number;
-    candidate: { id: string; firstName: string; lastName: string; email?: string; phone?: string; city?: string };
-  }[];
-  interviews?: { id: string; candidateName: string; scheduledAt: string; status: string; type: string; score: number | null }[];
-  assessments?: { id: string; candidateName: string; type: string; competency: string; score: number; maxScore: number; result: string; durationMinutes?: number }[];
-  activities?: { id: string; description: string; createdAt: string }[];
-  tasks?: { id: string; title: string; status: string; priority?: string; dueDate?: string }[];
-  notes?: { id: string; content: string; author: string; createdAt: string }[];
-  documents?: { id: string; name: string; type: string; date: string }[];
-  checklist?: { id: string; label: string; done: boolean }[];
+  jobProfile?: JobProfile;
+  candidates?: ProcessCandidate[];
+  assessments?: { candidateName: string }[];
 };
 
-const TAB_IDS = ['resumen', 'pipeline', 'candidatos', 'entrevistas', 'pruebas', 'actividades', 'tareas', 'notas', 'archivos', 'reportes', 'config'] as const;
-type TabId = typeof TAB_IDS[number];
+const ADVANCED_STAGES = new Set(['INTERVIEW', 'ASSESSMENT', 'CLIENT_REVIEW', 'OFFER', 'HIRED']);
 
 function scoreColor(pct: number) {
-  if (pct >= 80) return 'var(--kova-green)';
+  if (pct >= 85) return 'var(--kova-green)';
   if (pct >= 70) return '#B7791F';
   return 'var(--kova-coral)';
 }
 
-function clientStageIndexForProcess(status?: string | null) {
-  const map: Record<string, number> = {
-    DRAFT: 0,
-    DISCOVERY_PENDING: 0,
-    DISCOVERY: 0,
-    PROFILE_BUILDING: 1,
-    APPROVAL_PENDING: 1,
-    SEARCH_ACTIVE: 2,
-    EVALUATION: 3,
-    FINALISTS: 5,
-    OFFER: 7,
-    HIRED: 7,
-    CLOSED: 7,
-    PAUSED: 3,
-  };
-  return Math.max(0, Math.min(CLIENT_JOURNEY_STAGES.length - 1, map[status ?? ''] ?? 0));
+function scoreTrack(pct: number) {
+  if (pct >= 85) return '#E6FAF3';
+  if (pct >= 70) return '#FFF7E6';
+  return '#FFF0EE';
+}
+
+function matchLabel(pct: number) {
+  if (pct >= 90) return 'Excelente ajuste';
+  if (pct >= 80) return 'Buen ajuste';
+  if (pct >= 70) return 'Ajuste alto';
+  return 'Ajuste parcial';
+}
+
+function normalizeProfile(p: Proceso) {
+  const raw = p.jobProfile;
+  if (!raw) return { objective: p.description, skills: [] as string[], conditions: [] as string[] };
+  const skills = raw.skills ?? raw.competencies?.map((c) => c.name) ?? [];
+  const conditions = raw.conditions ?? (
+    Array.isArray(raw.experience)
+      ? (raw.experience as string[])
+      : typeof raw.experience === 'string'
+        ? [raw.experience]
+        : []
+  );
+  return { objective: raw.objective ?? p.description, skills, conditions };
 }
 
 export default function ProcesoDetallePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const queryClient = useQueryClient();
-  const [tab, setTab] = useState<TabId>('resumen');
-  const [draggingCandidateId, setDraggingCandidateId] = useState<string | null>(null);
-  const [automationMessage, setAutomationMessage] = useState<string | null>(null);
   const { data, isLoading, isError } = useQuery({
     queryKey: ['vacancy', id],
     queryFn: () => dashboardApi.vacancy(id),
@@ -87,448 +95,192 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
       body,
     }: {
       candidateVacancyId: string;
-      body: { action: 'advance' | 'move' | 'reject'; stage?: string; reason?: string };
+      body: { action: 'advance' | 'reject'; reason?: string };
     }) => dashboardApi.updateProcessCandidate(id, candidateVacancyId, body),
-    onSuccess: (res) => {
-      const automation = res.automation as { activity?: string; task?: string | null; email?: string | null } | undefined;
-      setAutomationMessage(
-        [
-          automation?.activity,
-          automation?.task ? `Tarea creada: ${automation.task}` : null,
-          automation?.email,
-        ].filter(Boolean).join(' · '),
-      );
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vacancy', id] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['candidates'] });
     },
   });
 
   const p = data as Proceso | undefined;
-  const progress = p?.progress ?? processProgress(p?.status);
-  const candidates = p?.candidates ?? [];
-  const currentClientStageIndex = clientStageIndexForProcess(p?.status);
+  const all = p?.candidates ?? [];
+  const active = [...all.filter((c) => c.stage !== 'REJECTED')].sort(
+    (a, b) => (b.compatibility ?? 0) - (a.compatibility ?? 0),
+  );
+  const rejected = all.filter((c) => c.stage === 'REJECTED');
 
-  const pipelineByStage = useMemo(() => {
-    const map = new Map<string, typeof candidates>();
-    for (const stage of p?.pipelineStages ?? []) {
-      map.set(stage.stage, candidates.filter((c) => c.stage === stage.stage));
-    }
-    for (const c of candidates) {
-      if (!map.has(c.stage)) map.set(c.stage, [c]);
-    }
-    return map;
-  }, [p?.pipelineStages, candidates]);
+  const testedNames = new Set((p?.assessments ?? []).map((a) => a.candidateName));
+  const withTests = active.filter(
+    (c) => c.stage === 'ASSESSMENT' || testedNames.has(`${c.candidate.firstName} ${c.candidate.lastName}`),
+  ).length;
+  const advanced = active.filter((c) => ADVANCED_STAGES.has(c.stage)).length;
 
-  const tabs = [
-    { id: 'resumen', label: 'Resumen' },
-    { id: 'pipeline', label: 'Pipeline candidatos', count: candidates.length },
-    { id: 'candidatos', label: 'Candidatos', count: candidates.length },
-    { id: 'entrevistas', label: 'Entrevistas', count: p?.interviews?.length },
-    { id: 'pruebas', label: 'Pruebas', count: p?.assessments?.length },
-    { id: 'actividades', label: 'Actividades', count: p?.activities?.length },
-    { id: 'tareas', label: 'Tareas', count: p?.tasks?.length },
-    { id: 'notas', label: 'Notas', count: p?.notes?.length },
-    { id: 'archivos', label: 'Archivos', count: p?.documents?.length },
-    { id: 'reportes', label: 'Reportes' },
-    { id: 'config', label: 'Configuración' },
-  ];
-
-  function moveCandidate(candidateVacancyId: string, stage: string) {
-    candidateAction.mutate({ candidateVacancyId, body: { action: 'move', stage } });
-  }
+  const profile = p ? normalizeProfile(p) : { objective: '', skills: [], conditions: [] };
+  const skills = profile.skills;
+  const conditions = profile.conditions;
 
   function advanceCandidate(candidateVacancyId: string) {
     candidateAction.mutate({ candidateVacancyId, body: { action: 'advance' } });
   }
 
   function rejectCandidate(candidateVacancyId: string) {
-    const reason = window.prompt('Motivo de rechazo: Experiencia, Salario, Competencias, Ubicación u Otro', 'Otro');
+    const reason = window.prompt(
+      'Motivo de rechazo: Experiencia, Salario, Competencias, Ubicación u Otro',
+      'Competencias',
+    );
     if (!reason) return;
     candidateAction.mutate({ candidateVacancyId, body: { action: 'reject', reason } });
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 max-w-[960px]">
       <Link href="/procesos" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700">
         <ArrowLeft className="w-4 h-4" /> Volver a procesos
       </Link>
 
       {isLoading ? (
-        <p className="text-sm text-slate-500">Cargando...</p>
+        <div className="kova-skeleton h-48 rounded-xl" />
       ) : isError || !p ? (
         <div className="kova-card p-8 text-center text-slate-400 text-sm">No se pudo cargar el proceso.</div>
       ) : (
         <>
-          <div className="kova-card p-6">
-            <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
+          {/* Solicitud del cargo */}
+          <div className="kova-card p-6 space-y-5">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="min-w-0">
+                {p.company && (
+                  <Link
+                    href={`/empresas/${p.company.id}`}
+                    className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline mb-2"
+                    style={{ color: 'var(--kova-blue)' }}
+                  >
+                    <Building2 className="w-4 h-4" /> {p.company.name}
+                  </Link>
+                )}
+                <h1 className="font-heading text-xl font-bold" style={{ color: 'var(--kova-navy)' }}>
+                  {p.title}
+                </h1>
+                <p className="text-sm text-slate-500 mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+                  {p.city && <span className="inline-flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> {p.city}</span>}
+                  {p.modality && <span>{p.modality}</span>}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-50 border border-slate-100">
+                <Briefcase className="w-4 h-4 text-slate-400" />
+                <span className="text-xs font-medium text-slate-600">Solicitud de contratación</span>
+              </div>
+            </div>
+
+            {(p.description || profile.objective) && (
+              <p className="text-sm text-slate-600 leading-relaxed">
+                {profile.objective ?? p.description}
+              </p>
+            )}
+
+            {skills.length > 0 && (
               <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100">{processStatusLabel(p.status)}</span>
-                  {p.company && (
-                    <Link href={`/empresas/${p.company.id}`} className="text-xs text-slate-500 hover:underline flex items-center gap-1">
-                      <Building2 className="w-3 h-3" /> {p.company.name}
-                    </Link>
-                  )}
+                <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400 mb-2.5">
+                  Habilidades requeridas
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {skills.map((s) => (
+                    <span
+                      key={s}
+                      className="text-xs font-medium px-2.5 py-1 rounded-lg"
+                      style={{ color: 'var(--kova-blue)', background: '#EEF2FA' }}
+                    >
+                      {s}
+                    </span>
+                  ))}
                 </div>
-                <h1 className="font-heading text-2xl font-bold" style={{ color: 'var(--kova-navy)' }}>{p.title}</h1>
-                <p className="text-sm text-slate-500 mt-1">{p.city ?? '—'} · {p.modality ?? '—'}</p>
               </div>
-              <div className="text-right">
-                <p className="font-heading text-3xl font-bold" style={{ color: 'var(--kova-blue)' }}>{progress}%</p>
-                <p className="text-xs text-slate-400">progreso general</p>
+            )}
+
+            {conditions.length > 0 && (
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400 mb-2.5">
+                  Condiciones para ser contratado
+                </p>
+                <ul className="space-y-1.5">
+                  {conditions.map((c) => (
+                    <li key={c} className="text-sm text-slate-600 flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" style={{ color: 'var(--kova-green)' }} />
+                      {c}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-            <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
-              <div className="h-full rounded-full" style={{ width: `${progress}%`, background: 'var(--kova-blue)' }} />
-            </div>
+            )}
           </div>
 
-          <div className="kova-card p-4">
-            <div className="flex flex-wrap items-end justify-between gap-3 mb-4">
+          {/* Resumen del proceso */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <SummaryStat label="Candidatos" value={active.length} icon={Users} />
+            <SummaryStat label="Con pruebas" value={withTests} icon={ClipboardCheck} />
+            <SummaryStat label="Avanzados" value={advanced} icon={ArrowRight} />
+            <SummaryStat label="Rechazados" value={rejected.length} icon={XCircle} tone="coral" />
+          </div>
+
+          {/* Perfiles compatibles */}
+          <div className="kova-card overflow-hidden">
+            <div className="px-5 py-4 border-b flex items-center justify-between gap-3" style={{ borderColor: 'var(--kova-border)' }}>
               <div>
-                <h2 className="font-heading text-base font-bold" style={{ color: 'var(--kova-navy)' }}>
-                  Etapas primero con el cliente
+                <h2 className="font-heading font-bold text-sm" style={{ color: 'var(--kova-navy)' }}>
+                  Perfiles compatibles
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Este es el flujo del servicio antes y durante la presentación de candidatos.
+                  Ordenados por puntaje de ajuste al cargo · clic en el perfil para ver el informe
                 </p>
               </div>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-blue-50" style={{ color: 'var(--kova-blue)' }}>
-                Etapa {currentClientStageIndex + 1} de {CLIENT_JOURNEY_STAGES.length}
+              <span className="text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 font-medium">
+                {active.length} activo{active.length === 1 ? '' : 's'}
               </span>
             </div>
-            <div className="grid md:grid-cols-4 xl:grid-cols-8 gap-2">
-              {CLIENT_JOURNEY_STAGES.map((stage, idx) => {
-                const done = idx < currentClientStageIndex;
-                const active = idx === currentClientStageIndex;
-                return (
-                  <div
-                    key={stage.id}
-                    className={`min-h-[88px] rounded-xl border p-3 flex flex-col justify-between transition-all ${
-                      active
-                        ? 'border-[var(--kova-blue)] bg-blue-50 shadow-sm'
-                        : done
-                          ? 'border-green-200 bg-green-50'
-                          : 'border-slate-100 bg-slate-50'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <span
-                        className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                        style={
-                          active
-                            ? { background: 'var(--kova-blue)', color: '#fff' }
-                            : done
-                              ? { background: 'var(--kova-green)', color: '#fff' }
-                              : { background: '#E2E8F0', color: '#64748B' }
-                        }
-                      >
-                        {stage.order}
-                      </span>
-                      {done && <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: 'var(--kova-green)' }} />}
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Etapa {stage.order}</p>
-                      <p
-                        className="text-[11px] leading-tight font-semibold mt-0.5"
-                        style={{ color: active ? 'var(--kova-navy)' : done ? '#047857' : '#64748B' }}
-                      >
-                        {stage.label}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+
+            {active.length === 0 ? (
+              <div className="p-10 text-center text-sm text-slate-400">
+                Aún no hay candidatos en este proceso.
+              </div>
+            ) : (
+              <div className="divide-y divide-slate-50">
+                {active.map((c, idx) => (
+                  <CandidateRow
+                    key={c.id}
+                    c={c}
+                    rank={idx + 1}
+                    busy={candidateAction.isPending}
+                    onAdvance={() => advanceCandidate(c.id)}
+                    onReject={() => rejectCandidate(c.id)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
-          <Tabs tabs={tabs} active={tab} onChange={(t) => setTab(t as TabId)} />
-
-          {automationMessage && (
-            <div className="kova-card p-3 text-sm border-l-4" style={{ borderLeftColor: 'var(--kova-green)' }}>
-              <p style={{ color: 'var(--kova-navy)' }}>{automationMessage}</p>
-            </div>
-          )}
-
-          {tab === 'resumen' && (
-            <div className="space-y-6">
-              <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
-                <StatCard label="Candidatos" value={p.stats?.candidates ?? candidates.length} icon={Users} />
-                <StatCard label="Entrevistados" value={p.stats?.interviewed ?? 0} icon={MessageSquare} />
-                <StatCard label="Finalistas" value={p.stats?.finalists ?? 0} icon={CheckCircle2} />
-                <StatCard label="Días restantes" value={p.daysRemaining ?? '—'} icon={Clock} />
+          {rejected.length > 0 && (
+            <div className="kova-card overflow-hidden opacity-80">
+              <div className="px-5 py-3 border-b" style={{ borderColor: 'var(--kova-border)' }}>
+                <h2 className="font-heading font-bold text-sm text-slate-500">
+                  Rechazados ({rejected.length})
+                </h2>
               </div>
-
-              <div className="kova-card p-5 border-2 border-dashed border-blue-100">
-                <h3 className="text-xs font-semibold uppercase text-slate-400 mb-2">Formulario de postulación</h3>
-                <p className="text-sm text-slate-600 mb-3">
-                  Cuando el cliente apruebe el perfil, comparte este enlace con aspirantes. Responderán las preguntas estándar del cargo y verás su compatibilidad.
-                </p>
-                <code className="text-xs block p-2 rounded bg-slate-50 text-slate-600 break-all">
-                  {typeof window !== 'undefined' ? `${window.location.origin}/postular/${p.id}` : `/postular/${p.id}`}
-                </code>
-                <Link
-                  href={`/postular/${p.id}`}
-                  target="_blank"
-                  className="inline-block mt-3 text-sm font-medium"
-                  style={{ color: 'var(--kova-blue)' }}
-                >
-                  Abrir formulario →
-                </Link>
+              <div className="divide-y divide-slate-50">
+                {rejected.map((c) => (
+                  <div key={c.id} className="px-5 py-3 flex items-center justify-between gap-3">
+                    <Link
+                      href={`/candidatos/${c.candidate.id}`}
+                      className="text-sm text-slate-500 hover:underline"
+                    >
+                      {c.candidate.firstName} {c.candidate.lastName}
+                    </Link>
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-red-50 text-red-500">
+                      Rechazado
+                    </span>
+                  </div>
+                ))}
               </div>
-
-              <div className="grid lg:grid-cols-2 gap-6">
-                {p.nextActivity && (
-                  <div className="kova-card p-5">
-                    <h3 className="text-xs font-semibold uppercase text-slate-400 mb-2">Próxima actividad</h3>
-                    <p className="font-medium" style={{ color: 'var(--kova-navy)' }}>{p.nextActivity.title}</p>
-                    <p className="text-sm text-slate-500 mt-1 flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      {new Date(p.nextActivity.date).toLocaleString('es-CO')}
-                    </p>
-                  </div>
-                )}
-                <div className="kova-card p-5">
-                  <h3 className="text-xs font-semibold uppercase text-slate-400 mb-3">Checklist del proceso</h3>
-                  <div className="space-y-2">
-                    {(p.checklist ?? []).map((item) => (
-                      <div key={item.id} className="flex items-center gap-2 text-sm">
-                        {item.done ? (
-                          <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: 'var(--kova-green)' }} />
-                        ) : (
-                          <Circle className="w-4 h-4 shrink-0 text-slate-300" />
-                        )}
-                        <span className={item.done ? 'text-slate-400 line-through' : 'text-slate-700'}>{item.label}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="kova-card p-5">
-                <h3 className="text-xs font-semibold uppercase text-slate-400 mb-3">Pendientes</h3>
-                <div className="space-y-2">
-                  {(p.tasks ?? []).filter((t) => t.status !== 'COMPLETED').map((t) => (
-                    <div key={t.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-50">
-                      <span className="text-sm" style={{ color: 'var(--kova-navy)' }}>{t.title}</span>
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">{t.priority ?? 'MEDIUM'}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="kova-card p-5">
-                <h3 className="text-xs font-semibold uppercase text-slate-400 mb-3">Actividad reciente</h3>
-                <div className="space-y-3">
-                  {(p.activities ?? []).slice(0, 5).map((a) => (
-                    <div key={a.id} className="flex gap-3 text-sm">
-                      <div className="w-2 h-2 rounded-full mt-1.5 shrink-0" style={{ background: 'var(--kova-blue)' }} />
-                      <div>
-                        <p style={{ color: 'var(--kova-navy)' }}>{a.description}</p>
-                        <p className="text-xs text-slate-400">{new Date(a.createdAt).toLocaleString('es-CO')}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {tab === 'pipeline' && (
-            <div className="flex gap-4 overflow-x-auto pb-4">
-              {(p.pipelineStages ?? []).map((stage) => (
-                <div
-                  key={stage.stage}
-                  className="shrink-0 w-56"
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={() => {
-                    if (draggingCandidateId) moveCandidate(draggingCandidateId, stage.stage);
-                    setDraggingCandidateId(null);
-                  }}
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-sm font-semibold" style={{ color: 'var(--kova-navy)' }}>{stage.label}</h3>
-                    <span className="text-xs text-slate-400">{(pipelineByStage.get(stage.stage) ?? []).length}</span>
-                  </div>
-                  <div className="space-y-2 min-h-[120px] p-2 rounded-lg bg-slate-50">
-                    {(pipelineByStage.get(stage.stage) ?? []).map((c) => (
-                      <Link
-                        key={c.id}
-                        href={`/candidatos/${c.candidate.id}`}
-                        draggable
-                        onDragStart={() => setDraggingCandidateId(c.id)}
-                        className="block p-3 rounded-lg bg-white border border-slate-100 hover:shadow-sm transition-shadow cursor-grab active:cursor-grabbing"
-                      >
-                        <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>
-                          {c.candidate.firstName} {c.candidate.lastName}
-                        </p>
-                        {c.compatibility != null && (
-                          <p className="text-xs mt-1" style={{ color: scoreColor(c.compatibility) }}>{c.compatibility}% match</p>
-                        )}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {tab === 'candidatos' && (
-            <div className="space-y-3">
-              {candidates.length === 0 ? (
-                <EmptyState text="No hay candidatos en este proceso." />
-              ) : (
-                candidates.map((c) => (
-                  <div key={c.id} className="kova-card p-4">
-                    <div className="flex flex-wrap items-start justify-between gap-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold" style={{ background: 'var(--kova-blue)' }}>
-                          {c.candidate.firstName[0]}{c.candidate.lastName[0]}
-                        </div>
-                        <div>
-                          <Link href={`/candidatos/${c.candidate.id}`} className="font-semibold hover:underline" style={{ color: 'var(--kova-navy)' }}>
-                            {c.candidate.firstName} {c.candidate.lastName}
-                          </Link>
-                          <p className="text-xs text-slate-500">{c.candidate.city ?? '—'} · {stageLabel(c.stage)}</p>
-                          <div className="flex gap-3 mt-1 text-xs text-slate-400">
-                            {c.candidate.phone && <span className="flex items-center gap-1"><Phone className="w-3 h-3" />{c.candidate.phone}</span>}
-                            {c.candidate.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3" />{c.candidate.email}</span>}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        {c.compatibility != null && (
-                          <p className="font-heading text-xl font-bold" style={{ color: scoreColor(c.compatibility) }}>{c.compatibility}%</p>
-                        )}
-                        <p className="text-xs text-slate-400">cumplimiento</p>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mt-4 pt-3 border-t border-slate-100">
-                      <ActionBtn href={`/candidatos/${c.candidate.id}`} label="Ver perfil" />
-                      <ActionBtn label="Avanzar" icon={ArrowRight} onClick={() => advanceCandidate(c.id)} />
-                      <ActionBtn label="Rechazar" icon={XCircle} variant="danger" onClick={() => rejectCandidate(c.id)} />
-                      <ActionBtn label="Agendar entrevista" icon={Calendar} onClick={() => moveCandidate(c.id, 'INTERVIEW')} />
-                      <ActionBtn label="Enviar prueba" icon={ClipboardCheck} onClick={() => moveCandidate(c.id, 'ASSESSMENT')} />
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-
-          {tab === 'entrevistas' && (
-            <div className="space-y-3">
-              {(p.interviews ?? []).length === 0 ? <EmptyState text="No hay entrevistas registradas." /> : (
-                p.interviews!.map((iv) => (
-                  <div key={iv.id} className="kova-card p-4 flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p className="font-medium" style={{ color: 'var(--kova-navy)' }}>{iv.candidateName}</p>
-                      <p className="text-xs text-slate-500">{iv.type} · {new Date(iv.scheduledAt).toLocaleString('es-CO')}</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs px-2 py-1 rounded-full bg-slate-100">
-                        {iv.status === 'COMPLETED' ? 'Completada' : 'Programada'}
-                      </span>
-                      {iv.score != null && <span className="font-bold" style={{ color: 'var(--kova-green)' }}>{iv.score}/10</span>}
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-
-          {tab === 'pruebas' && (
-            <div className="space-y-3">
-              {(p.assessments ?? []).length === 0 ? <EmptyState text="No hay pruebas registradas." /> : (
-                p.assessments!.map((a) => (
-                  <div key={a.id} className="kova-card p-4 flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p className="font-medium" style={{ color: 'var(--kova-navy)' }}>{a.candidateName}</p>
-                      <p className="text-xs text-slate-500">{a.type} · {a.competency}</p>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span className="font-bold" style={{ color: scoreColor((a.score / a.maxScore) * 100) }}>{a.score}/{a.maxScore}</span>
-                      <span className="text-xs px-2 py-1 rounded-full bg-slate-100">{a.result}</span>
-                      {a.durationMinutes && <span className="text-xs text-slate-400">{a.durationMinutes} min</span>}
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-
-          {tab === 'actividades' && (
-            <div className="kova-card p-5 space-y-4">
-              {(p.activities ?? []).map((a) => (
-                <div key={a.id} className="flex gap-4 pb-4 border-b border-slate-50 last:border-0 last:pb-0">
-                  <div className="w-2 h-2 rounded-full mt-2 shrink-0" style={{ background: 'var(--kova-blue)' }} />
-                  <div>
-                    <p className="text-sm" style={{ color: 'var(--kova-navy)' }}>{a.description}</p>
-                    <p className="text-xs text-slate-400 mt-0.5">{new Date(a.createdAt).toLocaleString('es-CO')}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {tab === 'tareas' && (
-            <div className="space-y-3">
-              {(p.tasks ?? []).map((t) => (
-                <div key={t.id} className="kova-card p-4 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <CheckSquare className="w-4 h-4 text-slate-400" />
-                    <div>
-                      <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>{t.title}</p>
-                      {t.dueDate && <p className="text-xs text-slate-400">Vence: {new Date(t.dueDate).toLocaleDateString('es-CO')}</p>}
-                    </div>
-                  </div>
-                  <span className="text-xs px-2 py-1 rounded-full bg-slate-100">{t.status}</span>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {tab === 'notas' && (
-            <div className="space-y-3">
-              {(p.notes ?? []).length === 0 ? <EmptyState text="No hay notas." /> : (
-                p.notes!.map((n) => (
-                  <div key={n.id} className="kova-card p-4">
-                    <p className="text-sm text-slate-700">{n.content}</p>
-                    <p className="text-xs text-slate-400 mt-2">{n.author} · {new Date(n.createdAt).toLocaleDateString('es-CO')}</p>
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-
-          {tab === 'archivos' && (
-            <div className="space-y-3">
-              {(p.documents ?? []).length === 0 ? <EmptyState text="No hay archivos." /> : (
-                p.documents!.map((d) => (
-                  <div key={d.id} className="kova-card p-4 flex items-center gap-3">
-                    <FileText className="w-5 h-5 text-slate-400" />
-                    <div>
-                      <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>{d.name}</p>
-                      <p className="text-xs text-slate-400">{d.type} · {new Date(d.date).toLocaleDateString('es-CO')}</p>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-
-          {tab === 'reportes' && (
-            <div className="kova-card p-8 text-center text-slate-400 text-sm">
-              <BarChart3 className="w-8 h-8 mx-auto mb-2 text-slate-300" />
-              Reportes del proceso disponibles próximamente.
-            </div>
-          )}
-
-          {tab === 'config' && (
-            <div className="kova-card p-8 text-center text-slate-400 text-sm">
-              <Settings className="w-8 h-8 mx-auto mb-2 text-slate-300" />
-              Configuración del pipeline, pruebas y automatizaciones.
             </div>
           )}
         </>
@@ -537,37 +289,92 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
   );
 }
 
-function StatCard({ label, value, icon: Icon }: { label: string; value: number | string; icon: React.ElementType }) {
+function SummaryStat({
+  label, value, icon: Icon, tone,
+}: {
+  label: string;
+  value: number;
+  icon: React.ElementType;
+  tone?: 'coral';
+}) {
+  const color = tone === 'coral' ? 'var(--kova-coral)' : 'var(--kova-navy)';
   return (
-    <div className="kova-card p-4">
-      <div className="flex items-center gap-2 text-slate-400 text-xs uppercase tracking-wide mb-1">
-        <Icon className="w-4 h-4" /> {label}
+    <div className="kova-card px-4 py-3.5">
+      <div className="flex items-center gap-2 text-[10px] uppercase tracking-wide text-slate-400 mb-1">
+        <Icon className="w-3.5 h-3.5" /> {label}
       </div>
-      <p className="font-heading text-2xl font-bold" style={{ color: 'var(--kova-navy)' }}>{value}</p>
+      <p className="font-heading text-xl font-bold" style={{ color }}>{value}</p>
     </div>
   );
 }
 
-function EmptyState({ text }: { text: string }) {
-  return <div className="kova-card p-8 text-center text-slate-400 text-sm">{text}</div>;
-}
-
-function ActionBtn({
-  label,
-  icon: Icon,
-  href,
-  variant,
-  onClick,
+function CandidateRow({
+  c, rank, busy, onAdvance, onReject,
 }: {
-  label: string;
-  icon?: React.ElementType;
-  href?: string;
-  variant?: 'danger';
-  onClick?: () => void;
+  c: ProcessCandidate;
+  rank: number;
+  busy: boolean;
+  onAdvance: () => void;
+  onReject: () => void;
 }) {
-  const cls = `inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg border transition-colors ${
-    variant === 'danger' ? 'border-red-100 text-red-600 hover:bg-red-50' : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-  }`;
-  if (href) return <Link href={href} className={cls}>{Icon && <Icon className="w-3 h-3" />}{label}</Link>;
-  return <button type="button" onClick={onClick} className={cls}>{Icon && <Icon className="w-3 h-3" />}{label}</button>;
+  const pct = Math.round(c.compatibility ?? 0);
+  const color = scoreColor(pct);
+  const canAdvance = c.stage !== 'HIRED';
+  const initials = `${c.candidate.firstName[0]}${c.candidate.lastName[0]}`;
+
+  return (
+    <div className="px-5 py-4 flex flex-wrap items-center gap-4 hover:bg-slate-50/60 transition-colors">
+      <span className="w-6 text-center text-xs font-bold text-slate-300 shrink-0">#{rank}</span>
+
+      <Link href={`/candidatos/${c.candidate.id}`} className="flex items-center gap-3 min-w-0 flex-1 group">
+        <div
+          className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-xs font-bold shrink-0"
+          style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}
+        >
+          {initials}
+        </div>
+        <div className="min-w-0">
+          <p className="text-sm font-semibold group-hover:underline truncate" style={{ color: 'var(--kova-navy)' }}>
+            {c.candidate.firstName} {c.candidate.lastName}
+          </p>
+          <p className="text-xs text-slate-400 truncate">
+            {c.candidate.city ?? '—'} · {stageLabel(c.stage)}
+          </p>
+        </div>
+        <ChevronRight className="w-4 h-4 text-slate-200 group-hover:text-slate-400 shrink-0 ml-auto hidden sm:block" />
+      </Link>
+
+      <div className="flex items-center gap-4 shrink-0">
+        <div className="text-center w-16">
+          <div
+            className="inline-flex items-center justify-center w-12 h-12 rounded-full font-heading font-bold text-sm"
+            style={{ color, background: scoreTrack(pct) }}
+          >
+            {pct}%
+          </div>
+          <p className="text-[9px] font-medium mt-1 leading-tight" style={{ color }}>{matchLabel(pct)}</p>
+        </div>
+
+        <div className="flex flex-col gap-1.5 w-[108px]">
+          <button
+            type="button"
+            disabled={busy || !canAdvance}
+            onClick={onAdvance}
+            className="inline-flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-xs font-semibold text-white disabled:opacity-40 transition-all hover:-translate-y-0.5"
+            style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}
+          >
+            <ArrowRight className="w-3.5 h-3.5" /> Avanzar
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={onReject}
+            className="inline-flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-xs font-medium border border-red-100 text-red-600 hover:bg-red-50 disabled:opacity-40 transition-colors"
+          >
+            <XCircle className="w-3.5 h-3.5" /> Rechazar
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
