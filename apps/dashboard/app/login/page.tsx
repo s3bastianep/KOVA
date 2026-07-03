@@ -5,6 +5,10 @@ import { useRouter } from 'next/navigation';
 import { authApi, saveSession } from '@/lib/api';
 import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 
+// Evita que el login quede cacheado estáticamente por un año (s-maxage) y
+// sirva credenciales/markup viejos tras un deploy.
+export const dynamic = 'force-dynamic';
+
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
