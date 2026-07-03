@@ -134,6 +134,16 @@ async function main() {
     },
   });
 
+  await prisma.companyConsultant.upsert({
+    where: { companyId_consultantId: { companyId: company2.id, consultantId: consultant.id } },
+    update: {},
+    create: {
+      companyId: company2.id,
+      consultantId: consultant.id,
+      isPrimary: true,
+    },
+  });
+
   const vacancy2 = await prisma.vacancy.upsert({
     where: { id: 'seed-vacancy-002' },
     update: {},
