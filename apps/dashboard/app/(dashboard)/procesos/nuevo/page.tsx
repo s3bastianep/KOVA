@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, type ReactNode, type ComponentType } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useState, type ReactNode, type ComponentType } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
 import {
-  ArrowLeft, ArrowRight, Check, Lightbulb, Building2, User, Mail, Phone, MapPin,
-  TrendingUp, HelpCircle, Briefcase, ClipboardCheck, GitBranch, FileCheck2,
+  ArrowLeft, ArrowRight, Check, Lightbulb, Building2, HelpCircle, Briefcase, ClipboardCheck, GitBranch, FileCheck2, DollarSign,
   type LucideIcon,
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
@@ -13,8 +13,6 @@ import {
   STANDARD_QUESTIONS,
   SKILLS_QUESTION_ID,
   JOB_TITLE_OPTIONS,
-  REVENUE_RANGES,
-  HOW_SELLS_OPTIONS,
   QUESTION_GROUPS,
   defaultExpectedForQuestion,
   defaultSelectedQuestions,
@@ -25,8 +23,6 @@ import {
 import { selectedToRequirements } from '@/lib/standard-questions';
 
 const STEPS = [
-  'Empresa',
-  'Discovery',
   'Necesidad',
   'Perfil del cargo',
   'Requisitos',
@@ -35,8 +31,6 @@ const STEPS = [
 ];
 
 const STEP_META: { icon: LucideIcon; title: string; subtitle: string }[] = [
-  { icon: Building2, title: 'Información de la empresa', subtitle: 'Registra los datos principales de la empresa cliente.' },
-  { icon: TrendingUp, title: 'Discovery comercial', subtitle: 'Entiende qué y cómo vende la empresa.' },
   { icon: HelpCircle, title: 'Necesidad de contratación', subtitle: 'Por qué y cuándo necesitan contratar.' },
   { icon: Briefcase, title: 'Perfil del cargo', subtitle: 'Describe el cargo que buscas para el proceso.' },
   { icon: ClipboardCheck, title: 'Requisitos del aspirante', subtitle: 'Elige y pondera lo que evaluará la compatibilidad.' },
@@ -119,31 +113,39 @@ const PIPELINE_STAGE_HELP: Record<string, { goal: string; advances: string; stal
   },
 };
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-function isValidEmail(v: string) {
-  return EMAIL_RE.test(v.trim());
-}
-function isValidPhone(v: string) {
-  return v.replace(/\D/g, '').length >= 7;
-}
+type CompanyOption = {
+  id: string;
+  name: string;
+  city?: string;
+  primaryContact?: string;
+  email?: string;
+  phone?: string;
+};
 
 export default function NuevoProcesoPage() {
+  return (
+    <Suspense fallback={<div className="max-w-4xl mx-auto p-6 text-sm text-slate-500">Cargando formulario...</div>}>
+      <NuevoProcesoForm />
+    </Suspense>
+  );
+}
+
+function NuevoProcesoForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const preselectedClient = searchParams.get('cliente');
+
+  const { data: companiesData, isLoading: loadingCompanies } = useQuery({
+    queryKey: ['companies'],
+    queryFn: dashboardApi.companies,
+  });
+  const companies = (companiesData as CompanyOption[]) ?? [];
+
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [companyId, setCompanyId] = useState(preselectedClient ?? '');
   const [form, setForm] = useState({
-    companyName: '',
-    contact: '',
-    email: '',
-    phone: '',
-    city: 'Bogotá',
-    whatSells: '',
-    revenue: '',
-    howSells: [] as string[],
-    market: '',
-    competitors: '',
-    commercialModel: '',
     whyHiring: '',
     headcount: '1',
     startDate: '',
@@ -153,6 +155,7 @@ export default function NuevoProcesoPage() {
     functions: '',
     responsibilities: '',
     kpis: '',
+    salaryRemuneration: '',
     requirements: defaultSelectedQuestions(),
     selectedQuestionIds: defaultSelectedQuestions().map((q) => q.id),
     pipeline: [...DEFAULT_PIPELINE],
@@ -162,17 +165,13 @@ export default function NuevoProcesoPage() {
     dueDate: '',
   });
 
+  const selectedCompany = companies.find((c) => c.id === companyId);
+
   const update = (key: string, value: unknown) => setForm((f) => ({ ...f, [key]: value }));
 
-  // Valida los campos obligatorios de cada paso antes de permitir avanzar o crear.
   const validateStep = (s: number): string => {
-    if (s === 0) {
-      if (!form.companyName.trim()) return 'Ingresa el nombre de la empresa.';
-      if (!form.contact.trim()) return 'Ingresa el contacto principal.';
-      if (!isValidEmail(form.email)) return 'Ingresa un correo válido (ej. nombre@empresa.com).';
-      if (!isValidPhone(form.phone)) return 'Ingresa un teléfono válido (mínimo 7 dígitos).';
-    }
-    if (s === 3 && form.titles.length === 0) {
+    if (!companyId) return 'Selecciona un cliente existente o crea uno nuevo.';
+    if (s === 1 && form.titles.length === 0) {
       return 'Selecciona al menos un cargo a buscar.';
     }
     return '';
@@ -283,16 +282,6 @@ export default function NuevoProcesoPage() {
     });
   };
 
-  const toggleHowSells = (option: string) => {
-    setForm((f) => {
-      const selected = f.howSells;
-      const next = selected.includes(option)
-        ? selected.filter((s) => s !== option)
-        : [...selected, option];
-      return { ...f, howSells: next };
-    });
-  };
-
   const toggleStage = (s: string) => {
     setForm((f) => ({
       ...f,
@@ -301,39 +290,37 @@ export default function NuevoProcesoPage() {
   };
 
   const finish = async () => {
-    const step0Error = validateStep(0);
-    const step3Error = validateStep(3);
-    if (step0Error || step3Error) {
-      setError(step0Error || step3Error);
-      setStep(step0Error ? 0 : 3);
+    const clientError = validateStep(0);
+    const profileError = validateStep(1);
+    if (clientError || profileError) {
+      setError(clientError || profileError);
+      setStep(profileError ? 1 : 0);
+      return;
+    }
+    if (!selectedCompany) {
+      setError('Selecciona un cliente válido.');
       return;
     }
     setLoading(true);
     setError('');
     try {
       const result = await dashboardApi.createProcess({
-        companyName: form.companyName,
-        contact: form.contact,
-        email: form.email,
-        phone: form.phone,
-        city: form.city,
+        companyId: selectedCompany.id,
+        companyName: selectedCompany.name,
+        contact: selectedCompany.primaryContact,
+        email: selectedCompany.email,
+        phone: selectedCompany.phone,
+        city: selectedCompany.city,
         title: serializeMultiValue(form.titles),
         objective: form.objective,
         functions: form.functions,
         responsibilities: form.responsibilities,
         kpis: form.kpis,
+        salaryRemuneration: form.salaryRemuneration,
         modality: form.modality,
         dueDate: form.dueDate || undefined,
         urgency: form.urgency,
         quantity: Number(form.headcount) || 1,
-        discovery: {
-          whatSells: form.whatSells,
-          revenue: form.revenue,
-          howSells: serializeMultiValue(form.howSells),
-          market: form.market,
-          competitors: form.competitors,
-          commercialModel: form.commercialModel,
-        },
         need: {
           whyHiring: form.whyHiring,
           headcount: form.headcount,
@@ -351,7 +338,7 @@ export default function NuevoProcesoPage() {
           'Agendar entrevistas',
           'Presentar finalistas',
         ],
-        summary: `Proceso ${serializeMultiValue(form.titles) || 'comercial'} para ${form.companyName}`,
+        summary: `Proceso ${serializeMultiValue(form.titles) || 'comercial'} para ${selectedCompany.name}`,
       });
       router.push(`/procesos/${result.id}`);
     } catch (e) {
@@ -378,7 +365,7 @@ export default function NuevoProcesoPage() {
           </div>
           <div>
             <h1 className="font-heading text-2xl font-bold leading-tight" style={{ color: 'var(--kova-navy)' }}>Nueva solicitud de búsqueda</h1>
-            <p className="text-sm text-slate-500 mt-0.5">El sistema guía el flujo: cliente → perfil → requisitos → pipeline → automatizaciones.</p>
+            <p className="text-sm text-slate-500 mt-0.5">Vincula un cliente existente y define la búsqueda desde la necesidad hasta el resumen.</p>
           </div>
         </div>
         <div className="hidden md:flex items-start gap-2.5 rounded-2xl border border-slate-100 bg-white px-4 py-3 max-w-xs shadow-sm">
@@ -390,6 +377,47 @@ export default function NuevoProcesoPage() {
             <p className="text-[11px] text-slate-500 leading-snug mt-0.5">Sigue los pasos para crear una solicitud completa y efectiva.</p>
           </div>
         </div>
+      </div>
+
+      <div className="kova-card p-5 space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>Cliente vinculado</p>
+            <p className="text-xs text-slate-500">Empresa y discovery se gestionan en Clientes. Aquí solo eliges a quién pertenece el proceso.</p>
+          </div>
+          <Link href="/clientes/nuevo" className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50">
+            <Building2 className="w-3.5 h-3.5" /> Crear cliente
+          </Link>
+        </div>
+        {loadingCompanies ? (
+          <p className="text-sm text-slate-400">Cargando clientes...</p>
+        ) : companies.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-slate-200 px-4 py-5 text-center">
+            <p className="text-sm text-slate-500">Aún no hay clientes registrados.</p>
+            <Link href="/clientes/nuevo" className="inline-flex mt-3 text-sm font-semibold text-[var(--kova-blue)] hover:underline">
+              Crear el primer cliente
+            </Link>
+          </div>
+        ) : (
+          <select
+            value={companyId}
+            onChange={(e) => setCompanyId(e.target.value)}
+            className="w-full px-3.5 py-3 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--kova-ring)] focus:border-[var(--kova-blue)]"
+          >
+            <option value="">Selecciona un cliente...</option>
+            {companies.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}{c.city ? ` · ${c.city}` : ''}
+              </option>
+            ))}
+          </select>
+        )}
+        {selectedCompany && (
+          <div className="rounded-xl bg-slate-50 border border-slate-100 px-4 py-3 text-xs text-slate-600">
+            <p className="font-medium" style={{ color: 'var(--kova-navy)' }}>{selectedCompany.name}</p>
+            <p className="mt-1">{selectedCompany.primaryContact ?? 'Sin contacto'}{selectedCompany.email ? ` · ${selectedCompany.email}` : ''}</p>
+          </div>
+        )}
       </div>
 
       {/* Stepper con líneas conectoras */}
@@ -433,41 +461,6 @@ export default function NuevoProcesoPage() {
 
         {step === 0 && (
           <>
-            <Field label="Empresa" value={form.companyName} onChange={(v) => update('companyName', v)} placeholder="TechSales Colombia SAS" icon={Building2} required />
-            <Field label="Contacto principal" value={form.contact} onChange={(v) => update('contact', v)} icon={User} required />
-            <div className="grid sm:grid-cols-2 gap-4">
-              <Field label="Correo" value={form.email} onChange={(v) => update('email', v)} icon={Mail} type="email" required placeholder="ejemplo@empresa.com" />
-              <Field label="Teléfono" value={form.phone} onChange={(v) => update('phone', v)} icon={Phone} type="tel" required placeholder="+57 300 123 4567" />
-            </div>
-            <SelectField label="Ciudad" value={form.city} onChange={(v) => update('city', v)} options={['Bogotá', 'Medellín', 'Cali', 'Barranquilla', 'Cartagena', 'Bucaramanga', 'Otra']} icon={MapPin} required />
-          </>
-        )}
-
-        {step === 1 && (
-          <>
-            <Field label="¿Qué vende?" value={form.whatSells} onChange={(v) => update('whatSells', v)} />
-            <SelectField
-              label="¿Cuánto vende?"
-              value={form.revenue}
-              onChange={(v) => update('revenue', v)}
-              options={REVENUE_RANGES}
-              placeholder="Seleccionar rango de facturación mensual"
-            />
-            <ChipMultiField
-              label="¿Cómo vende?"
-              hint="Selecciona una o más formas de venta"
-              options={HOW_SELLS_OPTIONS}
-              selected={form.howSells}
-              onToggle={toggleHowSells}
-            />
-            <Field label="Mercado" value={form.market} onChange={(v) => update('market', v)} />
-            <Field label="Competidores" value={form.competitors} onChange={(v) => update('competitors', v)} />
-            <Field label="Modelo comercial" value={form.commercialModel} onChange={(v) => update('commercialModel', v)} />
-          </>
-        )}
-
-        {step === 2 && (
-          <>
             <TextArea label="¿Por qué contrata?" value={form.whyHiring} onChange={(v) => update('whyHiring', v)} />
             <Field label="¿Cuántas personas?" value={form.headcount} onChange={(v) => update('headcount', v)} />
             <Field label="¿Cuándo ingresan?" type="date" value={form.startDate} onChange={(v) => update('startDate', v)} />
@@ -475,7 +468,7 @@ export default function NuevoProcesoPage() {
           </>
         )}
 
-        {step === 3 && (
+        {step === 1 && (
           <>
             <div className="rounded-lg bg-blue-50/60 border border-blue-100 px-4 py-3">
               <p className="text-sm text-slate-700">
@@ -493,10 +486,17 @@ export default function NuevoProcesoPage() {
             <TextArea label="Funciones principales" value={form.functions} onChange={(v) => update('functions', v)} placeholder="Prospección, cierre, gestión de cartera..." />
             <TextArea label="Responsabilidades clave" value={form.responsibilities} onChange={(v) => update('responsibilities', v)} placeholder="Meta individual, reporte semanal, capacitación..." />
             <Field label="KPI principal" value={form.kpis} onChange={(v) => update('kpis', v)} placeholder="Facturación mensual, tasa de cierre..." />
+            <Field
+              label="Remuneración salarial"
+              value={form.salaryRemuneration}
+              onChange={(v) => update('salaryRemuneration', v)}
+              placeholder="Ej. $3.500.000 - $5.000.000 fijos + comisiones"
+              icon={DollarSign}
+            />
           </>
         )}
 
-        {step === 4 && (
+        {step === 2 && (
           <>
             <div className="rounded-lg bg-blue-50/60 border border-blue-100 px-4 py-3 space-y-1">
               <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>Requisitos del aspirante</p>
@@ -612,7 +612,7 @@ export default function NuevoProcesoPage() {
           </>
         )}
 
-        {step === 5 && (
+        {step === 3 && (
           <>
             <div className="rounded-lg bg-blue-50/60 border border-blue-100 px-4 py-3 space-y-1">
               <p className="text-sm font-medium" style={{ color: 'var(--kova-navy)' }}>Proceso de selección</p>
@@ -710,8 +710,8 @@ export default function NuevoProcesoPage() {
           </>
         )}
 
-        {step === 6 && (
-          <ProcessSummary form={form} />
+        {step === 4 && (
+          <ProcessSummary form={form} company={selectedCompany} />
         )}
 
         {error && <p className="text-sm text-red-600">{error}</p>}
@@ -729,7 +729,7 @@ export default function NuevoProcesoPage() {
             Siguiente <ArrowRight className="w-4 h-4" />
           </button>
         ) : (
-          <button type="button" onClick={finish} disabled={loading || !form.companyName || form.titles.length === 0}
+          <button type="button" onClick={finish} disabled={loading || !companyId || form.titles.length === 0}
             className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold rounded-xl text-white shadow-sm hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 transition-all"
             style={{ background: 'linear-gradient(135deg, var(--kova-green), #00996a)' }}>
             {loading ? 'Creando...' : <><Check className="w-4 h-4" /> Crear proceso</>}
@@ -751,19 +751,8 @@ function dash(value: string | undefined | null) {
   return value?.trim() ? value : '-';
 }
 
-function ProcessSummary({ form }: {
+function ProcessSummary({ form, company }: {
   form: {
-    companyName: string;
-    contact: string;
-    email: string;
-    phone: string;
-    city: string;
-    whatSells: string;
-    revenue: string;
-    howSells: string[];
-    market: string;
-    competitors: string;
-    commercialModel: string;
     whyHiring: string;
     headcount: string;
     startDate: string;
@@ -773,10 +762,12 @@ function ProcessSummary({ form }: {
     functions: string;
     responsibilities: string;
     kpis: string;
+    salaryRemuneration: string;
     requirements: SelectedStandardQuestion[];
     pipeline: string[];
     stages: string[];
   };
+  company?: CompanyOption;
 }) {
   const totalWeight = form.requirements.reduce((s, r) => s + r.weight, 0);
 
@@ -789,32 +780,17 @@ function ProcessSummary({ form }: {
         </p>
       </div>
 
-      <SummarySection title="Empresa cliente" step={1}>
+      <SummarySection title="Cliente vinculado" step={1}>
         <SummaryGrid>
-          <SummaryItem label="Empresa" value={dash(form.companyName)} highlight />
-          <SummaryItem label="Contacto" value={dash(form.contact)} />
-          <SummaryItem label="Correo" value={dash(form.email)} />
-          <SummaryItem label="Teléfono" value={dash(form.phone)} />
-          <SummaryItem label="Ciudad" value={dash(form.city)} />
+          <SummaryItem label="Empresa" value={dash(company?.name)} highlight />
+          <SummaryItem label="Contacto" value={dash(company?.primaryContact)} />
+          <SummaryItem label="Correo" value={dash(company?.email)} />
+          <SummaryItem label="Teléfono" value={dash(company?.phone)} />
+          <SummaryItem label="Ciudad" value={dash(company?.city)} />
         </SummaryGrid>
       </SummarySection>
 
-      <SummarySection title="Discovery comercial" step={2}>
-        <SummaryGrid>
-          <SummaryItem label="¿Qué vende?" value={dash(form.whatSells)} span={2} />
-          <SummaryItem label="¿Cuánto vende?" value={dash(form.revenue)} highlight />
-          <SummaryItem
-            label="¿Cómo vende?"
-            value={form.howSells.length > 0 ? form.howSells.join(', ') : '-'}
-            span={2}
-          />
-          <SummaryItem label="Mercado" value={dash(form.market)} />
-          <SummaryItem label="Competidores" value={dash(form.competitors)} />
-          <SummaryItem label="Modelo comercial" value={dash(form.commercialModel)} />
-        </SummaryGrid>
-      </SummarySection>
-
-      <SummarySection title="Necesidad de contratación" step={3}>
+      <SummarySection title="Necesidad de contratación" step={2}>
         <SummaryGrid>
           <SummaryItem label="¿Por qué contrata?" value={dash(form.whyHiring)} span={2} />
           <SummaryItem label="Personas a contratar" value={dash(form.headcount)} />
@@ -823,17 +799,18 @@ function ProcessSummary({ form }: {
         </SummaryGrid>
       </SummarySection>
 
-      <SummarySection title="Perfil del cargo" step={4}>
+      <SummarySection title="Perfil del cargo" step={3}>
         <SummaryGrid>
           <SummaryItem label="Cargo(s)" value={form.titles.length > 0 ? form.titles.join(', ') : '-'} highlight span={2} />
           <SummaryItem label="Objetivo" value={dash(form.objective)} span={2} />
           <SummaryItem label="Funciones principales" value={dash(form.functions)} span={2} />
           <SummaryItem label="Responsabilidades" value={dash(form.responsibilities)} span={2} />
           <SummaryItem label="KPI principal" value={dash(form.kpis)} span={2} />
+          <SummaryItem label="Remuneración salarial" value={dash(form.salaryRemuneration)} span={2} highlight />
         </SummaryGrid>
       </SummarySection>
 
-      <SummarySection title="Requisitos del aspirante" step={5} badge={`${form.requirements.length} criterios · ${totalWeight}%`}>
+      <SummarySection title="Requisitos del aspirante" step={4} badge={`${form.requirements.length} criterios · ${totalWeight}%`}>
         {form.requirements.length === 0 ? (
           <p className="text-xs text-slate-400">Sin requisitos configurados.</p>
         ) : (
@@ -857,7 +834,7 @@ function ProcessSummary({ form }: {
         )}
       </SummarySection>
 
-      <SummarySection title="Proceso de selección" step={6}>
+      <SummarySection title="Proceso de selección" step={5}>
         <SummaryGrid>
           <SummaryItem
             label="Automatizaciones activas"

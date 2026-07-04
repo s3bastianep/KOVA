@@ -37,6 +37,8 @@ export async function POST(req: NextRequest) {
     return Response.json({ message: 'El nombre es obligatorio' }, { status: 400 });
   }
 
+  const discovery = dto.discovery as Record<string, unknown> | undefined;
+
   const company = await prisma.company.create({
     data: {
       tenantId: user.tenantId,
@@ -47,13 +49,14 @@ export async function POST(req: NextRequest) {
       city: dto.city,
       address: dto.address,
       website: dto.website,
-      status: dto.status,
+      status: dto.status ?? 'ACTIVE',
       primaryContact: dto.primaryContact,
       commercialDir: dto.commercialDir,
       generalManager: dto.generalManager,
       phone: dto.phone,
       email: dto.email,
       notes: dto.notes,
+      metadata: discovery ? { discovery } as object : undefined,
       consultants:
         user.role === 'CONSULTANT'
           ? { create: { consultantId: user.id, isPrimary: true } }
@@ -62,6 +65,27 @@ export async function POST(req: NextRequest) {
             : undefined,
     },
   });
+
+  if (discovery) {
+    await prisma.commercialDiscovery.create({
+      data: {
+        tenantId: user.tenantId,
+        companyId: company.id,
+        consultantId: user.id,
+        status: 'COMPLETED',
+        currentStep: 2,
+        step1Data: {
+          company: dto.name,
+          contact: dto.primaryContact,
+          city: dto.city,
+          email: dto.email,
+          phone: dto.phone,
+        },
+        step2Data: discovery as object,
+        completedAt: new Date(),
+      },
+    });
+  }
 
   await prisma.activityLog.create({
     data: {

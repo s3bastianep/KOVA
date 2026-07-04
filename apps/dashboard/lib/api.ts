@@ -65,6 +65,8 @@ export const dashboardApi = {
   companies: () => apiFetch<unknown[]>('/empresas'),
   clients: () => apiFetch<unknown[]>('/clientes'),
   company: (id: string) => apiFetch<Record<string, unknown>>(`/empresas/${id}`),
+  createCompany: (body: Record<string, unknown>) =>
+    apiFetch<{ id: string; name: string }>('/empresas', { method: 'POST', body: JSON.stringify(body) }),
   vacancies: () => apiFetch<unknown[]>('/vacantes'),
   createProcess: (body: Record<string, unknown>) =>
     apiFetch<{ ok: boolean; id: string }>('/procesos', { method: 'POST', body: JSON.stringify(body) }),

@@ -23,6 +23,7 @@ type Company = {
   consultants?: { consultant: { firstName: string; lastName: string; email: string } }[];
   vacancies?: { id: string; title: string; status: string; _count?: { candidates: number } }[];
   activities?: { id: string; description: string; createdAt: string }[];
+  discoveries?: { step2Data?: Record<string, string> | null }[];
 };
 
 function InfoRow({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value?: string }) {
@@ -45,6 +46,7 @@ export default function EmpresaDetallePage({ params }: { params: Promise<{ id: s
   });
 
   const company = data as Company | undefined;
+  const discovery = company?.discoveries?.[0]?.step2Data ?? null;
 
   return (
     <div className="space-y-6">
@@ -82,6 +84,27 @@ export default function EmpresaDetallePage({ params }: { params: Promise<{ id: s
             </div>
 
             <div className="lg:col-span-2 space-y-6">
+              <div className="kova-card p-6">
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                  <h2 className="font-semibold text-sm uppercase tracking-wide text-slate-500">Discovery comercial</h2>
+                  <Link href="/clientes/nuevo" className="text-xs font-semibold text-[var(--kova-blue)] hover:underline">
+                    Actualizar discovery
+                  </Link>
+                </div>
+                {discovery ? (
+                  <div className="grid sm:grid-cols-2 gap-4 text-sm">
+                    <InfoRow icon={Building2} label="¿Qué vende?" value={discovery.whatSells} />
+                    <InfoRow icon={Building2} label="¿Cuánto vende?" value={discovery.revenue} />
+                    <InfoRow icon={Building2} label="¿Cómo vende?" value={discovery.howSells} />
+                    <InfoRow icon={Building2} label="Mercado" value={discovery.market} />
+                    <InfoRow icon={Building2} label="Competidores" value={discovery.competitors} />
+                    <InfoRow icon={Building2} label="Modelo comercial" value={discovery.commercialModel} />
+                  </div>
+                ) : (
+                  <p className="text-sm text-slate-400">Sin discovery registrado. Completa la información comercial del cliente.</p>
+                )}
+              </div>
+
               <div>
                 <h2 className="font-semibold text-sm uppercase tracking-wide text-slate-500 mb-4">Procesos activos</h2>
                 {company.vacancies?.length ? (

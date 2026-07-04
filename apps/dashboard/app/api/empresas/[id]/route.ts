@@ -31,6 +31,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       contracts: true,
       invoices: { orderBy: { createdAt: 'desc' }, take: 10 },
       activities: { orderBy: { createdAt: 'desc' }, take: 30 },
+      discoveries: {
+        where: { vacancyId: null },
+        orderBy: { updatedAt: 'desc' },
+        take: 1,
+      },
     },
   });
 

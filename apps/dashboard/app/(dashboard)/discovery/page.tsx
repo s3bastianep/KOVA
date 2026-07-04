@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
 
 export default function DiscoveryPage() {
-  redirect('/procesos/nuevo');
+  redirect('/clientes/nuevo');
 }

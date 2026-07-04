@@ -35,34 +35,54 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json().catch(() => null);
-  if (!body?.title || !body?.companyName) {
-    return Response.json({ message: 'Empresa y cargo son obligatorios' }, { status: 400 });
+  if (!body?.title || (!body?.companyId && !body?.companyName)) {
+    return Response.json({ message: 'Cliente y cargo son obligatorios' }, { status: 400 });
   }
 
   if (isMockMode()) {
     return Response.json({ ok: true, id: 'mock-proceso-001' });
   }
 
-  const companies = await prisma.company.findMany({
-    where: companyWhereForUser(user),
-    select: { id: true, name: true },
+  let company: { id: string; name: string; city?: string | null } | null = null;
+
+  if (body.companyId) {
+    company = await prisma.company.findFirst({
+      where: { id: String(body.companyId), ...companyWhereForUser(user) },
+      select: { id: true, name: true, city: true },
+    });
+    if (!company) {
+      return Response.json({ message: 'Cliente no encontrado' }, { status: 404 });
+    }
+  } else {
+    const companies = await prisma.company.findMany({
+      where: companyWhereForUser(user),
+      select: { id: true, name: true, city: true },
+    });
+
+    company = companies.find((c) => c.name.toLowerCase() === String(body.companyName).toLowerCase()) ?? null;
+    if (!company) {
+      company = await prisma.company.create({
+        data: {
+          tenantId: user.tenantId,
+          name: body.companyName,
+          status: 'ACTIVE',
+          primaryContact: body.contact ?? undefined,
+          city: body.city ?? undefined,
+          email: body.email ?? undefined,
+          phone: body.phone ?? undefined,
+        },
+        select: { id: true, name: true, city: true },
+      });
+    }
+  }
+
+  const clientDiscovery = await prisma.commercialDiscovery.findFirst({
+    where: { companyId: company.id, vacancyId: null },
+    orderBy: { updatedAt: 'desc' },
+    select: { step2Data: true },
   });
 
-  let company = companies.find((c) => c.name.toLowerCase() === String(body.companyName).toLowerCase());
-  if (!company) {
-    company = await prisma.company.create({
-      data: {
-        tenantId: user.tenantId,
-        name: body.companyName,
-        status: 'ACTIVE',
-        primaryContact: body.contact ?? undefined,
-        city: body.city ?? undefined,
-        email: body.email ?? undefined,
-        phone: body.phone ?? undefined,
-      },
-      select: { id: true, name: true },
-    });
-  }
+  const discoveryData = body.discovery ?? clientDiscovery?.step2Data ?? {};
 
   const requirements = (body.standardQuestions ?? body.requirements ?? []) as SelectedStandardQuestion[];
   const pipelineLabels: string[] = body.pipeline ?? [
@@ -77,8 +97,9 @@ export async function POST(req: NextRequest) {
         consultantId: user.id,
         title: body.title,
         quantity: Number(body.quantity ?? 1),
-        city: body.city ?? null,
+        city: body.city ?? company.city ?? null,
         modality: body.modality ?? null,
+        variablePay: body.salaryRemuneration ?? body.variablePay ?? null,
         urgency: body.urgency ?? 'MEDIUM',
         status: VacancyStatus.SEARCH_ACTIVE,
         openedAt: new Date(),
@@ -101,14 +122,15 @@ export async function POST(req: NextRequest) {
         consultantId: user.id,
         status: 'COMPLETED',
         currentStep: 7,
-        step1Data: { company: body.companyName, contact: body.contact, city: body.city },
-        step2Data: body.discovery ?? {},
+        step1Data: { company: company.name, contact: body.contact, city: body.city ?? company.city },
+        step2Data: discoveryData,
         step3Data: body.need ?? {},
         step4Data: {
           title: body.title,
           objective: body.objective,
           functions: body.functions,
           kpis: body.kpis,
+          salaryRemuneration: body.salaryRemuneration ?? body.variablePay,
         },
         step5Data: { requirements },
         step6Data: { pipeline: pipelineLabels, tests: body.tests ?? [] },
