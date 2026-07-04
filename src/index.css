@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Sora:wght@400;500;600;700;800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -61,9 +59,12 @@
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased;
+    @apply bg-background text-foreground font-body;
     color: #3D3D3D;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: geometricPrecision;
   }
 
   h1, h2, h3, h4 {
@@ -136,6 +137,97 @@
     background-size: 24px 24px;
   }
 
+  .kova-mockup-crisp,
+  .kova-ui-crisp {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: geometricPrecision;
+  }
+
+  .kova-mockup-crisp svg,
+  .kova-ui-crisp svg {
+    shape-rendering: geometricPrecision;
+  }
+
+  .kova-ui-crisp img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: high-quality;
+  }
+
+  @media (min-resolution: 2dppx) {
+    .kova-ui-crisp img {
+      image-rendering: auto;
+    }
+  }
+
+  /* Contenedor y columna derecha compartidos: hero mockup, navbar, problema */
+  .kova-page-container {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 1280px) {
+    .kova-page-container {
+      max-width: 80rem;
+    }
+  }
+
+  :root {
+    --kova-rail-min: 520px;
+    --kova-rail-max: 580px;
+    --kova-rail-gap: 2rem;
+  }
+
+  @media (min-width: 1280px) {
+    :root {
+      --kova-rail-min: 560px;
+      --kova-rail-max: 620px;
+      --kova-rail-gap: 2.5rem;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    :root {
+      --kova-rail-min: 600px;
+      --kova-rail-max: 680px;
+    }
+  }
+
+  .kova-rail-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .kova-rail-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(var(--kova-rail-min), var(--kova-rail-max));
+      gap: var(--kova-rail-gap);
+    }
+  }
+
+  .kova-rail-grid--start {
+    align-items: start;
+  }
+
+  .kova-navbar-inner {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    height: 4rem;
+  }
+
+  @media (min-width: 1024px) {
+    .kova-navbar-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(var(--kova-rail-min), var(--kova-rail-max));
+      gap: var(--kova-rail-gap);
+      align-items: center;
+    }
+  }
+
   .kova-gradient-text {
     color: #1A3FAA;
     background: none;
@@ -151,6 +243,60 @@
     background: var(--kova-coral-dark);
     box-shadow: 0 6px 18px rgba(255, 59, 48, 0.34);
     transform: translateY(-1px);
+  }
+
+  .kova-navbar {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e6ed;
+    box-shadow: 0 1px 0 rgba(15, 31, 61, 0.04), 0 6px 16px -4px rgba(15, 31, 61, 0.08);
+  }
+
+  .kova-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .kova-nav-login {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5rem;
+    padding: 0 0.875rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1;
+    color: #475569;
+    border-radius: 0.5rem;
+    white-space: nowrap;
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .kova-nav-login:hover {
+    color: #0f1f3d;
+    background: #f4f6f9;
+  }
+
+  .kova-nav-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5rem;
+    padding: 0 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1;
+    color: #ffffff;
+    background: var(--kova-coral);
+    border: none;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    white-space: nowrap;
+    transition: background-color 0.15s ease;
+  }
+
+  .kova-nav-cta:hover {
+    background: var(--kova-coral-dark);
   }
 
   /* Calendario de agendamiento — limpio y B2B */

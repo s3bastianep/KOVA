@@ -24,6 +24,8 @@ import {
 import { dashboardApi } from '@/lib/api';
 import { COMMERCIAL_SKILLS } from '@/lib/standard-questions';
 import type { CandidateProcessHistoryItem } from '@/lib/candidate-process-history';
+import { AssessmentCard } from '@/components/candidato/AssessmentCard';
+import type { CandidateAssessment } from '@/lib/evaluations';
 
 const VIOLET = '#7C3AED';
 const VIOLET_SOFT = '#F3E8FF';
@@ -51,7 +53,7 @@ type Candidate = {
   competencies?: { name: string; score: number }[];
   notes?: { id: string; text: string; author: string; date: string }[];
   interviews?: { id: string; title: string; status: string; scheduledAt?: string; score?: number }[];
-  assessments?: { id: string; type: string; competency: string; score?: number; maxScore?: number; result?: string; comments?: string; date?: string }[];
+  assessments?: CandidateAssessment[];
   activities?: { id: string; description: string; type?: string; date: string }[];
   processHistory?: CandidateProcessHistoryItem[];
   processCount?: number;
@@ -485,36 +487,21 @@ function CandidateReport({ c }: { c: Candidate }) {
 
         {/* ── Pruebas ── */}
         <div id="sec-pruebas" className="kova-card p-6 print-block scroll-mt-24">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400 mb-4">Pruebas realizadas</p>
+          <div className="flex items-end justify-between gap-3 mb-4">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Pruebas realizadas</p>
+              {c.assessments?.length ? (
+                <p className="text-xs text-slate-500 mt-1">
+                  {c.assessments.length} evaluación{c.assessments.length !== 1 ? 'es' : ''} con feedback documentado
+                </p>
+              ) : null}
+            </div>
+          </div>
           {c.assessments?.length ? (
             <div className="space-y-3">
-              {c.assessments.map((a) => {
-                const score = a.score ?? 0;
-                const max = a.maxScore ?? 100;
-                const pct = Math.round((score / max) * 100);
-                return (
-                  <div key={a.id} className="p-4 rounded-xl border border-slate-100">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-sm font-semibold" style={{ color: 'var(--kova-navy)' }}>{a.type}</span>
-                          <span className="text-xs text-slate-400">· {a.competency}</span>
-                          {a.result && <span className="text-[10px] font-medium px-2 py-0.5 rounded-full text-slate-500 bg-slate-100">{a.result}</span>}
-                          {a.date && <span className="text-xs text-slate-400">· {new Date(a.date).toLocaleDateString('es-CO')}</span>}
-                        </div>
-                        {a.comments && <p className="text-sm text-slate-600 mt-1.5 leading-relaxed">{a.comments}</p>}
-                      </div>
-                      {a.score != null && (
-                        <div className="text-right shrink-0">
-                          <span className="font-heading font-bold text-lg" style={{ color: pct >= 70 ? 'var(--kova-green)' : '#D97706' }}>{score}</span>
-                          <span className="text-xs text-slate-400">/{max}</span>
-                        </div>
-                      )}
-                    </div>
-                    <button className="mt-2 text-xs font-semibold inline-flex items-center gap-1" style={{ color: VIOLET }}>Ver detalle <ChevronRight className="w-3 h-3" /></button>
-                  </div>
-                );
-              })}
+              {c.assessments.map((a) => (
+                <AssessmentCard key={a.id} assessment={a} />
+              ))}
             </div>
           ) : <p className="text-sm text-slate-400">Sin pruebas registradas.</p>}
         </div>

@@ -57,7 +57,7 @@ export default function RolesComerciales() {
   const { ref, visible } = useReveal();
 
   return (
-    <section id="roles" className="relative pt-10 pb-6 lg:pt-16 lg:pb-8 px-5 sm:px-6 lg:px-8" style={{ background: KOVA.paleBlue }}>
+    <section id="roles" className="relative pt-10 pb-6 lg:pt-14 lg:pb-10 px-5 sm:px-6 lg:px-8 border-t" style={{ background: KOVA.surface, borderColor: KOVA.border }}>
       <div className="absolute inset-x-0 top-0 flex h-[3px]" aria-hidden>
         <span className="flex-1" style={{ background: BRAND.blue }} />
         <span className="flex-1" style={{ background: BRAND.green }} />
@@ -135,7 +135,7 @@ export default function RolesComerciales() {
                   >
                     {title}
                   </h3>
-                  <p className="text-[11px] sm:text-xs lg:text-[13px] leading-snug" style={{ color: KOVA.muted, lineHeight: 1.5 }}>
+                  <p className="text-xs sm:text-[13px] leading-snug" style={{ color: KOVA.body, lineHeight: 1.55 }}>
                     {desc}
                   </p>
                 </article>

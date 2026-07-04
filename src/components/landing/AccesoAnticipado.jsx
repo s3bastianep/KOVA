@@ -145,8 +145,8 @@ export default function AccesoAnticipado() {
               Por qué las organizaciones eligen Kova
             </h2>
             <p className="kova-text-body leading-relaxed mb-6 lg:mb-7" style={{ color: KOVA.body }}>
-              La forma antigua de selección envía currículums y apuesta por la entrevista. Kova le aporta criterio,
-              evidencia y estructura para reducir el riesgo de cada contratación comercial.
+              Kova nace para resolver un problema concreto: contratar vendedores con el mismo rigor que exige el
+              desempeño comercial. Menos apuestas, más evidencia en cada decisión.
             </p>
 
             <ul className="space-y-4 lg:flex-1 lg:flex lg:flex-col lg:justify-between lg:gap-4 lg:space-y-0">
@@ -205,13 +205,6 @@ export default function AccesoAnticipado() {
             </div>
           </div>
         </div>
-
-        <p
-          className="text-center text-sm lg:text-[15px] mt-8 lg:mt-10 max-w-xl mx-auto"
-          style={{ color: KOVA.muted, lineHeight: 1.65 }}
-        >
-          Selección comercial basada en competencias, no en experiencia declarada.
-        </p>
       </div>
     </section>
   );

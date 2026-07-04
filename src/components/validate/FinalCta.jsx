@@ -6,8 +6,8 @@ export default function FinalCta() {
   return (
     <section
       id="contacto-final"
-      className="px-5 sm:px-6 lg:px-8 py-6 sm:py-7"
-      style={{ background: KOVA.paleBlue }}
+      className="px-5 sm:px-6 lg:px-8 py-8 sm:py-10"
+      style={{ background: KOVA.surface }}
     >
       <div className="max-w-6xl mx-auto">
         <div

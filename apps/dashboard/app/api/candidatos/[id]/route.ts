@@ -3,6 +3,7 @@ import { getUserFromRequest, unauthorized } from '../../../../lib/auth';
 import { prisma } from '../../../../lib/prisma';
 import { isMockMode, getMockCandidate, MOCK_ASSESSMENTS } from '../../../../lib/mock';
 import { mapCandidateProcessHistory } from '../../../../lib/candidate-process-history';
+import { mapCandidateAssessment } from '../../../../lib/evaluations';
 
 const ASSESSMENT_TYPE_LABELS: Record<string, string> = {
   COMMERCIAL: 'Prueba Comercial',
@@ -31,16 +32,20 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   if (isMockMode()) {
     const candidate = getMockCandidate(id);
     if (!candidate) return Response.json({ message: 'Candidato no encontrado' }, { status: 404 });
-    const assessments = MOCK_ASSESSMENTS.filter((a) => a.candidateId === id).map((a) => ({
-      id: a.id,
-      type: a.type,
-      competency: a.competency,
-      score: a.score,
-      maxScore: a.maxScore,
-      result: a.result,
-      comments: a.comments,
-      date: a.completedAt,
-    }));
+    const assessments = MOCK_ASSESSMENTS.filter((a) => a.candidateId === id).map((a) =>
+      mapCandidateAssessment({
+        id: a.id,
+        type: a.type,
+        competency: a.competency,
+        score: a.score,
+        maxScore: a.maxScore,
+        result: a.result,
+        comments: a.comments,
+        mistakes: a.mistakes,
+        date: a.completedAt,
+        durationMinutes: a.durationMinutes,
+      }),
+    );
     return Response.json({
       ...candidate,
       vacancyTitle: candidate.vacancies[0]?.vacancy.title,
@@ -154,16 +159,21 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       to: h.toStage,
       date: h.createdAt.toISOString(),
     })),
-    assessments: candidate.assessments.map((a) => ({
-      id: a.id,
-      type: ASSESSMENT_TYPE_LABELS[a.type] ?? a.type,
-      competency: a.title,
-      score: a.score,
-      maxScore: a.maxScore,
-      result: a.result,
-      comments: a.comments,
-      date: a.completedAt?.toISOString() ?? a.createdAt.toISOString(),
-    })),
+    assessments: candidate.assessments.map((a) =>
+      mapCandidateAssessment({
+        id: a.id,
+        type: ASSESSMENT_TYPE_LABELS[a.type] ?? a.type,
+        competency: a.title,
+        score: a.score,
+        maxScore: a.maxScore,
+        result: a.result,
+        comments: a.comments,
+        date: a.completedAt?.toISOString() ?? a.createdAt.toISOString(),
+        durationMinutes: a.completedAt
+          ? Math.max(1, Math.round((a.completedAt.getTime() - a.createdAt.getTime()) / 60000))
+          : null,
+      }),
+    ),
     educations: candidate.educations.map((e) => ({
       id: e.id,
       institution: e.institution,

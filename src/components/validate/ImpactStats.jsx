@@ -1,38 +1,29 @@
 import { useEffect, useRef, useState } from 'react';
+import { ClipboardCheck, Compass, FileText, Users } from 'lucide-react';
 import { BRAND } from '@/theme/kovaPalette';
 
-const stats = [
-  { value: 67, title: 'Reducción de entrevistas por contratación' },
-  { value: 92, title: 'Alineación con el perfil comercial' },
-  { value: 100, title: 'Criterio de evaluación uniforme' },
-  { value: 94, title: 'Retención al primer año' },
+const entregables = [
+  {
+    icon: Compass,
+    title: 'Discovery comercial',
+    desc: 'Perfil ideal, competencias y criterios de éxito definidos antes de abrir la búsqueda.',
+  },
+  {
+    icon: ClipboardCheck,
+    title: 'Evaluación uniforme',
+    desc: 'Cada candidato pasa por el mismo marco de competencias, sin criterios cambiantes.',
+  },
+  {
+    icon: FileText,
+    title: 'Informe con evidencia',
+    desc: 'Puntajes, observaciones y conclusión del evaluador documentados por candidato.',
+  },
+  {
+    icon: Users,
+    title: 'Terna comparada',
+    desc: 'Ranking final listo para decidir en equipo, con respaldo claro por perfil.',
+  },
 ];
-
-function useCountUp(target, active, duration = 1400) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (!active) {
-      setCount(0);
-      return;
-    }
-    let frame = 0;
-    let start = 0;
-
-    const step = (ts) => {
-      if (!start) start = ts;
-      const progress = Math.min((ts - start) / duration, 1);
-      const eased = 1 - (1 - progress) ** 3;
-      setCount(Math.round(eased * target));
-      if (progress < 1) frame = requestAnimationFrame(step);
-    };
-
-    frame = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(frame);
-  }, [active, target, duration]);
-
-  return count;
-}
 
 function useReveal() {
   const ref = useRef(null);
@@ -61,32 +52,39 @@ function useReveal() {
   return { ref, visible };
 }
 
-function StatCard({ value, title, active }) {
-  const count = useCountUp(value, active);
-
+function EntregableCard({ icon: Icon, title, desc, active }) {
   return (
-    <article className="kova-stat-card relative px-3 py-5 sm:px-4 sm:py-6 lg:py-7 flex flex-col items-center text-center h-full min-h-0 sm:min-h-[152px]">
+    <article
+      className="kova-stat-card relative px-4 py-6 sm:px-5 sm:py-7 lg:py-8 flex flex-col items-center text-center h-full min-h-0 sm:min-h-[196px]"
+      style={{
+        opacity: active ? 1 : 0,
+        transform: active ? 'translateY(0)' : 'translateY(12px)',
+        transition: 'opacity 0.5s ease, transform 0.5s ease',
+      }}
+    >
       <span
         className="absolute top-0 inset-x-0 h-[3px]"
         style={{ background: BRAND.green }}
         aria-hidden
       />
-      <div className="flex items-baseline justify-center gap-0.5 h-12 sm:h-14 mb-2 sm:mb-3">
-        <span
-          className="font-heading font-bold tabular-nums leading-none text-white kova-text-stat"
-        >
-          {count}
-        </span>
-        <span className="text-sm font-semibold tabular-nums" style={{ color: BRAND.green }}>
-          %
-        </span>
-      </div>
-      <div className="w-8 h-0.5 rounded-full mb-3 sm:mb-4 flex-shrink-0" style={{ background: BRAND.green }} />
-      <p
-        className="text-xs sm:text-[13px] lg:text-sm font-medium leading-snug max-w-[14rem] sm:max-w-[11.5rem]"
-        style={{ color: 'rgba(255,255,255,0.82)' }}
+      <div
+        className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center mb-4 flex-shrink-0"
+        style={{
+          background: 'rgba(0, 178, 122, 0.12)',
+          border: '1px solid rgba(0, 178, 122, 0.28)',
+        }}
       >
+        <Icon className="w-5 h-5" style={{ color: BRAND.green }} strokeWidth={2.25} />
+      </div>
+      <h3 className="font-heading font-semibold text-[15px] sm:text-base text-white mb-2 leading-snug">
         {title}
+      </h3>
+      <div className="w-8 h-0.5 rounded-full mb-3 flex-shrink-0" style={{ background: BRAND.green }} />
+      <p
+        className="text-xs sm:text-[13px] lg:text-sm font-medium leading-relaxed max-w-[15rem] sm:max-w-[12.5rem]"
+        style={{ color: 'rgba(255,255,255,0.72)' }}
+      >
+        {desc}
       </p>
     </article>
   );
@@ -111,9 +109,9 @@ export default function ImpactStats() {
             transition: 'opacity 0.5s ease',
           }}
         >
-          <p className="kova-eyebrow-results mb-4 sm:mb-5 mx-auto w-fit">Resultados con evidencia</p>
+          <p className="kova-eyebrow-results mb-4 sm:mb-5 mx-auto w-fit">Entregables del proceso</p>
           <h2 className="font-heading font-bold text-white text-balance mb-3 sm:mb-4 kova-text-h2" style={{ lineHeight: 1.2 }}>
-            Resultados reales para equipos de selección comercial
+            Valor concreto para equipos de selección comercial
           </h2>
           <p className="kova-text-body leading-relaxed" style={{ color: 'rgba(255,255,255,0.58)' }}>
             Metodología estructurada con criterio uniforme, evidencia documentada y evaluación diseñada para talento
@@ -129,8 +127,8 @@ export default function ImpactStats() {
             transition: 'opacity 0.5s ease 80ms',
           }}
         >
-          {stats.map((stat) => (
-            <StatCard key={stat.title} {...stat} active={visible} />
+          {entregables.map((item) => (
+            <EntregableCard key={item.title} {...item} active={visible} />
           ))}
         </div>
 
@@ -142,7 +140,7 @@ export default function ImpactStats() {
             transition: 'opacity 0.5s ease 400ms',
           }}
         >
-          Indicadores referenciales de procesos de selección comercial B2B con evaluación por competencias
+          Metodología aplicada en procesos de selección comercial B2B con evaluación por competencias
         </p>
       </div>
     </section>

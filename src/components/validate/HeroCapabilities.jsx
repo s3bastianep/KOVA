@@ -1,4 +1,4 @@
-import { Compass, FileCheck, Gauge, Shield, SlidersHorizontal } from 'lucide-react';
+import { Compass, FileCheck, Gauge, SlidersHorizontal } from 'lucide-react';
 import { accentCycle, BRAND, KOVA } from '@/theme/kovaPalette';
 
 const pillars = [
@@ -48,7 +48,7 @@ export default function HeroCapabilities() {
         </header>
 
         <div
-          className="rounded-xl sm:rounded-2xl p-3 sm:p-5 lg:p-6 mb-5 sm:mb-6 lg:mb-8"
+          className="rounded-xl sm:rounded-2xl p-3 sm:p-5 lg:p-6 mb-6 sm:mb-7 lg:mb-8"
           style={{
             background: 'rgba(255,255,255,0.72)',
             border: '1px solid rgba(197,212,240,0.8)',
@@ -87,21 +87,17 @@ export default function HeroCapabilities() {
         </div>
 
         <div
-          className="max-w-4xl mx-auto rounded-xl px-4 py-4 sm:px-5 sm:py-5 lg:px-7 lg:py-6 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 lg:gap-5"
+          className="max-w-4xl mx-auto rounded-xl flex items-start sm:items-center gap-3 sm:gap-4 px-4 py-4 sm:px-5 sm:py-4"
           style={{
-            background: `linear-gradient(135deg, ${BRAND.navy} 0%, #1A2D4A 100%)`,
-            boxShadow: '0 12px 40px rgba(15,31,61,0.2)',
+            background: BRAND.navy,
+            border: '1px solid rgba(255,255,255,0.08)',
           }}
         >
-          <div
-            className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: 'rgba(0,178,122,0.15)', border: '1px solid rgba(0,178,122,0.3)' }}
-          >
-            <Shield className="w-5 h-5" style={{ color: BRAND.green }} strokeWidth={2} />
-          </div>
-          <p className="text-[13px] sm:text-sm lg:text-[15px] leading-relaxed flex-1 min-w-0" style={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.65 }}>
+          <Gauge className="w-5 h-5 shrink-0 mt-0.5 sm:mt-0" style={{ color: BRAND.green }} strokeWidth={2} />
+
+          <p className="text-[13px] sm:text-sm leading-relaxed min-w-0" style={{ color: 'rgba(255,255,255,0.88)', lineHeight: 1.6 }}>
             <span className="font-semibold text-white">Impulsado por Kova Score</span>
-            <span style={{ color: 'rgba(255,255,255,0.72)' }}>
+            <span style={{ color: 'rgba(255,255,255,0.65)' }}>
               , el índice predictivo que estima el potencial comercial de cada candidato en su modelo de negocio.
             </span>
           </p>

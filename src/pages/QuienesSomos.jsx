@@ -86,7 +86,7 @@ export default function QuienesSomos() {
                   style={{ color: 'rgba(255,255,255,0.68)', lineHeight: 1.72 }}
                 >
                   Nacimos de la experiencia en liderazgo comercial y selección. Vimos empresas contratar por
-                  currículum e intuición — y descubrir meses después que el perfil no vendía.
+                  currículum e intuición, y descubrir meses después que el perfil no vendía.
                 </p>
                 <Link
                   to="/contacto"

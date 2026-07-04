@@ -4,10 +4,10 @@ import HeroDemoMockup from '@/components/landing/HeroDemoMockup';
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden kova-hero-premium">
-      <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-10 lg:pt-36 lg:pb-16 w-full">
-        <div className="grid lg:grid-cols-2 gap-7 sm:gap-10 lg:gap-12 xl:gap-14 items-center">
-          <div className="min-w-0 max-w-xl lg:max-w-[34rem]">
+    <section className="relative kova-hero-premium px-5 sm:px-6 lg:px-8 overflow-x-clip">
+      <div className="kova-page-container relative z-10 pt-24 sm:pt-28 pb-10 lg:pt-36 lg:pb-16 w-full">
+        <div className="kova-rail-grid">
+          <div className="min-w-0">
             <span className="kova-hero-eyebrow mb-4 sm:mb-6 max-w-full">
               <Shield className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: '#8EC5FF' }} strokeWidth={2} />
               Reduzca los riesgos en la contratación de talento comercial
@@ -35,15 +35,15 @@ export default function Hero() {
             </Link>
           </div>
 
-          <div className="min-w-0 w-full relative -mx-0.5 sm:mx-0">
+          <div className="min-w-0 w-full lg:col-start-2 relative">
             <div
-              className="absolute -inset-4 lg:-inset-6 rounded-3xl opacity-60 pointer-events-none"
+              className="absolute -inset-4 lg:-inset-6 rounded-3xl opacity-50 pointer-events-none"
               style={{
-                background: 'radial-gradient(ellipse at center, rgba(45,91,227,0.22) 0%, transparent 70%)',
+                background: 'radial-gradient(ellipse at center, rgba(45,91,227,0.18) 0%, transparent 72%)',
               }}
               aria-hidden
             />
-            <div className="relative lg:translate-y-1">
+            <div className="relative">
               <HeroDemoMockup dark />
             </div>
           </div>

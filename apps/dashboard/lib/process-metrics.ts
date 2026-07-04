@@ -42,10 +42,10 @@ export function computeProcessPipelineMetrics(stages: string[]): ProcessPipeline
 }
 
 export const PROCESS_PIPELINE_METRICS = [
-  { key: 'candidates', label: 'Candidatos' },
-  { key: 'interviewed', label: 'Entrevistado' },
-  { key: 'preselected', label: 'Preseleccionado' },
-  { key: 'tests', label: 'Pruebas' },
-  { key: 'finalInterview', label: 'Entrevista final' },
-  { key: 'selected', label: 'Seleccionados' },
-] as const satisfies ReadonlyArray<{ key: keyof ProcessPipelineMetrics; label: string }>;
+  { key: 'candidates', label: 'Candidatos', short: 'Cand.' },
+  { key: 'interviewed', label: 'Entrevistado', short: 'Entrev.' },
+  { key: 'preselected', label: 'Preseleccionado', short: 'Presel.' },
+  { key: 'tests', label: 'Pruebas', short: 'Pruebas' },
+  { key: 'finalInterview', label: 'Entrevista final', short: 'Ent. final' },
+  { key: 'selected', label: 'Seleccionados', short: 'Selecc.' },
+] as const satisfies ReadonlyArray<{ key: keyof ProcessPipelineMetrics; label: string; short: string }>;

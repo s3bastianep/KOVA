@@ -96,21 +96,20 @@ export function ProcessCard({
         <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-[var(--kova-blue)] transition-colors shrink-0" />
       </div>
 
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-[11px] font-medium px-2.5 py-1 rounded-full" style={{ background: st.bg, color: st.color }}>
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full" style={{ background: st.bg, color: st.color }}>
           {statusText}
         </span>
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-semibold text-slate-500">Etapa {stage.step}/{stage.total}</span>
-          <span className="font-heading font-bold text-sm" style={{ color: st.color }}>{pct}%</span>
-        </div>
+        <span className="text-[11px] font-semibold text-slate-500">
+          {stage.label} · {stage.step}/{stage.total}
+        </span>
       </div>
 
       <ProcessProgressBar
         status={status}
         progress={pct}
         color={st.bar}
-        size="md"
+        size="sm"
         showHeader={false}
         className="mb-4"
       />

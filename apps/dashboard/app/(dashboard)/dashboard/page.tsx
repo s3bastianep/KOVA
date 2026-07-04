@@ -6,11 +6,12 @@ import Link from 'next/link';
 import {
   GitBranch, Users, Calendar, ClipboardCheck, TrendingUp,
   ArrowRight, ChevronRight, Phone, ClipboardList,
-  CheckCircle2, Circle, Activity,
+  CheckCircle2, Circle, Activity, Briefcase,
 } from 'lucide-react';
 import { dashboardApi, getStoredUser } from '@/lib/api';
 import { CLIENT_JOURNEY_STAGES } from '@/lib/client-journey';
-import { processStatusLabel } from '@/lib/process-status';
+import { processStatusLabel, processProgress, processStageInfo } from '@/lib/process-status';
+import { ProcessProgressBar } from '@/components/proceso/ProcessProgressBar';
 import type { ProcessEvalGroup } from '@/lib/evaluations';
 
 type MyDay = {
@@ -41,6 +42,8 @@ type ActivityLog = {
 
 type AlertItem = { id: string; title: string; status: string; dueDate?: string };
 
+const STAGE_METRICS = ['Procesos', 'Procesos', 'Candidatos', 'Pruebas', 'Entrevistas', 'Finalistas', 'En entrevista', 'Contratados'] as const;
+
 const STAGE_ACTIVITIES: Record<string, string[]> = {
   discovery: ['Agenda reunión', 'Explica el negocio', 'Explica sus productos', 'Explica cómo vende', 'Explica su proceso comercial', 'Solicitud de cubrimiento'],
   ideal_seller: ['Analiza el cargo', 'Documenta el proceso', 'Identifica habilidades', 'Diseña evaluación', 'Define perfil ideal'],
@@ -57,10 +60,27 @@ function scoreColor(pct: number) {
   if (pct >= 70) return '#B7791F';
   return 'var(--kova-coral)';
 }
+
 function scoreTrack(pct: number) {
-  if (pct >= 80) return '#E6FAF3';
-  if (pct >= 70) return '#FFF7E6';
-  return '#FFF0EE';
+  if (pct >= 80) return '#ECFDF5';
+  if (pct >= 70) return '#FFFBEB';
+  return '#FEF2F2';
+}
+
+function processStatusColor(status: string) {
+  const map: Record<string, string> = {
+    SEARCH_ACTIVE: 'var(--kova-green)',
+    HIRED: 'var(--kova-green)',
+    FINALISTS: '#DB2777',
+    OFFER: '#EA580C',
+    EVALUATION: '#7C3AED',
+    PROFILE_BUILDING: '#2563EB',
+    APPROVAL_PENDING: '#F59E0B',
+    DISCOVERY: '#1D4ED8',
+    DISCOVERY_PENDING: '#1D4ED8',
+    PAUSED: '#94A3B8',
+  };
+  return map[status] ?? '#2563EB';
 }
 
 function greeting() {
@@ -79,6 +99,10 @@ function timeAgo(iso: string) {
   return `Hace ${d} día${d !== 1 ? 's' : ''}`;
 }
 
+function progressFor(p: ProcessSummary): number {
+  return processProgress(p.status);
+}
+
 export default function DashboardPage() {
   const { data, isLoading } = useQuery({ queryKey: ['dashboard'], queryFn: dashboardApi.metrics });
   const { data: evalData } = useQuery({ queryKey: ['assessments'], queryFn: () => dashboardApi.assessments() });
@@ -90,9 +114,6 @@ export default function DashboardPage() {
   const recentActivity = (data?.recentActivity ?? []) as ActivityLog[];
   const evalProcesses = (evalData?.processes ?? []) as ProcessEvalGroup[];
 
-  // El saludo y el nombre dependen de la hora local y de localStorage, que no
-  // existen en el servidor. Se calculan tras el montaje para evitar el error de
-  // hidratación de React (#418).
   const [greet, setGreet] = useState<string | null>(null);
   const [firstName, setFirstName] = useState('');
   useEffect(() => {
@@ -106,37 +127,44 @@ export default function DashboardPage() {
     ? Math.round(evalProcesses.reduce((s, p) => s + p.avgScore, 0) / evalProcesses.length)
     : 0;
 
-  // Resumen por prueba
   const testSummary = (() => {
     const map = new Map<string, number[]>();
-    for (const p of evalProcesses) for (const c of p.candidates) for (const t of c.tests) {
-      const arr = map.get(t.type) ?? [];
-      arr.push(Math.round((t.score / t.maxScore) * 100));
-      map.set(t.type, arr);
+    for (const p of evalProcesses) {
+      for (const c of p.candidates) {
+        for (const t of c.tests) {
+          const arr = map.get(t.type) ?? [];
+          arr.push(Math.round((t.score / t.maxScore) * 100));
+          map.set(t.type, arr);
+        }
+      }
     }
     return Array.from(map.entries()).map(([type, scores]) => ({
-      type, count: scores.length,
+      type,
+      count: scores.length,
       avg: Math.round(scores.reduce((a, b) => a + b, 0) / scores.length),
     }));
   })();
 
-  // Distribución de puntajes por candidato
   const distribution = (() => {
     const buckets = [
       { label: '90 - 100', min: 90, max: 100, count: 0, color: 'var(--kova-green)' },
-      { label: '70 - 89', min: 70, max: 89, count: 0, color: '#2D5BE3' },
+      { label: '70 - 89', min: 70, max: 89, count: 0, color: '#2563EB' },
       { label: '50 - 69', min: 50, max: 69, count: 0, color: '#F59E0B' },
       { label: '0 - 49', min: 0, max: 49, count: 0, color: 'var(--kova-coral)' },
     ];
-    for (const p of evalProcesses) for (const c of p.candidates) {
-      const b = buckets.find((x) => c.avgScore >= x.min && c.avgScore <= x.max);
-      if (b) b.count += 1;
+    for (const p of evalProcesses) {
+      for (const c of p.candidates) {
+        const b = buckets.find((x) => c.avgScore >= x.min && c.avgScore <= x.max);
+        if (b) b.count += 1;
+      }
     }
     const total = buckets.reduce((s, b) => s + b.count, 0) || 1;
-    return { buckets: buckets.map((b) => ({ ...b, pct: Math.round((b.count / total) * 100) })), total: buckets.reduce((s, b) => s + b.count, 0) };
+    return {
+      buckets: buckets.map((b) => ({ ...b, pct: Math.round((b.count / total) * 100) })),
+      total: buckets.reduce((s, b) => s + b.count, 0),
+    };
   })();
 
-  // Pipeline 8 etapas - conteos derivados
   const stageCounts = [
     kpis.activeProcesses ?? processes.length,
     kpis.activeProcesses ?? processes.length,
@@ -149,248 +177,192 @@ export default function DashboardPage() {
   ];
 
   return (
-      <div className="space-y-5">
-      <div className="kova-card p-6 sm:p-7 relative overflow-hidden">
-        <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full opacity-40 pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(37,99,235,0.15), transparent 70%)' }} />
-        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">Panel principal</p>
-        <h1 className="font-heading text-[1.75rem] sm:text-3xl font-bold mt-1 tracking-tight" style={{ color: 'var(--kova-navy)' }}>
-          {greet ?? 'Hola'}{firstName ? `, ${firstName}` : ''}
-        </h1>
-        <p className="text-sm text-slate-500 mt-2">Este es el resumen de tu operación hoy.</p>
-      </div>
-
-      {/* KPIs */}
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
-        <KpiCard label="Procesos activos" value={kpis.activeProcesses ?? 0} icon={GitBranch} tint="#EEF2FA" tone="var(--kova-blue)" href="/procesos" />
-        <KpiCard label="Candidatos evaluados" value={totalCandidatesEval} icon={Users} tint="#F3E8FF" tone="#7C3AED" href="/candidatos" />
-        <KpiCard label="Pruebas realizadas" value={totalTests} icon={ClipboardList} tint="#ECFEFF" tone="#0E7490" href="/evaluaciones" />
-        <KpiCard label="Entrevistas hoy" value={kpis.interviewsToday ?? 0} icon={Calendar} tint="#FDF2F8" tone="#BE185D" href="/agenda" />
-        <KpiCard label="Por revisar" value={kpis.pendingReviews ?? 0} icon={ClipboardCheck} tint="#FFF0EE" tone="var(--kova-coral)" href="/evaluaciones" />
-        <KpiCard label="Promedio general" value={`${avgScore}%`} icon={TrendingUp} tint={scoreTrack(avgScore)} tone={scoreColor(avgScore)} href="/reportes" />
-      </div>
-
-      {/* Pipeline 8 etapas + Rendimiento */}
-      <div className="grid xl:grid-cols-[1fr_320px] gap-4 items-start">
-        <div className="kova-card p-5">
-          <h2 className="font-heading font-bold text-sm mb-4" style={{ color: 'var(--kova-navy)' }}>Pipeline del proceso de selección</h2>
-          <div className="flex items-stretch gap-1 overflow-x-auto pb-2">
-            {CLIENT_JOURNEY_STAGES.map((stage, i) => (
-              <div key={stage.id} className="flex items-stretch shrink-0">
-                <div className="w-[116px] text-center">
-                  <div className="rounded-xl border p-2.5 h-full flex flex-col items-center justify-start" style={{ borderColor: stage.bg, background: stage.bg }}>
-                    <span className="text-[9px] font-bold uppercase tracking-wide" style={{ color: stage.color }}>Etapa {i + 1}</span>
-                    <span className="text-[10px] font-medium leading-tight mt-1" style={{ color: 'var(--kova-navy)' }}>{stage.label.split(' + ')[0]}</span>
-                  </div>
-                  <p className="font-heading font-bold text-lg mt-2 leading-none" style={{ color: stage.color }}>{stageCounts[i]}</p>
-                  <p className="text-[9px] text-slate-400 mt-0.5">{['Procesos', 'Procesos', 'Candidatos', 'Pruebas', 'Entrevistas', 'Finalistas', 'En entrevista', 'Contratados'][i]}</p>
-                </div>
-                {i < CLIENT_JOURNEY_STAGES.length - 1 && (
-                  <div className="flex items-center px-0.5 pt-6">
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-300" />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+    <div className="space-y-5">
+      {/* Saludo + KPIs */}
+      <div className="grid xl:grid-cols-[minmax(260px,320px)_1fr] gap-4 items-stretch">
+        <div className="kova-card p-6 relative overflow-hidden flex flex-col justify-center">
+          <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full opacity-40 pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(37,99,235,0.15), transparent 70%)' }} />
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">Panel principal</p>
+          <h1 className="font-heading text-2xl sm:text-[1.75rem] font-bold mt-1 tracking-tight" style={{ color: 'var(--kova-navy)' }}>
+            {greet ?? 'Hola'}{firstName ? `, ${firstName}` : ''}
+          </h1>
+          <p className="text-sm text-slate-600 mt-2 leading-relaxed">Resumen de tu operación comercial hoy.</p>
         </div>
 
-        <div className="kova-card p-5">
-          <h2 className="font-heading font-bold text-sm mb-3" style={{ color: 'var(--kova-navy)' }}>Rendimiento general</h2>
-          <div className="flex items-center gap-4">
-            <Donut buckets={distribution.buckets} centerValue={`${avgScore}%`} centerLabel="Promedio" />
-            <div className="flex-1 space-y-1.5">
-              {distribution.buckets.map((b, idx) => (
-                <div key={b.label} className="flex items-center justify-between text-xs">
-                  <span className="flex items-center gap-1.5 text-slate-600">
-                    <span className="w-2.5 h-2.5 rounded-full" style={{ background: b.color }} />
-                    {['Excelentes', 'Buenos', 'Regulares', 'Bajos'][idx]}
-                  </span>
-                  <span className="text-slate-400">{b.label}</span>
-                  <span className="font-semibold text-slate-700 w-12 text-right">{b.count} ({b.pct}%)</span>
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
+          <KpiCard label="Procesos activos" value={kpis.activeProcesses ?? 0} icon={GitBranch} tint="#EFF6FF" tone="var(--kova-blue)" href="/procesos" />
+          <KpiCard label="Candidatos evaluados" value={totalCandidatesEval} icon={Users} tint="#F5F3FF" tone="#7C3AED" href="/candidatos" />
+          <KpiCard label="Pruebas realizadas" value={totalTests} icon={ClipboardList} tint="#ECFEFF" tone="#0E7490" href="/evaluaciones" />
+          <KpiCard label="Entrevistas hoy" value={kpis.interviewsToday ?? 0} icon={Calendar} tint="#FDF2F8" tone="#BE185D" href="/agenda" />
+          <KpiCard label="Por revisar" value={kpis.pendingReviews ?? 0} icon={ClipboardCheck} tint="#FEF2F2" tone="var(--kova-coral)" href="/evaluaciones" />
+          <KpiCard label="Promedio general" value={`${avgScore}%`} icon={TrendingUp} tint={scoreTrack(avgScore)} tone={scoreColor(avgScore)} href="/reportes" />
+        </div>
+      </div>
+
+      {/* Pipeline + rendimiento */}
+      <div className="grid xl:grid-cols-[1fr_300px] gap-4 items-stretch">
+        <SectionCard title="Pipeline del proceso de selección" className="min-h-[280px]">
+          <div className="relative mt-1">
+            <div className="hidden lg:block absolute top-[2.75rem] left-[6%] right-[6%] h-0.5 bg-slate-200/90 z-0" />
+            <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-2.5 relative z-10">
+              {CLIENT_JOURNEY_STAGES.map((stage, i) => (
+                <div key={stage.id} className="flex flex-col items-center text-center min-h-[132px]">
+                  <div
+                    className="w-full rounded-xl border px-2 py-3 min-h-[72px] flex flex-col items-center justify-center"
+                    style={{ borderColor: `${stage.color}22`, background: stage.bg }}
+                  >
+                    <span className="text-[10px] font-bold uppercase tracking-wide" style={{ color: stage.color }}>
+                      Etapa {i + 1}
+                    </span>
+                    <span className="text-xs font-semibold leading-snug mt-1 line-clamp-2" style={{ color: 'var(--kova-navy)' }}>
+                      {stage.shortLabel}
+                    </span>
+                  </div>
+                  <p className="font-heading font-bold text-xl mt-2.5 leading-none tabular-nums" style={{ color: stage.color }}>
+                    {stageCounts[i]}
+                  </p>
+                  <p className="text-[11px] text-slate-500 mt-1 leading-tight">{STAGE_METRICS[i]}</p>
                 </div>
               ))}
             </div>
           </div>
-          <Link href="/reportes" className="text-xs inline-flex items-center gap-1 mt-3 hover:underline" style={{ color: 'var(--kova-blue)' }}>
-            Ver reporte completo <ArrowRight className="w-3 h-3" />
-          </Link>
-        </div>
+        </SectionCard>
+
+        <SectionCard title="Rendimiento general" footer={<Link href="/reportes" className="text-xs inline-flex items-center gap-1 hover:underline font-medium" style={{ color: 'var(--kova-blue)' }}>Ver reporte completo <ArrowRight className="w-3 h-3" /></Link>}>
+          <div className="flex flex-col sm:flex-row xl:flex-col items-center gap-4 flex-1 justify-center">
+            <Donut buckets={distribution.buckets} centerValue={`${avgScore}%`} centerLabel="Promedio" />
+            <div className="w-full space-y-2">
+              {distribution.buckets.map((b, idx) => (
+                <div key={b.label} className="flex items-center justify-between gap-2 text-xs">
+                  <span className="flex items-center gap-2 text-slate-700 font-medium min-w-0">
+                    <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: b.color }} />
+                    {['Excelentes', 'Buenos', 'Regulares', 'Bajos'][idx]}
+                  </span>
+                  <span className="text-slate-500 shrink-0">{b.label}</span>
+                  <span className="font-semibold text-slate-800 tabular-nums shrink-0">{b.count}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </SectionCard>
       </div>
 
-      {/* Procesos activos + Pendientes */}
-      <div className="grid xl:grid-cols-[1fr_320px] gap-4 items-start">
-        <div className="kova-card p-5">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-heading font-bold text-sm" style={{ color: 'var(--kova-navy)' }}>Mis procesos activos</h2>
-          </div>
+      {/* Procesos + pendientes */}
+      <div className="grid xl:grid-cols-[1fr_300px] gap-4 items-stretch">
+        <SectionCard
+          title="Mis procesos activos"
+          action={<Link href="/procesos" className="text-xs font-semibold hover:underline" style={{ color: 'var(--kova-blue)' }}>Ver todos</Link>}
+          className="min-h-[320px]"
+        >
           {isLoading ? (
-            <div className="space-y-2">{[0, 1].map((i) => <div key={i} className="kova-skeleton h-14 rounded-xl" />)}</div>
+            <div className="space-y-2">{[0, 1, 2].map((i) => <div key={i} className="kova-skeleton h-16 rounded-xl" />)}</div>
           ) : processes.length === 0 ? (
-            <p className="text-sm text-slate-400 py-6 text-center">Sin procesos activos.</p>
+            <EmptyState message="Sin procesos activos." actionLabel="Crear proceso" actionHref="/procesos/nuevo" />
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="text-left text-[10px] uppercase tracking-wide text-slate-400 border-b border-slate-100">
-                    <th className="pb-2 font-semibold">Proceso / Empresa</th>
-                    <th className="pb-2 font-semibold hidden sm:table-cell">Estado</th>
-                    <th className="pb-2 font-semibold text-center">Cand.</th>
-                    <th className="pb-2 font-semibold hidden md:table-cell">Próxima acción</th>
-                    <th className="pb-2 font-semibold text-right">Progreso</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-50">
-                  {processes.map((p) => {
-                    const pct = progressFor(p);
-                    return (
-                      <tr key={p.id} className="group hover:bg-slate-50/60 transition-colors">
-                        <td className="py-3">
-                          <Link href={`/procesos/${p.id}`} className="flex items-center gap-2.5">
-                            <span className="w-2 h-2 rounded-full shrink-0" style={{ background: p.trafficLight === 'red' ? 'var(--kova-coral)' : p.trafficLight === 'yellow' ? '#F59E0B' : 'var(--kova-green)' }} />
-                            <span className="min-w-0">
-                              <span className="block font-semibold truncate group-hover:underline" style={{ color: 'var(--kova-navy)' }}>{p.company}</span>
-                              <span className="block text-xs text-slate-400 truncate">{p.title}</span>
-                            </span>
-                          </Link>
-                        </td>
-                        <td className="py-3 hidden sm:table-cell">
-                          <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 whitespace-nowrap">{processStatusLabel(p.status)}</span>
-                        </td>
-                        <td className="py-3 text-center font-medium text-slate-600">{p.candidates}</td>
-                        <td className="py-3 hidden md:table-cell text-xs text-slate-500">{p.daysOpen}d abiertos</td>
-                        <td className="py-3">
-                          <div className="flex items-center justify-end gap-2">
-                            <div className="w-16 h-1.5 rounded-full bg-slate-100 overflow-hidden hidden sm:block">
-                              <div className="h-full rounded-full" style={{ width: `${pct}%`, background: scoreColor(pct) }} />
-                            </div>
-                            <span className="text-xs font-bold" style={{ color: scoreColor(pct) }}>{pct}%</span>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+            <div className="space-y-2.5 flex-1">
+              {processes.slice(0, 4).map((p) => (
+                <ActiveProcessRow key={p.id} process={p} />
+              ))}
             </div>
           )}
-          <Link href="/procesos" className="text-xs inline-flex items-center gap-1 mt-3 hover:underline" style={{ color: 'var(--kova-blue)' }}>
-            Ver todos los procesos <ArrowRight className="w-3 h-3" />
-          </Link>
-        </div>
+        </SectionCard>
 
-        <div className="kova-card p-5">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-heading font-bold text-sm" style={{ color: 'var(--kova-navy)' }}>Pendientes de hoy</h2>
-            <Link href="/tareas" className="text-[10px] hover:underline" style={{ color: 'var(--kova-blue)' }}>Ver todas ({alerts.length})</Link>
-          </div>
+        <SectionCard
+          title="Pendientes de hoy"
+          action={<Link href="/tareas" className="text-xs font-semibold hover:underline" style={{ color: 'var(--kova-blue)' }}>Ver todas ({alerts.length})</Link>}
+          className="min-h-[320px]"
+        >
           {alerts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-8 text-center">
-              <CheckCircle2 className="w-9 h-9 text-slate-200 mb-2" />
-              <p className="text-sm text-slate-400">Todo al día.</p>
+            <div className="flex flex-col items-center justify-center flex-1 py-8 text-center">
+              <CheckCircle2 className="w-10 h-10 text-emerald-200 mb-2" />
+              <p className="text-sm font-medium text-slate-600">Todo al día</p>
+              <p className="text-xs text-slate-400 mt-1">No hay tareas urgentes para hoy</p>
             </div>
           ) : (
-            <div className="space-y-1">
-              {alerts.map((a, i) => {
+            <div className="space-y-1.5 flex-1">
+              {alerts.slice(0, 6).map((a, i) => {
                 const icons = [Phone, ClipboardCheck, Phone, ClipboardList];
                 const Icon = icons[i % icons.length];
-                const times = ['09:00', '10:30', '11:30', '15:30'];
+                const overdue = a.status === 'OVERDUE';
                 return (
-                  <div key={a.id} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-colors">
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: a.status === 'OVERDUE' ? '#FFF0EE' : '#EEF2FA' }}>
-                      <Icon className="w-4 h-4" style={{ color: a.status === 'OVERDUE' ? 'var(--kova-coral)' : 'var(--kova-blue)' }} />
+                  <div key={a.id} className="flex items-center gap-3 p-2.5 rounded-xl border border-transparent hover:border-slate-100 hover:bg-slate-50/80 transition-colors">
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: overdue ? '#FEF2F2' : '#EFF6FF' }}>
+                      <Icon className="w-4 h-4" style={{ color: overdue ? 'var(--kova-coral)' : 'var(--kova-blue)' }} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium truncate" style={{ color: 'var(--kova-navy)' }}>{a.title}</p>
+                      <p className="text-sm font-medium leading-snug line-clamp-2" style={{ color: 'var(--kova-navy)' }}>{a.title}</p>
+                      {a.dueDate && (
+                        <p className="text-[11px] text-slate-500 mt-0.5">
+                          {new Date(a.dueDate).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' })}
+                        </p>
+                      )}
                     </div>
-                    <span className="text-[10px] text-slate-400 shrink-0">{times[i % times.length]}</span>
+                    {overdue && <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-red-50 text-red-600 shrink-0">Vencida</span>}
                   </div>
                 );
               })}
             </div>
           )}
-        </div>
+        </SectionCard>
       </div>
 
-      {/* Evaluaciones + Distribución + Actividad */}
-      <div className="grid lg:grid-cols-3 gap-4 items-start">
-        <div className="kova-card p-5">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-heading font-bold text-sm" style={{ color: 'var(--kova-navy)' }}>Evaluaciones</h2>
-            <Link href="/evaluaciones" className="text-[10px] hover:underline" style={{ color: 'var(--kova-blue)' }}>Ver todas</Link>
-          </div>
+      {/* Evaluaciones + actividad */}
+      <div className="grid lg:grid-cols-2 gap-4 items-stretch">
+        <SectionCard title="Evaluaciones por tipo" action={<Link href="/evaluaciones" className="text-xs font-semibold hover:underline" style={{ color: 'var(--kova-blue)' }}>Ver todas</Link>}>
           {testSummary.length === 0 ? (
-            <p className="text-xs text-slate-400 py-6 text-center">Sin evaluaciones aún.</p>
+            <EmptyState message="Sin evaluaciones registradas." actionLabel="Ir a evaluaciones" actionHref="/evaluaciones" />
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {testSummary.map((t) => (
                 <div key={t.type}>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-medium text-slate-700">{t.type}</span>
-                    <span className="text-[10px] text-slate-400">{t.count} completada{t.count !== 1 ? 's' : ''}</span>
+                  <div className="flex items-center justify-between mb-1.5 gap-2">
+                    <span className="text-sm font-semibold text-slate-800">{t.type}</span>
+                    <span className="text-xs text-slate-500">{t.count} completada{t.count !== 1 ? 's' : ''}</span>
                   </div>
-                  <div className="h-2 rounded-full overflow-hidden" style={{ background: scoreTrack(t.avg) }}>
-                    <div className="h-full rounded-full" style={{ width: `${t.avg}%`, background: scoreColor(t.avg) }} />
+                  <div className="h-2.5 rounded-full overflow-hidden bg-slate-100">
+                    <div className="h-full rounded-full transition-all" style={{ width: `${t.avg}%`, background: scoreColor(t.avg) }} />
                   </div>
-                  <p className="text-[10px] text-slate-400 mt-0.5">Promedio {t.avg}/100</p>
+                  <p className="text-xs text-slate-500 mt-1">Promedio {t.avg} · {t.avg >= 70 ? 'Nivel aceptable' : 'Por reforzar'}</p>
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </SectionCard>
 
-        <div className="kova-card p-5">
-          <h2 className="font-heading font-bold text-sm mb-3" style={{ color: 'var(--kova-navy)' }}>Distribución de puntajes</h2>
-          <Donut buckets={distribution.buckets} centerValue={String(distribution.total)} centerLabel="Candidatos" />
-          <div className="mt-3 space-y-1.5">
-            {distribution.buckets.map((b) => (
-              <div key={b.label} className="flex items-center justify-between text-xs">
-                <span className="flex items-center gap-2 text-slate-600">
-                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: b.color }} /> {b.label}
-                </span>
-                <span className="font-semibold text-slate-700">{b.count} ({b.pct}%)</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="kova-card p-5">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-heading font-bold text-sm" style={{ color: 'var(--kova-navy)' }}>Actividad reciente</h2>
-          </div>
+        <SectionCard title="Actividad reciente">
           {recentActivity.length === 0 ? (
-            <p className="text-xs text-slate-400 py-6 text-center">Sin actividad reciente.</p>
+            <EmptyState message="Sin actividad reciente." />
           ) : (
             <div className="space-y-3">
-              {recentActivity.slice(0, 5).map((a) => (
-                <div key={a.id} className="flex items-start gap-2.5">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ background: '#EEF2FA' }}>
-                    <Activity className="w-3.5 h-3.5" style={{ color: 'var(--kova-blue)' }} />
+              {recentActivity.slice(0, 6).map((a) => (
+                <div key={a.id} className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-blue-50">
+                    <Activity className="w-4 h-4" style={{ color: 'var(--kova-blue)' }} />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs text-slate-700 leading-snug">{a.description}</p>
-                    <p className="text-[10px] text-slate-400 mt-0.5">{timeAgo(a.createdAt)}</p>
+                  <div className="flex-1 min-w-0 pt-0.5">
+                    <p className="text-sm text-slate-700 leading-snug">{a.description}</p>
+                    <p className="text-xs text-slate-500 mt-1">{timeAgo(a.createdAt)}</p>
                   </div>
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </SectionCard>
       </div>
 
       {/* Detalle por etapa */}
-      <div className="kova-card p-5">
-        <h2 className="font-heading font-bold text-sm mb-4" style={{ color: 'var(--kova-navy)' }}>Detalle por etapa del proceso</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-3">
+      <SectionCard title="Detalle por etapa del proceso">
+        <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-3 items-stretch">
           {CLIENT_JOURNEY_STAGES.map((stage, i) => (
-            <div key={stage.id} className="rounded-xl border border-slate-100 overflow-hidden">
-              <div className="px-3 py-2 border-b border-slate-100" style={{ background: stage.bg }}>
-                <p className="text-[9px] font-bold uppercase tracking-wide" style={{ color: stage.color }}>Etapa {i + 1}</p>
-                <p className="text-[11px] font-semibold leading-tight mt-0.5" style={{ color: 'var(--kova-navy)' }}>{stage.shortLabel}</p>
+            <div key={stage.id} className="rounded-xl border border-slate-100 overflow-hidden flex flex-col min-h-[180px]">
+              <div className="px-3 py-2.5 border-b border-slate-100/80 shrink-0" style={{ background: stage.bg }}>
+                <p className="text-[10px] font-bold uppercase tracking-wide" style={{ color: stage.color }}>Etapa {i + 1}</p>
+                <p className="text-xs font-semibold leading-snug mt-0.5" style={{ color: 'var(--kova-navy)' }}>{stage.shortLabel}</p>
               </div>
-              <ul className="p-3 space-y-1.5">
-                {(STAGE_ACTIVITIES[stage.id] ?? []).map((act) => (
-                  <li key={act} className="text-[10px] text-slate-500 flex items-start gap-1.5 leading-snug">
-                    <Circle className="w-1.5 h-1.5 mt-1 shrink-0 fill-current" style={{ color: stage.color }} />
+              <ul className="p-3 space-y-1.5 flex-1">
+                {(STAGE_ACTIVITIES[stage.id] ?? []).slice(0, 4).map((act) => (
+                  <li key={act} className="text-[11px] text-slate-600 flex items-start gap-1.5 leading-snug">
+                    <Circle className="w-1.5 h-1.5 mt-1.5 shrink-0 fill-current" style={{ color: stage.color }} />
                     {act}
                   </li>
                 ))}
@@ -398,32 +370,101 @@ export default function DashboardPage() {
             </div>
           ))}
         </div>
-      </div>
+      </SectionCard>
     </div>
   );
 }
 
-function progressFor(p: ProcessSummary): number {
-  const map: Record<string, number> = {
-    DRAFT: 5, DISCOVERY_PENDING: 15, DISCOVERY: 15, PROFILE_BUILDING: 25, APPROVAL_PENDING: 35,
-    SEARCH_ACTIVE: 55, EVALUATION: 70, FINALISTS: 85, OFFER: 92, HIRED: 100,
-  };
-  return map[p.status] ?? 40;
+function SectionCard({
+  title,
+  action,
+  footer,
+  children,
+  className = '',
+}: {
+  title: string;
+  action?: React.ReactNode;
+  footer?: React.ReactNode;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={`kova-card p-5 flex flex-col h-full ${className}`}>
+      <div className="flex items-center justify-between gap-3 mb-4 shrink-0">
+        <h2 className="font-heading font-bold text-[15px]" style={{ color: 'var(--kova-navy)' }}>{title}</h2>
+        {action}
+      </div>
+      <div className="flex-1 flex flex-col min-h-0">{children}</div>
+      {footer && <div className="mt-4 pt-3 border-t border-slate-100 shrink-0">{footer}</div>}
+    </div>
+  );
+}
+
+function EmptyState({ message, actionLabel, actionHref }: { message: string; actionLabel?: string; actionHref?: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center flex-1 py-10 text-center">
+      <p className="text-sm text-slate-500">{message}</p>
+      {actionLabel && actionHref && (
+        <Link href={actionHref} className="text-sm font-semibold mt-3 hover:underline" style={{ color: 'var(--kova-blue)' }}>
+          {actionLabel} →
+        </Link>
+      )}
+    </div>
+  );
+}
+
+function ActiveProcessRow({ process: p }: { process: ProcessSummary }) {
+  const color = processStatusColor(p.status);
+  const pct = progressFor(p);
+  const stage = processStageInfo(p.status);
+  const traffic =
+    p.trafficLight === 'red' ? 'var(--kova-coral)' : p.trafficLight === 'yellow' ? '#F59E0B' : 'var(--kova-green)';
+
+  return (
+    <Link
+      href={`/procesos/${p.id}`}
+      className="group block rounded-xl border border-slate-100 bg-slate-50/60 px-4 py-3.5 hover:bg-white hover:border-blue-100 hover:shadow-sm transition-all"
+    >
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+        <div className="flex items-start gap-3 min-w-0 flex-1">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-white border border-slate-100">
+            <Briefcase className="w-4 h-4 text-slate-500 group-hover:text-[var(--kova-blue)]" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="w-2 h-2 rounded-full shrink-0" style={{ background: traffic }} />
+              <p className="font-semibold text-sm truncate group-hover:underline" style={{ color: 'var(--kova-navy)' }}>{p.company}</p>
+              <span className="text-[11px] px-2 py-0.5 rounded-full font-semibold shrink-0" style={{ background: `${color}18`, color }}>
+                {processStatusLabel(p.status)}
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 truncate mt-0.5">{p.title}</p>
+            <p className="text-xs text-slate-500 mt-1">
+              {p.candidates} candidatos · {p.daysOpen} días abiertos · {stage.label}
+            </p>
+          </div>
+        </div>
+        <div className="w-full sm:w-44 shrink-0">
+          <ProcessProgressBar status={p.status} progress={pct} color={color} size="sm" showHeader={false} />
+        </div>
+      </div>
+    </Link>
+  );
 }
 
 function KpiCard({ label, value, icon: Icon, tint, tone, href }: {
   label: string; value: number | string; icon: React.ElementType; tint: string; tone: string; href: string;
 }) {
   return (
-    <Link href={href} className="kova-card kova-card-hover group px-4 py-4 flex items-center gap-3">
-      <div className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0" style={{ background: tint, boxShadow: 'var(--kova-shadow-xs)' }}>
-        <Icon className="w-5 h-5" style={{ color: tone }} />
+    <Link href={href} className="kova-card kova-card-hover group px-3.5 py-3.5 sm:px-4 sm:py-4 flex items-center gap-3 h-full min-h-[88px]">
+      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: tint }}>
+        <Icon className="w-[18px] h-[18px] sm:w-5 sm:h-5" style={{ color: tone }} />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="font-heading text-2xl font-bold leading-none" style={{ color: 'var(--kova-navy)' }}>{value}</p>
-        <p className="text-[10px] font-medium text-slate-400 truncate mt-1">{label}</p>
+        <p className="font-heading text-xl sm:text-2xl font-bold leading-none tabular-nums" style={{ color: 'var(--kova-navy)' }}>{value}</p>
+        <p className="text-[11px] sm:text-xs font-medium text-slate-600 mt-1.5 leading-snug line-clamp-2">{label}</p>
       </div>
-      <ChevronRight className="w-4 h-4 text-slate-200 group-hover:text-slate-400 shrink-0" />
+      <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-500 shrink-0 hidden sm:block" />
     </Link>
   );
 }
@@ -442,21 +483,26 @@ function Donut({ buckets, centerValue, centerLabel }: {
   }) : [];
 
   return (
-    <div className="relative w-28 h-28 mx-auto shrink-0">
+    <div className="relative w-[7.5rem] h-[7.5rem] mx-auto shrink-0">
       <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-        <circle cx="18" cy="18" r="15.9" fill="none" stroke="#EEF1F6" strokeWidth="3.4" />
+        <circle cx="18" cy="18" r="15.9" fill="none" stroke="#E2E8F0" strokeWidth="3.2" />
         {segments.map((seg) => (
-          <circle key={seg.label} cx="18" cy="18" r="15.9" fill="none"
-            stroke={seg.color} strokeWidth="3.4"
+          <circle
+            key={seg.label}
+            cx="18"
+            cy="18"
+            r="15.9"
+            fill="none"
+            stroke={seg.color}
+            strokeWidth="3.2"
             strokeDasharray={`${seg.dash} ${100 - seg.dash}`}
             strokeDashoffset={-seg.start}
-            style={{ transition: 'stroke-dasharray 0.6s ease' }}
           />
         ))}
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="font-heading font-bold text-lg" style={{ color: 'var(--kova-navy)' }}>{centerValue}</span>
-        <span className="text-[9px] text-slate-400">{centerLabel}</span>
+        <span className="font-heading font-bold text-lg leading-none" style={{ color: 'var(--kova-navy)' }}>{centerValue}</span>
+        <span className="text-[10px] text-slate-500 mt-1">{centerLabel}</span>
       </div>
     </div>
   );

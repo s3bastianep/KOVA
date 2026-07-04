@@ -134,3 +134,67 @@ export function processStageInfo(status?: string | null) {
     progress,
   };
 }
+
+type PipelineCounts = {
+  candidates?: number;
+  interviewed?: number;
+  preselected?: number;
+  tests?: number;
+  finalInterview?: number;
+  selected?: number;
+};
+
+/** Sugiere la siguiente acción cuando no hay agenda explícita en el proceso. */
+export function suggestProcessNextAction(
+  status: string,
+  metrics?: PipelineCounts,
+): { title: string; detail?: string } {
+  const m = {
+    candidates: metrics?.candidates ?? 0,
+    interviewed: metrics?.interviewed ?? 0,
+    preselected: metrics?.preselected ?? 0,
+    tests: metrics?.tests ?? 0,
+    finalInterview: metrics?.finalInterview ?? 0,
+    selected: metrics?.selected ?? 0,
+  };
+
+  switch (status) {
+    case 'HIRED':
+      return { title: 'Contratación completada', detail: 'Candidato incorporado · proceso cerrado' };
+    case 'CLOSED':
+      return { title: 'Proceso archivado', detail: 'Consultar historial y documentación' };
+    case 'PAUSED':
+      return { title: 'Proceso pausado', detail: 'Reactivar cuando el cliente confirme continuidad' };
+    case 'DISCOVERY':
+    case 'DISCOVERY_PENDING':
+      return { title: 'Completar discovery comercial', detail: 'Definir perfil ideal, competencias y criterios' };
+    case 'PROFILE_BUILDING':
+      return { title: 'Finalizar perfil de cargo', detail: 'Documentar requisitos para aprobación del cliente' };
+    case 'APPROVAL_PENDING':
+      return { title: 'Esperar aprobación del perfil', detail: 'Cliente debe validar el marco de evaluación' };
+    case 'SEARCH_ACTIVE':
+      if (m.candidates === 0) {
+        return { title: 'Iniciar captación', detail: 'Publicar vacante y activar fuentes de talento' };
+      }
+      if (m.preselected === 0 && m.interviewed === 0) {
+        return { title: 'Preseleccionar candidatos', detail: `${m.candidates} en pipeline sin filtrar` };
+      }
+      return { title: 'Avanzar candidatos en pipeline', detail: `${m.candidates} activos en el proceso` };
+    case 'EVALUATION':
+      return {
+        title: 'Continuar evaluaciones',
+        detail: `${m.tests + m.interviewed + m.preselected} candidatos en pruebas o entrevista`,
+      };
+    case 'FINALISTS':
+      return {
+        title: 'Presentar terna al cliente',
+        detail: m.finalInterview > 0
+          ? `${m.finalInterview} en entrevista final con el cliente`
+          : 'Preparar informe comparativo de finalistas',
+      };
+    case 'OFFER':
+      return { title: 'Gestionar oferta laboral', detail: 'Coordinar propuesta, negociación y cierre' };
+    default:
+      return { title: 'Revisar detalle del proceso', detail: 'Ver candidatos, etapa y pendientes' };
+  }
+}

@@ -6,13 +6,20 @@ import Link from 'next/link';
 import {
   Plus, GitBranch, Filter, List, LayoutGrid,
   PlayCircle, PauseCircle, CheckCircle2, Loader2, Archive,
-  MoreVertical, ChevronLeft, ChevronRight,
+  ChevronRight, Calendar, ArrowUpRight,
+  ChevronLeft,
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import { ProcessCard } from '@/components/proceso/ProcessCard';
 import { ProcessProgressBar } from '@/components/proceso/ProcessProgressBar';
 import { ProcessPipelineMetrics } from '@/components/proceso/ProcessPipelineMetrics';
-import { processStatusLabel, processProgress, ACTIVE_STATUSES, countProcessesByBucket } from '@/lib/process-status';
+import {
+  processStatusLabel,
+  processProgress,
+  ACTIVE_STATUSES,
+  countProcessesByBucket,
+  suggestProcessNextAction,
+} from '@/lib/process-status';
 import type { ProcessPipelineMetrics as ProcessPipelineMetricsType } from '@/lib/process-metrics';
 
 type Proceso = {
@@ -147,11 +154,11 @@ export default function ProcesosPage() {
       {/* KPIs */}
       {!isLoading && procesos.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
-          <StatCard icon={PlayCircle} value={stats.active} label="Procesos activos" hint="En progreso" tint="#E6FAF3" tone="var(--kova-green)" />
-          <StatCard icon={Loader2} value={stats.review} label="En revisión" hint="Pendientes de acción" tint="#EEF2FA" tone="var(--kova-blue)" />
-          <StatCard icon={PauseCircle} value={stats.paused} label="Pausados" hint="Temporales" tint="#FFF7E6" tone="#B7791F" />
-          <StatCard icon={CheckCircle2} value={stats.closed} label="Cerrados" hint="Contratados" tint="#F3E8FF" tone="#7C3AED" />
-          <StatCard icon={Archive} value={stats.archived} label="Archivados" hint="Histórico" tint="#F1F5F9" tone="#64748B" />
+          <StatCard icon={PlayCircle} value={stats.active} label="Procesos activos" hint="En progreso" tint="#E6FAF3" tone="var(--kova-green)" active={statusFilter === 'active'} onClick={() => setStatusFilter('active')} />
+          <StatCard icon={Loader2} value={stats.review} label="En revisión" hint="Pendientes de acción" tint="#EEF2FA" tone="var(--kova-blue)" active={statusFilter === 'review'} onClick={() => setStatusFilter('review')} />
+          <StatCard icon={PauseCircle} value={stats.paused} label="Pausados" hint="Temporales" tint="#FFF7E6" tone="#B7791F" active={statusFilter === 'paused'} onClick={() => setStatusFilter('paused')} />
+          <StatCard icon={CheckCircle2} value={stats.closed} label="Cerrados" hint="Contratados" tint="#F3E8FF" tone="#7C3AED" active={statusFilter === 'closed'} onClick={() => setStatusFilter('closed')} />
+          <StatCard icon={Archive} value={stats.archived} label="Archivados" hint="Histórico" tint="#F1F5F9" tone="#64748B" active={statusFilter === 'archived'} onClick={() => setStatusFilter('archived')} />
         </div>
       )}
 
@@ -210,20 +217,27 @@ export default function ProcesosPage() {
   );
 }
 
-function StatCard({ icon: Icon, value, label, hint, tint, tone }: {
+function StatCard({ icon: Icon, value, label, hint, tint, tone, active, onClick }: {
   icon: typeof PlayCircle; value: number; label: string; hint: string; tint: string; tone: string;
+  active?: boolean; onClick?: () => void;
 }) {
   return (
-    <div className="kova-card kova-card-hover p-4 flex items-center gap-3">
+    <button
+      type="button"
+      onClick={onClick}
+      className={`kova-card kova-card-hover p-4 flex items-center gap-3 text-left w-full transition-all ${
+        active ? 'ring-2 ring-[var(--kova-blue)] ring-offset-1' : ''
+      }`}
+    >
       <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: tint }}>
         <Icon className="w-5 h-5" style={{ color: tone }} />
       </div>
       <div className="min-w-0">
-        <p className="font-heading font-bold text-2xl leading-none" style={{ color: 'var(--kova-navy)' }}>{value}</p>
-        <p className="text-[11px] font-medium text-slate-600 mt-1 truncate">{label}</p>
-        <p className="text-[10px] text-slate-400 truncate">{hint}</p>
+        <p className="font-heading font-bold text-2xl leading-none tabular-nums" style={{ color: 'var(--kova-navy)' }}>{value}</p>
+        <p className="text-xs font-medium text-slate-600 mt-1 truncate">{label}</p>
+        <p className="text-[11px] text-slate-400 truncate">{hint}</p>
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -232,48 +246,85 @@ function ProcessRow({ p }: { p: Proceso }) {
   const color = statusColor(p.status);
   const consultant = p.consultantName ?? (p.consultant ? `${p.consultant.firstName} ${p.consultant.lastName}` : 'María Consultora');
   const created = p.createdAt ? new Date(p.createdAt).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' }) : null;
+  const due = p.requiredDate
+    ? new Date(p.requiredDate).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' })
+    : null;
+  const suggested = suggestProcessNextAction(p.status, p.pipelineMetrics);
+  const nextTitle = p.nextActionTitle ?? suggested.title;
+  const nextDetail = p.nextActionDetail ?? suggested.detail;
+  const totalCandidates = p.pipelineMetrics?.candidates ?? p._count?.candidates ?? 0;
 
   return (
     <div className="kova-card kova-card-hover relative overflow-hidden">
-      <span className="absolute left-0 top-0 bottom-0 w-1" style={{ background: color }} />
-      <div className="p-4 pl-5 grid lg:grid-cols-[minmax(200px,1.2fr)_minmax(200px,1.3fr)_minmax(160px,0.9fr)_auto] gap-4 items-center">
-        {/* Empresa + vacante */}
-        <Link href={`/procesos/${p.id}`} className="flex items-center gap-3 min-w-0 group">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 font-heading font-bold text-xs" style={{ background: `${color}1A`, color }}>
-            {initials(p.company?.name)}
-          </div>
-          <div className="min-w-0">
-            <p className="font-heading font-bold text-sm truncate group-hover:underline" style={{ color: 'var(--kova-navy)' }}>{p.company?.name ?? 'Sin empresa'}</p>
-            <p className="text-xs text-slate-500 truncate">{p.title}</p>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: `${color}1A`, color }}>{processStatusLabel(p.status)}</span>
+      <span className="absolute left-0 top-0 bottom-0 w-1.5 rounded-r-full" style={{ background: color }} />
+
+      <div className="p-4 pl-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-6">
+          {/* Identidad del proceso */}
+          <Link href={`/procesos/${p.id}`} className="flex items-start gap-3 min-w-0 lg:w-[280px] xl:w-[320px] shrink-0 group">
+            <div
+              className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 font-heading font-bold text-sm shadow-sm"
+              style={{ background: `${color}18`, color }}
+            >
+              {initials(p.company?.name)}
             </div>
-            {created && <p className="text-[10px] text-slate-400 mt-1">Creado: {created} · {consultant}</p>}
-          </div>
-        </Link>
-
-        {/* Progreso + métricas */}
-        <div className="min-w-0">
-          <ProcessProgressBar status={p.status} progress={pct} color={color} size="md" className="mb-2.5" />
-          <ProcessPipelineMetrics metrics={p.pipelineMetrics} variant="compact" />
-        </div>
-
-        {/* Próxima acción */}
-        <div className="min-w-0">
-          <p className="text-[10px] text-slate-400 mb-1">Próxima acción</p>
-          <div className="flex items-start gap-2">
-            <span className="w-2 h-2 rounded-full mt-1.5 shrink-0" style={{ background: color }} />
-            <div className="min-w-0">
-              <p className="text-xs font-medium truncate" style={{ color: 'var(--kova-navy)' }}>{p.nextActionTitle ?? 'Sin acción definida'}</p>
-              {p.nextActionDetail && <p className="text-[11px] text-slate-400 truncate">{p.nextActionDetail}</p>}
+            <div className="min-w-0 flex-1">
+              <div className="flex items-start justify-between gap-2">
+                <p className="font-heading font-bold text-[15px] leading-snug group-hover:underline" style={{ color: 'var(--kova-navy)' }}>
+                  {p.company?.name ?? 'Sin empresa'}
+                </p>
+                <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-[var(--kova-blue)] shrink-0 mt-0.5 transition-colors" />
+              </div>
+              <p className="text-sm text-slate-600 mt-0.5 line-clamp-2">{p.title}</p>
+              <div className="flex flex-wrap items-center gap-2 mt-2">
+                <span className="text-[11px] px-2.5 py-1 rounded-full font-semibold" style={{ background: `${color}18`, color }}>
+                  {processStatusLabel(p.status)}
+                </span>
+                {totalCandidates > 0 && (
+                  <span className="text-[11px] text-slate-500 font-medium">
+                    {totalCandidates} candidato{totalCandidates !== 1 ? 's' : ''}
+                  </span>
+                )}
+              </div>
+              {created && (
+                <p className="text-[11px] text-slate-400 mt-2">
+                  Creado {created} · {consultant}
+                </p>
+              )}
             </div>
+          </Link>
+
+          {/* Progreso + pipeline */}
+          <div className="flex-1 min-w-0 space-y-3">
+            <ProcessProgressBar status={p.status} progress={pct} color={color} size="md" />
+            <ProcessPipelineMetrics metrics={p.pipelineMetrics} variant="row" />
+          </div>
+
+          {/* Siguiente paso */}
+          <div className="lg:w-[220px] xl:w-[240px] shrink-0 rounded-xl border border-slate-100 bg-slate-50/80 p-3.5">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400 mb-2">Siguiente paso</p>
+            <p className="text-sm font-semibold leading-snug" style={{ color: 'var(--kova-navy)' }}>
+              {nextTitle}
+            </p>
+            {nextDetail && (
+              <p className="text-xs text-slate-500 mt-1 leading-relaxed line-clamp-2">{nextDetail}</p>
+            )}
+            {due && (
+              <p className="inline-flex items-center gap-1.5 text-[11px] text-slate-500 mt-3 pt-3 border-t border-slate-200/80 w-full">
+                <Calendar className="w-3.5 h-3.5 shrink-0" />
+                Entrega objetivo: {due}
+              </p>
+            )}
+            <Link
+              href={`/procesos/${p.id}`}
+              className="inline-flex items-center gap-1 text-[11px] font-semibold mt-3 hover:underline"
+              style={{ color: 'var(--kova-blue)' }}
+            >
+              Abrir proceso
+              <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
-
-        {/* Menú */}
-        <Link href={`/procesos/${p.id}`} className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-300 hover:text-slate-500 hover:bg-slate-50 transition-colors justify-self-end">
-          <MoreVertical className="w-4 h-4" />
-        </Link>
       </div>
     </div>
   );
