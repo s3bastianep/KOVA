@@ -174,23 +174,23 @@
   }
 
   :root {
-    --kova-rail-min: 520px;
-    --kova-rail-max: 580px;
+    --kova-rail-min: 480px;
+    --kova-rail-max: 535px;
     --kova-rail-gap: 2rem;
   }
 
   @media (min-width: 1280px) {
     :root {
-      --kova-rail-min: 560px;
-      --kova-rail-max: 620px;
+      --kova-rail-min: 515px;
+      --kova-rail-max: 570px;
       --kova-rail-gap: 2.5rem;
     }
   }
 
   @media (min-width: 1536px) {
     :root {
-      --kova-rail-min: 600px;
-      --kova-rail-max: 680px;
+      --kova-rail-min: 555px;
+      --kova-rail-max: 620px;
     }
   }
 

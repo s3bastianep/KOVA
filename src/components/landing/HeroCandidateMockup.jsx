@@ -52,7 +52,7 @@ const PROCESS_STATS = [
 function SectionLabel({ children }) {
   return (
     <p
-      className="text-[10px] font-semibold uppercase mb-2.5 leading-none tracking-wide"
+      className="text-[9px] font-semibold uppercase mb-2 leading-none tracking-wide"
       style={{ color: KOVA.muted }}
     >
       {children}
@@ -67,7 +67,7 @@ function ScoreRing({ value }) {
   const offset = circumference - (value / 100) * circumference;
 
   return (
-    <div className="flex flex-col items-center flex-shrink-0 w-[4.25rem] px-0.5">
+    <div className="flex flex-col items-center flex-shrink-0 w-[3.75rem] px-0.5">
       <div className="relative w-full aspect-square">
         <svg
           viewBox="0 0 88 88"
@@ -94,15 +94,15 @@ function ScoreRing({ value }) {
             strokeDashoffset={offset}
           />
         </svg>
-        <div className="absolute inset-[14%] flex flex-col items-center justify-center gap-1">
+        <div className="absolute inset-[14%] flex flex-col items-center justify-center gap-0.5">
           <span
-            className="font-heading font-bold tabular-nums leading-none text-base"
+            className="font-heading font-bold tabular-nums leading-none text-sm"
             style={{ color: BRAND.navy, letterSpacing: '-0.04em' }}
           >
             {value}
           </span>
           <span
-            className="text-[8px] font-semibold uppercase leading-none tracking-wide"
+            className="text-[7px] font-semibold uppercase leading-none tracking-wide"
             style={{ color: KOVA.muted }}
           >
             Afinidad
@@ -110,7 +110,7 @@ function ScoreRing({ value }) {
         </div>
       </div>
       <span
-        className="mt-2.5 text-[9px] font-semibold px-2.5 py-1 rounded-md"
+        className="mt-2 text-[8px] font-semibold px-2 py-0.5 rounded-md"
         style={{ color: BRAND.greenDark, background: KOVA.paleGreen }}
       >
         Excelente
@@ -122,21 +122,21 @@ function ScoreRing({ value }) {
 function KpiCard({ icon: Icon, iconBg, iconColor, label, value, highlight }) {
   return (
     <div
-      className="flex items-center gap-2 min-w-0 rounded-lg px-2 py-1.5"
+      className="flex items-center gap-1.5 min-w-0 rounded-lg px-1.5 py-1"
       style={{ background: KOVA.white, border: `1px solid ${KOVA.border}` }}
     >
       <div
-        className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0"
+        className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0"
         style={{ background: iconBg }}
       >
-        <Icon className="w-3 h-3" style={{ color: iconColor }} strokeWidth={2} />
+        <Icon className="w-2.5 h-2.5" style={{ color: iconColor }} strokeWidth={2} />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-[9px] leading-none mb-0.5 whitespace-nowrap" style={{ color: KOVA.muted }}>
+        <p className="text-[8px] leading-none mb-0.5 whitespace-nowrap" style={{ color: KOVA.muted }}>
           {label}
         </p>
         <p
-          className="font-heading font-semibold tabular-nums leading-none text-xs"
+          className="font-heading font-semibold tabular-nums leading-none text-[11px]"
           style={{
             color: highlight ? BRAND.greenDark : BRAND.navy,
             letterSpacing: '-0.02em',
@@ -154,26 +154,26 @@ function CompetencyBar({ label, value, maxInSet }) {
   const Icon = COMPETENCY_ICONS[label] ?? Target;
 
   return (
-    <div className="flex items-center gap-3 w-full min-w-0">
+    <div className="flex items-center gap-2.5 w-full min-w-0">
       <div
-        className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+        className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
         style={{ background: isTop ? KOVA.paleGreen : KOVA.paleBlue }}
       >
-        <Icon className="w-3.5 h-3.5" style={{ color: isTop ? BRAND.greenDark : BRAND.blue }} strokeWidth={2} />
+        <Icon className="w-3 h-3" style={{ color: isTop ? BRAND.greenDark : BRAND.blue }} strokeWidth={2} />
       </div>
       <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between gap-3 mb-1.5">
-          <span className="text-[10px] font-medium leading-snug" style={{ color: BRAND.navy }}>
+        <div className="flex items-center justify-between gap-2 mb-1">
+          <span className="text-[9px] font-medium leading-snug" style={{ color: BRAND.navy }}>
             {label}
           </span>
           <span
-            className="font-heading font-semibold tabular-nums text-[10px] leading-none shrink-0 w-9 text-right"
+            className="font-heading font-semibold tabular-nums text-[9px] leading-none shrink-0 w-8 text-right"
             style={{ color: isTop ? BRAND.greenDark : BRAND.blue, letterSpacing: '-0.02em' }}
           >
             {value}%
           </span>
         </div>
-        <div className="h-2 w-full rounded-full overflow-hidden" style={{ background: KOVA.border }}>
+        <div className="h-1.5 w-full rounded-full overflow-hidden" style={{ background: KOVA.border }}>
           <div
             className="h-full rounded-full"
             style={{
@@ -192,20 +192,20 @@ function CompetencyBar({ label, value, maxInSet }) {
 function StatCard({ label, display, icon: Icon, iconBg, iconColor, accent }) {
   return (
     <div
-      className="flex flex-col items-center text-center rounded-lg px-2 py-2.5 min-w-0"
+      className="flex flex-col items-center text-center rounded-lg px-1.5 py-2 min-w-0"
       style={{ background: KOVA.white, border: `1px solid ${KOVA.border}` }}
     >
       <div
-        className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 mb-1.5"
+        className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 mb-1"
         style={{ background: iconBg }}
       >
-        <Icon className="w-3 h-3" style={{ color: iconColor }} strokeWidth={2} />
+        <Icon className="w-2.5 h-2.5" style={{ color: iconColor }} strokeWidth={2} />
       </div>
-      <p className="text-[9px] uppercase mb-1 tracking-wide leading-none" style={{ color: KOVA.muted }}>
+      <p className="text-[8px] uppercase mb-0.5 tracking-wide leading-none" style={{ color: KOVA.muted }}>
         {label}
       </p>
       <p
-        className="font-heading font-semibold tabular-nums leading-none text-xs"
+        className="font-heading font-semibold tabular-nums leading-none text-[11px]"
         style={{
           color: accent ? BRAND.greenDark : BRAND.navy,
           letterSpacing: '-0.02em',
@@ -233,87 +233,87 @@ export default function HeroCandidateMockup({ dark = false }) {
         }}
       >
         <div
-          className="flex items-center gap-2.5 px-4 py-2.5 border-b"
+          className="flex items-center gap-2 px-3.5 py-2 border-b"
           style={{ background: KOVA.surface, borderColor: KOVA.border }}
         >
-          <div className="flex gap-1.5 flex-shrink-0">
+          <div className="flex gap-1 flex-shrink-0">
             {['#D1D5DB', '#D1D5DB', '#D1D5DB'].map((c, i) => (
-              <span key={i} className="w-[7px] h-[7px] rounded-full" style={{ background: c }} />
+              <span key={i} className="w-[6px] h-[6px] rounded-full" style={{ background: c }} />
             ))}
           </div>
           <div className="flex-1 min-w-0">
             <div
-              className="h-[22px] rounded-md flex items-center px-2.5 w-full"
+              className="h-5 rounded-md flex items-center px-2 w-full"
               style={{ background: KOVA.white, border: `1px solid ${KOVA.border}` }}
             >
-              <span className="text-[9px] font-medium w-full text-center" style={{ color: KOVA.muted }}>
+              <span className="text-[8px] font-medium w-full text-center" style={{ color: KOVA.muted }}>
                 Informe de evaluación · Ejecutivo Comercial
               </span>
             </div>
           </div>
           <span
-            className="text-[9px] font-semibold uppercase px-2 py-0.5 rounded flex-shrink-0 tracking-wide inline-flex items-center gap-1"
+            className="text-[8px] font-semibold uppercase px-1.5 py-0.5 rounded flex-shrink-0 tracking-wide inline-flex items-center gap-1"
             style={{ color: BRAND.greenDark, background: KOVA.paleGreen }}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-current" />
+            <span className="w-1 h-1 rounded-full bg-current" />
             En vivo
           </span>
-          <MoreVertical className="w-3 h-3 flex-shrink-0" style={{ color: KOVA.muted }} aria-hidden />
+          <MoreVertical className="w-2.5 h-2.5 flex-shrink-0" style={{ color: KOVA.muted }} aria-hidden />
         </div>
 
-        <div className="px-4 py-3 border-b flex items-center gap-3" style={{ borderColor: KOVA.border }}>
+        <div className="px-3.5 py-2.5 border-b flex items-center gap-2.5" style={{ borderColor: KOVA.border }}>
           <div className="relative flex-shrink-0">
             <img
               src={`${CANDIDATE_PHOTO}&w=128`}
               srcSet={`${CANDIDATE_PHOTO}&w=64 1x, ${CANDIDATE_PHOTO}&w=128 2x, ${CANDIDATE_PHOTO}&w=192 3x, ${CANDIDATE_PHOTO}&w=256 4x`}
               alt={TOP_CANDIDATE.name}
-              width={44}
-              height={44}
+              width={40}
+              height={40}
               decoding="async"
-              className="w-11 h-11 rounded-full object-cover"
+              className="w-10 h-10 rounded-full object-cover"
               style={{ border: `2px solid ${KOVA.white}`, boxShadow: `0 0 0 1px ${KOVA.border}` }}
             />
             <span
-              className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2"
+              className="absolute bottom-0 right-0 w-2 h-2 rounded-full border-2"
               style={{ background: BRAND.green, borderColor: KOVA.white }}
               aria-hidden
             />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-0.5">
-              <h3 className="text-xs font-semibold leading-tight" style={{ color: BRAND.navy }}>
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <h3 className="text-[11px] font-semibold leading-tight" style={{ color: BRAND.navy }}>
                 {TOP_CANDIDATE.name}
               </h3>
               <span
-                className="text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded flex-shrink-0 tracking-wide inline-flex items-center gap-1"
+                className="text-[8px] font-semibold uppercase px-1 py-0.5 rounded flex-shrink-0 tracking-wide inline-flex items-center gap-0.5"
                 style={{ color: BRAND.greenDark, background: KOVA.paleGreen }}
               >
-                <Star className="w-2 h-2 fill-current" strokeWidth={0} />
+                <Star className="w-1.5 h-1.5 fill-current" strokeWidth={0} />
                 Recomendada
               </span>
             </div>
-            <p className="text-[10px]" style={{ color: KOVA.muted }}>
+            <p className="text-[9px]" style={{ color: KOVA.muted }}>
               {TOP_CANDIDATE.role} · B2B consultivo
             </p>
           </div>
-          <div className="text-right flex-shrink-0 hidden sm:flex sm:items-center sm:gap-1.5">
-            <FileText className="w-3 h-3" style={{ color: KOVA.muted }} aria-hidden />
-            <p className="text-[9px] font-semibold tabular-nums" style={{ color: BRAND.navy }}>
+          <div className="text-right flex-shrink-0 hidden sm:flex sm:items-center sm:gap-1">
+            <FileText className="w-2.5 h-2.5" style={{ color: KOVA.muted }} aria-hidden />
+            <p className="text-[8px] font-semibold tabular-nums" style={{ color: BRAND.navy }}>
               REF. EV-0847
             </p>
           </div>
         </div>
 
-        <div className="px-4 py-3 space-y-3">
+        <div className="px-3.5 py-2.5 space-y-2.5">
           {/* Análisis predictivo — ancho completo, gauge + KPIs 3×2 */}
           <section
-            className="rounded-xl p-3.5"
+            className="rounded-xl p-3"
             style={{ background: KOVA.surface, border: `1px solid ${KOVA.border}` }}
           >
             <SectionLabel>Análisis predictivo</SectionLabel>
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-3 items-center">
               <ScoreRing value={profile.matchScore} />
-              <div className="flex-1 min-w-0 grid grid-cols-3 gap-x-2 gap-y-1.5">
+              <div className="flex-1 min-w-0 grid grid-cols-3 gap-x-1.5 gap-y-1">
                 {PREDICTIVE_KPIS.map(({ key, label, suffix, icon, iconBg, iconColor }, i) => (
                   <KpiCard
                     key={key}
@@ -331,11 +331,11 @@ export default function HeroCandidateMockup({ dark = false }) {
 
           {/* Competencias — ancho completo, barras horizontales */}
           <section
-            className="rounded-xl p-3.5"
+            className="rounded-xl p-3"
             style={{ background: KOVA.surface, border: `1px solid ${KOVA.border}` }}
           >
             <SectionLabel>Competencias comerciales</SectionLabel>
-            <div className="space-y-2.5">
+            <div className="space-y-2">
               {profile.competencies.map(({ label, value }) => (
                 <CompetencyBar key={label} label={label} value={value} maxInSet={maxCompetency} />
               ))}
@@ -343,14 +343,14 @@ export default function HeroCandidateMockup({ dark = false }) {
           </section>
 
           {/* Fortalezas — línea con puntos de color */}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-            <span className="text-[10px] font-semibold uppercase shrink-0 tracking-wide" style={{ color: KOVA.muted }}>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span className="text-[9px] font-semibold uppercase shrink-0 tracking-wide" style={{ color: KOVA.muted }}>
               Fortalezas
             </span>
             {profile.strengths.map((strength, i) => (
-              <span key={strength} className="inline-flex items-center gap-1.5 text-[10px] font-medium" style={{ color: BRAND.navy }}>
+              <span key={strength} className="inline-flex items-center gap-1 text-[9px] font-medium" style={{ color: BRAND.navy }}>
                 <span
-                  className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                  className="w-1 h-1 rounded-full flex-shrink-0"
                   style={{ background: STRENGTH_DOTS[i % STRENGTH_DOTS.length] }}
                 />
                 {strength}
@@ -359,7 +359,7 @@ export default function HeroCandidateMockup({ dark = false }) {
           </div>
 
           {/* Stats — 4 tarjetas en fila */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
             {PROCESS_STATS.map(({ key, label, format, accent, icon, iconBg, iconColor }) => {
               const raw = profile[key];
               const display = format ? format(raw) : String(raw);
@@ -379,22 +379,22 @@ export default function HeroCandidateMockup({ dark = false }) {
         </div>
 
         <div
-          className="px-4 py-2.5 border-t flex items-center justify-between gap-2"
+          className="px-3.5 py-2 border-t flex items-center justify-between gap-2"
           style={{ borderColor: KOVA.border, background: KOVA.surface }}
         >
-          <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center gap-1.5 min-w-0">
             <div
-              className="w-4 h-4 rounded flex items-center justify-center flex-shrink-0"
+              className="w-3.5 h-3.5 rounded flex items-center justify-center flex-shrink-0"
               style={{ background: BRAND.navy }}
             >
-              <span className="text-[8px] font-bold text-white">K</span>
+              <span className="text-[7px] font-bold text-white">K</span>
             </div>
-            <span className="text-[9px] font-medium" style={{ color: KOVA.muted }}>
+            <span className="text-[8px] font-medium" style={{ color: KOVA.muted }}>
               Kova Intelligence
             </span>
           </div>
-          <span className="text-[9px] flex-shrink-0 tabular-nums inline-flex items-center gap-1" style={{ color: KOVA.muted }}>
-            <RefreshCw className="w-2.5 h-2.5" aria-hidden />
+          <span className="text-[8px] flex-shrink-0 tabular-nums inline-flex items-center gap-1" style={{ color: KOVA.muted }}>
+            <RefreshCw className="w-2 h-2" aria-hidden />
             Actualizado hace 2 min
           </span>
         </div>
