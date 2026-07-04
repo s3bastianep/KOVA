@@ -27,7 +27,7 @@ type VacancyLink = {
     id: string;
     title: string;
     status: string;
-    company?: { id: string; name: string } | null;
+    company?: { id?: string; name: string } | null;
   };
 };
 

@@ -239,6 +239,9 @@ export const MOCK_CANDIDATES = [
         vacancy: { id: 'seed-vacancy-hist-001', title: 'Asesor Comercial Senior', status: 'HIRED', company: { id: 'seed-company-hist-001', name: 'DataSell Colombia' } },
       },
     ],
+  },
+  {
+    id: 'c2',
     firstName: 'Ana',
     lastName: 'Gómez',
     email: 'ana.gomez@email.com',
