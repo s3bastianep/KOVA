@@ -149,12 +149,14 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h1 className="font-heading text-2xl font-bold" style={{ color: 'var(--kova-navy)' }}>
+      <div className="space-y-5">
+      <div className="kova-card p-6 sm:p-7 relative overflow-hidden">
+        <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full opacity-40 pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(37,99,235,0.15), transparent 70%)' }} />
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">Panel principal</p>
+        <h1 className="font-heading text-[1.75rem] sm:text-3xl font-bold mt-1 tracking-tight" style={{ color: 'var(--kova-navy)' }}>
           {greet ?? 'Hola'}{firstName ? `, ${firstName}` : ''}
         </h1>
-        <p className="text-sm text-slate-500 mt-0.5">Este es el resumen de tu operación hoy.</p>
+        <p className="text-sm text-slate-500 mt-2">Este es el resumen de tu operación hoy.</p>
       </div>
 
       {/* KPIs */}
@@ -413,8 +415,8 @@ function KpiCard({ label, value, icon: Icon, tint, tone, href }: {
   label: string; value: number | string; icon: React.ElementType; tint: string; tone: string; href: string;
 }) {
   return (
-    <Link href={href} className="kova-card kova-card-hover group px-4 py-3.5 flex items-center gap-3">
-      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: tint }}>
+    <Link href={href} className="kova-card kova-card-hover group px-4 py-4 flex items-center gap-3">
+      <div className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0" style={{ background: tint, boxShadow: 'var(--kova-shadow-xs)' }}>
         <Icon className="w-5 h-5" style={{ color: tone }} />
       </div>
       <div className="min-w-0 flex-1">

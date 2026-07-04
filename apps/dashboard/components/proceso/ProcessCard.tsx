@@ -70,9 +70,12 @@ export function ProcessCard({
   return (
     <Link
       href={link}
-      className="kova-card group relative overflow-hidden p-5 block hover:shadow-md hover:-translate-y-0.5 transition-all"
+      className="kova-card kova-card-hover group relative overflow-hidden p-5 block transition-all"
     >
-      <span className="absolute inset-x-0 top-0 h-1" style={{ background: st.bar }} />
+      <span
+        className="absolute inset-x-0 top-0 h-[3px] opacity-90"
+        style={{ background: `linear-gradient(90deg, ${st.bar}, ${st.bar}88)` }}
+      />
 
       <div className="flex items-start gap-3 mb-4">
         <div

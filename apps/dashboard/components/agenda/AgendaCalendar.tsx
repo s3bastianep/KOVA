@@ -450,7 +450,7 @@ export function AgendaCalendar() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center rounded-xl border border-slate-200 bg-white p-0.5 text-xs font-medium">
+          <div className="kova-segment text-xs font-medium">
             {([
               ['today', 'Hoy'],
               ['month', 'Mes'],
@@ -461,8 +461,8 @@ export function AgendaCalendar() {
                 key={v}
                 type="button"
                 onClick={() => selectView(v)}
-                className={`px-3 py-1.5 rounded-lg transition-colors ${view === v ? 'text-white' : 'text-slate-500 hover:text-slate-700'}`}
-                style={view === v ? { background: 'var(--kova-blue)' } : undefined}
+                className="kova-segment-item"
+                data-active={view === v ? 'true' : 'false'}
               >
                 {label}
               </button>
