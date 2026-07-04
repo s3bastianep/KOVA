@@ -9,6 +9,10 @@ const landingLinks = [
   ['Quiénes somos', '/quienes-somos'],
 ];
 
+// El login vive en la app externa del dashboard (Next.js), no en este SPA.
+// VITE_DASHBOARD_URL debe apuntar a la URL pública del login (ver PLATFORM.md).
+const loginUrl = import.meta.env.VITE_DASHBOARD_URL || '/login';
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [recursosOpen, setRecursosOpen] = useState(false);
@@ -143,8 +147,8 @@ export default function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-3">
-          <Link
-            to="/login"
+          <a
+            href={loginUrl}
             className="text-sm font-medium transition-colors px-3 py-2 rounded-lg border"
             style={{
               color: onLandingHero ? 'rgba(255,255,255,0.85)' : BRAND.navy,
@@ -152,7 +156,7 @@ export default function Navbar() {
             }}
           >
             Iniciar sesión
-          </Link>
+          </a>
           <Link
             to="/contacto"
             className="inline-flex kova-btn-primary text-sm font-semibold px-4 py-2.5 rounded-lg transition-all text-white hover:opacity-95"
