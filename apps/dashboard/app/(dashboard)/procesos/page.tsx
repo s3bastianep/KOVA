@@ -4,13 +4,16 @@ import { useMemo, useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import {
-  Plus, GitBranch, Filter, List, LayoutGrid, Users, Calendar, Trophy,
-  ClipboardList, ChevronLeft, ChevronRight, MoreVertical,
-  PlayCircle, PauseCircle, CheckCircle2, Loader2,
+  Plus, GitBranch, Filter, List, LayoutGrid,
+  PlayCircle, PauseCircle, CheckCircle2, Loader2, Archive,
+  MoreVertical, ChevronLeft, ChevronRight,
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import { ProcessCard } from '@/components/proceso/ProcessCard';
-import { processStatusLabel, processProgress } from '@/lib/process-status';
+import { ProcessProgressBar } from '@/components/proceso/ProcessProgressBar';
+import { ProcessPipelineMetrics } from '@/components/proceso/ProcessPipelineMetrics';
+import { processStatusLabel, processProgress, ACTIVE_STATUSES, countProcessesByBucket } from '@/lib/process-status';
+import type { ProcessPipelineMetrics as ProcessPipelineMetricsType } from '@/lib/process-metrics';
 
 type Proceso = {
   id: string;
@@ -19,9 +22,7 @@ type Proceso = {
   city?: string;
   company?: { id: string; name: string };
   _count?: { candidates: number };
-  interviewsCount?: number;
-  finalistsCount?: number;
-  testsCount?: number;
+  pipelineMetrics?: ProcessPipelineMetricsType;
   progress?: number;
   requiredDate?: string;
   createdAt?: string;
@@ -31,7 +32,7 @@ type Proceso = {
   nextActionDetail?: string;
 };
 
-const ACTIVE_STATUSES = ['SEARCH_ACTIVE', 'EVALUATION', 'FINALISTS', 'OFFER', 'PROFILE_BUILDING', 'DISCOVERY', 'DISCOVERY_PENDING'];
+const ACTIVE_STATUSES_LIST = ACTIVE_STATUSES;
 
 function statusColor(status: string): string {
   const map: Record<string, string> = {
@@ -51,7 +52,7 @@ function initials(name?: string) {
 
 const PAGE_SIZE = 10;
 
-type StatusFilter = 'all' | 'active' | 'review' | 'paused' | 'closed';
+type StatusFilter = 'all' | 'active' | 'review' | 'paused' | 'closed' | 'archived';
 
 export default function ProcesosPage() {
   const { data, isLoading } = useQuery({ queryKey: ['vacancies'], queryFn: dashboardApi.vacancies });
@@ -63,10 +64,11 @@ export default function ProcesosPage() {
 
   const filtered = useMemo(() => {
     switch (statusFilter) {
-      case 'active': return procesos.filter((p) => ACTIVE_STATUSES.includes(p.status));
+      case 'active': return procesos.filter((p) => ACTIVE_STATUSES_LIST.includes(p.status));
       case 'review': return procesos.filter((p) => p.status === 'APPROVAL_PENDING');
       case 'paused': return procesos.filter((p) => p.status === 'PAUSED');
-      case 'closed': return procesos.filter((p) => p.status === 'CLOSED' || p.status === 'HIRED');
+      case 'closed': return procesos.filter((p) => p.status === 'HIRED');
+      case 'archived': return procesos.filter((p) => p.status === 'CLOSED');
       default: return procesos;
     }
   }, [procesos, statusFilter]);
@@ -83,15 +85,10 @@ export default function ProcesosPage() {
     review: 'En revisión',
     paused: 'Pausados',
     closed: 'Cerrados',
+    archived: 'Archivados',
   };
 
-  const stats = useMemo(() => {
-    const active = procesos.filter((p) => ACTIVE_STATUSES.includes(p.status)).length;
-    const review = procesos.filter((p) => p.status === 'APPROVAL_PENDING').length;
-    const paused = procesos.filter((p) => p.status === 'PAUSED').length;
-    const closed = procesos.filter((p) => p.status === 'CLOSED' || p.status === 'HIRED').length;
-    return { active, review, paused, closed };
-  }, [procesos]);
+  const stats = useMemo(() => countProcessesByBucket(procesos), [procesos]);
 
   return (
     <div className="space-y-5">
@@ -149,11 +146,12 @@ export default function ProcesosPage() {
 
       {/* KPIs */}
       {!isLoading && procesos.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
           <StatCard icon={PlayCircle} value={stats.active} label="Procesos activos" hint="En progreso" tint="#E6FAF3" tone="var(--kova-green)" />
           <StatCard icon={Loader2} value={stats.review} label="En revisión" hint="Pendientes de acción" tint="#EEF2FA" tone="var(--kova-blue)" />
           <StatCard icon={PauseCircle} value={stats.paused} label="Pausados" hint="Temporales" tint="#FFF7E6" tone="#B7791F" />
-          <StatCard icon={CheckCircle2} value={stats.closed} label="Cerrados" hint="Finalizados" tint="#F3E8FF" tone="#7C3AED" />
+          <StatCard icon={CheckCircle2} value={stats.closed} label="Cerrados" hint="Contratados" tint="#F3E8FF" tone="#7C3AED" />
+          <StatCard icon={Archive} value={stats.archived} label="Archivados" hint="Histórico" tint="#F1F5F9" tone="#64748B" />
         </div>
       )}
 
@@ -182,9 +180,7 @@ export default function ProcesosPage() {
               status={p.status}
               companyName={p.company?.name}
               companyId={p.company?.id}
-              candidatesCount={p._count?.candidates ?? 0}
-              interviewsCount={p.interviewsCount ?? 0}
-              finalistsCount={p.finalistsCount ?? 0}
+              pipelineMetrics={p.pipelineMetrics}
               progress={p.progress}
               dueDate={p.requiredDate}
               consultantName={p.consultantName ?? (p.consultant ? `${p.consultant.firstName} ${p.consultant.lastName}` : 'María Consultora')}
@@ -258,19 +254,8 @@ function ProcessRow({ p }: { p: Proceso }) {
 
         {/* Progreso + métricas */}
         <div className="min-w-0">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[10px] text-slate-400">Progreso del proceso</span>
-            <span className="text-xs font-bold" style={{ color }}>{pct}%</span>
-          </div>
-          <div className="h-2 rounded-full bg-slate-100 overflow-hidden mb-2.5">
-            <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, background: color }} />
-          </div>
-          <div className="grid grid-cols-4 gap-1 text-center">
-            <Metric icon={Users} value={p._count?.candidates ?? 0} label="Candidatos" />
-            <Metric icon={Calendar} value={p.interviewsCount ?? 0} label="Entrevistas" />
-            <Metric icon={Trophy} value={p.finalistsCount ?? 0} label="Finalistas" />
-            <Metric icon={ClipboardList} value={p.testsCount ?? 0} label="Pruebas" />
-          </div>
+          <ProcessProgressBar status={p.status} progress={pct} color={color} size="md" className="mb-2.5" />
+          <ProcessPipelineMetrics metrics={p.pipelineMetrics} variant="compact" />
         </div>
 
         {/* Próxima acción */}
@@ -290,16 +275,6 @@ function ProcessRow({ p }: { p: Proceso }) {
           <MoreVertical className="w-4 h-4" />
         </Link>
       </div>
-    </div>
-  );
-}
-
-function Metric({ icon: Icon, value, label }: { icon: typeof Users; value: number; label: string }) {
-  return (
-    <div className="rounded-lg bg-slate-50 py-1.5">
-      <Icon className="w-3 h-3 mx-auto text-slate-400" />
-      <p className="text-sm font-bold leading-none mt-0.5" style={{ color: 'var(--kova-navy)' }}>{value}</p>
-      <p className="text-[9px] text-slate-400 mt-0.5">{label}</p>
     </div>
   );
 }

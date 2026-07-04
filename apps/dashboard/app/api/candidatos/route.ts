@@ -4,6 +4,7 @@ import { prisma } from '../../../lib/prisma';
 import { isMockMode, MOCK_CANDIDATES } from '../../../lib/mock';
 import { normalizeSkillList } from '../../../lib/candidate-skills';
 import { runCandidateAddedAutomation } from '../../../lib/automations';
+import { mapCandidateProcessHistory } from '../../../lib/candidate-process-history';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,9 +38,32 @@ function mapCandidate(c: {
   metadata?: unknown;
   skills?: string[];
   assessments?: { title?: string | null }[];
-  vacancies: { stage: string; source?: string | null; ranking?: number | null; vacancy: { title: string; company?: { name: string } | null } }[];
+  vacancies: {
+    id?: string;
+    stage: string;
+    source?: string | null;
+    ranking?: number | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    vacancy: { id: string; title: string; status?: string; company?: { id?: string; name: string } | null };
+  }[];
 }) {
   const primary = c.vacancies[0];
+  const processHistory = mapCandidateProcessHistory(
+    c.vacancies.map((v, index) => ({
+      id: v.id ?? `cv-${c.id}-${index}`,
+      stage: v.stage,
+      ranking: v.ranking,
+      createdAt: v.createdAt ?? new Date(Date.now() - (c.vacancies.length - index) * 30 * 86400000),
+      updatedAt: v.updatedAt ?? new Date(Date.now() - (c.vacancies.length - index - 1) * 7 * 86400000),
+      vacancy: {
+        id: v.vacancy.id,
+        title: v.vacancy.title,
+        status: v.vacancy.status ?? 'SEARCH_ACTIVE',
+        company: v.vacancy.company,
+      },
+    })),
+  );
   return {
     id: c.id,
     firstName: c.firstName,
@@ -53,7 +77,10 @@ function mapCandidate(c: {
     ranking: c.ranking ?? primary?.ranking,
     currentStage: primary?.stage,
     vacancyTitle: primary?.vacancy.title,
+    vacancyId: primary?.vacancy.id,
     companyName: primary?.vacancy.company?.name ?? undefined,
+    processCount: c.vacancies.length,
+    processHistory,
     skills: extractSkills(c),
     scores: deriveScores(c.compatibility ?? 0, c.id),
   };
@@ -77,34 +104,54 @@ export async function GET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
 
-  if (isMockMode()) {
-    return Response.json(
-      MOCK_CANDIDATES.map((c) => ({
-        ...c,
-        vacancyTitle: c.vacancies[0]?.vacancy.title,
-        companyName: c.vacancies[0]?.vacancy.company?.name,
-        skills: extractSkills(c),
-        scores: c.scores ?? deriveScores(c.compatibility ?? 0, c.id),
-      })),
-    );
-  }
-
   const vacancyId = req.nextUrl.searchParams.get('vacancyId') ?? undefined;
+  const excludeVacancyId = req.nextUrl.searchParams.get('excludeVacancyId') ?? undefined;
+  const search = req.nextUrl.searchParams.get('q')?.trim().toLowerCase();
+
+  if (isMockMode()) {
+    let list = MOCK_CANDIDATES.map((c) => mapCandidate(c));
+    if (vacancyId) {
+      list = list.filter((c) => c.processHistory.some((p) => p.vacancyId === vacancyId));
+    }
+    if (excludeVacancyId) {
+      list = list.filter((c) => !c.processHistory.some((p) => p.vacancyId === excludeVacancyId));
+    }
+    if (search) {
+      list = list.filter(
+        (c) =>
+          `${c.firstName} ${c.lastName}`.toLowerCase().includes(search) ||
+          (c.email ?? '').toLowerCase().includes(search),
+      );
+    }
+    return Response.json(list);
+  }
 
   const candidates = await prisma.candidate.findMany({
     where: {
       tenantId: user.tenantId,
       ...(vacancyId && { vacancies: { some: { vacancyId } } }),
+      ...(excludeVacancyId && { vacancies: { none: { vacancyId: excludeVacancyId } } }),
+      ...(search && {
+        OR: [
+          { firstName: { contains: search, mode: 'insensitive' } },
+          { lastName: { contains: search, mode: 'insensitive' } },
+          { email: { contains: search, mode: 'insensitive' } },
+        ],
+      }),
     },
     include: {
       vacancies: {
-        include: { vacancy: { select: { id: true, title: true, company: { select: { name: true } } } } },
+        include: {
+          vacancy: {
+            select: { id: true, title: true, status: true, company: { select: { id: true, name: true } } },
+          },
+        },
         orderBy: { updatedAt: 'desc' },
-        take: 1,
       },
       assessments: { select: { title: true }, take: 20 },
     },
-    orderBy: [{ ranking: 'asc' }, { updatedAt: 'desc' }],
+    orderBy: { updatedAt: 'desc' },
+    ...(search || excludeVacancyId ? { take: 25 } : {}),
   });
 
   return Response.json(candidates.map((c) => mapCandidate(c)));
@@ -115,14 +162,33 @@ export async function POST(req: NextRequest) {
   if (!user) return unauthorized();
 
   const body = await req.json().catch(() => ({}));
-  const { vacancyId, firstName, lastName, email, phone, city, source, metadata } = body;
+  const {
+    vacancyId,
+    existingCandidateId,
+    firstName,
+    lastName,
+    email,
+    phone,
+    city,
+    source,
+    metadata,
+  } = body;
 
-  if (!vacancyId || !firstName || !lastName) {
-    return Response.json({ message: 'Proceso, nombre y apellido son obligatorios' }, { status: 400 });
+  if (!vacancyId) {
+    return Response.json({ message: 'Proceso es obligatorio' }, { status: 400 });
+  }
+
+  if (!existingCandidateId && (!firstName || !lastName)) {
+    return Response.json({ message: 'Nombre y apellido son obligatorios' }, { status: 400 });
   }
 
   if (isMockMode()) {
-    return Response.json({ ok: true, compatibility: 88 });
+    return Response.json({
+      ok: true,
+      id: existingCandidateId ?? 'mock-candidate',
+      linked: !!existingCandidateId,
+      compatibility: 88,
+    });
   }
 
   const vacancy = await prisma.vacancy.findFirst({
@@ -130,6 +196,66 @@ export async function POST(req: NextRequest) {
     select: { id: true, title: true, companyId: true, consultantId: true, metadata: true },
   });
   if (!vacancy) return Response.json({ message: 'Proceso no encontrado' }, { status: 404 });
+
+  let candidateId = existingCandidateId as string | undefined;
+
+  if (!candidateId && email) {
+    const byEmail = await prisma.candidate.findFirst({
+      where: { tenantId: user.tenantId, email: { equals: String(email), mode: 'insensitive' } },
+      select: { id: true, firstName: true, lastName: true, metadata: true },
+    });
+    if (byEmail) candidateId = byEmail.id;
+  }
+
+  if (candidateId) {
+    const candidate = await prisma.candidate.findFirst({
+      where: { id: candidateId, tenantId: user.tenantId },
+      include: { experiences: true },
+    });
+    if (!candidate) return Response.json({ message: 'Candidato no encontrado' }, { status: 404 });
+
+    const alreadyLinked = await prisma.candidateVacancy.findUnique({
+      where: { candidateId_vacancyId: { candidateId: candidate.id, vacancyId: vacancy.id } },
+    });
+    if (alreadyLinked) {
+      return Response.json({ message: 'Este candidato ya está en el proceso' }, { status: 409 });
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      const candidateVacancy = await tx.candidateVacancy.create({
+        data: {
+          candidateId: candidate.id,
+          vacancyId: vacancy.id,
+          stage: 'APPLIED',
+          source: source ?? 'Base de talento',
+        },
+      });
+
+      const automation = await runCandidateAddedAutomation(tx, {
+        tenantId: user.tenantId,
+        userId: user.id,
+        companyId: vacancy.companyId,
+        vacancyId: vacancy.id,
+        candidateId: candidate.id,
+        candidateVacancyId: candidateVacancy.id,
+        consultantId: vacancy.consultantId ?? user.id,
+        vacancyTitle: vacancy.title,
+        candidateName: `${candidate.firstName} ${candidate.lastName}`,
+        vacancyMetadata: vacancy.metadata,
+        candidate: { metadata: candidate.metadata, experiences: candidate.experiences },
+      });
+
+      return { candidate, candidateVacancy, automation, linked: true };
+    });
+
+    return Response.json({
+      ok: true,
+      id: result.candidate.id,
+      linked: true,
+      compatibility: result.automation.compatibility,
+      breakdown: result.automation.breakdown,
+    });
+  }
 
   const result = await prisma.$transaction(async (tx) => {
     const candidate = await tx.candidate.create({
@@ -175,6 +301,7 @@ export async function POST(req: NextRequest) {
   return Response.json({
     ok: true,
     id: result.candidate.id,
+    linked: false,
     compatibility: result.automation.compatibility,
     breakdown: result.automation.breakdown,
   });

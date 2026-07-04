@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import { COMMERCIAL_SKILLS } from '@/lib/standard-questions';
+import type { CandidateProcessHistoryItem } from '@/lib/candidate-process-history';
 
 const VIOLET = '#7C3AED';
 const VIOLET_SOFT = '#F3E8FF';
@@ -52,6 +53,8 @@ type Candidate = {
   interviews?: { id: string; title: string; status: string; scheduledAt?: string; score?: number }[];
   assessments?: { id: string; type: string; competency: string; score?: number; maxScore?: number; result?: string; comments?: string; date?: string }[];
   activities?: { id: string; description: string; type?: string; date: string }[];
+  processHistory?: CandidateProcessHistoryItem[];
+  processCount?: number;
 };
 
 const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
@@ -392,6 +395,70 @@ function CandidateReport({ c }: { c: Candidate }) {
               </div>
             ) : <p className="text-sm text-slate-400">Sin formación registrada.</p>}
           </InfoCard>
+        </div>
+
+        {/* ── Historial de procesos ── */}
+        <div className="kova-card p-6 print-block">
+          <div className="flex items-center justify-between gap-3 mb-4">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Historial de procesos</p>
+              <p className="text-xs text-slate-500 mt-1">
+                Todos los procesos donde ha participado este perfil. La información se conserva para reutilizarlo en nuevas vacantes.
+              </p>
+            </div>
+            {(c.processCount ?? c.processHistory?.length ?? 0) > 0 && (
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-violet-50 text-violet-700 shrink-0">
+                {c.processCount ?? c.processHistory?.length} proceso{(c.processCount ?? c.processHistory?.length) === 1 ? '' : 's'}
+              </span>
+            )}
+          </div>
+          {c.processHistory?.length ? (
+            <div className="space-y-3">
+              {c.processHistory.map((item) => (
+                <div
+                  key={`${item.vacancyId}-${item.candidateVacancyId}`}
+                  className={`flex flex-wrap items-center gap-3 p-4 rounded-xl border transition-colors ${
+                    item.isCurrent ? 'border-violet-200 bg-violet-50/40' : 'border-slate-100 bg-slate-50/50'
+                  }`}
+                >
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: item.isCurrent ? '#EDE9FE' : '#EEF2FA' }}>
+                    <Briefcase className="w-4 h-4" style={{ color: item.isCurrent ? VIOLET : 'var(--kova-blue)' }} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Link href={`/procesos/${item.vacancyId}`} className="text-sm font-semibold hover:underline" style={{ color: 'var(--kova-navy)' }}>
+                        {item.vacancyTitle}
+                      </Link>
+                      {item.isCurrent && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-100 text-violet-700">
+                          Proceso actual
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-500 mt-0.5 flex items-center gap-1">
+                      <Building2 className="w-3 h-3" />
+                      {item.companyName ?? 'Sin empresa'}
+                      {' · '}
+                      Etapa: {item.stageLabel}
+                    </p>
+                    <p className="text-[11px] text-slate-400 mt-1">
+                      {item.vacancyStatusLabel}
+                      {' · '}
+                      Desde {new Date(item.startedAt).toLocaleDateString('es-CO', { month: 'short', year: 'numeric' })}
+                    </p>
+                  </div>
+                  <Link
+                    href={`/procesos/${item.vacancyId}`}
+                    className="text-xs font-semibold text-[var(--kova-blue)] hover:underline shrink-0"
+                  >
+                    Ver proceso
+                  </Link>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-slate-400">Este candidato aún no tiene historial en otros procesos.</p>
+          )}
         </div>
 
         {/* ── Experiencia ── */}

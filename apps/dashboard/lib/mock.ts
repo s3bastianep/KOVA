@@ -1,3 +1,6 @@
+import { computeProcessPipelineMetrics } from './process-metrics';
+import { mapCandidateProcessHistory } from './candidate-process-history';
+
 export const MOCK_USER = {
   id: 'mock-user-001',
   email: 'consultor@kova.co',
@@ -226,10 +229,16 @@ export const MOCK_CANDIDATES = [
     source: 'LinkedIn',
     skills: ['Prospección', 'Negociación', 'Cierre de ventas', 'Venta consultiva', 'Gestión de pipeline'],
     scores: { experiencia: 100, habilidades: 95, educacion: 85, cultura: 90 },
-    vacancies: [{ vacancy: { id: 'seed-vacancy-001', title: 'Ejecutivo Comercial B2B', company: { name: 'TechSales Colombia SAS' } } }],
-  },
-  {
-    id: 'c2',
+    vacancies: [
+      {
+        stage: 'INTERVIEW',
+        vacancy: { id: 'seed-vacancy-001', title: 'Ejecutivo Comercial B2B', status: 'SEARCH_ACTIVE', company: { id: 'seed-company-001', name: 'TechSales Colombia SAS' } },
+      },
+      {
+        stage: 'HIRED',
+        vacancy: { id: 'seed-vacancy-hist-001', title: 'Asesor Comercial Senior', status: 'HIRED', company: { id: 'seed-company-hist-001', name: 'DataSell Colombia' } },
+      },
+    ],
     firstName: 'Ana',
     lastName: 'Gómez',
     email: 'ana.gomez@email.com',
@@ -242,7 +251,7 @@ export const MOCK_CANDIDATES = [
     source: 'Referido',
     skills: ['Negociación', 'Presentación comercial', 'Manejo de objeciones', 'Inteligencia emocional', 'Trabajo en equipo'],
     scores: { experiencia: 85, habilidades: 80, educacion: 75, cultura: 85 },
-    vacancies: [{ vacancy: { id: 'seed-vacancy-001', title: 'Ejecutivo Comercial B2B', company: { name: 'TechSales Colombia SAS' } } }],
+    vacancies: [{ stage: 'ASSESSMENT', vacancy: { id: 'seed-vacancy-001', title: 'Ejecutivo Comercial B2B', status: 'SEARCH_ACTIVE', company: { id: 'seed-company-001', name: 'TechSales Colombia SAS' } } }],
   },
   {
     id: 'c3',
@@ -258,7 +267,7 @@ export const MOCK_CANDIDATES = [
     source: 'Computrabajo',
     skills: ['Liderazgo comercial', 'Cuentas clave', 'Análisis de mercado', 'Negociación', 'Pricing'],
     scores: { experiencia: 90, habilidades: 80, educacion: 70, cultura: 72 },
-    vacancies: [{ vacancy: { id: 'seed-vacancy-002', title: 'Gerente Comercial Regional', company: { name: 'Distribuidora Andina' } } }],
+    vacancies: [{ stage: 'SCREENING', vacancy: { id: 'seed-vacancy-002', title: 'Gerente Comercial Regional', status: 'FINALISTS', company: { id: 'seed-company-002', name: 'Distribuidora Andina' } } }],
   },
 ];
 
@@ -306,11 +315,31 @@ export function getMockCandidate(id: string) {
   const base = MOCK_CANDIDATES.find((c) => c.id === id);
   if (!base) return null;
   const detail = CANDIDATE_DETAIL[id] ?? { experiences: [], competencies: [], notes: [] };
+  const processHistory = mapCandidateProcessHistory(
+    base.vacancies.map((v, index) => ({
+      id: `cv-${base.id}-${index}`,
+      stage: v.stage ?? base.currentStage ?? 'APPLIED',
+      ranking: base.ranking,
+      createdAt: new Date(Date.now() - (base.vacancies.length - index) * 120 * 86400000),
+      updatedAt: new Date(Date.now() - (base.vacancies.length - index - 1) * 14 * 86400000),
+      vacancy: {
+        id: v.vacancy.id,
+        title: v.vacancy.title,
+        status: v.vacancy.status ?? 'SEARCH_ACTIVE',
+        company: v.vacancy.company,
+      },
+    })),
+  );
+  const current = processHistory[0];
   return {
     ...base,
     ...detail,
-    vacancyTitle: base.vacancies[0]?.vacancy.title,
-    companyName: base.vacancies[0]?.vacancy.title.includes('Regional') ? 'Distribuidora Andina' : 'TechSales Colombia SAS',
+    vacancyTitle: current?.vacancyTitle ?? base.vacancies[0]?.vacancy.title,
+    vacancyId: current?.vacancyId ?? base.vacancies[0]?.vacancy.id,
+    companyName: current?.companyName ?? base.vacancies[0]?.vacancy.company?.name,
+    currentStage: current?.stage ?? base.currentStage,
+    processHistory,
+    processCount: processHistory.length,
     profileSummary: id === 'c1'
       ? 'Ejecutivo comercial B2B con 6 años de experiencia en software. Fuerte en prospección y cierre consultivo.'
       : id === 'c2'
@@ -816,7 +845,7 @@ export function getMockCompany(id: string) {
     contacts: [
       { id: 'ct1', name: base.city === 'Bogotá' ? 'Laura Martínez' : 'Pedro Salazar', role: 'Gerente Comercial', email: base.email, phone: base.phone },
     ],
-    vacancies: MOCK_VACANCIES.filter((v) => v.company.id === id),
+    vacancies: MOCK_VACANCIES.filter((v) => v.company.id === id).map(enrichVacancyWithMetrics),
     followUps: [],
     crmInteractions: [],
     documents: [],
@@ -932,6 +961,24 @@ export function getMockCandidateStage(candidateVacancyId: string, fallback: stri
 
 export function setMockCandidateStage(candidateVacancyId: string, stage: string) {
   mockCandidateStageOverrides[candidateVacancyId] = stage;
+}
+
+export function getMockVacancyPipelineMetrics(vacancyId: string) {
+  const candidates = MOCK_CANDIDATES.filter((c) =>
+    c.vacancies.some((cv) => cv.vacancy.id === vacancyId),
+  );
+  const stages = candidates.map((c) =>
+    getMockCandidateStage(`cv-${c.id}`, c.currentStage ?? 'SCREENING'),
+  );
+  return computeProcessPipelineMetrics(stages);
+}
+
+export function enrichVacancyWithMetrics<T extends { id: string }>(vacancy: T) {
+  return { ...vacancy, pipelineMetrics: getMockVacancyPipelineMetrics(vacancy.id) };
+}
+
+export function getMockVacanciesForList() {
+  return MOCK_VACANCIES.map(enrichVacancyWithMetrics);
 }
 
 export function isMockMode() {

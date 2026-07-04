@@ -86,13 +86,14 @@ const EMPTY_APPOINTMENT: NewAppointment = {
   purpose: '',
 };
 
-type CalendarView = 'month' | 'week' | 'list';
+type CalendarView = 'today' | 'month' | 'week' | 'list';
 
 export function AgendaCalendar() {
   const today = new Date();
   const toast = useToast();
   const [cursor, setCursor] = useState({ year: today.getFullYear(), month: today.getMonth() });
   const [view, setView] = useState<CalendarView>('month');
+  const [focusDate, setFocusDate] = useState(() => new Date());
   const [modal, setModal] = useState<ModalMode>(null);
   const [dragItem, setDragItem] = useState<AgendaItem | null>(null);
   const [reasonText, setReasonText] = useState('');
@@ -165,6 +166,11 @@ export function AgendaCalendar() {
     [items],
   );
 
+  const todayItems = useMemo(
+    () => sortedItems.filter((item) => sameDay(new Date(item.date), focusDate)),
+    [sortedItems, focusDate],
+  );
+
   const mutation = useMutation({
     mutationFn: (payload: {
       itemKey: string;
@@ -233,9 +239,28 @@ export function AgendaCalendar() {
     year: 'numeric',
   });
 
-  const goToday = () => setCursor({ year: today.getFullYear(), month: today.getMonth() });
+  const goToday = () => {
+    const now = new Date();
+    setCursor({ year: now.getFullYear(), month: now.getMonth() });
+    setFocusDate(now);
+  };
+
+  const selectView = (v: CalendarView) => {
+    setView(v);
+    if (v === 'today') goToday();
+  };
+
   const prevMonth = () => setCursor((c) => { const d = new Date(c.year, c.month - 1, 1); return { year: d.getFullYear(), month: d.getMonth() }; });
   const nextMonth = () => setCursor((c) => { const d = new Date(c.year, c.month + 1, 1); return { year: d.getFullYear(), month: d.getMonth() }; });
+  const prevDay = () => setFocusDate((d) => { const next = new Date(d); next.setDate(d.getDate() - 1); setCursor({ year: next.getFullYear(), month: next.getMonth() }); return next; });
+  const nextDay = () => setFocusDate((d) => { const next = new Date(d); next.setDate(d.getDate() + 1); setCursor({ year: next.getFullYear(), month: next.getMonth() }); return next; });
+
+  const todayLabel = focusDate.toLocaleDateString('es-CO', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: focusDate.getFullYear() !== today.getFullYear() ? 'numeric' : undefined,
+  });
 
   const handleDrop = (day: Date) => {
     if (!dragItem) return;
@@ -405,27 +430,37 @@ export function AgendaCalendar() {
       {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-1.5">
-          <button type="button" onClick={goToday} className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors">
-            <CalendarDays className="w-3.5 h-3.5 text-slate-400" /> Hoy
-          </button>
-          <button type="button" onClick={prevMonth} className="w-8 h-8 rounded-lg border border-slate-200 bg-white flex items-center justify-center hover:bg-slate-50">
+          <button
+            type="button"
+            onClick={view === 'today' ? prevDay : prevMonth}
+            className="w-8 h-8 rounded-lg border border-slate-200 bg-white flex items-center justify-center hover:bg-slate-50"
+          >
             <ChevronLeft className="w-4 h-4 text-slate-500" />
           </button>
-          <button type="button" onClick={nextMonth} className="w-8 h-8 rounded-lg border border-slate-200 bg-white flex items-center justify-center hover:bg-slate-50">
+          <button
+            type="button"
+            onClick={view === 'today' ? nextDay : nextMonth}
+            className="w-8 h-8 rounded-lg border border-slate-200 bg-white flex items-center justify-center hover:bg-slate-50"
+          >
             <ChevronRight className="w-4 h-4 text-slate-500" />
           </button>
           <h2 className="font-heading text-lg font-semibold capitalize ml-1" style={{ color: 'var(--kova-navy)' }}>
-            {monthLabel}
+            {view === 'today' ? todayLabel : monthLabel}
           </h2>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center rounded-xl border border-slate-200 bg-white p-0.5 text-xs font-medium">
-            {([['month', 'Mes'], ['week', 'Semana'], ['list', 'Lista']] as [CalendarView, string][]).map(([v, label]) => (
+            {([
+              ['today', 'Hoy'],
+              ['month', 'Mes'],
+              ['week', 'Semana'],
+              ['list', 'Lista'],
+            ] as [CalendarView, string][]).map(([v, label]) => (
               <button
                 key={v}
                 type="button"
-                onClick={() => setView(v)}
+                onClick={() => selectView(v)}
                 className={`px-3 py-1.5 rounded-lg transition-colors ${view === v ? 'text-white' : 'text-slate-500 hover:text-slate-700'}`}
                 style={view === v ? { background: 'var(--kova-blue)' } : undefined}
               >
@@ -483,6 +518,71 @@ export function AgendaCalendar() {
       {/* Calendario */}
       {isLoading ? (
         <div className="kova-card p-12 text-center text-sm text-slate-400">Cargando agenda...</div>
+      ) : view === 'today' ? (
+        <div className="kova-card overflow-hidden">
+          <div className="px-4 py-3 border-b flex items-center justify-between gap-3" style={{ borderColor: 'var(--kova-border)' }}>
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Agenda del día</p>
+              <p className="text-sm font-semibold capitalize mt-0.5" style={{ color: 'var(--kova-navy)' }}>
+                {todayLabel}
+              </p>
+            </div>
+            {!sameDay(focusDate, today) && (
+              <button
+                type="button"
+                onClick={() => selectView('today')}
+                className="text-xs font-medium px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600"
+              >
+                Ir a hoy
+              </button>
+            )}
+          </div>
+          {todayItems.length === 0 ? (
+            <p className="text-sm text-slate-400 text-center py-12">No hay citas para este día.</p>
+          ) : (
+            <div className="divide-y" style={{ borderColor: 'var(--kova-border)' }}>
+              {todayItems.map((item) => {
+                const style = agendaTypeStyle(item.type);
+                const rejected = item.status === 'REJECTED';
+                return (
+                  <button
+                    key={item.itemKey}
+                    type="button"
+                    onClick={() => setModal({ type: 'detail', item })}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 transition-colors"
+                  >
+                    <div className="w-14 shrink-0 text-center">
+                      <p className="text-lg font-bold leading-none" style={{ color: 'var(--kova-blue)' }}>
+                        {formatAgendaTime(item.date)}
+                      </p>
+                    </div>
+                    <span className="w-1 self-stretch rounded-full" style={{ background: rejected ? '#DC2626' : style.dot }} />
+                    <div className="min-w-0 flex-1">
+                      <p
+                        className="text-sm font-medium truncate"
+                        style={{
+                          color: 'var(--kova-navy)',
+                          textDecoration: rejected || item.status === 'CANCELLED' ? 'line-through' : undefined,
+                        }}
+                      >
+                        {item.title}
+                      </p>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        {item.companyName ?? item.contactName ?? item.type}
+                      </p>
+                    </div>
+                    <span
+                      className="text-[10px] px-2 py-0.5 rounded-full shrink-0"
+                      style={{ background: rejected ? '#FEF2F2' : style.bg, color: rejected ? '#DC2626' : style.text }}
+                    >
+                      {item.type}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
       ) : view === 'month' ? (
         <div className="kova-card overflow-hidden">
           <div className="grid grid-cols-7 border-b" style={{ borderColor: 'var(--kova-border)' }}>

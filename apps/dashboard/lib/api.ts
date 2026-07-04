@@ -67,6 +67,8 @@ export const dashboardApi = {
   company: (id: string) => apiFetch<Record<string, unknown>>(`/empresas/${id}`),
   createCompany: (body: Record<string, unknown>) =>
     apiFetch<{ id: string; name: string }>('/empresas', { method: 'POST', body: JSON.stringify(body) }),
+  updateCompany: (id: string, body: Record<string, unknown>) =>
+    apiFetch<{ id: string; name: string }>(`/empresas/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
   vacancies: () => apiFetch<unknown[]>('/vacantes'),
   createProcess: (body: Record<string, unknown>) =>
     apiFetch<{ ok: boolean; id: string }>('/procesos', { method: 'POST', body: JSON.stringify(body) }),
@@ -82,15 +84,24 @@ export const dashboardApi = {
     }),
   candidates: (vacancyId?: string) =>
     apiFetch<unknown[]>(`/candidatos${vacancyId ? `?vacancyId=${vacancyId}` : ''}`),
+  searchCandidates: (params?: { q?: string; excludeVacancyId?: string; vacancyId?: string }) => {
+    const qs = new URLSearchParams();
+    if (params?.q) qs.set('q', params.q);
+    if (params?.excludeVacancyId) qs.set('excludeVacancyId', params.excludeVacancyId);
+    if (params?.vacancyId) qs.set('vacancyId', params.vacancyId);
+    const query = qs.toString();
+    return apiFetch<unknown[]>(`/candidatos${query ? `?${query}` : ''}`);
+  },
   createCandidate: (body: {
     vacancyId: string;
     firstName: string;
     lastName: string;
+    existingCandidateId?: string;
     email?: string;
     phone?: string;
     city?: string;
     source?: string;
-  }) => apiFetch<{ ok: boolean; id?: string; compatibility?: number }>('/candidatos', {
+  }) => apiFetch<{ ok: boolean; id?: string; linked?: boolean; compatibility?: number }>('/candidatos', {
     method: 'POST',
     body: JSON.stringify(body),
   }),

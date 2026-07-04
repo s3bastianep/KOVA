@@ -177,14 +177,9 @@ export default function ClientesPage() {
             <p className="text-sm text-slate-500 mt-0.5">Expediente, procesos activos, contrataciones y seguimiento comercial.</p>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Link href="/clientes/nuevo" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white shadow-sm hover:-translate-y-0.5 transition-all" style={{ background: 'linear-gradient(135deg, var(--kova-green), #00996a)' }}>
-            <Plus className="w-4 h-4" /> Crear cliente
-          </Link>
-          <Link href="/procesos/nuevo" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white shadow-sm hover:-translate-y-0.5 transition-all" style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}>
-            <GitBranch className="w-4 h-4" /> Nuevo proceso
-          </Link>
-        </div>
+        <Link href="/clientes/nuevo" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white shadow-sm hover:-translate-y-0.5 transition-all" style={{ background: 'linear-gradient(135deg, var(--kova-green), #00996a)' }}>
+          <Plus className="w-4 h-4" /> Crear cliente
+        </Link>
       </div>
 
       {!isLoading && list.length > 0 && (
@@ -391,9 +386,6 @@ function ClientCard({ client: c }: { client: Client }) {
             </div>
           </div>
           <div className="flex flex-col gap-1.5 mt-auto">
-            <Link href={`/procesos/nuevo?cliente=${c.id}`} className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border border-slate-200 text-slate-600 hover:bg-slate-50">
-              <GitBranch className="w-3.5 h-3.5" /> Nuevo proceso
-            </Link>
             <Link href={`/empresas/${c.id}`} className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-white" style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}>
               Ver expediente <ArrowRight className="w-3.5 h-3.5" />
             </Link>

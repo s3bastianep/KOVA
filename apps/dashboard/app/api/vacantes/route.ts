@@ -1,7 +1,8 @@
 import { NextRequest } from 'next/server';
 import { getUserFromRequest, unauthorized, companyWhereForUser } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
-import { isMockMode, MOCK_VACANCIES } from '../../../lib/mock';
+import { isMockMode, getMockVacanciesForList } from '../../../lib/mock';
+import { computeProcessPipelineMetrics } from '../../../lib/process-metrics';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,7 +10,7 @@ export async function GET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
 
-  if (isMockMode()) return Response.json(MOCK_VACANCIES);
+  if (isMockMode()) return Response.json(getMockVacanciesForList());
 
   const companies = await prisma.company.findMany({
     where: companyWhereForUser(user),
@@ -21,10 +22,16 @@ export async function GET(req: NextRequest) {
     where: { tenantId: user.tenantId, companyId: { in: companyIds } },
     include: {
       company: { select: { id: true, name: true } },
-      _count: { select: { candidates: true } },
+      candidates: { select: { stage: true } },
     },
     orderBy: { updatedAt: 'desc' },
   });
 
-  return Response.json(vacancies);
+  return Response.json(
+    vacancies.map(({ candidates, ...vacancy }) => ({
+      ...vacancy,
+      _count: { candidates: candidates.length },
+      pipelineMetrics: computeProcessPipelineMetrics(candidates.map((c) => c.stage)),
+    })),
+  );
 }

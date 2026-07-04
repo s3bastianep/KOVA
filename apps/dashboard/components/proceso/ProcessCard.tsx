@@ -1,6 +1,9 @@
 import Link from 'next/link';
-import { Users, Calendar, Trophy, Clock, Briefcase, ArrowUpRight } from 'lucide-react';
-import { processStatusLabel, processProgress } from '@/lib/process-status';
+import { Clock, Briefcase, ArrowUpRight } from 'lucide-react';
+import { processStatusLabel, processProgress, processBucketLabel, processBucketStyle, processStageInfo } from '@/lib/process-status';
+import { ProcessProgressBar } from '@/components/proceso/ProcessProgressBar';
+import { ProcessPipelineMetrics } from '@/components/proceso/ProcessPipelineMetrics';
+import type { ProcessPipelineMetrics as ProcessPipelineMetricsType } from '@/lib/process-metrics';
 
 type ProcessCardProps = {
   id: string;
@@ -8,13 +11,13 @@ type ProcessCardProps = {
   status: string;
   companyName?: string;
   companyId?: string;
-  candidatesCount?: number;
-  interviewsCount?: number;
-  finalistsCount?: number;
+  pipelineMetrics?: Partial<ProcessPipelineMetricsType>;
   progress?: number;
   dueDate?: string;
   consultantName?: string;
   href?: string;
+  /** Muestra el estado agrupado (activos, en revisión, etc.) en lugar del estado técnico. */
+  statusMode?: 'detail' | 'bucket';
 };
 
 function statusStyle(status: string): { bg: string; color: string; bar: string } {
@@ -51,17 +54,18 @@ export function ProcessCard({
   status,
   companyName,
   companyId,
-  candidatesCount = 0,
-  interviewsCount = 0,
-  finalistsCount = 0,
+  pipelineMetrics,
   progress,
   dueDate,
   consultantName,
   href,
+  statusMode = 'detail',
 }: ProcessCardProps) {
   const pct = progress ?? processProgress(status);
   const link = href ?? `/procesos/${id}`;
-  const st = statusStyle(status);
+  const st = statusMode === 'bucket' ? processBucketStyle(status) : statusStyle(status);
+  const statusText = statusMode === 'bucket' ? processBucketLabel(status) : processStatusLabel(status);
+  const stage = processStageInfo(status);
 
   return (
     <Link
@@ -89,34 +93,26 @@ export function ProcessCard({
         <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-[var(--kova-blue)] transition-colors shrink-0" />
       </div>
 
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-2">
         <span className="text-[11px] font-medium px-2.5 py-1 rounded-full" style={{ background: st.bg, color: st.color }}>
-          {processStatusLabel(status)}
+          {statusText}
         </span>
-        <span className="font-heading font-bold text-sm" style={{ color: st.color }}>{pct}%</span>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-semibold text-slate-500">Etapa {stage.step}/{stage.total}</span>
+          <span className="font-heading font-bold text-sm" style={{ color: st.color }}>{pct}%</span>
+        </div>
       </div>
 
-      <div className="h-2 rounded-full bg-slate-100 overflow-hidden mb-4">
-        <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, background: st.bar }} />
-      </div>
+      <ProcessProgressBar
+        status={status}
+        progress={pct}
+        color={st.bar}
+        size="md"
+        showHeader={false}
+        className="mb-4"
+      />
 
-      <div className="grid grid-cols-3 gap-2 text-center mb-3">
-        <div className="p-2.5 rounded-xl bg-slate-50 group-hover:bg-blue-50/40 transition-colors">
-          <Users className="w-3.5 h-3.5 mx-auto text-slate-400 mb-1" />
-          <p className="text-base font-bold leading-none" style={{ color: 'var(--kova-navy)' }}>{candidatesCount}</p>
-          <p className="text-[10px] text-slate-400 mt-1">Candidatos</p>
-        </div>
-        <div className="p-2.5 rounded-xl bg-slate-50 group-hover:bg-blue-50/40 transition-colors">
-          <Calendar className="w-3.5 h-3.5 mx-auto text-slate-400 mb-1" />
-          <p className="text-base font-bold leading-none" style={{ color: 'var(--kova-navy)' }}>{interviewsCount}</p>
-          <p className="text-[10px] text-slate-400 mt-1">Entrevistas</p>
-        </div>
-        <div className="p-2.5 rounded-xl bg-slate-50 group-hover:bg-blue-50/40 transition-colors">
-          <Trophy className="w-3.5 h-3.5 mx-auto text-slate-400 mb-1" />
-          <p className="text-base font-bold leading-none" style={{ color: 'var(--kova-navy)' }}>{finalistsCount}</p>
-          <p className="text-[10px] text-slate-400 mt-1">Finalistas</p>
-        </div>
-      </div>
+      <ProcessPipelineMetrics metrics={pipelineMetrics} variant="card" className="mb-3 group" />
 
       <div className="flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-slate-100">
         {consultantName && (

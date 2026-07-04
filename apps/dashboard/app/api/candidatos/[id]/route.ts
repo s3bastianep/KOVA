@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { getUserFromRequest, unauthorized } from '../../../../lib/auth';
 import { prisma } from '../../../../lib/prisma';
 import { isMockMode, getMockCandidate, MOCK_ASSESSMENTS } from '../../../../lib/mock';
+import { mapCandidateProcessHistory } from '../../../../lib/candidate-process-history';
 
 const ASSESSMENT_TYPE_LABELS: Record<string, string> = {
   COMMERCIAL: 'Prueba Comercial',
@@ -43,6 +44,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     return Response.json({
       ...candidate,
       vacancyTitle: candidate.vacancies[0]?.vacancy.title,
+      processHistory: candidate.processHistory ?? [],
       assessments,
       activities: [
         { id: 'a1', description: 'Candidato agregado al proceso', type: 'CREATE', date: new Date(Date.now() - 6 * 86400000).toISOString() },
@@ -70,8 +72,16 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       interviews: { include: { questions: true }, orderBy: { scheduledAt: 'desc' }, take: 5 },
       assessments: { orderBy: { updatedAt: 'desc' }, take: 5 },
       vacancies: {
+        orderBy: { updatedAt: 'desc' },
         include: {
-          vacancy: { select: { id: true, title: true, company: { select: { name: true } } } },
+          vacancy: {
+            select: {
+              id: true,
+              title: true,
+              status: true,
+              company: { select: { id: true, name: true } },
+            },
+          },
           stageHistory: { orderBy: { createdAt: 'desc' }, take: 10 },
         },
       },
@@ -82,6 +92,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   if (!candidate) return Response.json({ message: 'Candidato no encontrado' }, { status: 404 });
 
   const primary = candidate.vacancies[0];
+  const processHistory = mapCandidateProcessHistory(candidate.vacancies);
 
   let evaluatedCount = 0;
   let finalistCount = 0;
@@ -110,6 +121,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     vacancyTitle: primary?.vacancy.title,
     vacancyId: primary?.vacancy.id,
     companyName: primary?.vacancy.company?.name,
+    processHistory,
+    processCount: processHistory.length,
     profileSummary: candidate.profileSummary,
     compatibilityBreakdown: (candidate.metadata as { compatibilityBreakdown?: unknown[] })?.compatibilityBreakdown ?? [],
     experiences: candidate.experiences.map((e) => ({

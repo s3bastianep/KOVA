@@ -9,8 +9,10 @@ import {
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import { stageLabel, stageMoveOptions, stageStepLabel, stageStyle } from '@/lib/stages';
-import { processStatusLabel, processProgress } from '@/lib/process-status';
+import { processStatusLabel } from '@/lib/process-status';
+import { ProcessProgressBar } from '@/components/proceso/ProcessProgressBar';
 import { RejectModal } from '@/components/ui/RejectModal';
+import { AddExistingCandidatePanel } from '@/components/candidatos/AddExistingCandidatePanel';
 import { useToast } from '@/components/ui/Toast';
 
 type JobProfile = {
@@ -201,12 +203,12 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
                   <span className="text-xs font-medium text-slate-600">Solicitud de contratación</span>
                 </div>
                 {p.status && (
-                  <div className="flex items-center gap-2 w-40">
-                    <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
-                      <div className="h-full rounded-full" style={{ width: `${processProgress(p.status)}%`, background: 'var(--kova-blue)' }} />
-                    </div>
-                    <span className="text-[10px] font-semibold text-slate-500">{processProgress(p.status)}%</span>
-                  </div>
+                  <ProcessProgressBar
+                    status={p.status}
+                    color="var(--kova-blue)"
+                    size="sm"
+                    className="w-44"
+                  />
                 )}
               </div>
             </div>
@@ -275,6 +277,7 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
 
           {/* Perfiles compatibles */}
           <div className="kova-card overflow-hidden">
+            <AddExistingCandidatePanel vacancyId={id} />
             <div className="px-5 py-4 border-b flex items-center justify-between gap-3" style={{ borderColor: 'var(--kova-border)' }}>
               <div>
                 <h2 className="font-heading font-bold text-sm" style={{ color: 'var(--kova-navy)' }}>
