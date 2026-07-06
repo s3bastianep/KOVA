@@ -2,123 +2,135 @@ import { Link } from 'react-router-dom';
 import { getRelatedGuides } from './guiaRoutes';
 import GuiaSidebar from './GuiaSidebar';
 
-export function GuiaHeroSplit({ label, title, readTime, image, imageAlt }) {
-  return (
-    <header className="pt-[72px] bg-white">
-      <div className="grid lg:grid-cols-2 min-h-[420px] lg:min-h-[480px]">
-        <div className="flex flex-col justify-between px-6 lg:px-12 xl:px-16 py-12 lg:py-16">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider mb-6" style={{ color: '#4338CA' }}>
-              {label} · Lectura de {readTime}
-            </p>
-            <h1
-              className="font-heading font-bold leading-tight"
-              style={{ fontSize: 'clamp(1.85rem, 3.5vw, 2.65rem)', letterSpacing: '-0.03em', color: '#0F172A', lineHeight: 1.12 }}
-            >
-              {title}
-            </h1>
-          </div>
-
-          <div className="flex items-center gap-3 mt-10 lg:mt-0">
-            <div
-              className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0"
-              style={{ background: '#4338CA' }}
-            >
-              K
-            </div>
-            <div>
-              <p className="text-sm font-medium" style={{ color: '#0F172A' }}>Por Equipo Kova</p>
-              <p className="text-xs" style={{ color: '#94A3B8' }}>Actualizado el 26 de junio de 2026</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="relative min-h-[280px] lg:min-h-full">
-          <img src={image} alt={imageAlt} className="absolute inset-0 w-full h-full object-cover" />
-        </div>
-      </div>
-    </header>
-  );
-}
-
 export function GuiaDivider() {
-  return <hr className="my-14 lg:my-16 border-0 h-px" style={{ background: '#E2E8F0' }} />;
+  return <hr className="kv-guia-divider" aria-hidden />;
 }
 
 export function GuiaSectionTitle({ id, children }) {
   return (
-    <h2
-      id={id}
-      className="font-heading font-bold text-[1.65rem] lg:text-[1.75rem] leading-tight mb-5 scroll-mt-28"
-      style={{ color: '#0F172A', letterSpacing: '-0.02em' }}
-    >
+    <h2 id={id} className="kv-guia-section-title font-display">
       {children}
     </h2>
   );
 }
 
-export function GuiaProse({ children, className = '' }) {
+export function GuiaProse({ children, className = '', lead = false }) {
   return (
-    <p className={`text-[17px] leading-[1.85] mb-5 text-left ${className}`} style={{ color: '#334155' }}>
+    <p className={`kv-guia-p${lead ? ' kv-guia-p--lead' : ''}${className ? ` ${className}` : ''}`}>
       {children}
     </p>
   );
 }
 
+export function GuiaQuote({ children }) {
+  return <blockquote className="kv-guia-quote">{children}</blockquote>;
+}
+
 export function GuiaNumberedItem({ num, title, children }) {
   return (
-    <div className="mb-8 last:mb-0">
-      <h3 className="font-heading font-bold text-lg mb-3" style={{ color: '#0F172A' }}>
-        {num}. {title}
+    <div className="kv-guia-numbered">
+      <h3 className="font-display">
+        <span className="kv-guia-numbered-num">{num}</span>
+        {title}
       </h3>
-      <p className="text-[17px] leading-[1.85] text-left" style={{ color: '#334155' }}>
-        {children}
-      </p>
+      <p>{children}</p>
+    </div>
+  );
+}
+
+export function GuiaIssueBlock({ id, num, title, paragraphs, solution }) {
+  return (
+    <article id={id} className="kv-guia-issue">
+      <h3 className="font-display">
+        <span className="kv-guia-issue-num">{num}</span>
+        {title}
+      </h3>
+      {paragraphs.map((p) => (
+        <p key={p.slice(0, 48)}>{p}</p>
+      ))}
+      <div className="kv-guia-solution">
+        <p className="kv-guia-solution-label font-mono">Cómo lo resuelve Kova</p>
+        <p>{solution}</p>
+      </div>
+    </article>
+  );
+}
+
+export function GuiaFeatureCard({ image, imageAlt, badge, title, children, stats, source }) {
+  return (
+    <div className="kv-guia-feature">
+      <div className="kv-guia-feature-media">
+        <img src={image} alt={imageAlt} loading="lazy" />
+      </div>
+      <div className="kv-guia-feature-body">
+        <span className="kv-guia-feature-badge font-mono">{badge}</span>
+        <p className="kv-guia-feature-title font-display">{title}</p>
+        <div className="kv-guia-feature-copy">{children}</div>
+        {stats?.length > 0 && (
+          <div className="kv-guia-feature-stats">
+            {stats.map(({ value, label, wide }) => (
+              <div key={label} className={`kv-guia-feature-stat${wide ? ' kv-guia-feature-stat--wide' : ''}`}>
+                <p className="kv-guia-feature-stat-value font-display">{value}</p>
+                <p className="kv-guia-feature-stat-label">{label}</p>
+              </div>
+            ))}
+          </div>
+        )}
+        {source && <p className="kv-guia-feature-source font-mono">{source}</p>}
+      </div>
+    </div>
+  );
+}
+
+export function GuiaSkillGrid({ items }) {
+  return (
+    <div className="kv-guia-skills">
+      {items.map(({ title, desc }) => (
+        <div key={title} className="kv-guia-skill-card">
+          <h4 className="font-display">{title}</h4>
+          <p>{desc}</p>
+        </div>
+      ))}
     </div>
   );
 }
 
 export function GuiaCallout({ title, items }) {
   return (
-    <div
-      className="rounded-xl p-6 lg:p-8 my-10"
-      style={{ background: '#EFF6FF', border: '1px solid #BFDBFE' }}
-    >
-      <p className="text-[11px] font-bold uppercase tracking-wider mb-5" style={{ color: '#1D4ED8' }}>
-        {title}
-      </p>
-      <ul className="space-y-3">
+    <div className="kv-guia-callout">
+      <p className="kv-guia-callout-label font-mono">{title}</p>
+      <ul>
         {items.map((item) => (
-          <li key={item} className="flex items-start gap-2.5 text-[17px] leading-[1.75]" style={{ color: '#1E3A5F' }}>
-            <span className="text-blue-600 mt-1.5 flex-shrink-0">•</span>
-            {item}
-          </li>
+          <li key={item}>{item}</li>
         ))}
       </ul>
     </div>
   );
 }
 
+export function GuiaCtaBand({ eyebrow, title, description, ctaLabel, ctaTo }) {
+  return (
+    <div className="kv-guia-cta-band">
+      {eyebrow && <p className="kv-guia-cta-band-eyebrow font-mono">{eyebrow}</p>}
+      <h3 className="kv-guia-cta-band-title font-display">{title}</h3>
+      <p className="kv-guia-cta-band-desc">{description}</p>
+      <Link to={ctaTo} className="kv-guia-cta-btn kv-guia-cta-btn--primary kv-guia-cta-band-btn">
+        {ctaLabel}
+      </Link>
+    </div>
+  );
+}
+
 export function GuiaArticleCTA({ title, description, primaryLabel, primaryTo, secondaryLabel, secondaryTo }) {
   return (
-    <div className="pt-14 border-t" style={{ borderColor: '#E2E8F0' }}>
-      <h2 className="font-heading font-bold text-[1.65rem] leading-tight mb-5" style={{ color: '#0F172A' }}>
-        {title}
-      </h2>
-      <GuiaProse className="mb-8">{description}</GuiaProse>
-      <div className="flex flex-wrap gap-3">
-        <Link
-          to={primaryTo}
-          className="inline-flex items-center justify-center font-semibold px-6 py-3.5 rounded-lg text-sm text-white transition-opacity hover:opacity-95"
-          style={{ background: '#4338CA' }}
-        >
+    <div className="kv-guia-article-cta">
+      <h2 className="kv-guia-section-title font-display">{title}</h2>
+      <GuiaProse>{description}</GuiaProse>
+      <div className="kv-guia-article-cta-actions">
+        <Link to={primaryTo} className="kv-guia-cta-btn kv-guia-cta-btn--primary">
           {primaryLabel}
         </Link>
-        <Link
-          to={secondaryTo}
-          className="inline-flex items-center justify-center font-semibold px-6 py-3.5 rounded-lg text-sm transition-colors hover:bg-slate-50"
-          style={{ background: '#FFFFFF', color: '#334155', border: '1px solid #CBD5E1' }}
-        >
+        <Link to={secondaryTo} className="kv-guia-cta-btn kv-guia-cta-btn--secondary">
           {secondaryLabel}
         </Link>
       </div>
@@ -128,15 +140,11 @@ export function GuiaArticleCTA({ title, description, primaryLabel, primaryTo, se
 
 export function GuiaInlineImage({ src, alt, caption }) {
   return (
-    <figure className="my-10">
-      <div className="rounded-xl overflow-hidden" style={{ border: '1px solid #E2E8F0' }}>
-        <img src={src} alt={alt} className="w-full h-auto object-cover" />
+    <figure className="kv-guia-figure">
+      <div className="kv-guia-figure-frame">
+        <img src={src} alt={alt} loading="lazy" />
       </div>
-      {caption && (
-        <figcaption className="text-sm mt-3 leading-relaxed" style={{ color: '#64748B' }}>
-          {caption}
-        </figcaption>
-      )}
+      {caption && <figcaption>{caption}</figcaption>}
     </figure>
   );
 }
@@ -146,25 +154,25 @@ export function GuiaArticleShell({ currentPath, children }) {
 
   return (
     <>
-      <div className="max-w-6xl mx-auto px-6 lg:px-8 py-14 lg:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_260px] xl:grid-cols-[minmax(0,1fr)_280px] gap-10 xl:gap-14">
-          <article className="min-w-0 max-w-[720px] lg:max-w-none mx-auto lg:mx-0">
-            {children}
-          </article>
+      <div className="kv-wrap kv-guia-shell">
+        <div className="kv-guia-shell-grid">
+          <article className="kv-guia-article">{children}</article>
           <GuiaSidebar currentPath={currentPath} />
         </div>
       </div>
 
       {related.length > 0 && (
-        <div className="lg:hidden border-t px-6 py-8" style={{ borderColor: '#E2E8F0', background: '#F8FAFC' }}>
-          <p className="text-sm font-semibold mb-4" style={{ color: '#0F172A' }}>Más recursos de Kova</p>
-          <div className="space-y-4">
-            {related.map(({ path, title, readTime }) => (
-              <Link key={path} to={path} className="block rounded-xl p-4 bg-white" style={{ border: '1px solid #E2E8F0' }}>
-                <p className="text-sm font-semibold mb-0.5" style={{ color: '#4338CA' }}>{title}</p>
-                <p className="text-xs" style={{ color: '#94A3B8' }}>Lectura de {readTime}</p>
-              </Link>
-            ))}
+        <div className="kv-guia-mobile-footer lg:hidden">
+          <div className="kv-wrap">
+            <p className="kv-guia-mobile-title font-display">Artículos recientes</p>
+            <div className="kv-guia-mobile-links">
+              {related.map(({ path, title, readTime }) => (
+                <Link key={path} to={path} className="kv-guia-mobile-link">
+                  <p className="font-display">{title}</p>
+                  <span className="font-mono">Lectura de {readTime}</span>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -177,16 +185,14 @@ export function GuiaRelatedGuides({ currentPath }) {
   if (!others.length) return null;
 
   return (
-    <div className="mt-16 pt-10 border-t" style={{ borderColor: '#E2E8F0' }}>
-      <p className="text-sm font-semibold mb-5" style={{ color: '#0F172A' }}>Más recursos de Kova</p>
-      <div className="space-y-4">
+    <div className="kv-guia-related">
+      <p className="kv-guia-related-title font-display">Más del blog</p>
+      <div className="kv-guia-related-list">
         {others.map(({ path, title, readTime, excerpt }) => (
-          <Link key={path} to={path} className="group block">
-            <p className="text-base font-semibold group-hover:underline mb-1" style={{ color: '#4338CA' }}>{title}</p>
-            {excerpt && (
-              <p className="text-sm mb-1 leading-relaxed" style={{ color: '#64748B' }}>{excerpt}</p>
-            )}
-            <p className="text-xs" style={{ color: '#94A3B8' }}>Lectura de {readTime}</p>
+          <Link key={path} to={path} className="kv-guia-related-item">
+            <p className="font-display">{title}</p>
+            {excerpt && <p>{excerpt}</p>}
+            <span className="font-mono">Lectura de {readTime}</span>
           </Link>
         ))}
       </div>

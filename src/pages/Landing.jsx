@@ -1,28 +1,40 @@
-import Navbar from '@/components/landing/Navbar';
-import Footer from '@/components/landing/Footer';
-import AccesoAnticipado from '@/components/landing/AccesoAnticipado';
-import RolesComerciales from '@/components/validate/RolesComerciales';
-import FinalCta from '@/components/validate/FinalCta';
-import MetodologiaProceso from '@/components/validate/MetodologiaProceso';
-import SectionReveal from '@/components/landing/SectionReveal';
+import SiteLayout from '@/components/landing/SiteLayout';
 import Hero from '@/components/validate/Hero';
-import HeroCapabilities from '@/components/validate/HeroCapabilities';
+import SignalStrip from '@/components/validate/SignalStrip';
 import Problema from '@/components/validate/Problema';
-import StickyCta from '@/components/validate/StickyCta';
+import SolucionSection from '@/components/validate/SolucionSection';
+import MetodologiaSection from '@/components/validate/MetodologiaSection';
+import SignatureQuoteSection from '@/components/validate/SignatureQuoteSection';
+import StatsBand from '@/components/validate/StatsBand';
+import StatsSection from '@/components/validate/StatsSection';
+import FilosofiaSection from '@/components/validate/FilosofiaSection';
+import ComparacionSection from '@/components/validate/ComparacionSection';
+import CierreLanding from '@/components/validate/CierreLanding';
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-background pb-[calc(5.75rem+env(safe-area-inset-bottom))] md:pb-0 kova-ui-crisp">
-      <Navbar />
-      <StickyCta />
-      <Hero />
-      <SectionReveal><Problema /></SectionReveal>
-      <SectionReveal delay={40}><HeroCapabilities /></SectionReveal>
-      <SectionReveal delay={40}><MetodologiaProceso /></SectionReveal>
-      <SectionReveal delay={40}><AccesoAnticipado /></SectionReveal>
-      <SectionReveal delay={40}><RolesComerciales /></SectionReveal>
-      <SectionReveal delay={40}><FinalCta /></SectionReveal>
-      <Footer />
-    </div>
+    <SiteLayout>
+      <main>
+        <Hero />
+        <SignalStrip />
+
+        <div className="kv-page-band kv-page-band--light">
+          <Problema />
+          <SolucionSection />
+          <MetodologiaSection />
+        </div>
+
+        <SignatureQuoteSection />
+
+        <div className="kv-page-band kv-page-band--dark">
+          <StatsBand />
+          <StatsSection />
+        </div>
+
+        <FilosofiaSection />
+        <ComparacionSection />
+        <CierreLanding />
+      </main>
+    </SiteLayout>
   );
 }

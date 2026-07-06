@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import { CN_METHOD_INTRO } from '@/theme/landingConsult';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ClipboardCheck, FileCheck, SlidersHorizontal, Target } from 'lucide-react';
 import { accentCycle, BRAND, KOVA } from '@/theme/kovaPalette';
@@ -76,10 +77,10 @@ export default function MetodologiaProceso() {
           </span>
           <h2 className="font-heading font-bold text-balance mb-3 sm:mb-4 kova-text-h2-section" style={{ color: BRAND.navy }}>
             Cuatro etapas.{' '}
-            <span style={{ color: BRAND.blue }}>Un mismo método.</span>
+            <span style={{ color: BRAND.blue }}>Evaluación a su medida.</span>
           </h2>
           <p className="kova-text-body leading-relaxed mx-auto" style={{ color: KOVA.body }}>
-            Un vistazo al proceso. El detalle completo está en cómo trabajamos.
+            {CN_METHOD_INTRO}
           </p>
         </header>
 

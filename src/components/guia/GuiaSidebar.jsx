@@ -1,59 +1,27 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
 import { getRelatedGuides } from './guiaRoutes';
 
+const SIDEBAR_LIMIT = 3;
+
 export default function GuiaSidebar({ currentPath }) {
-  const related = getRelatedGuides(currentPath);
+  const related = getRelatedGuides(currentPath, SIDEBAR_LIMIT);
 
   return (
     <aside className="hidden lg:block">
-      <div className="sticky top-28">
-        <p className="text-sm font-semibold mb-5" style={{ color: '#0F172A' }}>
-          Artículos recientes
-        </p>
-        <div className="space-y-5">
-          {related.map(({ path, title, excerpt, image, readTime }) => (
-            <Link key={path} to={path} className="group block">
-              <div className="rounded-xl overflow-hidden mb-3 aspect-[16/10]" style={{ border: '1px solid #E2E8F0' }}>
-                <img
-                  src={image}
-                  alt=""
-                  className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                />
-              </div>
-              <p className="text-[10px] font-medium mb-1" style={{ color: '#94A3B8' }}>
-                Lectura de {readTime}
-              </p>
-              <h3
-                className="text-sm font-semibold leading-snug mb-1.5 group-hover:underline"
-                style={{ color: '#0F172A' }}
-              >
-                {title}
-              </h3>
-              <p className="text-xs leading-relaxed mb-2" style={{ color: '#64748B', lineHeight: 1.65 }}>
-                {excerpt}
-              </p>
-              <span className="inline-flex items-center gap-1 text-xs font-semibold" style={{ color: '#4338CA' }}>
-                Leer más
-                <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-              </span>
+      <div className="kv-guia-toc-sticky">
+        <p className="kv-guia-toc-title font-display">Artículos recientes</p>
+        <div className="kv-guia-sidebar-list">
+          {related.map(({ path, title, readTime }) => (
+            <Link key={path} to={path} className="kv-guia-sidebar-item kv-guia-sidebar-item--compact">
+              <span className="kv-guia-sidebar-meta font-mono">Lectura de {readTime}</span>
+              <h3 className="font-display">{title}</h3>
             </Link>
           ))}
 
-          <Link
-            to="/contacto"
-            className="block rounded-xl p-4 mt-6 transition-colors hover:bg-indigo-50"
-            style={{ background: '#F8FAFF', border: '1px solid #E0E7FF' }}
-          >
-            <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#6366F1' }}>
-              Contacto comercial
-            </p>
-            <p className="text-sm font-semibold mb-1" style={{ color: '#0F172A' }}>
-              Hablemos de tu vacante comercial
-            </p>
-            <p className="text-xs leading-relaxed" style={{ color: '#64748B' }}>
-              Un especialista de Kova revisa tu caso y te presenta una propuesta.
-            </p>
+          <Link to="/contacto" className="kv-guia-sidebar-cta">
+            <span className="font-mono">Consulta comercial</span>
+            <p className="font-display">Hablemos de su vacante comercial</p>
+            <p>Un especialista de Kova revisa su caso y le presenta una propuesta.</p>
           </Link>
         </div>
       </div>

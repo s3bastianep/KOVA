@@ -130,7 +130,7 @@ export default function VacanteForm({ compact = false, alternateContact = null }
         }}
       >
         <h2 className="font-heading font-semibold text-lg mb-1.5" style={{ color: BRAND.navy }}>
-          Solicite su consultoría
+          Agendar una consultoría
         </h2>
         <p className="text-[13px] leading-relaxed" style={{ color: KOVA.muted, lineHeight: 1.6 }}>
           Cuanto más contexto nos comparta, más preparado llegará su consultor. Solo toma unos minutos.
@@ -271,7 +271,7 @@ export default function VacanteForm({ compact = false, alternateContact = null }
             disabled={loading}
             className="group kova-btn-primary w-full flex items-center justify-center gap-2 font-semibold py-3.5 rounded-xl text-sm transition-all text-white disabled:opacity-50"
           >
-            {loading ? 'Enviando...' : 'Solicitar consultoría gratuita'}
+            {loading ? 'Enviando...' : 'Agendar una consultoría'}
             {!loading && <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />}
           </button>
 

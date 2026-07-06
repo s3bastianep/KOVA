@@ -14,7 +14,7 @@ export default function GuiaHabilidadesBlandasComercial() {
   return (
     <GuiaPageLayout
       currentPath={GUIA_HABILIDADES}
-      title="Guía para líderes comerciales: cómo evaluar habilidades blandas en la contratación por competencias"
+      title="Cómo evaluar habilidades blandas en la contratación por competencias"
       readTime="15 min"
       heroImage="/images/guia-habilidades-hero.png"
       heroImageAlt="Equipo comercial colaborando: evaluación de habilidades blandas en conjunto"
@@ -32,7 +32,7 @@ export default function GuiaHabilidadesBlandasComercial() {
           metodología especializada: evaluación por competencias, sin pruebas genéricas de RH.
         </GuiaProse>
         <GuiaProse>
-          En esta guía explicamos qué son las habilidades blandas comerciales, por qué cuesta evaluarlas, cómo
+          En este artículo explicamos qué son las habilidades blandas comerciales, por qué cuesta evaluarlas, cómo
           hacerlo con contratación basada en competencias y qué errores evitar al seleccionar vendedores.
         </GuiaProse>
 
@@ -222,7 +222,7 @@ export default function GuiaHabilidadesBlandasComercial() {
           description="Contáctenos. Un especialista de Kova te orienta sobre cómo medir competencias interpersonales con rigor, no con intuición."
           primaryLabel="Contáctenos"
           primaryTo="/contacto"
-          secondaryLabel="Ver guía de evaluación comercial"
+          secondaryLabel="Ver artículo sobre evaluación comercial"
           secondaryTo="/guia-evaluacion-comercial"
         />
 

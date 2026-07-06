@@ -32,7 +32,7 @@ export default function GuiaRotacionComercial() {
           multiplica el costo de cada error.
         </GuiaProse>
         <GuiaProse>
-          En Kova ayudamos a empresas a detectar esas señales débiles antes de contratar. Esta guía explica
+          En Kova ayudamos a empresas a detectar esas señales débiles antes de contratar. Este artículo explica
           por qué ocurre la rotación comercial y cómo evaluar con criterio especializado reduce el riesgo.
         </GuiaProse>
 
@@ -209,7 +209,7 @@ export default function GuiaRotacionComercial() {
           description="Contáctenos. Un especialista de Kova te orienta sobre cómo validar competencias antes de contratar y dejar de repetir el ciclo escasez-rotación-escasez."
           primaryLabel="Contáctenos"
           primaryTo="/contacto"
-          secondaryLabel="Ver guía de evaluación comercial"
+          secondaryLabel="Ver artículo sobre evaluación comercial"
           secondaryTo="/guia-evaluacion-comercial"
         />
 

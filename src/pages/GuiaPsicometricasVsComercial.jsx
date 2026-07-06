@@ -31,7 +31,7 @@ export default function GuiaPsicometricasVsComercial() {
           están reemplazando métodos genéricos por evaluación comercial especializada.
         </GuiaProse>
         <GuiaProse>
-          En esta guía comparamos las pruebas psicométricas tradicionales con la evaluación comercial que aplica Kova,
+          En este artículo comparamos las pruebas psicométricas tradicionales con la evaluación comercial que aplica Kova,
           y explicamos cuál predice mejor el desempeño real en roles de venta.
         </GuiaProse>
 
@@ -193,7 +193,7 @@ export default function GuiaPsicometricasVsComercial() {
           description="Contáctenos. Te mostramos cómo la metodología Kova reemplaza pruebas genéricas por evaluación especializada alineada a tu rol."
           primaryLabel="Contáctenos"
           primaryTo="/contacto"
-          secondaryLabel="Leer guía de evaluación comercial"
+          secondaryLabel="Leer artículo sobre evaluación comercial"
           secondaryTo="/guia-evaluacion-comercial"
         />
 

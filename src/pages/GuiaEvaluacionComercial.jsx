@@ -14,7 +14,7 @@ export default function GuiaEvaluacionComercial() {
   return (
     <GuiaPageLayout
       currentPath={GUIA_EVALUACION}
-      title="La guía completa para la evaluación comercial"
+      title="Evaluación comercial: criterios que sí predicen desempeño"
       readTime="18 min"
       heroImage="/images/guia-evaluacion-comercial.png"
       heroImageAlt="Equipo comercial evaluando candidatos con datos, gráficos y criterio objetivo"
@@ -32,7 +32,7 @@ export default function GuiaEvaluacionComercial() {
           comercial y talento humano.
         </GuiaProse>
         <GuiaProse>
-          Esta guía explica por qué la evaluación comercial supera los métodos tradicionales, qué tipos de evaluación
+          Este artículo explica por qué la evaluación comercial supera los métodos tradicionales, qué tipos de evaluación
           existen, cómo implementarlas y en qué momento del proceso conviene aplicarlas.
         </GuiaProse>
 

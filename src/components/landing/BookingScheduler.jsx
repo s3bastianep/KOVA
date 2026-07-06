@@ -7,18 +7,12 @@ import {
   startOfDay,
 } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { ArrowLeft, Check, Loader2 } from 'lucide-react';
+import { ArrowLeft, CalendarDays, Check, Loader2, Video } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { createBooking, fetchAvailability, checkBookingApi } from '@/api/booking';
 import { formatDateKey, generateTimeSlots, isBookableDateKey } from '@/lib/schedule';
-import { BRAND, KOVA } from '@/theme/kovaPalette';
 
 const DAYS_AHEAD = 45;
-
-const labelClass = 'block text-[13px] font-medium mb-1.5';
-const inputClass =
-  'w-full rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1A3FAA]/12 focus:border-[#1A3FAA] transition-all';
-const inputStyle = { background: KOVA.white, border: `1px solid ${KOVA.borderSoft}`, color: BRAND.navy };
 
 function isSelectableDay(date, minDate, maxDate) {
   const day = startOfDay(date);
@@ -27,9 +21,6 @@ function isSelectableDay(date, minDate, maxDate) {
   return isBookableDateKey(formatDateKey(day));
 }
 
-// react-day-picker v8 no aplica aria-label a los botones de día, así que el
-// nombre accesible sale solo del número ("15"). Reemplazamos el contenido para
-// exponer un nombre claro, p. ej. "Seleccionar 15 de julio de 2026".
 function BookingDayContent({ date, activeModifiers = {} }) {
   const human = format(date, "d 'de' MMMM 'de' yyyy", { locale: es });
   const label = activeModifiers.disabled ? `${human} (no disponible)` : `Seleccionar ${human}`;
@@ -124,22 +115,17 @@ export default function BookingScheduler({ alternateContact = null }) {
 
   if (step === 'done' && confirmed) {
     return (
-      <div className="kova-card rounded-2xl p-8 sm:p-10 text-center">
-        <div
-          className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
-          style={{ background: KOVA.paleGreen }}
-        >
-          <Check className="w-6 h-6" style={{ color: BRAND.greenDark }} strokeWidth={2.5} />
+      <div className="kv-booking-card kv-booking-card--dark kv-booking-success">
+        <div className="kv-booking-success-icon">
+          <Check strokeWidth={2.5} aria-hidden />
         </div>
-        <h2 className="font-heading font-semibold text-lg mb-2" style={{ color: BRAND.navy }}>
-          Solicitud enviada
-        </h2>
-        <p className="text-sm capitalize mb-1" style={{ color: KOVA.body }}>
+        <h2 className="font-display">Solicitud enviada</h2>
+        <p className="kv-booking-success-date capitalize">
           {format(new Date(`${confirmed.date}T12:00:00`), "EEEE d 'de' MMMM", { locale: es })}
           {' · '}
           {confirmed.time}
         </p>
-        <p className="text-[13px]" style={{ color: KOVA.muted }}>
+        <p className="kv-booking-success-note">
           Revisaremos tu solicitud y te confirmaremos por correo. Un consultor de Kova te acompañará en la sesión.
         </p>
       </div>
@@ -147,32 +133,38 @@ export default function BookingScheduler({ alternateContact = null }) {
   }
 
   return (
-    <div className="kova-card rounded-2xl overflow-hidden">
-      {/* Encabezado compacto */}
-      <div className="px-5 sm:px-6 py-4 border-b" style={{ borderColor: KOVA.borderSoft }}>
-        <h2 className="font-heading font-semibold text-base" style={{ color: BRAND.navy }}>
-          Agenda tu consultoría
-        </h2>
-        <p className="text-[13px] mt-0.5" style={{ color: KOVA.muted }}>
-          30 min · Videollamada · Lun a vie
-        </p>
+    <div className="kv-booking-card kv-booking-card--dark">
+      <div className="kv-booking-header">
+        <div className="kv-booking-header-top">
+          <div>
+            <h2 className="font-display">Agendar una consultoría</h2>
+            <p className="kv-booking-meta font-mono">
+              <Video className="kv-booking-meta-icon" aria-hidden />
+              30 min · Videollamada · Lun a vie
+            </p>
+          </div>
+          <div className="kv-booking-step-pills font-mono" aria-hidden>
+            <span className={step === 'schedule' ? 'is-active' : ''}>1. Fecha</span>
+            <span className={step === 'details' ? 'is-active' : ''}>2. Datos</span>
+          </div>
+        </div>
       </div>
 
       {apiReady === false && (
-        <div
-          className="mx-5 sm:mx-6 mt-4 text-[13px] rounded-lg px-3 py-2"
-          style={{ color: '#92400E', background: '#FFFBEB', border: '1px solid #FDE68A' }}
-        >
+        <div className="kv-booking-alert">
           El servidor de citas no responde. En local ejecuta <strong>npm run dev</strong> y abre{' '}
           <strong>http://localhost:3000</strong>.
         </div>
       )}
 
       {step === 'schedule' ? (
-        <div className="p-5 sm:p-6">
-          <div className="grid md:grid-cols-[1fr_auto] gap-6 md:gap-8 items-start">
-            {/* Calendario */}
-            <div className="min-w-0">
+        <div className="kv-booking-body">
+          <div className="kv-booking-schedule-grid">
+            <div className="kv-booking-calendar-wrap">
+              <p className="kv-booking-panel-label font-mono">
+                <CalendarDays className="kv-booking-panel-icon" aria-hidden />
+                Seleccione un día
+              </p>
               <Calendar
                 mode="single"
                 selected={selectedDate}
@@ -183,30 +175,23 @@ export default function BookingScheduler({ alternateContact = null }) {
                 toDate={maxDate}
                 disabled={(date) => !isSelectableDay(date, today, maxDate)}
                 defaultMonth={today}
-                className="kova-booking-calendar p-0 w-full"
+                className="kova-booking-calendar kv-booking-calendar p-0 w-full"
               />
             </div>
 
-            {/* Horarios */}
-            <div
-              className="md:w-[9.5rem] lg:w-[10.5rem] flex-shrink-0 md:border-l md:pl-6"
-              style={{ borderColor: KOVA.borderSoft }}
-            >
+            <div className="kv-booking-slots-panel">
               {selectedDate ? (
                 <>
-                  <p
-                    className="text-[11px] font-semibold uppercase tracking-wide mb-3 capitalize"
-                    style={{ color: KOVA.muted, letterSpacing: '0.06em' }}
-                  >
-                    {format(selectedDate, 'EEE d MMM', { locale: es })}
+                  <p className="kv-booking-panel-label font-mono capitalize">
+                    {format(selectedDate, 'EEEE d MMM', { locale: es })}
                   </p>
                   {loadingSlots ? (
-                    <div className="flex justify-center py-10">
-                      <Loader2 className="w-5 h-5 animate-spin" style={{ color: BRAND.blue }} />
+                    <div className="kv-booking-loading">
+                      <Loader2 className="animate-spin" aria-hidden />
                     </div>
                   ) : slots.length ? (
                     <>
-                      <div className="grid grid-cols-2 md:grid-cols-1 gap-1.5 max-h-[17rem] overflow-y-auto pr-0.5">
+                      <div className="kv-booking-slots">
                         {slots.map((slot) => {
                           const isSelected = selectedTime === slot;
                           return (
@@ -219,12 +204,7 @@ export default function BookingScheduler({ alternateContact = null }) {
                                 setSelectedTime(slot);
                                 setError('');
                               }}
-                              className="text-[13px] font-medium py-2 px-3 rounded-lg transition-colors text-center border hover:border-[#1A3FAA] hover:bg-[#EEF2FA]"
-                              style={{
-                                color: isSelected ? BRAND.blue : BRAND.navy,
-                                background: isSelected ? '#EEF2FA' : KOVA.surface,
-                                borderColor: isSelected ? BRAND.blue : KOVA.borderSoft,
-                              }}
+                              className={`kv-booking-slot font-mono${isSelected ? ' is-selected' : ''}`}
                             >
                               {slot}
                             </button>
@@ -238,58 +218,42 @@ export default function BookingScheduler({ alternateContact = null }) {
                             setStep('details');
                             setError('');
                           }}
-                          className="kova-btn-primary mt-3 w-full font-semibold text-[13px] py-2.5 rounded-lg text-white"
+                          className="kv-btn-solid kv-booking-continue"
                         >
                           Continuar con {selectedTime}
                         </button>
                       )}
                     </>
                   ) : (
-                    <p className="text-[13px] leading-relaxed py-4" style={{ color: KOVA.muted }}>
-                      Sin horarios. Prueba otro día laboral.
-                    </p>
+                    <p className="kv-booking-empty">Sin horarios. Prueba otro día laboral.</p>
                   )}
                 </>
               ) : (
-                <p className="text-[13px] leading-relaxed py-2 md:py-8 md:text-center" style={{ color: KOVA.muted }}>
-                  Selecciona un día para ver horarios.
+                <p className="kv-booking-empty kv-booking-empty--center">
+                  Selecciona un día para ver horarios disponibles.
                 </p>
               )}
             </div>
           </div>
 
-          {error && (
-            <p className="text-[13px] mt-4" style={{ color: '#B91C1C' }}>
-              {error}
-            </p>
-          )}
+          {error && <p className="kv-booking-error">{error}</p>}
         </div>
       ) : (
-        <form onSubmit={handleConfirm} className="p-5 sm:p-6">
-          <button
-            type="button"
-            onClick={() => setStep('schedule')}
-            className="inline-flex items-center gap-1.5 text-[13px] font-medium mb-5 transition-opacity hover:opacity-70"
-            style={{ color: BRAND.blue }}
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
+        <form onSubmit={handleConfirm} className="kv-booking-body kv-booking-form">
+          <button type="button" onClick={() => setStep('schedule')} className="kv-booking-back">
+            <ArrowLeft aria-hidden />
             Cambiar horario
           </button>
 
-          <div
-            className="inline-flex items-center gap-2 text-[13px] font-medium px-3 py-1.5 rounded-full mb-5"
-            style={{ background: KOVA.paleBlue, color: BRAND.navy }}
-          >
-            <span className="capitalize">
-              {selectedDate && format(selectedDate, 'EEE d MMM', { locale: es })}
-            </span>
-            <span style={{ color: KOVA.muted }}>·</span>
-            <span>{selectedTime}</span>
+          <div className="kv-booking-selected-slot font-mono capitalize">
+            {selectedDate && format(selectedDate, 'EEE d MMM', { locale: es })}
+            <span>·</span>
+            {selectedTime}
           </div>
 
-          <div className="space-y-4 max-w-md">
+          <div className="kv-booking-fields">
             <div>
-              <label htmlFor="booking-nombre" className={labelClass} style={{ color: BRAND.navy }}>
+              <label htmlFor="booking-nombre" className="kv-booking-label">
                 Nombre completo
               </label>
               <input
@@ -298,14 +262,13 @@ export default function BookingScheduler({ alternateContact = null }) {
                 type="text"
                 value={form.nombre}
                 onChange={(e) => setForm({ ...form, nombre: e.target.value })}
-                className={inputClass}
-                style={inputStyle}
+                className="kv-booking-input"
                 autoComplete="name"
                 required
               />
             </div>
             <div>
-              <label htmlFor="booking-correo" className={labelClass} style={{ color: BRAND.navy }}>
+              <label htmlFor="booking-correo" className="kv-booking-label">
                 Correo corporativo
               </label>
               <input
@@ -314,14 +277,13 @@ export default function BookingScheduler({ alternateContact = null }) {
                 type="email"
                 value={form.correo}
                 onChange={(e) => setForm({ ...form, correo: e.target.value })}
-                className={inputClass}
-                style={inputStyle}
+                className="kv-booking-input"
                 autoComplete="email"
                 required
               />
             </div>
             <div>
-              <label htmlFor="booking-telefono" className={labelClass} style={{ color: BRAND.navy }}>
+              <label htmlFor="booking-telefono" className="kv-booking-label">
                 Teléfono o WhatsApp
               </label>
               <input
@@ -330,14 +292,13 @@ export default function BookingScheduler({ alternateContact = null }) {
                 type="tel"
                 value={form.telefono}
                 onChange={(e) => setForm({ ...form, telefono: e.target.value })}
-                className={inputClass}
-                style={inputStyle}
+                className="kv-booking-input"
                 autoComplete="tel"
                 required
               />
             </div>
             <div>
-              <label htmlFor="booking-empresa" className={labelClass} style={{ color: BRAND.navy }}>
+              <label htmlFor="booking-empresa" className="kv-booking-label">
                 Empresa
               </label>
               <input
@@ -346,50 +307,27 @@ export default function BookingScheduler({ alternateContact = null }) {
                 type="text"
                 value={form.empresa}
                 onChange={(e) => setForm({ ...form, empresa: e.target.value })}
-                className={inputClass}
-                style={inputStyle}
+                className="kv-booking-input"
                 autoComplete="organization"
                 required
               />
             </div>
           </div>
 
-          {error && (
-            <p
-              className="text-[13px] rounded-lg px-3 py-2 mt-4 max-w-md"
-              style={{ color: '#B91C1C', background: '#FEF2F2' }}
-            >
-              {error}
-            </p>
-          )}
+          {error && <p className="kv-booking-error kv-booking-error--box">{error}</p>}
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="kova-btn-primary mt-6 max-w-md w-full font-semibold py-3 rounded-lg text-sm text-white disabled:opacity-50"
-          >
+          <button type="submit" disabled={submitting} className="kv-btn-solid kv-booking-submit">
             {submitting ? 'Enviando...' : 'Enviar solicitud'}
           </button>
         </form>
       )}
 
       {alternateContact && step === 'schedule' && (
-        <div
-          className="px-5 sm:px-6 py-3 border-t text-center text-[12px]"
-          style={{ borderColor: KOVA.borderSoft, color: KOVA.muted, background: '#FAFBFC' }}
-        >
+        <div className="kv-booking-footer font-mono">
           ¿Prefieres escribirnos?{' '}
-          <a href={`tel:${alternateContact.phoneTel}`} className="font-medium hover:underline" style={{ color: BRAND.blue }}>
-            {alternateContact.phoneDisplay}
-          </a>
+          <a href={`tel:${alternateContact.phoneTel}`}>{alternateContact.phoneDisplay}</a>
           {' · '}
-          <a
-            href={alternateContact.whatsAppUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium hover:underline"
-            style={{ color: BRAND.greenDark }}
-          >
+          <a href={alternateContact.whatsAppUrl} target="_blank" rel="noopener noreferrer">
             WhatsApp
           </a>
         </div>

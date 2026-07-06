@@ -1,70 +1,98 @@
-import { Check } from 'lucide-react';
-import Navbar from '@/components/landing/Navbar';
-import Footer from '@/components/landing/Footer';
+import { Clock, MessageCircle } from 'lucide-react';
+import SiteLayout from '@/components/landing/SiteLayout';
+import InnerPageHero from '@/components/landing/InnerPageHero';
 import BookingScheduler from '@/components/landing/BookingScheduler';
-import { BRAND, KOVA } from '@/theme/kovaPalette';
+import { CN_CTA_NOTE } from '@/theme/landingConsult';
 
 const PHONE_DISPLAY = '+57 300 000 0000';
 const PHONE_TEL = '+573000000000';
 const WHATSAPP_URL = 'https://wa.me/573000000000';
 
-const beneficios = [
-  'Evaluación por competencias adaptada a cada rol comercial.',
-  'Informe comparativo con evidencia para decidir con respaldo.',
-  'Consultor dedicado exclusivamente a tu vacante.',
-  'Primera sesión de diagnóstico sin costo ni compromiso.',
+const trustChips = CN_CTA_NOTE.split('·').map((s) => s.trim());
+
+const pasos = [
+  { num: '01', title: 'Agenda', desc: 'Elija día y hora que le convenga' },
+  { num: '02', title: 'Diagnóstico', desc: 'Entendemos su vacante y modelo comercial' },
+  { num: '03', title: 'Propuesta', desc: 'Recibe alcance, perfil y siguiente paso' },
 ];
 
 export default function Contacto() {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <Navbar />
-      <main className="flex-1 border-t" style={{ borderColor: KOVA.borderSoft }}>
-        <div className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 pb-14 lg:pb-20">
-          <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] xl:grid-cols-[minmax(0,1fr)_28rem] gap-10 lg:gap-12 xl:gap-14 items-start">
-            <div className="lg:pt-1 max-w-lg">
-              <p className="kova-eyebrow-pill mb-4">Hable con un especialista</p>
-              <h1
-                className="font-heading font-bold leading-tight mb-4 text-balance kova-text-h1"
-                style={{ color: BRAND.navy }}
-              >
-                Encuentra el talento comercial que tu organización necesita.
-              </h1>
-              <p className="kova-text-body mb-8" style={{ color: KOVA.body }}>
-                Agenda una consultoría gratuita de 30 minutos. Un especialista entiende tu vacante y
-                te explica cómo Kova puede ayudarte a contratar con criterio y evidencia.
-              </p>
+    <SiteLayout>
+      <main>
+        <InnerPageHero
+          compact
+          eyebrow="Hable con un especialista"
+          title="Encuentre el"
+          highlight="talento comercial que su organización necesita"
+          subtitle="Agende una consultoría gratuita de 30 minutos. Un especialista entiende su vacante y le explica cómo Kova puede ayudarle a contratar con criterio y evidencia."
+        />
 
-              <ul className="space-y-3.5">
-                {beneficios.map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <span
-                      className="w-[18px] h-[18px] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                      style={{ background: KOVA.paleGreen }}
-                    >
-                      <Check className="w-3 h-3" style={{ color: BRAND.greenDark }} strokeWidth={3} />
-                    </span>
-                    <span className="text-[14px] leading-relaxed" style={{ color: KOVA.body }}>
-                      {item}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="lg:sticky lg:top-24 w-full">
-              <BookingScheduler
-                alternateContact={{
-                  phoneDisplay: PHONE_DISPLAY,
-                  phoneTel: PHONE_TEL,
-                  whatsAppUrl: WHATSAPP_URL,
-                }}
-              />
+        <div className="kv-contact-trust">
+          <div className="kv-wrap">
+            <div className="kv-contact-trust-bar">
+              {trustChips.map((chip) => (
+                <span key={chip} className="kv-contact-trust-chip font-mono">
+                  <Clock className="kv-contact-trust-icon" aria-hidden />
+                  {chip}
+                </span>
+              ))}
             </div>
           </div>
         </div>
+
+        <section className="kv-section kv-section--paper-2 kv-contact-section">
+          <div className="kv-wrap kv-contact-layout">
+            <div className="kv-contact-main">
+              <p className="kv-eyebrow kv-eyebrow--ink font-mono">Qué obtiene</p>
+              <h2 className="kv-contact-heading font-display">
+                Una sesión que aclara su próxima contratación comercial
+              </h2>
+              <p className="kv-contact-lead">
+                En 30 minutos revisamos su vacante, el perfil que necesita y cómo una evaluación por competencias
+                reduce el riesgo de contratar mal.
+              </p>
+
+              <div className="kv-contact-steps">
+                <p className="kv-contact-steps-label font-mono">Cómo funciona</p>
+                <ol className="kv-contact-steps-list">
+                  {pasos.map(({ num, title, desc }) => (
+                    <li key={num}>
+                      <span className="kv-contact-step-num font-mono">{num}</span>
+                      <div>
+                        <p className="font-display">{title}</p>
+                        <p>{desc}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="kv-contact-whatsapp">
+                <MessageCircle aria-hidden />
+                <span>
+                  <strong>¿Prefiere escribirnos?</strong>
+                  <span>
+                    {PHONE_DISPLAY} · WhatsApp
+                  </span>
+                </span>
+              </a>
+            </div>
+
+            <div className="kv-contact-booking">
+              <div className="kv-booking-stage">
+                <BookingScheduler
+                  alternateContact={{
+                    phoneDisplay: PHONE_DISPLAY,
+                    phoneTel: PHONE_TEL,
+                    whatsAppUrl: WHATSAPP_URL,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
-      <Footer />
-    </div>
+    </SiteLayout>
   );
 }

@@ -1,37 +1,25 @@
-import { useLocation, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import SiteLayout from '@/components/landing/SiteLayout';
 
 export default function PageNotFound() {
-  const location = useLocation();
-  const pageName = location.pathname.substring(1);
-
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50">
-      <div className="max-w-md w-full">
-        <div className="text-center space-y-6">
-          <div className="space-y-2">
-            <h1 className="text-7xl font-light text-slate-300">404</h1>
-            <div className="h-0.5 w-16 bg-slate-200 mx-auto"></div>
-          </div>
-
-          <div className="space-y-3">
-            <h2 className="text-2xl font-medium text-slate-800">
-              Página no encontrada
-            </h2>
-            <p className="text-slate-600 leading-relaxed">
-              La página <span className="font-medium text-slate-700">"{pageName}"</span> no existe.
-            </p>
-          </div>
-
-          <div className="pt-6">
-            <Link
-              to="/"
-              className="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500"
-            >
-              Volver al inicio
-            </Link>
-          </div>
+    <SiteLayout>
+      <main className="kv-section kv-section--paper-2" style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+        <div className="kv-wrap kv-narrow-center" style={{ textAlign: 'center' }}>
+          <p className="kv-founder-num font-display" style={{ fontSize: '4rem' }}>
+            404
+          </p>
+          <h1 className="kv-h2 font-display" style={{ marginTop: '1rem' }}>
+            Página no encontrada
+          </h1>
+          <p className="kv-section-lead" style={{ margin: '1rem auto 2rem' }}>
+            La página que busca no existe o fue movida.
+          </p>
+          <Link to="/" className="kv-btn-solid">
+            Volver al inicio →
+          </Link>
         </div>
-      </div>
-    </div>
-  )
+      </main>
+    </SiteLayout>
+  );
 }

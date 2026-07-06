@@ -14,7 +14,7 @@ export const GUIAS = [
   },
   {
     path: GUIA_EVALUACION,
-    title: 'La guía completa para la evaluación comercial',
+    title: 'Evaluación comercial: criterios que sí predicen desempeño',
     excerpt: 'Por qué la evaluación comercial supera los métodos tradicionales para identificar talento ideal.',
     readTime: '18 min',
     image: '/images/guia-evaluacion-comercial.png',
@@ -36,7 +36,7 @@ export const GUIAS = [
   {
     path: GUIA_HABILIDADES,
     title: 'Cómo evaluar habilidades blandas al atraer talento comercial',
-    excerpt: 'Guía para líderes comerciales sobre evaluación por competencias sin pruebas genéricas.',
+    excerpt: 'Cómo los líderes comerciales pueden evaluar por competencias sin pruebas genéricas.',
     readTime: '15 min',
     image: '/images/guia-habilidades-hero.png',
   },
