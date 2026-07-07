@@ -174,12 +174,12 @@ export default function PostularPage({ params }: { params: Promise<{ id: string 
             <CheckCircle2 className="w-11 h-11" style={{ color: 'var(--kova-green)' }} />
           </div>
           <div>
-            <p className="text-sm text-slate-500 mb-1">¡Postulación enviada!</p>
-            <ScoreRing value={done.compatibility} />
-            <p className="text-sm text-slate-500 mt-1">de compatibilidad con el cargo</p>
+            <h2 className="font-heading text-xl font-bold" style={{ color: 'var(--kova-navy)' }}>
+              ¡Postulación enviada!
+            </h2>
+            <p className="text-sm text-slate-600 mt-3 leading-relaxed">{done.message}</p>
           </div>
-          <p className="text-sm text-slate-600 leading-relaxed">{done.message}</p>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-400 leading-relaxed">
             El equipo de {data?.companyName} revisará tu perfil y te contactará si avanzas en el proceso.
           </p>
         </div>

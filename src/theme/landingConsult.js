@@ -52,12 +52,100 @@ export const CN_HERO_NOTE =
   'Así luce un informe de evaluación diseñado para apoyar decisiones de contratación con mayor objetividad.';
 
 export const CN_BRAND_SLOGAN =
-  'Cada empresa vende diferente. Cada contratación también debería ser diferente.';
+  'Somos el puente entre empresas y talento, creando conexiones estratégicas que generan impacto real.';
 
-export const CN_CLOSER_TITLE = 'Contrate con mayor certeza';
+export const CN_BRAND_CLOSE_HEADLINE = 'Somos el puente entre empresas y talento';
+export const CN_BRAND_CLOSE_SUBLINE =
+  'Creando conexiones estratégicas que generan impacto real.';
+export const CN_BRAND_CLOSE_PROMPT = '¿Listo para dar el siguiente paso?';
+
+export const CN_SERVICES_INTRO =
+  'Un proceso estructurado asegura precisión, eficiencia y resultados medibles en cada contratación comercial.';
+
+export const CN_SERVICES_STATS = [
+  { value: '2–3 sem', label: 'terna validada por vacante' },
+  { value: '24 h', label: 'informe por candidato' },
+  { value: '100%', label: 'evaluados con el mismo criterio' },
+];
+
+export const CN_SERVICES = [
+  {
+    n: '01',
+    label: 'Selección',
+    title: 'Selección de talento comercial',
+    body: 'Optimice tiempo y recursos delegando la búsqueda en un equipo especializado en perfiles comerciales. Identificamos y atraemos profesionales con la experiencia y las competencias que su organización requiere.',
+    items: [
+      'Definición del perfil comercial ideal',
+      'Búsqueda activa, no solo publicaciones',
+      'Entrevistas por competencias comerciales',
+      'Terna validada con evidencia documentada',
+    ],
+    highlight: 'Terna validada en 2–3 semanas.',
+    image: '/images/guia-rotacion-hero.png',
+    imageAlt: 'Equipo comercial en reunión de planificación',
+    tone: 'indigo',
+  },
+  {
+    n: '02',
+    label: 'Diagnóstico',
+    title: 'Diagnóstico comercial y perfil del cargo',
+    body: 'Antes de buscar candidatos, entendemos cómo vende su empresa: tipo de cliente, ciclo de venta, ticket y cultura comercial. Con ese contexto definimos el perfil real del cargo y los criterios de éxito.',
+    items: [
+      'Sesión de diagnóstico con dirección comercial',
+      'Mapeo del modelo de ventas y competencias críticas',
+      'Perfil del cargo alineado a su negocio',
+      'Criterios de éxito comercial documentados',
+    ],
+    highlight: 'Ideal para empresas en crecimiento o reestructuración.',
+    image: '/images/guia-habilidades-inline-2.png',
+    imageAlt: 'Consultores y cliente definiendo el perfil comercial',
+    tone: 'lime',
+  },
+  {
+    n: '03',
+    label: 'Evaluación',
+    title: 'Evaluación comercial con evidencia',
+    body: 'Aplicamos pruebas de habilidades comerciales alineadas a su modelo de ventas. Identificamos fortalezas, brechas de competencia, adecuación al cargo y compatibilidad con su cultura comercial.',
+    items: [
+      'Pruebas de habilidades personalizadas por vacante',
+      'Kova Score y ranking comparativo',
+      'Informe ejecutivo por competencia',
+      'Evidencia documentada para cada decisión',
+    ],
+    highlight: 'Reporte por candidato en 24 horas.',
+    image: '/images/guia-evaluacion-comercial.png',
+    imageAlt: 'Profesional comercial en proceso de evaluación',
+    tone: 'ink',
+  },
+];
+
+export const CN_SERVICES_TEAM = {
+  tag: 'Quién lo hace',
+  headline: 'Personas que entienden ventas y selección',
+  body: 'Detrás de cada proceso hay consultores con experiencia en liderazgo comercial y evaluación de talento. Trabajamos codo a codo con su equipo para encontrar perfiles que realmente encajen.',
+  image: '/images/equipo-kova.png',
+  imageAlt: 'Equipo Kova',
+};
+
+export const CN_SERVICES_HERO_FACES = [
+  {
+    src: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80&auto=format&fit=crop&crop=face',
+    alt: 'Ejecutivo comercial',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80&auto=format&fit=crop&crop=face',
+    alt: 'Gerente comercial',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80&auto=format&fit=crop&crop=face',
+    alt: 'Directora de ventas',
+  },
+];
+
+export const CN_CLOSER_TITLE = '¿Listo para contratar con mayor certeza?';
 export const CN_CLOSER_TITLE_HIGHLIGHT = 'mayor certeza';
 export const CN_CLOSER_LEAD =
-  'Descubra cómo un proceso de selección diseñado alrededor de su modelo comercial puede reducir el riesgo de una mala contratación y acelerar la productividad de sus nuevos vendedores.';
+  'Un proceso de selección diseñado alrededor de su modelo comercial reduce el riesgo de una mala contratación y acelera la productividad de sus vendedores.';
 
 export const CN_PROBLEM_TAG = 'El problema';
 
@@ -85,23 +173,23 @@ export const CN_PROBLEM_POINTS = [
 export const CN_PROBLEM_STAKES_TAG = 'Lo que está en juego';
 
 export const CN_PROBLEM_STAKES_HEADLINE =
-  'Una mala contratación comercial impacta directamente la generación de ingresos';
+  'Una mala contratación impacta directamente sus ingresos';
 
 export const CN_PROBLEM_STAKES = [
   {
     icon: 'clock',
     title: 'Retraso en productividad',
-    desc: 'Perfiles que no alcanzan el nivel esperado dentro del ciclo comercial.',
+    desc: 'Perfiles que no alcanzan el nivel del ciclo.',
   },
   {
     icon: 'team',
     title: 'Sobrecarga del equipo',
-    desc: 'Vacantes abiertas que afectan la ejecución y la capacidad de ventas.',
+    desc: 'Vacantes abiertas que frenan la ejecución.',
   },
   {
     icon: 'turnover',
     title: 'Rotación y sobrecostos',
-    desc: 'Procesos que se repiten, incrementando el costo total de contratación.',
+    desc: 'Procesos repetidos que encarecen la contratación.',
   },
 ];
 
@@ -166,6 +254,36 @@ export const CN_METHOD_HEADLINE = 'Cuatro etapas, evaluación a su medida';
 export const CN_METHOD_INTRO =
   'Cada vacante recorre el mismo marco. El diagnóstico, el perfil del cargo y las pruebas se ajustan a cómo vende su empresa.';
 
+export const CN_METHOD_LANDING_INTRO =
+  'Menor riesgo, calibrado a cómo vende su empresa.';
+
+export const CN_METHOD_LANDING = [
+  {
+    n: '01',
+    title: 'Diagnóstico',
+    body: 'Su modelo de venta antes de buscar.',
+    tone: 'indigo',
+  },
+  {
+    n: '02',
+    title: 'Perfil y pruebas',
+    body: 'Criterios reales, no plantillas.',
+    tone: 'lime',
+  },
+  {
+    n: '03',
+    title: 'Búsqueda',
+    body: 'Solo perfiles con alta probabilidad de éxito.',
+    tone: 'rose',
+  },
+  {
+    n: '04',
+    title: 'Integración',
+    body: 'Aceleramos la productividad del ingreso.',
+    tone: 'ink',
+  },
+];
+
 export const CN_METHOD = [
   {
     n: '01',
@@ -194,31 +312,38 @@ export const CN_METHOD = [
 ];
 
 export const CN_SIGNATURE_QUOTE = {
-  setup:
-    'Un excelente vendedor de seguros probablemente fracase vendiendo reductores industriales.',
-  payoffBefore: 'No porque sea malo, sino porque vende ',
+  setup: 'Un gran vendedor de seguros puede fracasar en reductores industriales.',
+  payoffBefore: 'No es malo: vende ',
   payoffHighlight: 'de otra manera',
-  payoffAfter: '.',
-  cite: 'No evaluamos si es un buen vendedor en abstracto. Analizamos si se adaptará al modelo comercial de su empresa.',
+  payoffAfter: '. Medimos encaje con su modelo comercial.',
+  cite: '',
 };
+
+export const CN_IMPACT_TAG = 'Lo que está en juego';
+export const CN_IMPACT_HEADLINE = 'El precio real de una mala contratación comercial';
+export const CN_IMPACT_LEAD =
+  'Impacta directamente la generación de ingresos. Estas son las cifras y las consecuencias que vemos en el mercado.';
+
+export const CN_STATS_BAND_TAG = CN_IMPACT_TAG;
+export const CN_STATS_BAND_HEADLINE = CN_IMPACT_HEADLINE;
 
 export const CN_STATS_BAND = [
   {
     value: '7 de 10',
-    label: 'gerentes comerciales afirman que contratar bien es cada vez más difícil, según estudios de la industria',
+    label: 'áreas comerciales dicen que contratar bien es más difícil',
   },
   {
     value: '60%',
-    label: 'de los candidatos comerciales parecen calificados únicamente en el papel',
+    label: 'candidatos parecen calificados solo en el papel',
   },
   {
     value: '$35K+',
-    label: 'costo directo estimado de una contratación comercial fallida, según análisis de rotación en ventas',
+    label: 'costo estimado de una contratación fallida',
   },
 ];
 
 export const CN_STATS_DISCLAIMER =
-  'Cifras de referencia basadas en estudios públicos sobre rotación y selección comercial, no datos propios de Kova.';
+  'Referencias de estudios públicos. No son datos propios de Kova.';
 
 export const CN_PHILOSOPHY_HEADLINE =
   'Las mejores contrataciones no ocurren por casualidad, se construyen con criterio';
@@ -245,13 +370,12 @@ export const CN_PRINCIPLES = [
 ];
 
 export const CN_FOUNDER = {
-  years: '9+',
-  yearsLabel: 'años liderando equipos comerciales B2B',
-  sectorsValue: '5',
-  sectorsLabel: 'sectores industriales: minería, oil & gas, manufactura, MRO y empaques corrugados',
-  conviction:
-    'Una convicción: la mayoría de las contrataciones comerciales fallan por incompatibilidad, no por falta de talento.',
-  body: 'La metodología de Kova nace de haber liderado equipos y transformaciones comerciales en sectores industriales de alta complejidad, y de haber vivido de primera mano el costo real de una contratación que no encaja con el modelo de venta de la empresa.',
+  tag: 'Nuestra experiencia',
+  years: '5+',
+  yearsLabel: 'años conociendo el mercado comercial',
+  sectors: ['Minería', 'Consumo masivo', 'Manufactura', 'Tecnología B2B', 'Logística', 'MRO'],
+  headline: 'Ayudamos a potencializar su área comercial con perfiles que realmente encajan',
+  summary: CN_BRAND_SLOGAN,
 };
 
 export const CN_COMPARISON_HEADLINE = 'Selección tradicional frente a metodología Kova';

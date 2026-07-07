@@ -4,6 +4,8 @@ import { CN } from '@/theme/landingConsult';
 import { LC } from '@/theme/landingCorporate';
 
 const links = [
+  ['Servicios', '/servicios'],
+  ['Busco empleo', '/registro'],
   ['Nuestra metodología', '/como-trabajamos'],
   ['Quiénes somos', '/quienes-somos'],
   ['Contacto', '/contacto'],
@@ -27,7 +29,9 @@ export default function Footer({ variant }) {
   if (isWave) {
     return (
       <footer className="kv-footer">
-        Kova · Reclutamiento comercial, con evidencia
+        <div className="kv-wrap">
+          <p className="kv-footer-meta">Kova · Reclutamiento comercial, con evidencia</p>
+        </div>
       </footer>
     );
   }

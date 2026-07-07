@@ -5,6 +5,10 @@ import {
   standardQuestionsFromMetadata,
   selectedToRequirements,
 } from './standard-questions';
+import {
+  commercialProfileFromMetadata,
+  profileToStandardAnswers,
+} from './candidate-commercial-profile';
 
 export type RequirementRule = {
   key: string;
@@ -147,6 +151,11 @@ export function profileFromCandidate(candidate: {
 
   if (Object.keys(standardAnswers).length > 0) {
     return standardAnswers;
+  }
+
+  const commercialProfile = commercialProfileFromMetadata(meta);
+  if (commercialProfile) {
+    return profileToStandardAnswers(commercialProfile);
   }
 
   let experienceYears = Number(meta.experienceYears ?? 0);

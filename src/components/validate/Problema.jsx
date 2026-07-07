@@ -6,6 +6,8 @@ import {
   CN_PROBLEM_STAKES_HEADLINE,
   CN_PROBLEM_STAKES_TAG,
   CN_PROBLEM_TAG,
+  CN_STATS_BAND,
+  CN_STATS_DISCLAIMER,
 } from '@/theme/landingConsult';
 
 const stakeIcons = {
@@ -32,9 +34,21 @@ export default function Problema() {
             </ul>
           </div>
 
-          <aside className="kv-problem-stakes" aria-label={CN_PROBLEM_STAKES_TAG}>
+          <aside className="kv-problem-stakes" aria-labelledby="problem-stakes-heading">
             <span className="kv-problem-stakes-tag font-mono">{CN_PROBLEM_STAKES_TAG}</span>
-            <h3 className="kv-problem-stakes-headline font-display">{CN_PROBLEM_STAKES_HEADLINE}</h3>
+            <h3 id="problem-stakes-heading" className="kv-problem-stakes-headline font-display">
+              {CN_PROBLEM_STAKES_HEADLINE}
+            </h3>
+
+            <div className="kv-problem-stakes-stats">
+              {CN_STATS_BAND.map(({ value, label }) => (
+                <div key={value} className="kv-problem-stakes-stat">
+                  <b className="font-display">{value}</b>
+                  <span>{label}</span>
+                </div>
+              ))}
+            </div>
+
             <ul className="kv-problem-stakes-list">
               {CN_PROBLEM_STAKES.map(({ icon, title, desc }) => {
                 const Icon = stakeIcons[icon];
@@ -51,6 +65,8 @@ export default function Problema() {
                 );
               })}
             </ul>
+
+            <p className="kv-problem-stakes-note font-mono">{CN_STATS_DISCLAIMER}</p>
           </aside>
         </div>
       </div>

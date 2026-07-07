@@ -328,6 +328,49 @@ export function standardQuestionsFromMetadata(metadata: unknown): SelectedStanda
 export const PROFILE_QUESTION_IDS = STANDARD_QUESTIONS.filter((q) => q.category === 'Perfil del cargo').map((q) => q.id);
 export const REQUIREMENT_QUESTION_IDS = STANDARD_QUESTIONS.filter((q) => q.category !== 'Perfil del cargo').map((q) => q.id);
 
+/** Preguntas del registro global de talento (sin vacante específica) */
+export const TALENT_POOL_QUESTION_IDS = [
+  'experience_years',
+  SKILLS_QUESTION_ID,
+  'industry',
+  'sales_type',
+  'ticket_avg',
+  'team_leadership',
+  'education',
+  'english_level',
+  'city',
+  'availability',
+  'crm',
+] as const;
+
+export type TalentPoolFormQuestion = {
+  id: string;
+  label: string;
+  category: string;
+  inputType: QuestionInputType;
+  options: string[];
+  helpText?: string;
+  maxSelections?: number;
+};
+
+export function talentPoolQuestionsForForm(): TalentPoolFormQuestion[] {
+  return TALENT_POOL_QUESTION_IDS.flatMap((id) => {
+    const def = getQuestionById(id);
+    if (!def) return [];
+    return [
+      {
+        id: def.id,
+        label: def.label,
+        category: def.category,
+        inputType: def.inputType,
+        options: def.options,
+        helpText: def.helpText,
+        maxSelections: def.maxSelections,
+      },
+    ];
+  });
+}
+
 /** Grupos lógicos para el selector de preguntas al aspirante */
 export type QuestionGroupDef = {
   id: string;

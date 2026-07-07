@@ -13,6 +13,7 @@ import { processStatusLabel } from '@/lib/process-status';
 import { ProcessProgressBar } from '@/components/proceso/ProcessProgressBar';
 import { RejectModal } from '@/components/ui/RejectModal';
 import { AddExistingCandidatePanel } from '@/components/candidatos/AddExistingCandidatePanel';
+import { SuggestedMatchesPanel } from '@/components/candidatos/SuggestedMatchesPanel';
 import { useToast } from '@/components/ui/Toast';
 
 type JobProfile = {
@@ -277,6 +278,7 @@ export default function ProcesoDetallePage({ params }: { params: Promise<{ id: s
 
           {/* Perfiles compatibles */}
           <div className="kova-card overflow-hidden">
+            <SuggestedMatchesPanel vacancyId={id} />
             <AddExistingCandidatePanel vacancyId={id} />
             <div className="px-5 py-4 border-b flex items-center justify-between gap-3" style={{ borderColor: 'var(--kova-border)' }}>
               <div>

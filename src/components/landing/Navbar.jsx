@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { CN_CTA_LABEL_SHORT } from '@/theme/landingConsult';
 
 const navLinks = [
+  ['Servicios', '/servicios'],
+  ['Busco empleo', '/registro'],
   ['Nuestra metodología', '/como-trabajamos'],
   ['Quiénes somos', '/quienes-somos'],
   ['Blog', '/guias'],
