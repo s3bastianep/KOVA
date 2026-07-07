@@ -1,9 +1,11 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   Briefcase,
   Building2,
+  Check,
   CheckCircle2,
   ChevronRight,
   GraduationCap,
@@ -19,6 +21,7 @@ import {
   Trash2,
   TrendingUp,
   User,
+  Zap,
 } from 'lucide-react';
 import './registro.css';
 import {
@@ -137,6 +140,24 @@ const STEPS = [
   },
 ];
 
+const STEP_INSIGHTS = [
+  'Los perfiles completos tienen prioridad cuando abre una vacante compatible contigo.',
+  'Tu nivel define las competencias del paso 8 — cuanto más preciso, mejor el match.',
+  'Este historial alimenta tus tarjetas de evidencia y años de experiencia reales.',
+  'Educación e idiomas ayudan a filtrar vacantes que sí encajan contigo.',
+  'Usamos la misma estructura que las vacantes B2B — comparación campo a campo.',
+  'Las industrias donde has vendido pesan fuerte en el scoring de compatibilidad.',
+  'Los logros con cifras son la evidencia que diferencia tu perfil del resto.',
+  'Competencias con respaldo valen más que un puntaje sin ejemplo concreto.',
+];
+
+const stepMotion = {
+  initial: (dir: number) => ({ opacity: 0, x: dir > 0 ? 48 : -48, filter: 'blur(6px)' }),
+  animate: { opacity: 1, x: 0, filter: 'blur(0px)' },
+  exit: (dir: number) => ({ opacity: 0, x: dir > 0 ? -48 : 48, filter: 'blur(6px)' }),
+  transition: { duration: 0.38, ease: [0.22, 1, 0.36, 1] },
+};
+
 const EMPTY_PROFILE: CommercialProfile = {
   industrias: [],
   tickets: [],
@@ -173,16 +194,64 @@ function ChoiceField({
     <div className="kv-registro-field kv-registro-field--choice">
       <label>{label}</label>
       <div className={`kv-registro-choice-grid${options.length > 2 ? ' kv-registro-choice-grid--wide' : ''}`}>
-        {options.map((option) => (
-          <button
-            key={option}
-            type="button"
-            className={`kv-registro-choice${value === option ? ' selected' : ''}`}
-            onClick={() => onSelect(option)}
-          >
-            {option}
-          </button>
-        ))}
+        {options.map((option) => {
+          const selected = value === option;
+          return (
+            <motion.button
+              key={option}
+              type="button"
+              className={`kv-registro-choice${selected ? ' selected' : ''}`}
+              onClick={() => onSelect(option)}
+              whileTap={{ scale: 0.97 }}
+              aria-pressed={selected}
+            >
+              <span className="kv-registro-choice-text">{option}</span>
+              <span className="kv-registro-choice-mark" aria-hidden>
+                {selected ? <Check strokeWidth={2.5} size={15} /> : null}
+              </span>
+            </motion.button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ProgressRing({ value, size = 92 }: { value: number; size?: number }) {
+  const stroke = 5;
+  const r = (size - stroke) / 2;
+  const circ = 2 * Math.PI * r;
+  const offset = circ - (Math.min(100, Math.max(0, value)) / 100) * circ;
+
+  return (
+    <div className="kv-registro-ring-wrap">
+      <svg width={size} height={size} className="kv-registro-ring" aria-hidden>
+        <circle
+          className="kv-registro-ring-bg"
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          strokeWidth={stroke}
+          fill="none"
+        />
+        <motion.circle
+          className="kv-registro-ring-fill"
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          strokeWidth={stroke}
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray={circ}
+          initial={false}
+          animate={{ strokeDashoffset: offset }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          transform={`rotate(-90 ${size / 2} ${size / 2})`}
+        />
+      </svg>
+      <div className="kv-registro-ring-label">
+        <strong>{value}%</strong>
+        <span>completo</span>
       </div>
     </div>
   );
@@ -191,7 +260,12 @@ function ChoiceField({
 function RegistroShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="kv-registro">
-      <div className="kv-registro-bg" aria-hidden />
+      <div className="kv-registro-bg" aria-hidden>
+        <div className="kv-registro-orb kv-registro-orb--1" />
+        <div className="kv-registro-orb kv-registro-orb--2" />
+        <div className="kv-registro-orb kv-registro-orb--3" />
+        <div className="kv-registro-grid" />
+      </div>
       <header className="kv-registro-nav">
         <a href="/" className="kv-registro-logo font-heading">
           <span className="kv-registro-logo-mark" aria-hidden />
@@ -211,10 +285,18 @@ function RegistroShell({ children }: { children: React.ReactNode }) {
 
 export default function RegistroPage() {
   const [step, setStep] = useState(0);
+  const [stepDir, setStepDir] = useState(1);
   const [profile, setProfile] = useState<CommercialProfile>(EMPTY_PROFILE);
   const [done, setDone] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const goToStep = (target: number) => {
+    if (target < 0 || target >= STEPS.length || target === step) return;
+    setStepDir(target > step ? 1 : -1);
+    setStep(target);
+    setError('');
+  };
 
   const current = STEPS[step];
   const progress = ((step + 1) / STEPS.length) * 100;
@@ -499,10 +581,21 @@ export default function RegistroPage() {
     return (
       <RegistroShell>
         <div className="kv-registro-stage kv-registro-stage--success">
-          <div className="kv-registro-success-card">
-            <div className="kv-registro-success-icon" aria-hidden>
+          <motion.div
+            className="kv-registro-success-card"
+            initial={{ opacity: 0, scale: 0.94, y: 24 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <motion.div
+              className="kv-registro-success-icon"
+              aria-hidden
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.15, type: 'spring', stiffness: 260, damping: 18 }}
+            >
               <CheckCircle2 strokeWidth={2} />
-            </div>
+            </motion.div>
             <p className="kv-registro-step-tag font-mono">Perfil guardado</p>
             <h1 className="kv-registro-step-title font-heading">
               ¡Listo, {profile.nombre?.split(' ')[0] || 'candidato'}!
@@ -515,7 +608,7 @@ export default function RegistroPage() {
                 contactará directamente. No verás puntajes ni ofertas aquí.
               </p>
             </div>
-          </div>
+          </motion.div>
         </div>
       </RegistroShell>
     );
@@ -526,42 +619,58 @@ export default function RegistroPage() {
       <div className="kv-registro-layout">
         <aside className="kv-registro-aside">
           <div className="kv-registro-aside-panel">
-            <p className="kv-registro-aside-eyebrow font-mono">Constructor de perfil comercial</p>
+            <p className="kv-registro-aside-eyebrow font-mono">Talent intelligence · Kova</p>
             <h2 className="kv-registro-aside-title font-heading">
-              Evidencia real para matching preciso
+              Tu perfil comercial, listo para el match
             </h2>
             <p className="kv-registro-aside-lead">
-              Cada campo tiene equivalente en las vacantes que publica Kova. Tu perfil se compara
-              automáticamente sin volver a diligenciar.
+              No es un formulario genérico: cada respuesta se compara con vacantes reales del
+              pipeline B2B de Kova.
             </p>
 
-            <div className="kv-registro-aside-stats kv-registro-aside-stats--triple">
-              <div className="kv-registro-aside-stat">
-                <strong>~12 min</strong>
-                <span>Tiempo estimado</span>
-              </div>
-              <div className="kv-registro-aside-stat">
-                <strong>{profileCompleteness}%</strong>
-                <span>Perfil completo</span>
-              </div>
-              <div className="kv-registro-aside-stat">
-                <strong>{step + 1}/8</strong>
-                <span>Paso actual</span>
+            <div className="kv-registro-aside-hero">
+              <ProgressRing value={profileCompleteness} />
+              <div className="kv-registro-aside-hero-copy">
+                <p className="kv-registro-aside-hero-title font-heading">
+                  {profileCompleteness < 35
+                    ? 'Empecemos con lo esencial'
+                    : profileCompleteness < 70
+                      ? 'Vas construyendo evidencia'
+                      : 'Casi listo para el radar'}
+                </p>
+                <p className="kv-registro-aside-hero-sub">
+                  Paso {step + 1} de {STEPS.length} · ~{Math.max(2, 12 - step)} min restantes
+                </p>
               </div>
             </div>
 
             <ol className="kv-registro-stepper">
               {STEPS.map((s, i) => {
                 const state = i < step ? 'done' : i === step ? 'active' : 'pending';
+                const StepIconSmall = s.icon;
                 return (
-                  <li key={s.short} className={`kv-registro-stepper-item kv-registro-stepper-item--${state}`}>
-                    <span className="kv-registro-stepper-dot">
-                      {state === 'done' ? <CheckCircle2 strokeWidth={2.5} size={14} /> : i + 1}
-                    </span>
-                    <div>
-                      <p className="kv-registro-stepper-label">{s.short}</p>
-                      {state === 'active' && <p className="kv-registro-stepper-hint">{s.tag}</p>}
-                    </div>
+                  <li key={s.short}>
+                    <button
+                      type="button"
+                      className={`kv-registro-stepper-item kv-registro-stepper-item--${state}`}
+                      onClick={() => i < step && goToStep(i)}
+                      disabled={i > step}
+                      aria-current={i === step ? 'step' : undefined}
+                    >
+                      <span className="kv-registro-stepper-dot">
+                        {state === 'done' ? (
+                          <Check strokeWidth={2.5} size={13} />
+                        ) : state === 'active' ? (
+                          <StepIconSmall strokeWidth={2} size={13} />
+                        ) : (
+                          i + 1
+                        )}
+                      </span>
+                      <div>
+                        <p className="kv-registro-stepper-label">{s.short}</p>
+                        {state === 'active' && <p className="kv-registro-stepper-hint">En curso</p>}
+                      </div>
+                    </button>
                   </li>
                 );
               })}
@@ -575,17 +684,32 @@ export default function RegistroPage() {
         </aside>
 
         <div className="kv-registro-main">
-          <div className="kv-registro-card" key={step}>
-            <div className="kv-registro-card-chrome">
-              <div className="kv-registro-card-dots" aria-hidden>
-                <span />
-                <span />
-                <span />
-              </div>
+          <div className="kv-registro-card">
+            <div className="kv-registro-card-status">
+              <span className="kv-registro-live">
+                <span className="kv-registro-live-dot" aria-hidden />
+                Perfil en construcción
+              </span>
               <span className="kv-registro-card-badge font-mono">
                 {isLeadershipRoleLevel(profile.nivelRol) ? 'Perfil liderazgo' : 'Perfil individual'}
               </span>
             </div>
+
+            <div className="kv-registro-segments" role="tablist" aria-label="Progreso del perfil">
+              {STEPS.map((s, i) => (
+                <button
+                  key={s.short}
+                  type="button"
+                  role="tab"
+                  aria-selected={i === step}
+                  aria-label={`${s.short}${i < step ? ', completado' : i === step ? ', actual' : ''}`}
+                  className={`kv-registro-segment${i < step ? ' kv-registro-segment--done' : ''}${i === step ? ' kv-registro-segment--active' : ''}`}
+                  onClick={() => i < step && goToStep(i)}
+                  disabled={i > step}
+                />
+              ))}
+            </div>
+
             <div className="kv-registro-card-top">
               <div className="kv-registro-card-progress">
                 <div className="kv-registro-progress-meta">
@@ -593,21 +717,67 @@ export default function RegistroPage() {
                   <span className="kv-registro-progress-pct font-mono">{Math.round(progress)}%</span>
                 </div>
                 <div className="kv-registro-progress-track">
-                  <div className="kv-registro-progress-fill" style={{ width: `${progress}%` }} />
+                  <motion.div
+                    className="kv-registro-progress-fill"
+                    initial={false}
+                    animate={{ width: `${progress}%` }}
+                    transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                  />
                 </div>
               </div>
+
+              <motion.div
+                className="kv-registro-insight"
+                key={`insight-${step}`}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.08 }}
+              >
+                <Zap strokeWidth={2} size={16} aria-hidden />
+                <span>{STEP_INSIGHTS[step]}</span>
+              </motion.div>
+
               <div className="kv-registro-card-head">
-                <span className="kv-registro-card-icon" aria-hidden>
+                <motion.span
+                  className="kv-registro-card-icon"
+                  aria-hidden
+                  key={`icon-${step}`}
+                  initial={{ scale: 0.8, rotate: -8 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: 'spring', stiffness: 320, damping: 22 }}
+                >
                   <StepIcon strokeWidth={2} />
-                </span>
+                </motion.span>
                 <div>
-                  <h1 className="kv-registro-step-title font-heading">{current.title}</h1>
-                  {current.sub && <p className="kv-registro-step-sub">{current.sub}</p>}
+                  <AnimatePresence mode="wait" custom={stepDir}>
+                    <motion.div
+                      key={`head-${step}`}
+                      custom={stepDir}
+                      variants={stepMotion}
+                      initial="initial"
+                      animate="animate"
+                      exit="exit"
+                      transition={stepMotion.transition}
+                    >
+                      <h1 className="kv-registro-step-title font-heading">{current.title}</h1>
+                      {current.sub && <p className="kv-registro-step-sub">{current.sub}</p>}
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
               </div>
             </div>
 
-            <div className="kv-registro-card-body">
+            <AnimatePresence mode="wait" custom={stepDir}>
+              <motion.div
+                key={step}
+                className="kv-registro-card-body kv-registro-step-panel"
+                custom={stepDir}
+                variants={stepMotion}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={stepMotion.transition}
+              >
               {current.kind === 'contact' && (
                 <div className="kv-registro-form-stack">
                   <div className="kv-registro-field">
@@ -1407,37 +1577,42 @@ export default function RegistroPage() {
               )}
 
               {error && <p className="kv-registro-error">{error}</p>}
-            </div>
+              </motion.div>
+            </AnimatePresence>
 
             <div className="kv-registro-card-footer">
               <div className="kv-registro-btn-row">
                 {step > 0 ? (
-                  <button type="button" className="kv-registro-btn-ghost" onClick={() => setStep((s) => s - 1)}>
+                  <button type="button" className="kv-registro-btn-ghost" onClick={() => goToStep(step - 1)}>
                     Atrás
                   </button>
                 ) : (
                   <span />
                 )}
                 {step < STEPS.length - 1 ? (
-                  <button
+                  <motion.button
                     type="button"
                     className="kv-registro-btn-solid"
                     disabled={!canNext}
-                    onClick={() => setStep((s) => s + 1)}
+                    onClick={() => goToStep(step + 1)}
+                    whileHover={canNext ? { scale: 1.02 } : undefined}
+                    whileTap={canNext ? { scale: 0.98 } : undefined}
                   >
-                    Siguiente
+                    Continuar
                     <ChevronRight strokeWidth={2} aria-hidden />
-                  </button>
+                  </motion.button>
                 ) : (
-                  <button
+                  <motion.button
                     type="button"
                     className="kv-registro-btn-solid kv-registro-btn-solid--lime"
                     disabled={loading}
                     onClick={submit}
+                    whileHover={!loading ? { scale: 1.02 } : undefined}
+                    whileTap={!loading ? { scale: 0.98 } : undefined}
                   >
-                    {loading ? 'Guardando...' : 'Guardar mi perfil'}
+                    {loading ? 'Guardando...' : 'Publicar mi perfil'}
                     {!loading && <ChevronRight strokeWidth={2} aria-hidden />}
-                  </button>
+                  </motion.button>
                 )}
               </div>
               <p className="kv-registro-save-note font-mono">
