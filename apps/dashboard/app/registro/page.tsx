@@ -78,7 +78,7 @@ const STEPS = [
     tag: 'Paso 1 de 8',
     short: 'Contacto',
     title: 'Creemos tu perfil comercial',
-    sub: 'Datos de contacto y disponibilidad. Sin motivo de salida ni preguntas incómodas — solo lo que importa para el match.',
+    sub: 'Contacto y disponibilidad — sin preguntas incómodas.',
     kind: 'contact' as const,
     icon: User,
   },
@@ -184,31 +184,41 @@ function ChoiceField({
   value,
   options,
   onSelect,
+  compact = false,
 }: {
   label: string;
   value?: string;
   options: readonly string[] | string[];
   onSelect: (option: string) => void;
+  compact?: boolean;
 }) {
+  const gridClass = compact
+    ? ' kv-registro-choice-grid--compact'
+    : options.length > 2
+      ? ' kv-registro-choice-grid--wide'
+      : '';
+
   return (
-    <div className="kv-registro-field kv-registro-field--choice">
+    <div className={`kv-registro-field kv-registro-field--choice${compact ? ' kv-registro-field--compact' : ''}`}>
       <label>{label}</label>
-      <div className={`kv-registro-choice-grid${options.length > 2 ? ' kv-registro-choice-grid--wide' : ''}`}>
+      <div className={`kv-registro-choice-grid${gridClass}`}>
         {options.map((option) => {
           const selected = value === option;
           return (
             <motion.button
               key={option}
               type="button"
-              className={`kv-registro-choice${selected ? ' selected' : ''}`}
+              className={`kv-registro-choice${selected ? ' selected' : ''}${compact ? ' kv-registro-choice--compact' : ''}`}
               onClick={() => onSelect(option)}
               whileTap={{ scale: 0.97 }}
               aria-pressed={selected}
             >
               <span className="kv-registro-choice-text">{option}</span>
-              <span className="kv-registro-choice-mark" aria-hidden>
-                {selected ? <Check strokeWidth={2.5} size={15} /> : null}
-              </span>
+              {!compact && (
+                <span className="kv-registro-choice-mark" aria-hidden>
+                  {selected ? <Check strokeWidth={2.5} size={15} /> : null}
+                </span>
+              )}
             </motion.button>
           );
         })}
@@ -684,18 +694,12 @@ export default function RegistroPage() {
         </aside>
 
         <div className="kv-registro-main">
-          <div className="kv-registro-card">
-            <div className="kv-registro-card-status">
-              <span className="kv-registro-live">
-                <span className="kv-registro-live-dot" aria-hidden />
-                Perfil en construcción
-              </span>
-              <span className="kv-registro-card-badge font-mono">
-                {isLeadershipRoleLevel(profile.nivelRol) ? 'Perfil liderazgo' : 'Perfil individual'}
-              </span>
+          <div className="kv-registro-mobile-bar">
+            <div className="kv-registro-mobile-bar-meta">
+              <span className="font-mono">{current.tag}</span>
+              <span className="font-mono">{profileCompleteness}%</span>
             </div>
-
-            <div className="kv-registro-segments" role="tablist" aria-label="Progreso del perfil">
+            <div className="kv-registro-segments kv-registro-segments--mobile" role="tablist" aria-label="Progreso del perfil">
               {STEPS.map((s, i) => (
                 <button
                   key={s.short}
@@ -709,23 +713,31 @@ export default function RegistroPage() {
                 />
               ))}
             </div>
+          </div>
+
+          <div className="kv-registro-card">
+            <div className="kv-registro-card-topbar">
+              <div className="kv-registro-segments kv-registro-segments--desktop" role="tablist" aria-label="Progreso del perfil">
+                {STEPS.map((s, i) => (
+                  <button
+                    key={s.short}
+                    type="button"
+                    role="tab"
+                    aria-selected={i === step}
+                    aria-label={`${s.short}${i < step ? ', completado' : i === step ? ', actual' : ''}`}
+                    className={`kv-registro-segment${i < step ? ' kv-registro-segment--done' : ''}${i === step ? ' kv-registro-segment--active' : ''}`}
+                    onClick={() => i < step && goToStep(i)}
+                    disabled={i > step}
+                  />
+                ))}
+              </div>
+              <div className="kv-registro-card-topbar-meta font-mono">
+                <span>{current.tag}</span>
+                <span>{Math.round(progress)}%</span>
+              </div>
+            </div>
 
             <div className="kv-registro-card-top">
-              <div className="kv-registro-card-progress">
-                <div className="kv-registro-progress-meta">
-                  <span className="kv-registro-step-tag font-mono">{current.tag}</span>
-                  <span className="kv-registro-progress-pct font-mono">{Math.round(progress)}%</span>
-                </div>
-                <div className="kv-registro-progress-track">
-                  <motion.div
-                    className="kv-registro-progress-fill"
-                    initial={false}
-                    animate={{ width: `${progress}%` }}
-                    transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-                  />
-                </div>
-              </div>
-
               <motion.div
                 className="kv-registro-insight"
                 key={`insight-${step}`}
@@ -779,23 +791,38 @@ export default function RegistroPage() {
                 transition={stepMotion.transition}
               >
               {current.kind === 'contact' && (
-                <div className="kv-registro-form-stack">
-                  <div className="kv-registro-field">
-                    <label htmlFor="nombre">Nombre completo</label>
-                    <div className="kv-registro-input-wrap">
-                      <User strokeWidth={2} aria-hidden />
-                      <input
-                        id="nombre"
-                        type="text"
-                        placeholder="Ej. María López García"
-                        value={profile.nombre ?? ''}
-                        onChange={(e) => update({ nombre: e.target.value })}
-                      />
+                <div className="kv-registro-form-stack kv-registro-form-stack--compact">
+                  <div className="kv-registro-field-row">
+                    <div className="kv-registro-field">
+                      <label htmlFor="nombre">Nombre completo</label>
+                      <div className="kv-registro-input-wrap">
+                        <User strokeWidth={2} aria-hidden />
+                        <input
+                          id="nombre"
+                          type="text"
+                          placeholder="Ej. María López"
+                          value={profile.nombre ?? ''}
+                          onChange={(e) => update({ nombre: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                    <div className="kv-registro-field">
+                      <label htmlFor="ciudad">Ciudad</label>
+                      <div className="kv-registro-input-wrap">
+                        <MapPin strokeWidth={2} aria-hidden />
+                        <input
+                          id="ciudad"
+                          type="text"
+                          placeholder="Ej. Bogotá"
+                          value={profile.ciudad ?? ''}
+                          onChange={(e) => update({ ciudad: e.target.value })}
+                        />
+                      </div>
                     </div>
                   </div>
                   <div className="kv-registro-field-row">
                     <div className="kv-registro-field">
-                      <label htmlFor="email">Correo electrónico</label>
+                      <label htmlFor="email">Correo</label>
                       <div className="kv-registro-input-wrap">
                         <Mail strokeWidth={2} aria-hidden />
                         <input
@@ -814,58 +841,47 @@ export default function RegistroPage() {
                         <input
                           id="telefono"
                           type="tel"
-                          placeholder="Ej. 300 123 4567"
+                          placeholder="300 123 4567"
                           value={profile.telefono ?? ''}
                           onChange={(e) => update({ telefono: e.target.value })}
                         />
                       </div>
                     </div>
                   </div>
-                  <div className="kv-registro-field">
-                    <label htmlFor="ciudad">Ciudad</label>
-                    <div className="kv-registro-input-wrap">
-                      <MapPin strokeWidth={2} aria-hidden />
-                      <input
-                        id="ciudad"
-                        type="text"
-                        placeholder="Ej. Bogotá"
-                        value={profile.ciudad ?? ''}
-                        onChange={(e) => update({ ciudad: e.target.value })}
-                      />
-                    </div>
-                  </div>
 
-                  <div className="kv-registro-field-group">
+                  <div className="kv-registro-field-group kv-registro-field-group--compact">
                     <h3 className="kv-registro-field-group-title">Disponibilidad</h3>
                     <ChoiceField
-                      label="Para iniciar"
+                      compact
+                      label="Inicio"
                       value={profile.disponibilidad}
                       options={AVAILABILITY_OPTIONS}
                       onSelect={(v) => update({ disponibilidad: v })}
                     />
                     <ChoiceField
-                      label="Para viajar"
+                      compact
+                      label="Viajar"
                       value={profile.disponibilidadViajar}
                       options={TRAVEL_OPTIONS}
                       onSelect={(v) => update({ disponibilidadViajar: v })}
                     />
                     <ChoiceField
-                      label="Para cambio de ciudad"
+                      compact
+                      label="Cambio de ciudad"
                       value={profile.disponibilidadReubicacion}
                       options={RELOCATION_OPTIONS}
                       onSelect={(v) => update({ disponibilidadReubicacion: v })}
                     />
                   </div>
 
-                  <label className="kv-registro-consent">
+                  <label className="kv-registro-consent kv-registro-consent--compact">
                     <input
                       type="checkbox"
                       checked={Boolean(profile.consentimientoDatos)}
                       onChange={(e) => update({ consentimientoDatos: e.target.checked })}
                     />
                     <span>
-                      <strong>Acepto el uso de mis datos</strong> para evaluar compatibilidad con vacantes
-                      comerciales. Mi perfil es confidencial y se trata conforme a la Ley 1581.
+                      Acepto el uso de mis datos para matching comercial (Ley 1581).
                     </span>
                   </label>
                 </div>
@@ -957,7 +973,7 @@ export default function RegistroPage() {
                             <label>Empresa</label>
                             <input
                               className="kv-registro-input"
-                              placeholder="Ej. Empaquetaduras y Empaques"
+                              placeholder="Nombre de la empresa"
                               value={entry.empresa}
                               onChange={(e) => updateHistorial(entry.id, { empresa: e.target.value })}
                             />
@@ -1193,7 +1209,7 @@ export default function RegistroPage() {
                             <label>Entidad</label>
                             <input
                               className="kv-registro-input"
-                              placeholder="Ej. Huthwaite International"
+                              placeholder="Organización emisora"
                               value={cert.entidad}
                               onChange={(e) => updateCertificacion(cert.id, { entidad: e.target.value })}
                             />
@@ -1452,7 +1468,7 @@ export default function RegistroPage() {
                         <label>Empresa / contexto</label>
                         <input
                           className="kv-registro-input"
-                          placeholder="Ej. Empaquetaduras y Empaques, 2019–2023"
+                          placeholder="Empresa y periodo"
                           value={card.contexto}
                           onChange={(e) => updateLogro(card.id, { contexto: e.target.value })}
                         />
