@@ -1,7 +1,7 @@
 /* KOVA — Registro candidato (landing wave) */
 
 html:has(.kv-registro) {
-  font-size: 95%;
+  font-size: 90.25%;
 }
 
 .kv-registro {
@@ -17,10 +17,10 @@ html:has(.kv-registro) {
   --kv-line: #d7d9ce;
   --kv-nav-muted: #a7aba0;
   --kv-indigo-soft: rgba(51, 65, 196, 0.08);
-  --kv-radius: 1.25rem;
-  --kv-shadow: 0 20px 50px rgba(18, 20, 15, 0.06);
-  --kv-gap-section: 1.25rem;
-  --kv-gap-field: 1rem;
+  --kv-radius: 1.1875rem;
+  --kv-shadow: 0 19px 48px rgba(18, 20, 15, 0.06);
+  --kv-gap-section: 1.1875rem;
+  --kv-gap-field: 0.95rem;
   min-height: 100vh;
   background: var(--kv-paper);
   color: var(--kv-ink);
@@ -501,8 +501,8 @@ html:has(.kv-registro) {
 
 .kv-registro-stepper-dot {
   flex-shrink: 0;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -542,7 +542,7 @@ html:has(.kv-registro) {
   margin: 0;
   font-size: 0.875rem;
   font-weight: 600;
-  line-height: 28px;
+  line-height: 26px;
   color: rgba(255, 255, 255, 0.85);
 }
 
@@ -914,8 +914,8 @@ html:has(.kv-registro) {
 
 .kv-registro-card-icon {
   flex-shrink: 0;
-  width: 3.25rem;
-  height: 3.25rem;
+  width: 3.1rem;
+  height: 3.1rem;
   border-radius: 0.875rem;
   display: grid;
   place-items: center;
@@ -1182,8 +1182,8 @@ html:has(.kv-registro) {
 
 .kv-registro-input-wrap svg {
   flex-shrink: 0;
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
   color: var(--kv-slate);
   opacity: 0.55;
 }
@@ -1218,10 +1218,10 @@ html:has(.kv-registro) {
 
 .kv-registro-choice--compact {
   flex: 1 1 auto;
-  min-width: 4.75rem;
+  min-width: 4.5rem;
   justify-content: center;
-  padding: 0.55rem 0.7rem;
-  font-size: 0.8125rem;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.78rem;
   text-align: center;
 }
 
@@ -1252,8 +1252,8 @@ html:has(.kv-registro) {
   flex: 1;
   border: none;
   background: transparent;
-  padding: 0.8rem 0;
-  font-size: 0.9375rem;
+  padding: 0.75rem 0;
+  font-size: 0.9rem;
   color: var(--kv-ink);
   outline: none;
 }
