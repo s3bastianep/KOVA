@@ -1534,14 +1534,12 @@ export default function RegistroPage() {
             </div>
 
             <div className="kv-registro-card-footer">
-              <div className="kv-registro-btn-row">
+              <div className={`kv-registro-btn-row${step > 0 ? '' : ' kv-registro-btn-row--end'}`}>
                 {step > 0 ? (
                   <button type="button" className="kv-registro-btn-ghost" onClick={() => goToStep(step - 1)}>
                     Atrás
                   </button>
-                ) : (
-                  <span />
-                )}
+                ) : null}
                 {step < STEPS.length - 1 ? (
                   <button
                     type="button"
