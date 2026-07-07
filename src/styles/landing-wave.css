@@ -4,11 +4,6 @@ html:has(.kova-landing-wave) {
   font-size: 95%;
 }
 
-.kova-landing-consult.kova-landing-wave {
-  background-color: var(--kv-paper) !important;
-  color: var(--kv-ink);
-}
-
 .kova-landing-wave {
   --kv-ink: #12140f;
   --kv-paper: #edefea;
@@ -84,7 +79,6 @@ html:has(.kova-landing-wave) {
   color: #fff;
 }
 
-.kova-landing-consult.kova-landing-wave .kova-navbar.kv-nav,
 .kova-landing-wave .kova-navbar.kv-nav {
   display: flex;
   align-items: center;
@@ -261,52 +255,36 @@ html:has(.kova-landing-wave) {
 
 .kova-landing-wave .kv-hero-star--bright.kv-hero-star--white {
   background: #fff;
-  box-shadow:
-    0 0 12px 3px rgba(255, 255, 255, 0.7),
-    0 0 22px 5px rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.5);
 }
 
 .kova-landing-wave .kv-hero-star--bright.kv-hero-star--lime {
   background: #e4ff5c;
-  box-shadow:
-    0 0 14px 3px rgba(216, 242, 76, 0.85),
-    0 0 26px 6px rgba(216, 242, 76, 0.35);
+  box-shadow: 0 0 10px 2px rgba(216, 242, 76, 0.6);
 }
 
 .kova-landing-wave .kv-hero-star--bright.kv-hero-star--indigo {
   background: #b8c4ff;
-  box-shadow:
-    0 0 12px 3px rgba(130, 145, 255, 0.75),
-    0 0 22px 5px rgba(51, 65, 196, 0.3);
+  box-shadow: 0 0 8px 2px rgba(130, 145, 255, 0.55);
 }
 
 .kova-landing-wave .kv-hero-star--brilliant {
   z-index: 1;
-  filter: brightness(1.15);
 }
 
 .kova-landing-wave .kv-hero-star--brilliant.kv-hero-star--white {
   background: #fff;
-  box-shadow:
-    0 0 20px 5px rgba(255, 255, 255, 0.95),
-    0 0 40px 10px rgba(255, 255, 255, 0.4),
-    0 0 56px 14px rgba(216, 242, 76, 0.22);
+  box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.75);
 }
 
 .kova-landing-wave .kv-hero-star--brilliant.kv-hero-star--lime {
   background: #f0ff7a;
-  box-shadow:
-    0 0 22px 6px rgba(216, 242, 76, 1),
-    0 0 44px 12px rgba(216, 242, 76, 0.5),
-    0 0 60px 16px rgba(216, 242, 76, 0.2);
+  box-shadow: 0 0 14px 3px rgba(216, 242, 76, 0.8);
 }
 
 .kova-landing-wave .kv-hero-star--brilliant.kv-hero-star--indigo {
   background: #d8deff;
-  box-shadow:
-    0 0 20px 5px rgba(160, 175, 255, 0.95),
-    0 0 38px 10px rgba(51, 65, 196, 0.45),
-    0 0 52px 14px rgba(51, 65, 196, 0.2);
+  box-shadow: 0 0 12px 3px rgba(160, 175, 255, 0.7);
 }
 
 @keyframes kv-hero-star-twinkle {
@@ -1013,22 +991,17 @@ html:has(.kova-landing-wave) {
   inset: 0;
   border-radius: 50%;
   background: var(--kv-lime);
-  box-shadow:
-    0 0 6px rgba(216, 242, 76, 0.95),
-    0 0 14px rgba(216, 242, 76, 0.55),
-    0 0 28px rgba(216, 242, 76, 0.28);
+  box-shadow: 0 0 8px rgba(216, 242, 76, 0.65);
 }
 
 @keyframes kv-signal-glow {
   0%,
   100% {
     opacity: 0.55;
-    transform: scale(1);
   }
 
   50% {
     opacity: 1;
-    transform: scale(1.12);
   }
 }
 

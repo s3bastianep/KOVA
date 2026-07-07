@@ -31,7 +31,7 @@ html:has(.kv-registro) {
   letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  text-rendering: auto;
 }
 
 .kv-registro button,
@@ -61,7 +61,7 @@ html:has(.kv-registro) {
   font-family: var(--font-mono), 'JetBrains Mono', ui-monospace, monospace;
 }
 
-/* Background */
+/* Background — static gradients only (no animated orbs) */
 
 .kv-registro-bg {
   position: fixed;
@@ -72,68 +72,6 @@ html:has(.kv-registro) {
     radial-gradient(ellipse 70% 55% at 12% -8%, rgba(51, 65, 196, 0.07) 0%, transparent 58%),
     radial-gradient(ellipse 50% 45% at 88% 100%, rgba(216, 242, 76, 0.05) 0%, transparent 52%),
     var(--kv-paper);
-}
-
-.kv-registro-grid {
-  position: absolute;
-  inset: 0;
-  opacity: 0.2;
-  background-image:
-    linear-gradient(rgba(51, 65, 196, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(51, 65, 196, 0.04) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, #000 20%, transparent 75%);
-}
-
-.kv-registro-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-  opacity: 0.45;
-  animation: kv-orb-float 18s ease-in-out infinite;
-}
-
-.kv-registro-orb--1 {
-  width: 420px;
-  height: 420px;
-  top: -8%;
-  left: -6%;
-  background: rgba(51, 65, 196, 0.14);
-}
-
-.kv-registro-orb--2 {
-  width: 360px;
-  height: 360px;
-  bottom: 5%;
-  right: -4%;
-  background: rgba(216, 242, 76, 0.12);
-  animation-delay: -6s;
-}
-
-.kv-registro-orb--3 {
-  width: 240px;
-  height: 240px;
-  top: 42%;
-  left: 38%;
-  background: rgba(51, 65, 196, 0.08);
-  animation-delay: -12s;
-}
-
-@keyframes kv-orb-float {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(24px, -18px) scale(1.05);
-  }
-  66% {
-    transform: translate(-16px, 14px) scale(0.96);
-  }
-}
-
-.kv-registro-bg::after {
-  display: none;
 }
 
 /* Nav — ink bar like landing */
@@ -294,6 +232,8 @@ html:has(.kv-registro) {
 .kv-registro-aside {
   position: sticky;
   top: 4.5rem;
+  content-visibility: auto;
+  contain-intrinsic-size: 520px;
 }
 
 .kv-registro-aside-panel {
@@ -314,18 +254,23 @@ html:has(.kv-registro) {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--kv-indigo), var(--kv-lime));
+  background: var(--kv-lime);
 }
 
 .kv-registro-aside-hero {
   display: flex;
   align-items: center;
-  gap: 1.1rem;
+  gap: 0.9rem;
   margin-bottom: 1.75rem;
-  padding: 1rem 1.1rem;
+  padding: 0.9rem 1rem;
   border-radius: 1rem;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.kv-registro-aside-hero-copy {
+  min-width: 0;
+  flex: 1;
 }
 
 .kv-registro-ring-wrap {
@@ -338,9 +283,8 @@ html:has(.kv-registro) {
 }
 
 .kv-registro-ring-fill {
-  stroke: url(#kv-ring-gradient);
   stroke: var(--kv-lime);
-  filter: drop-shadow(0 0 6px rgba(216, 242, 76, 0.35));
+  transition: stroke-dashoffset 0.35s ease;
 }
 
 .kv-registro-ring-label {
@@ -355,33 +299,35 @@ html:has(.kv-registro) {
 
 .kv-registro-ring-label strong {
   font-family: var(--font-sora), 'Sora', ui-sans-serif, sans-serif;
-  font-size: 1.25rem;
+  font-size: 1.0625rem;
   font-weight: 700;
   color: #fff;
   letter-spacing: -0.03em;
 }
 
 .kv-registro-ring-label span {
-  font-size: 0.625rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.45);
-  margin-top: 0.15rem;
+  display: none;
 }
 
 .kv-registro-aside-hero-title {
-  margin: 0 0 0.35rem;
-  font-size: 1rem;
+  margin: 0 0 0.3rem;
+  font-size: 0.9375rem;
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.3;
   letter-spacing: -0.02em;
 }
 
-.kv-registro-aside-hero-sub {
+.kv-registro-aside-hero-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.4rem;
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: rgba(255, 255, 255, 0.45);
-  line-height: 1.45;
+  white-space: nowrap;
 }
 
 .kv-registro-aside-eyebrow {
@@ -518,18 +464,6 @@ html:has(.kv-registro) {
   background: var(--kv-lime);
   border-color: var(--kv-lime);
   color: var(--kv-ink);
-  box-shadow: 0 0 16px rgba(216, 242, 76, 0.45);
-  animation: kv-pulse-dot 2s ease-in-out infinite;
-}
-
-@keyframes kv-pulse-dot {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgba(216, 242, 76, 0.45);
-  }
-  50% {
-    box-shadow: 0 0 0 6px rgba(216, 242, 76, 0);
-  }
 }
 
 .kv-registro-stepper-item--done .kv-registro-stepper-dot {
@@ -794,37 +728,16 @@ html:has(.kv-registro) {
   color: var(--kv-lime-dark);
 }
 
-.kv-registro-step-panel > * {
-  animation: kv-field-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+.kv-registro-step-panel {
+  animation: kv-step-in 0.2s ease;
 }
 
-.kv-registro-step-panel > *:nth-child(1) {
-  animation-delay: 0.04s;
-}
-.kv-registro-step-panel > *:nth-child(2) {
-  animation-delay: 0.08s;
-}
-.kv-registro-step-panel > *:nth-child(3) {
-  animation-delay: 0.12s;
-}
-.kv-registro-step-panel > *:nth-child(4) {
-  animation-delay: 0.16s;
-}
-.kv-registro-step-panel > *:nth-child(5) {
-  animation-delay: 0.2s;
-}
-.kv-registro-step-panel > *:nth-child(6) {
-  animation-delay: 0.24s;
-}
-
-@keyframes kv-field-rise {
+@keyframes kv-step-in {
   from {
     opacity: 0;
-    transform: translateY(14px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -890,19 +803,8 @@ html:has(.kv-registro) {
 .kv-registro-progress-fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--kv-indigo), var(--kv-lime-dark), var(--kv-indigo));
-  background-size: 200% 100%;
-  animation: kv-progress-flow 3s linear infinite;
-  position: relative;
-}
-
-@keyframes kv-progress-flow {
-  0% {
-    background-position: 0% 50%;
-  }
-  100% {
-    background-position: 200% 50%;
-  }
+  background: var(--kv-indigo);
+  transition: width 0.35s ease;
 }
 
 .kv-registro-card-head {
@@ -1712,13 +1614,12 @@ html:has(.kv-registro) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .kv-registro-orb,
-  .kv-registro-stepper-item--active .kv-registro-stepper-dot,
-  .kv-registro-aside-panel::before {
+  .kv-registro-step-panel,
+  .kv-registro-success-card {
     animation: none;
   }
 
-  .kv-registro-step-panel > * {
-    animation: none;
+  .kv-registro-ring-fill {
+    transition: none;
   }
 }

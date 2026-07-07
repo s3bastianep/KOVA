@@ -1,8 +1,10 @@
+import { lazy, Suspense } from 'react';
 import { Clock, MessageCircle } from 'lucide-react';
 import SiteLayout from '@/components/landing/SiteLayout';
 import InnerPageHero from '@/components/landing/InnerPageHero';
-import BookingScheduler from '@/components/landing/BookingScheduler';
 import { CN_CTA_NOTE } from '@/theme/landingConsult';
+
+const BookingScheduler = lazy(() => import('@/components/landing/BookingScheduler'));
 
 const PHONE_DISPLAY = '+57 300 000 0000';
 const PHONE_TEL = '+573000000000';
@@ -81,13 +83,15 @@ export default function Contacto() {
 
             <div className="kv-contact-booking">
               <div className="kv-booking-stage">
-                <BookingScheduler
-                  alternateContact={{
-                    phoneDisplay: PHONE_DISPLAY,
-                    phoneTel: PHONE_TEL,
-                    whatsAppUrl: WHATSAPP_URL,
-                  }}
-                />
+                <Suspense fallback={<div className="kv-booking-loading" aria-busy="true" />}>
+                  <BookingScheduler
+                    alternateContact={{
+                      phoneDisplay: PHONE_DISPLAY,
+                      phoneTel: PHONE_TEL,
+                      whatsAppUrl: WHATSAPP_URL,
+                    }}
+                  />
+                </Suspense>
               </div>
             </div>
           </div>

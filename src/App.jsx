@@ -1,26 +1,25 @@
-import { Toaster } from "@/components/ui/toaster"
-import { QueryClientProvider } from '@tanstack/react-query'
-import { queryClientInstance } from '@/lib/query-client'
+import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import PageNotFound from './lib/PageNotFound';
 import ScrollToTop from './components/ScrollToTop';
 import Landing from './pages/Landing';
-import Guias from './pages/Guias';
-import GuiaContratarComercial from './pages/GuiaContratarComercial';
-import GuiaEvaluacionComercial from './pages/GuiaEvaluacionComercial';
-import GuiaPsicometricasVsComercial from './pages/GuiaPsicometricasVsComercial';
-import GuiaRotacionComercial from './pages/GuiaRotacionComercial';
-import GuiaHabilidadesBlandasComercial from './pages/GuiaHabilidadesBlandasComercial';
-import Contacto from './pages/Contacto';
-import QuienesSomos from './pages/QuienesSomos';
-import ComoTrabajamos from './pages/ComoTrabajamos';
-import Servicios from './pages/Servicios';
+
+const PageNotFound = lazy(() => import('./lib/PageNotFound'));
+const Guias = lazy(() => import('./pages/Guias'));
+const GuiaContratarComercial = lazy(() => import('./pages/GuiaContratarComercial'));
+const GuiaEvaluacionComercial = lazy(() => import('./pages/GuiaEvaluacionComercial'));
+const GuiaPsicometricasVsComercial = lazy(() => import('./pages/GuiaPsicometricasVsComercial'));
+const GuiaRotacionComercial = lazy(() => import('./pages/GuiaRotacionComercial'));
+const GuiaHabilidadesBlandasComercial = lazy(() => import('./pages/GuiaHabilidadesBlandasComercial'));
+const Contacto = lazy(() => import('./pages/Contacto'));
+const QuienesSomos = lazy(() => import('./pages/QuienesSomos'));
+const ComoTrabajamos = lazy(() => import('./pages/ComoTrabajamos'));
+const Servicios = lazy(() => import('./pages/Servicios'));
 
 function App() {
   return (
-    <QueryClientProvider client={queryClientInstance}>
-      <Router>
-        <ScrollToTop />
+    <Router>
+      <ScrollToTop />
+      <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/guias" element={<Guias />} />
@@ -35,10 +34,9 @@ function App() {
           <Route path="/servicios" element={<Servicios />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
-      </Router>
-      <Toaster />
-    </QueryClientProvider>
-  )
+      </Suspense>
+    </Router>
+  );
 }
 
-export default App
+export default App;
