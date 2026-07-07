@@ -170,7 +170,7 @@ function ChoiceField({
   onSelect: (option: string) => void;
 }) {
   return (
-    <div className="kv-registro-field">
+    <div className="kv-registro-field kv-registro-field--choice">
       <label>{label}</label>
       <div className={`kv-registro-choice-grid${options.length > 2 ? ' kv-registro-choice-grid--wide' : ''}`}>
         {options.map((option) => (
@@ -204,15 +204,6 @@ function RegistroShell({ children }: { children: React.ReactNode }) {
           </a>
         </div>
       </header>
-      <div className="kv-registro-signal" aria-hidden>
-        <div className="kv-registro-signal-inner">
-          <span className="kv-registro-signal-label font-mono">
-            <b>Evidencia real · matching preciso</b>
-            <span>Tu perfil se compara automáticamente con cada vacante nueva</span>
-          </span>
-          <div className="kv-registro-signal-wave" />
-        </div>
-      </div>
       {children}
     </div>
   );
@@ -618,7 +609,7 @@ export default function RegistroPage() {
 
             <div className="kv-registro-card-body">
               {current.kind === 'contact' && (
-                <>
+                <div className="kv-registro-form-stack">
                   <div className="kv-registro-field">
                     <label htmlFor="nombre">Nombre completo</label>
                     <div className="kv-registro-input-wrap">
@@ -673,24 +664,29 @@ export default function RegistroPage() {
                       />
                     </div>
                   </div>
-                  <ChoiceField
-                    label="Disponibilidad para iniciar"
-                    value={profile.disponibilidad}
-                    options={AVAILABILITY_OPTIONS}
-                    onSelect={(v) => update({ disponibilidad: v })}
-                  />
-                  <ChoiceField
-                    label="Disponibilidad para viajar"
-                    value={profile.disponibilidadViajar}
-                    options={TRAVEL_OPTIONS}
-                    onSelect={(v) => update({ disponibilidadViajar: v })}
-                  />
-                  <ChoiceField
-                    label="Disponibilidad para cambio de ciudad"
-                    value={profile.disponibilidadReubicacion}
-                    options={RELOCATION_OPTIONS}
-                    onSelect={(v) => update({ disponibilidadReubicacion: v })}
-                  />
+
+                  <div className="kv-registro-field-group">
+                    <h3 className="kv-registro-field-group-title">Disponibilidad</h3>
+                    <ChoiceField
+                      label="Para iniciar"
+                      value={profile.disponibilidad}
+                      options={AVAILABILITY_OPTIONS}
+                      onSelect={(v) => update({ disponibilidad: v })}
+                    />
+                    <ChoiceField
+                      label="Para viajar"
+                      value={profile.disponibilidadViajar}
+                      options={TRAVEL_OPTIONS}
+                      onSelect={(v) => update({ disponibilidadViajar: v })}
+                    />
+                    <ChoiceField
+                      label="Para cambio de ciudad"
+                      value={profile.disponibilidadReubicacion}
+                      options={RELOCATION_OPTIONS}
+                      onSelect={(v) => update({ disponibilidadReubicacion: v })}
+                    />
+                  </div>
+
                   <label className="kv-registro-consent">
                     <input
                       type="checkbox"
@@ -698,12 +694,11 @@ export default function RegistroPage() {
                       onChange={(e) => update({ consentimientoDatos: e.target.checked })}
                     />
                     <span>
-                      Autorizo a Kova a usar mis datos para evaluar compatibilidad con vacantes comerciales.
-                      Mi perfil es confidencial y no se usa para fines distintos al proceso de selección con
-                      el equipo Kova y sus clientes, conforme a la Ley 1581 de protección de datos.
+                      <strong>Acepto el uso de mis datos</strong> para evaluar compatibilidad con vacantes
+                      comerciales. Mi perfil es confidencial y se trata conforme a la Ley 1581.
                     </span>
                   </label>
-                </>
+                </div>
               )}
 
               {current.kind === 'role' && (
