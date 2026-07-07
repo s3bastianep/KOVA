@@ -12,9 +12,9 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   return Response.json({
-    title: 'Panel de candidato',
+    title: 'Constructor de Perfil Comercial',
     subtitle:
-      'Completa tu perfil comercial en 6 pasos. Te contactaremos si hay vacantes compatibles. No verás puntajes ni ofertas aquí.',
+      'Crea tu perfil comercial con evidencia verificable. Te contactaremos si hay vacantes compatibles. No verás puntajes ni ofertas aquí.',
   });
 }
 
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     firstName,
     lastName,
     email,
-    phone: null as string | null,
+    phone: profile.telefono?.trim() || null,
     city: profile.ciudad?.trim() || standardAnswers.city || null,
     linkedinUrl: null as string | null,
     source: 'Registro web',

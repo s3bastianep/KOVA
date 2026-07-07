@@ -6,106 +6,213 @@ import {
   Building2,
   CheckCircle2,
   ChevronRight,
+  GraduationCap,
+  History,
   Lock,
   Mail,
   MapPin,
+  Phone,
+  Plus,
   Shield,
   Sparkles,
   Target,
+  Trash2,
   TrendingUp,
   User,
-  Wrench,
 } from 'lucide-react';
 import './registro.css';
 import {
+  AVAILABILITY_OPTIONS,
+  calculateProfileCompleteness,
+  CLIENT_TYPE_OPTIONS,
   COMMERCIAL_INDUSTRIES,
-  COMMERCIAL_TOOLS,
+  COMMISSION_OPTIONS,
+  CONTRACT_TYPE_OPTIONS,
+  CRM_SALES_OPTIONS,
+  EDUCATION_LEVEL_OPTIONS,
+  EVIDENCE_COMPETENCY_TAGS,
+  GEO_COVERAGE_OPTIONS,
+  HIGH_SCORE_THRESHOLD,
+  INTERLOCUTOR_OPTIONS,
+  isEducationComplete,
+  isLanguageComplete,
+  LANGUAGE_LEVEL_OPTIONS,
+  LANGUAGE_OPTIONS,
+  newCertificationEntry,
+  newEducationEntry,
+  newLanguageEntry,
+  PORTFOLIO_SIZE_OPTIONS,
+  PROFESSIONAL_OBJECTIVE_OPTIONS,
+  RELOCATION_OPTIONS,
+  ROLE_FUNCTION_OPTIONS,
+  ROLE_LEVEL_OPTIONS,
+  SALARY_EXPECTATION_OPTIONS,
+  SALE_CYCLE_OPTIONS,
+  SALES_CHANNEL_OPTIONS,
+  TEAM_SIZE_OPTIONS,
+  TICKET_OPTIONS,
+  TRAVEL_OPTIONS,
   type CommercialProfile,
+  type EvidenceCard,
+  competencyHasBacking,
+  getCompetenciesForRole,
+  isEvidenceCardComplete,
+  isLeadershipRoleLevel,
+  isWorkHistoryComplete,
+  newEvidenceCard,
+  newWorkHistoryEntry,
   splitFullName,
+  type WorkHistoryEntry,
+  type EducationEntry,
+  type LanguageEntry,
+  type CertificationEntry,
 } from '@/lib/candidate-commercial-profile';
+
+const CRM_OTHER = 'Otro';
 
 const STEPS = [
   {
-    tag: 'Paso 1 de 6',
+    tag: 'Paso 1 de 8',
     short: 'Contacto',
     title: 'Creemos tu perfil comercial',
-    sub: 'Esto no es una hoja de vida genérica: son los datos que usamos para encontrar vacantes compatibles contigo.',
+    sub: 'Datos de contacto y disponibilidad. Sin motivo de salida ni preguntas incómodas — solo lo que importa para el match.',
     kind: 'contact' as const,
     icon: User,
   },
   {
-    tag: 'Paso 2 de 6',
+    tag: 'Paso 2 de 8',
     short: 'Rol',
-    title: 'Tu rol comercial',
-    sub: '¿A qué tipo de posición aplicas y cuánta experiencia comercial tienes?',
+    title: 'Tu rol y objetivo',
+    sub: 'Define tu nivel, función y hacia dónde quieres ir. Esto determina las competencias del paso 8.',
     kind: 'role' as const,
     icon: Briefcase,
   },
   {
-    tag: 'Paso 3 de 6',
+    tag: 'Paso 3 de 8',
+    short: 'Historial',
+    title: 'Historial laboral',
+    sub: 'Tus trabajos anteriores en orden cronológico. Base para tus logros y años de experiencia.',
+    kind: 'work' as const,
+    icon: History,
+  },
+  {
+    tag: 'Paso 4 de 8',
+    short: 'Formación',
+    title: 'Formación y expectativas',
+    sub: 'Educación, idiomas y rango salarial esperado — clave para un match real con las vacantes.',
+    kind: 'education' as const,
+    icon: GraduationCap,
+  },
+  {
+    tag: 'Paso 5 de 8',
     short: 'Cómo vendes',
     title: 'Cómo vendes',
-    sub: 'No todos los vendedores venden igual. Esto determina tu compatibilidad real con cada vacante.',
+    sub: 'Misma estructura que usamos al crear vacantes, para comparar campo a campo.',
     kind: 'sales' as const,
     icon: Target,
   },
   {
-    tag: 'Paso 4 de 6',
+    tag: 'Paso 6 de 8',
     short: 'Industria',
-    title: 'Tu industria y herramientas',
-    sub: 'Selecciona todo lo que aplique a tu experiencia.',
+    title: 'Tu industria',
+    sub: 'Selecciona las industrias donde tienes experiencia y marca la principal.',
     kind: 'industry' as const,
     icon: Building2,
   },
   {
-    tag: 'Paso 5 de 6',
+    tag: 'Paso 7 de 8',
     short: 'Logros',
-    title: 'Tus logros',
-    sub: 'Un número concreto dice más que un párrafo.',
+    title: 'Tarjetas de evidencia',
+    sub: 'Hitos destacados con cifras. Puedes vincularlos a una experiencia del paso 3.',
     kind: 'achievements' as const,
     icon: TrendingUp,
   },
   {
-    tag: 'Paso 6 de 6',
+    tag: 'Paso 8 de 8',
     short: 'Competencias',
-    title: 'Autoevaluación de competencias',
-    sub: 'Sé honesto. Esto luego se contrasta con evaluación real durante el proceso.',
+    title: 'Competencias con evidencia',
+    sub: 'Autoevalúate y vincula cada competencia con un logro del paso 7 o un ejemplo corto.',
     kind: 'sliders' as const,
     icon: Sparkles,
   },
 ];
 
-const ROLE_OPTIONS = ['SDR / Prospección', 'Ejecutivo comercial', 'Key Account Manager', 'Gerente comercial'];
-const CYCLE_OPTIONS = ['Menos de 1 mes', '1 a 3 meses', '3 a 6 meses', 'Más de 6 meses'];
-const TICKET_OPTIONS = ['Menos de $5M', '$5M–$20M', '$20M–$100M', 'Más de $100M'];
-
-const SLIDERS = [
-  { key: 'venta_consultiva', label: 'Venta consultiva' },
-  { key: 'prospeccion', label: 'Prospección' },
-  { key: 'objeciones', label: 'Manejo de objeciones' },
-  { key: 'logro_orient', label: 'Orientación al logro' },
-] as const;
-
 const EMPTY_PROFILE: CommercialProfile = {
   industrias: [],
-  herramientas: [],
-  venta_consultiva: 60,
-  prospeccion: 60,
-  objeciones: 60,
-  logro_orient: 60,
+  tickets: [],
+  historialLaboral: [],
+  formacion: [],
+  idiomas: [],
+  certificaciones: [],
+  logros: [],
+  competencias: {},
+  tamanoEquipo: '0',
 };
+
+function SalesSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="kv-registro-section">
+      <h3 className="kv-registro-section-title">{title}</h3>
+      <div className="kv-registro-section-body">{children}</div>
+    </section>
+  );
+}
+
+function ChoiceField({
+  label,
+  value,
+  options,
+  onSelect,
+}: {
+  label: string;
+  value?: string;
+  options: readonly string[] | string[];
+  onSelect: (option: string) => void;
+}) {
+  return (
+    <div className="kv-registro-field">
+      <label>{label}</label>
+      <div className={`kv-registro-choice-grid${options.length > 2 ? ' kv-registro-choice-grid--wide' : ''}`}>
+        {options.map((option) => (
+          <button
+            key={option}
+            type="button"
+            className={`kv-registro-choice${value === option ? ' selected' : ''}`}
+            onClick={() => onSelect(option)}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function RegistroShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="kv-registro">
       <div className="kv-registro-bg" aria-hidden />
-      <nav className="kv-registro-nav">
-        <div className="kv-registro-logo">
+      <header className="kv-registro-nav">
+        <a href="/" className="kv-registro-logo font-heading">
           <span className="kv-registro-logo-mark" aria-hidden />
           Kova
+        </a>
+        <div className="kv-registro-nav-end">
+          <span className="kv-registro-nav-pill font-mono">Constructor de perfil comercial</span>
+          <a href="/" className="kv-registro-nav-link">
+            Volver al inicio
+          </a>
         </div>
-        <div className="kv-registro-nav-sub">Panel de candidato</div>
-      </nav>
+      </header>
+      <div className="kv-registro-signal" aria-hidden>
+        <div className="kv-registro-signal-inner">
+          <span className="kv-registro-signal-label font-mono">
+            <b>Evidencia real · matching preciso</b>
+            <span>Tu perfil se compara automáticamente con cada vacante nueva</span>
+          </span>
+          <div className="kv-registro-signal-wave" />
+        </div>
+      </div>
       {children}
     </div>
   );
@@ -121,34 +228,259 @@ export default function RegistroPage() {
   const current = STEPS[step];
   const progress = ((step + 1) / STEPS.length) * 100;
   const StepIcon = current.icon;
+  const competencyDefs = useMemo(() => getCompetenciesForRole(profile.nivelRol), [profile.nivelRol]);
+  const completeLogros = useMemo(
+    () => (profile.logros ?? []).filter(isEvidenceCardComplete),
+    [profile.logros],
+  );
+  const completeHistorial = useMemo(
+    () => (profile.historialLaboral ?? []).filter(isWorkHistoryComplete),
+    [profile.historialLaboral],
+  );
+  const profileCompleteness = useMemo(() => calculateProfileCompleteness(profile), [profile]);
 
   const canNext = useMemo(() => {
     if (step === 0) {
-      return Boolean(profile.nombre?.trim() && profile.email?.trim() && /.+@.+\..+/.test(profile.email));
+      return Boolean(
+        profile.nombre?.trim() &&
+          profile.email?.trim() &&
+          /.+@.+\..+/.test(profile.email ?? '') &&
+          profile.telefono?.trim() &&
+          profile.ciudad?.trim() &&
+          profile.disponibilidad &&
+          profile.disponibilidadViajar &&
+          profile.disponibilidadReubicacion &&
+          profile.consentimientoDatos,
+      );
     }
     if (step === 1) {
-      return Boolean(profile.rol && profile.anios !== '' && profile.anios != null);
+      return Boolean(
+        profile.nivelRol &&
+          profile.funcionPrincipal &&
+          profile.objetivoProfesional &&
+          profile.tamanoEquipo != null &&
+          profile.tamanoEquipo !== '',
+      );
     }
     if (step === 2) {
-      return Boolean(profile.tipoVenta && profile.naturaleza && profile.enfoque && profile.ciclo && profile.ticket);
+      return completeHistorial.length >= 1;
     }
     if (step === 3) {
-      return (profile.industrias?.length ?? 0) > 0;
+      const eduOk = (profile.formacion ?? []).some(isEducationComplete);
+      const langOk = (profile.idiomas ?? []).some(isLanguageComplete);
+      return Boolean(eduOk && langOk && profile.expectativaSalarial);
+    }
+    if (step === 4) {
+      const tickets = profile.tickets ?? [];
+      const ticketOk = tickets.length > 0 && (tickets.length === 1 || Boolean(profile.ticketPrincipal));
+      const crmOk =
+        profile.crmVentas === CRM_OTHER
+          ? Boolean(profile.crmVentasOtro?.trim())
+          : Boolean(profile.crmVentas);
+      return Boolean(
+        profile.tipoVenta &&
+          profile.naturaleza &&
+          profile.enfoque &&
+          profile.tipoCliente &&
+          profile.nivelInterlocutor &&
+          profile.canalVenta &&
+          profile.coberturaGeografica &&
+          profile.cuentasCartera &&
+          crmOk &&
+          profile.estructuraComision &&
+          profile.ciclo &&
+          ticketOk,
+      );
+    }
+    if (step === 5) {
+      const industries = profile.industrias ?? [];
+      const primaryOk = industries.length <= 1 || Boolean(profile.industriaPrincipal);
+      return industries.length > 0 && primaryOk;
+    }
+    if (step === 6) {
+      return completeLogros.length >= 1;
     }
     return true;
-  }, [step, profile]);
+  }, [step, profile, completeLogros.length, completeHistorial.length]);
 
   const update = (patch: Partial<CommercialProfile>) => {
     setProfile((prev) => ({ ...prev, ...patch }));
   };
 
-  const toggleTag = (key: 'industrias' | 'herramientas', value: string) => {
+  const updateCompetency = (key: string, patch: { score?: number; evidenceId?: string; ejemplo?: string }) => {
+    setProfile((prev) => ({
+      ...prev,
+      competencias: {
+        ...prev.competencias,
+        [key]: {
+          score: prev.competencias?.[key]?.score ?? 60,
+          evidenceId: prev.competencias?.[key]?.evidenceId,
+          ejemplo: prev.competencias?.[key]?.ejemplo,
+          ...patch,
+        },
+      },
+      [key]: patch.score ?? prev.competencias?.[key]?.score ?? 60,
+    }));
+  };
+
+  const toggleTag = (key: 'industrias' | 'tickets', value: string) => {
     setProfile((prev) => {
       const list = [...(prev[key] ?? [])];
       const idx = list.indexOf(value);
       if (idx > -1) list.splice(idx, 1);
       else list.push(value);
-      return { ...prev, [key]: list };
+
+      const next: CommercialProfile = { ...prev, [key]: list };
+      if (key === 'tickets') {
+        if (list.length === 1) next.ticketPrincipal = list[0];
+        else if (prev.ticketPrincipal && !list.includes(prev.ticketPrincipal)) {
+          next.ticketPrincipal = undefined;
+        }
+      }
+      if (key === 'industrias') {
+        if (list.length === 1) next.industriaPrincipal = list[0];
+        else if (prev.industriaPrincipal && !list.includes(prev.industriaPrincipal)) {
+          next.industriaPrincipal = undefined;
+        }
+      }
+      return next;
+    });
+  };
+
+  const updateLogro = (id: string, patch: Partial<EvidenceCard>) => {
+    setProfile((prev) => ({
+      ...prev,
+      logros: (prev.logros ?? []).map((card) => (card.id === id ? { ...card, ...patch } : card)),
+    }));
+  };
+
+  const toggleLogroCompetencia = (id: string, tag: string) => {
+    setProfile((prev) => ({
+      ...prev,
+      logros: (prev.logros ?? []).map((card) => {
+        if (card.id !== id) return card;
+        const list = [...card.competencias];
+        const idx = list.indexOf(tag);
+        if (idx > -1) list.splice(idx, 1);
+        else list.push(tag);
+        return { ...card, competencias: list };
+      }),
+    }));
+  };
+
+  const addLogro = () => {
+    setProfile((prev) => ({ ...prev, logros: [...(prev.logros ?? []), newEvidenceCard()] }));
+  };
+
+  const removeLogro = (id: string) => {
+    setProfile((prev) => ({
+      ...prev,
+      logros: (prev.logros ?? []).filter((c) => c.id !== id),
+      competencias: Object.fromEntries(
+        Object.entries(prev.competencias ?? {}).map(([k, v]) => [
+          k,
+          v.evidenceId === id ? { ...v, evidenceId: undefined } : v,
+        ]),
+      ),
+    }));
+  };
+
+  const updateHistorial = (id: string, patch: Partial<WorkHistoryEntry>) => {
+    setProfile((prev) => ({
+      ...prev,
+      historialLaboral: (prev.historialLaboral ?? []).map((entry) =>
+        entry.id === id ? { ...entry, ...patch } : entry,
+      ),
+    }));
+  };
+
+  const removeHistorial = (id: string) => {
+    setProfile((prev) => ({
+      ...prev,
+      historialLaboral: (prev.historialLaboral ?? []).filter((e) => e.id !== id),
+      logros: (prev.logros ?? []).map((l) =>
+        l.historialId === id ? { ...l, historialId: undefined } : l,
+      ),
+    }));
+  };
+
+  const addHistorial = () => {
+    setProfile((prev) => {
+      const entry = newWorkHistoryEntry();
+      const isFirst = (prev.historialLaboral ?? []).length === 0;
+      if (isFirst && prev.tamanoEquipo) {
+        entry.tamanoEquipo = prev.tamanoEquipo;
+      }
+      return {
+        ...prev,
+        historialLaboral: [...(prev.historialLaboral ?? []), entry],
+      };
+    });
+  };
+
+  const updateFormacion = (id: string, patch: Partial<EducationEntry>) => {
+    setProfile((prev) => ({
+      ...prev,
+      formacion: (prev.formacion ?? []).map((e) => (e.id === id ? { ...e, ...patch } : e)),
+    }));
+  };
+
+  const addFormacion = () => {
+    setProfile((prev) => ({ ...prev, formacion: [...(prev.formacion ?? []), newEducationEntry()] }));
+  };
+
+  const removeFormacion = (id: string) => {
+    setProfile((prev) => ({
+      ...prev,
+      formacion: (prev.formacion ?? []).filter((e) => e.id !== id),
+    }));
+  };
+
+  const updateIdioma = (id: string, patch: Partial<LanguageEntry>) => {
+    setProfile((prev) => ({
+      ...prev,
+      idiomas: (prev.idiomas ?? []).map((e) => (e.id === id ? { ...e, ...patch } : e)),
+    }));
+  };
+
+  const addIdioma = () => {
+    setProfile((prev) => ({ ...prev, idiomas: [...(prev.idiomas ?? []), newLanguageEntry()] }));
+  };
+
+  const removeIdioma = (id: string) => {
+    setProfile((prev) => ({
+      ...prev,
+      idiomas: (prev.idiomas ?? []).filter((e) => e.id !== id),
+    }));
+  };
+
+  const updateCertificacion = (id: string, patch: Partial<CertificationEntry>) => {
+    setProfile((prev) => ({
+      ...prev,
+      certificaciones: (prev.certificaciones ?? []).map((e) => (e.id === id ? { ...e, ...patch } : e)),
+    }));
+  };
+
+  const addCertificacion = () => {
+    setProfile((prev) => ({
+      ...prev,
+      certificaciones: [...(prev.certificaciones ?? []), newCertificationEntry()],
+    }));
+  };
+
+  const removeCertificacion = (id: string) => {
+    setProfile((prev) => ({
+      ...prev,
+      certificaciones: (prev.certificaciones ?? []).filter((e) => e.id !== id),
+    }));
+  };
+
+  const linkLogroToHistorial = (logroId: string, historialId: string) => {
+    const entry = (profile.historialLaboral ?? []).find((h) => h.id === historialId);
+    if (!entry) return;
+    updateLogro(logroId, {
+      historialId,
+      contexto: `${entry.empresa}${entry.sector ? ` · ${entry.sector}` : ''}`,
     });
   };
 
@@ -180,16 +512,16 @@ export default function RegistroPage() {
             <div className="kv-registro-success-icon" aria-hidden>
               <CheckCircle2 strokeWidth={2} />
             </div>
-            <p className="kv-registro-step-tag">Perfil guardado</p>
-            <h1 className="kv-registro-step-title">
+            <p className="kv-registro-step-tag font-mono">Perfil guardado</p>
+            <h1 className="kv-registro-step-title font-heading">
               ¡Listo, {profile.nombre?.split(' ')[0] || 'candidato'}!
             </h1>
             <p className="kv-registro-step-sub">{done}</p>
             <div className="kv-registro-privacy">
               <Shield strokeWidth={2} aria-hidden />
               <p>
-                No verás vacantes ni puntajes aquí. Si hay una oportunidad compatible, el equipo de Kova te
-                contactará directamente.
+                Tu perfil quedó en la base de talento Kova. Si hay una vacante compatible, el equipo te
+                contactará directamente. No verás puntajes ni ofertas aquí.
               </p>
             </div>
           </div>
@@ -202,54 +534,83 @@ export default function RegistroPage() {
     <RegistroShell>
       <div className="kv-registro-layout">
         <aside className="kv-registro-aside">
-          <p className="kv-registro-aside-eyebrow font-mono">Tu perfil en 6 pasos</p>
-          <h2 className="kv-registro-aside-title">Construye tu perfil comercial con evidencia</h2>
-          <p className="kv-registro-aside-lead">
-            Cada paso nos ayuda a entender cómo vendes y qué vacantes encajan contigo.
-          </p>
+          <div className="kv-registro-aside-panel">
+            <p className="kv-registro-aside-eyebrow font-mono">Constructor de perfil comercial</p>
+            <h2 className="kv-registro-aside-title font-heading">
+              Evidencia real para matching preciso
+            </h2>
+            <p className="kv-registro-aside-lead">
+              Cada campo tiene equivalente en las vacantes que publica Kova. Tu perfil se compara
+              automáticamente sin volver a diligenciar.
+            </p>
 
-          <ol className="kv-registro-stepper">
-            {STEPS.map((s, i) => {
-              const state = i < step ? 'done' : i === step ? 'active' : 'pending';
-              return (
-                <li key={s.short} className={`kv-registro-stepper-item kv-registro-stepper-item--${state}`}>
-                  <span className="kv-registro-stepper-dot">
-                    {state === 'done' ? <CheckCircle2 strokeWidth={2.5} size={14} /> : i + 1}
-                  </span>
-                  <div>
-                    <p className="kv-registro-stepper-label">{s.short}</p>
-                    {state === 'active' && <p className="kv-registro-stepper-hint">{s.tag}</p>}
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
+            <div className="kv-registro-aside-stats kv-registro-aside-stats--triple">
+              <div className="kv-registro-aside-stat">
+                <strong>~12 min</strong>
+                <span>Tiempo estimado</span>
+              </div>
+              <div className="kv-registro-aside-stat">
+                <strong>{profileCompleteness}%</strong>
+                <span>Perfil completo</span>
+              </div>
+              <div className="kv-registro-aside-stat">
+                <strong>{step + 1}/8</strong>
+                <span>Paso actual</span>
+              </div>
+            </div>
 
-          <div className="kv-registro-aside-privacy">
-            <Lock strokeWidth={2} aria-hidden />
-            <span>Datos confidenciales · solo equipo Kova</span>
+            <ol className="kv-registro-stepper">
+              {STEPS.map((s, i) => {
+                const state = i < step ? 'done' : i === step ? 'active' : 'pending';
+                return (
+                  <li key={s.short} className={`kv-registro-stepper-item kv-registro-stepper-item--${state}`}>
+                    <span className="kv-registro-stepper-dot">
+                      {state === 'done' ? <CheckCircle2 strokeWidth={2.5} size={14} /> : i + 1}
+                    </span>
+                    <div>
+                      <p className="kv-registro-stepper-label">{s.short}</p>
+                      {state === 'active' && <p className="kv-registro-stepper-hint">{s.tag}</p>}
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+
+            <div className="kv-registro-aside-privacy">
+              <Lock strokeWidth={2} aria-hidden />
+              <span>Datos confidenciales · solo equipo Kova</span>
+            </div>
           </div>
         </aside>
 
         <div className="kv-registro-main">
           <div className="kv-registro-card" key={step}>
+            <div className="kv-registro-card-chrome">
+              <div className="kv-registro-card-dots" aria-hidden>
+                <span />
+                <span />
+                <span />
+              </div>
+              <span className="kv-registro-card-badge font-mono">
+                {isLeadershipRoleLevel(profile.nivelRol) ? 'Perfil liderazgo' : 'Perfil individual'}
+              </span>
+            </div>
             <div className="kv-registro-card-top">
               <div className="kv-registro-card-progress">
                 <div className="kv-registro-progress-meta">
-                  <span className="kv-registro-step-tag">{current.tag}</span>
-                  <span className="kv-registro-progress-pct">{Math.round(progress)}%</span>
+                  <span className="kv-registro-step-tag font-mono">{current.tag}</span>
+                  <span className="kv-registro-progress-pct font-mono">{Math.round(progress)}%</span>
                 </div>
                 <div className="kv-registro-progress-track">
                   <div className="kv-registro-progress-fill" style={{ width: `${progress}%` }} />
                 </div>
               </div>
-
               <div className="kv-registro-card-head">
                 <span className="kv-registro-card-icon" aria-hidden>
                   <StepIcon strokeWidth={2} />
                 </span>
                 <div>
-                  <h1 className="kv-registro-step-title">{current.title}</h1>
+                  <h1 className="kv-registro-step-title font-heading">{current.title}</h1>
                   {current.sub && <p className="kv-registro-step-sub">{current.sub}</p>}
                 </div>
               </div>
@@ -271,17 +632,32 @@ export default function RegistroPage() {
                       />
                     </div>
                   </div>
-                  <div className="kv-registro-field">
-                    <label htmlFor="email">Correo electrónico</label>
-                    <div className="kv-registro-input-wrap">
-                      <Mail strokeWidth={2} aria-hidden />
-                      <input
-                        id="email"
-                        type="email"
-                        placeholder="tu@correo.com"
-                        value={profile.email ?? ''}
-                        onChange={(e) => update({ email: e.target.value })}
-                      />
+                  <div className="kv-registro-field-row">
+                    <div className="kv-registro-field">
+                      <label htmlFor="email">Correo electrónico</label>
+                      <div className="kv-registro-input-wrap">
+                        <Mail strokeWidth={2} aria-hidden />
+                        <input
+                          id="email"
+                          type="email"
+                          placeholder="tu@correo.com"
+                          value={profile.email ?? ''}
+                          onChange={(e) => update({ email: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                    <div className="kv-registro-field">
+                      <label htmlFor="telefono">Teléfono</label>
+                      <div className="kv-registro-input-wrap">
+                        <Phone strokeWidth={2} aria-hidden />
+                        <input
+                          id="telefono"
+                          type="tel"
+                          placeholder="Ej. 300 123 4567"
+                          value={profile.telefono ?? ''}
+                          onChange={(e) => update({ telefono: e.target.value })}
+                        />
+                      </div>
                     </div>
                   </div>
                   <div className="kv-registro-field">
@@ -297,22 +673,67 @@ export default function RegistroPage() {
                       />
                     </div>
                   </div>
+                  <ChoiceField
+                    label="Disponibilidad para iniciar"
+                    value={profile.disponibilidad}
+                    options={AVAILABILITY_OPTIONS}
+                    onSelect={(v) => update({ disponibilidad: v })}
+                  />
+                  <ChoiceField
+                    label="Disponibilidad para viajar"
+                    value={profile.disponibilidadViajar}
+                    options={TRAVEL_OPTIONS}
+                    onSelect={(v) => update({ disponibilidadViajar: v })}
+                  />
+                  <ChoiceField
+                    label="Disponibilidad para cambio de ciudad"
+                    value={profile.disponibilidadReubicacion}
+                    options={RELOCATION_OPTIONS}
+                    onSelect={(v) => update({ disponibilidadReubicacion: v })}
+                  />
+                  <label className="kv-registro-consent">
+                    <input
+                      type="checkbox"
+                      checked={Boolean(profile.consentimientoDatos)}
+                      onChange={(e) => update({ consentimientoDatos: e.target.checked })}
+                    />
+                    <span>
+                      Autorizo a Kova a usar mis datos para evaluar compatibilidad con vacantes comerciales.
+                      Mi perfil es confidencial y no se usa para fines distintos al proceso de selección con
+                      el equipo Kova y sus clientes, conforme a la Ley 1581 de protección de datos.
+                    </span>
+                  </label>
                 </>
               )}
 
               {current.kind === 'role' && (
                 <>
+                  <ChoiceField
+                    label="Nivel del rol"
+                    value={profile.nivelRol}
+                    options={ROLE_LEVEL_OPTIONS}
+                    onSelect={(v) => update({ nivelRol: v })}
+                  />
+                  <ChoiceField
+                    label="Función principal"
+                    value={profile.funcionPrincipal}
+                    options={ROLE_FUNCTION_OPTIONS}
+                    onSelect={(v) => update({ funcionPrincipal: v })}
+                  />
+                  <ChoiceField
+                    label="¿Qué estás buscando en tu próximo reto?"
+                    value={profile.objetivoProfesional}
+                    options={PROFESSIONAL_OBJECTIVE_OPTIONS}
+                    onSelect={(v) => update({ objetivoProfesional: v })}
+                  />
+                  <ChoiceField
+                    label="Tamaño de equipo que has liderado"
+                    value={profile.tamanoEquipo}
+                    options={TEAM_SIZE_OPTIONS}
+                    onSelect={(v) => update({ tamanoEquipo: v })}
+                  />
                   <div className="kv-registro-field">
-                    <label htmlFor="rol">Rol al que aplicas</label>
-                    <select id="rol" className="kv-registro-select" value={profile.rol ?? ''} onChange={(e) => update({ rol: e.target.value })}>
-                      <option value="">Selecciona tu rol objetivo...</option>
-                      {ROLE_OPTIONS.map((o) => (
-                        <option key={o} value={o}>{o}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="kv-registro-field">
-                    <label htmlFor="anios">Años de experiencia comercial</label>
+                    <label htmlFor="anios">Años de experiencia comercial (opcional)</label>
                     <input
                       id="anios"
                       className="kv-registro-input"
@@ -324,58 +745,470 @@ export default function RegistroPage() {
                       onChange={(e) => update({ anios: e.target.value })}
                     />
                   </div>
+                  {profile.nivelRol && (
+                    <p className="kv-registro-field-hint kv-registro-field-hint--info">
+                      En el paso 8 evaluaremos competencias de{' '}
+                      <strong>{isLeadershipRoleLevel(profile.nivelRol) ? 'liderazgo' : 'ejecución comercial'}</strong>{' '}
+                      según tu nivel de rol.
+                    </p>
+                  )}
                 </>
               )}
 
-              {current.kind === 'sales' && (
-                <>
-                  {[
-                    { key: 'tipoVenta' as const, label: 'Tipo de venta', options: ['Consultiva', 'Transaccional'] },
-                    { key: 'naturaleza' as const, label: 'Naturaleza de la venta', options: ['Técnica', 'Relacional'] },
-                    { key: 'enfoque' as const, label: 'Enfoque principal', options: ['Prospección (hunter)', 'Manejo de cuentas (farmer)'] },
-                  ].map((group) => (
-                    <div className="kv-registro-field" key={group.key}>
-                      <label>{group.label}</label>
-                      <div className="kv-registro-choice-grid">
-                        {group.options.map((option) => (
-                          <button
-                            key={option}
-                            type="button"
-                            className={`kv-registro-choice${profile[group.key] === option ? ' selected' : ''}`}
-                            onClick={() => update({ [group.key]: option })}
+              {current.kind === 'work' && (
+                <div className="kv-registro-evidence-list kv-registro-work-list">
+                  <p className="kv-registro-field-hint">
+                    Agrega tu experiencia más reciente primero. Mínimo 1 cargo completo para continuar.
+                  </p>
+                  {(profile.historialLaboral ?? []).map((entry, index) => (
+                    <article key={entry.id} className="kv-registro-evidence-card kv-registro-work-card">
+                      <div className="kv-registro-evidence-card-head">
+                        <span className="kv-registro-evidence-card-num font-mono">
+                          Experiencia {index + 1}
+                          {index === 0 ? ' · más reciente' : ''}
+                        </span>
+                        <button
+                          type="button"
+                          className="kv-registro-evidence-remove"
+                          onClick={() => removeHistorial(entry.id)}
+                          aria-label="Eliminar experiencia"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+
+                      <SalesSection title="Datos básicos">
+                        <div className="kv-registro-field">
+                          <label>Cargo</label>
+                          <input
+                            className="kv-registro-input"
+                            placeholder="Ej. Gerente comercial regional"
+                            value={entry.cargo}
+                            onChange={(e) => updateHistorial(entry.id, { cargo: e.target.value })}
+                          />
+                        </div>
+                        <div className="kv-registro-field-row">
+                          <div className="kv-registro-field">
+                            <label>Empresa</label>
+                            <input
+                              className="kv-registro-input"
+                              placeholder="Ej. Empaquetaduras y Empaques"
+                              value={entry.empresa}
+                              onChange={(e) => updateHistorial(entry.id, { empresa: e.target.value })}
+                            />
+                          </div>
+                          <div className="kv-registro-field">
+                            <label>Sector / industria de la empresa</label>
+                            <select
+                              className="kv-registro-select"
+                              value={entry.sector}
+                              onChange={(e) => updateHistorial(entry.id, { sector: e.target.value })}
+                            >
+                              <option value="">Selecciona...</option>
+                              {COMMERCIAL_INDUSTRIES.map((o) => (
+                                <option key={o} value={o}>{o}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="kv-registro-field-row">
+                          <div className="kv-registro-field">
+                            <label htmlFor={`inicio-${entry.id}`}>Fecha de inicio</label>
+                            <input
+                              id={`inicio-${entry.id}`}
+                              className="kv-registro-input"
+                              type="month"
+                              value={entry.fechaInicio}
+                              onChange={(e) => updateHistorial(entry.id, { fechaInicio: e.target.value })}
+                            />
+                          </div>
+                          <div className="kv-registro-field">
+                            <label htmlFor={`fin-${entry.id}`}>Fecha de fin</label>
+                            <input
+                              id={`fin-${entry.id}`}
+                              className="kv-registro-input"
+                              type="month"
+                              value={entry.fechaFin ?? ''}
+                              disabled={entry.trabajoActual}
+                              onChange={(e) =>
+                                updateHistorial(entry.id, { fechaFin: e.target.value, trabajoActual: false })
+                              }
+                            />
+                          </div>
+                        </div>
+                        <label className="kv-registro-checkbox">
+                          <input
+                            type="checkbox"
+                            checked={entry.trabajoActual}
+                            onChange={(e) =>
+                              updateHistorial(entry.id, {
+                                trabajoActual: e.target.checked,
+                                fechaFin: e.target.checked ? undefined : entry.fechaFin,
+                              })
+                            }
+                          />
+                          <span>Trabajo actual aquí</span>
+                        </label>
+                      </SalesSection>
+
+                      <SalesSection title="Contexto del rol">
+                        <div className="kv-registro-field">
+                          <label>Descripción breve de funciones</label>
+                          <textarea
+                            className="kv-registro-textarea kv-registro-textarea--compact"
+                            placeholder="2-3 líneas sobre tu rol, responsabilidades y alcance..."
+                            value={entry.descripcion}
+                            onChange={(e) => updateHistorial(entry.id, { descripcion: e.target.value })}
+                          />
+                        </div>
+                        <ChoiceField
+                          label="Tamaño de equipo liderado en ese cargo (si aplica)"
+                          value={entry.tamanoEquipo ?? ''}
+                          options={TEAM_SIZE_OPTIONS}
+                          onSelect={(v) => updateHistorial(entry.id, { tamanoEquipo: v })}
+                        />
+                        <div className="kv-registro-field">
+                          <label>Presupuesto o volumen de operación manejado</label>
+                          <select
+                            className="kv-registro-select"
+                            value={entry.volumenOperacion ?? ''}
+                            onChange={(e) =>
+                              updateHistorial(entry.id, { volumenOperacion: e.target.value })
+                            }
                           >
-                            {option}
+                            <option value="">Selecciona un rango (opcional)...</option>
+                            {TICKET_OPTIONS.map((o) => (
+                              <option key={o} value={o}>{o}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </SalesSection>
+                    </article>
+                  ))}
+
+                  <button type="button" className="kv-registro-add-evidence" onClick={addHistorial}>
+                    <Plus size={18} />
+                    {profile.historialLaboral?.length
+                      ? 'Agregar experiencia anterior'
+                      : 'Agregar experiencia laboral'}
+                  </button>
+                </div>
+              )}
+
+              {current.kind === 'education' && (
+                <div className="kv-registro-evidence-list">
+                  <SalesSection title="Formación académica">
+                    <p className="kv-registro-field-hint">Agrega al menos una formación. Puedes incluir varias.</p>
+                    {(profile.formacion ?? []).map((edu, index) => (
+                      <article key={edu.id} className="kv-registro-evidence-card kv-registro-edu-card">
+                        <div className="kv-registro-evidence-card-head">
+                          <span className="kv-registro-evidence-card-num font-mono">Formación {index + 1}</span>
+                          <button
+                            type="button"
+                            className="kv-registro-evidence-remove"
+                            onClick={() => removeFormacion(edu.id)}
+                            aria-label="Eliminar formación"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                        <div className="kv-registro-field-row">
+                          <div className="kv-registro-field">
+                            <label>Nivel educativo</label>
+                            <select
+                              className="kv-registro-select"
+                              value={edu.nivel}
+                              onChange={(e) => updateFormacion(edu.id, { nivel: e.target.value })}
+                            >
+                              <option value="">Selecciona...</option>
+                              {EDUCATION_LEVEL_OPTIONS.map((o) => (
+                                <option key={o} value={o}>{o}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="kv-registro-field">
+                            <label>Año de graduación (opcional)</label>
+                            <input
+                              className="kv-registro-input"
+                              type="number"
+                              min={1970}
+                              max={2030}
+                              placeholder="Ej. 2018"
+                              value={edu.anioGraduacion ?? ''}
+                              onChange={(e) => updateFormacion(edu.id, { anioGraduacion: e.target.value })}
+                            />
+                          </div>
+                        </div>
+                        <div className="kv-registro-field">
+                          <label>Título obtenido</label>
+                          <input
+                            className="kv-registro-input"
+                            placeholder="Ej. Administración de Empresas"
+                            value={edu.titulo}
+                            onChange={(e) => updateFormacion(edu.id, { titulo: e.target.value })}
+                          />
+                        </div>
+                        <div className="kv-registro-field">
+                          <label>Institución</label>
+                          <input
+                            className="kv-registro-input"
+                            placeholder="Ej. Universidad de los Andes"
+                            value={edu.institucion}
+                            onChange={(e) => updateFormacion(edu.id, { institucion: e.target.value })}
+                          />
+                        </div>
+                      </article>
+                    ))}
+                    <button type="button" className="kv-registro-add-evidence" onClick={addFormacion}>
+                      <Plus size={18} />
+                      Agregar formación
+                    </button>
+                  </SalesSection>
+
+                  <SalesSection title="Idiomas">
+                    <p className="kv-registro-field-hint">Indica al menos un idioma y tu nivel.</p>
+                    {(profile.idiomas ?? []).map((lang, index) => (
+                      <div key={lang.id} className="kv-registro-field-row kv-registro-lang-row">
+                        <div className="kv-registro-field">
+                          <label>Idioma {index + 1}</label>
+                          <select
+                            className="kv-registro-select"
+                            value={lang.idioma}
+                            onChange={(e) => updateIdioma(lang.id, { idioma: e.target.value })}
+                          >
+                            <option value="">Selecciona...</option>
+                            {LANGUAGE_OPTIONS.map((o) => (
+                              <option key={o} value={o}>{o}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="kv-registro-field">
+                          <label>Nivel</label>
+                          <select
+                            className="kv-registro-select"
+                            value={lang.nivel}
+                            onChange={(e) => updateIdioma(lang.id, { nivel: e.target.value })}
+                          >
+                            <option value="">Nivel...</option>
+                            {LANGUAGE_LEVEL_OPTIONS.map((o) => (
+                              <option key={o} value={o}>{o}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <button
+                          type="button"
+                          className="kv-registro-evidence-remove kv-registro-lang-remove"
+                          onClick={() => removeIdioma(lang.id)}
+                          aria-label="Eliminar idioma"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    ))}
+                    <button type="button" className="kv-registro-add-evidence" onClick={addIdioma}>
+                      <Plus size={18} />
+                      Agregar idioma
+                    </button>
+                  </SalesSection>
+
+                  <SalesSection title="Certificaciones (opcional)">
+                    {(profile.certificaciones ?? []).map((cert) => (
+                      <div key={cert.id} className="kv-registro-evidence-card kv-registro-edu-card">
+                        <div className="kv-registro-field-row">
+                          <div className="kv-registro-field">
+                            <label>Certificación</label>
+                            <input
+                              className="kv-registro-input"
+                              placeholder="Ej. SPIN Selling"
+                              value={cert.nombre}
+                              onChange={(e) => updateCertificacion(cert.id, { nombre: e.target.value })}
+                            />
+                          </div>
+                          <div className="kv-registro-field">
+                            <label>Entidad</label>
+                            <input
+                              className="kv-registro-input"
+                              placeholder="Ej. Huthwaite International"
+                              value={cert.entidad}
+                              onChange={(e) => updateCertificacion(cert.id, { entidad: e.target.value })}
+                            />
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          className="kv-registro-btn-ghost kv-registro-btn-ghost--sm"
+                          onClick={() => removeCertificacion(cert.id)}
+                        >
+                          Quitar certificación
+                        </button>
+                      </div>
+                    ))}
+                    <button type="button" className="kv-registro-add-evidence" onClick={addCertificacion}>
+                      <Plus size={18} />
+                      Agregar certificación
+                    </button>
+                  </SalesSection>
+
+                  <SalesSection title="Expectativas">
+                    <ChoiceField
+                      label="Rango salarial mensual esperado (fijo + variable estimado)"
+                      value={profile.expectativaSalarial}
+                      options={SALARY_EXPECTATION_OPTIONS}
+                      onSelect={(v) => update({ expectativaSalarial: v })}
+                    />
+                    <ChoiceField
+                      label="Tipo de contrato deseado (opcional)"
+                      value={profile.tipoContratoDeseado}
+                      options={CONTRACT_TYPE_OPTIONS}
+                      onSelect={(v) => update({ tipoContratoDeseado: v })}
+                    />
+                  </SalesSection>
+                </div>
+              )}
+
+              {current.kind === 'sales' && (
+                <div className="kv-registro-sales">
+                  <SalesSection title="Estilo de venta">
+                    <ChoiceField
+                      label="Tipo de venta"
+                      value={profile.tipoVenta}
+                      options={['Consultiva', 'Transaccional']}
+                      onSelect={(v) => update({ tipoVenta: v })}
+                    />
+                    <ChoiceField
+                      label="Naturaleza de la venta"
+                      value={profile.naturaleza}
+                      options={['Técnica', 'Relacional']}
+                      onSelect={(v) => update({ naturaleza: v })}
+                    />
+                    <ChoiceField
+                      label="Enfoque principal"
+                      value={profile.enfoque}
+                      options={['Prospección (hunter)', 'Manejo de cuentas (farmer)']}
+                      onSelect={(v) => update({ enfoque: v })}
+                    />
+                    <div className="kv-registro-field">
+                      <label htmlFor="ciclo">Ciclo de venta típico</label>
+                      <select
+                        id="ciclo"
+                        className="kv-registro-select"
+                        value={profile.ciclo ?? ''}
+                        onChange={(e) => update({ ciclo: e.target.value })}
+                      >
+                        <option value="">Selecciona...</option>
+                        {SALE_CYCLE_OPTIONS.map((o) => (
+                          <option key={o} value={o}>{o}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="kv-registro-field">
+                      <label>Ticket promedio manejado</label>
+                      <p className="kv-registro-field-hint">
+                        Puedes seleccionar más de uno. Si eliges varios, indica con cuál tienes mayor
+                        experiencia.
+                      </p>
+                      <div className="kv-registro-tag-grid">
+                        {TICKET_OPTIONS.map((item) => (
+                          <button
+                            key={item}
+                            type="button"
+                            className={`kv-registro-tag-choice${profile.tickets?.includes(item) ? ' selected' : ''}`}
+                            onClick={() => toggleTag('tickets', item)}
+                          >
+                            {item}
                           </button>
                         ))}
                       </div>
                     </div>
-                  ))}
-                  <div className="kv-registro-field-row">
+                    {(profile.tickets?.length ?? 0) > 1 && (
+                      <ChoiceField
+                        label="¿Con cuál tienes mayor experiencia?"
+                        value={profile.ticketPrincipal}
+                        options={profile.tickets ?? []}
+                        onSelect={(v) => update({ ticketPrincipal: v })}
+                      />
+                    )}
+                  </SalesSection>
+
+                  <SalesSection title="Sobre el cliente">
+                    <ChoiceField
+                      label="Tipo de cliente"
+                      value={profile.tipoCliente}
+                      options={CLIENT_TYPE_OPTIONS}
+                      onSelect={(v) => update({ tipoCliente: v })}
+                    />
+                    <ChoiceField
+                      label="Nivel de interlocutor habitual"
+                      value={profile.nivelInterlocutor}
+                      options={INTERLOCUTOR_OPTIONS}
+                      onSelect={(v) => update({ nivelInterlocutor: v })}
+                    />
+                    <ChoiceField
+                      label="Canal de venta"
+                      value={profile.canalVenta}
+                      options={SALES_CHANNEL_OPTIONS}
+                      onSelect={(v) => update({ canalVenta: v })}
+                    />
+                  </SalesSection>
+
+                  <SalesSection title="Alcance y herramientas">
+                    <ChoiceField
+                      label="Cobertura geográfica"
+                      value={profile.coberturaGeografica}
+                      options={GEO_COVERAGE_OPTIONS}
+                      onSelect={(v) => update({ coberturaGeografica: v })}
+                    />
+                    <ChoiceField
+                      label="Número de cuentas en cartera"
+                      value={profile.cuentasCartera}
+                      options={PORTFOLIO_SIZE_OPTIONS}
+                      onSelect={(v) => update({ cuentasCartera: v })}
+                    />
                     <div className="kv-registro-field">
-                      <label htmlFor="ciclo">Ciclo de venta típico</label>
-                      <select id="ciclo" className="kv-registro-select" value={profile.ciclo ?? ''} onChange={(e) => update({ ciclo: e.target.value })}>
+                      <label htmlFor="crmVentas">CRM que manejas</label>
+                      <select
+                        id="crmVentas"
+                        className="kv-registro-select"
+                        value={profile.crmVentas ?? ''}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === CRM_OTHER) update({ crmVentas: CRM_OTHER });
+                          else update({ crmVentas: value, crmVentasOtro: '' });
+                        }}
+                      >
                         <option value="">Selecciona...</option>
-                        {CYCLE_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}
+                        {CRM_SALES_OPTIONS.map((o) => (
+                          <option key={o} value={o}>{o}</option>
+                        ))}
                       </select>
                     </div>
-                    <div className="kv-registro-field">
-                      <label htmlFor="ticket">Ticket promedio manejado</label>
-                      <select id="ticket" className="kv-registro-select" value={profile.ticket ?? ''} onChange={(e) => update({ ticket: e.target.value })}>
-                        <option value="">Selecciona...</option>
-                        {TICKET_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}
-                      </select>
-                    </div>
-                  </div>
-                </>
+                    {profile.crmVentas === CRM_OTHER && (
+                      <div className="kv-registro-field">
+                        <label htmlFor="crmVentasOtro">Especifica el CRM</label>
+                        <input
+                          id="crmVentasOtro"
+                          className="kv-registro-input"
+                          placeholder="Ej. Monday CRM"
+                          value={profile.crmVentasOtro ?? ''}
+                          onChange={(e) => update({ crmVentas: CRM_OTHER, crmVentasOtro: e.target.value })}
+                        />
+                      </div>
+                    )}
+                    <ChoiceField
+                      label="Estructura de comisión familiarizada"
+                      value={profile.estructuraComision}
+                      options={COMMISSION_OPTIONS}
+                      onSelect={(v) => update({ estructuraComision: v })}
+                    />
+                  </SalesSection>
+                </div>
               )}
 
               {current.kind === 'industry' && (
                 <>
                   <div className="kv-registro-field">
-                    <label>
-                      <Building2 strokeWidth={2} aria-hidden className="kv-registro-label-icon" />
-                      Industrias en las que tienes experiencia
-                    </label>
+                    <label>Industrias en las que tienes experiencia</label>
+                    <p className="kv-registro-field-hint">Selecciona todas las que apliquen.</p>
                     <div className="kv-registro-tag-grid">
                       {COMMERCIAL_INDUSTRIES.map((item) => (
                         <button
@@ -389,63 +1222,134 @@ export default function RegistroPage() {
                       ))}
                     </div>
                   </div>
-                  <div className="kv-registro-field">
-                    <label>
-                      <Wrench strokeWidth={2} aria-hidden className="kv-registro-label-icon" />
-                      Herramientas / CRM que has usado
-                    </label>
-                    <div className="kv-registro-tag-grid">
-                      {COMMERCIAL_TOOLS.map((item) => (
-                        <button
-                          key={item}
-                          type="button"
-                          className={`kv-registro-tag-choice${profile.herramientas?.includes(item) ? ' selected' : ''}`}
-                          onClick={() => toggleTag('herramientas', item)}
-                        >
-                          {item}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                  {(profile.industrias?.length ?? 0) > 1 && (
+                    <ChoiceField
+                      label="Industria principal (mayor experiencia)"
+                      value={profile.industriaPrincipal}
+                      options={profile.industrias ?? []}
+                      onSelect={(v) => update({ industriaPrincipal: v })}
+                    />
+                  )}
                 </>
               )}
 
               {current.kind === 'achievements' && (
-                <>
-                  <div className="kv-registro-field">
-                    <label htmlFor="cuota">% de cumplimiento de cuota promedio (últimos 12 meses)</label>
-                    <input
-                      id="cuota"
-                      className="kv-registro-input"
-                      type="number"
-                      min={0}
-                      max={200}
-                      placeholder="Ej. 95"
-                      value={profile.cuota ?? ''}
-                      onChange={(e) => update({ cuota: e.target.value })}
-                    />
-                  </div>
-                  <div className="kv-registro-field">
-                    <label htmlFor="logro">Tu logro comercial más relevante</label>
-                    <textarea
-                      id="logro"
-                      className="kv-registro-textarea"
-                      placeholder="Ej. Cerré el deal más grande del trimestre en sector industrial..."
-                      value={profile.logro ?? ''}
-                      onChange={(e) => update({ logro: e.target.value })}
-                    />
-                  </div>
-                </>
+                <div className="kv-registro-evidence-list">
+                  <p className="kv-registro-field-hint">
+                    Agrega al menos 1 tarjeta de evidencia. Te sugerimos mínimo 2 para fortalecer tu perfil
+                    en el paso 8.
+                  </p>
+                  {(profile.logros ?? []).map((card, index) => (
+                    <article key={card.id} className="kv-registro-evidence-card">
+                      <div className="kv-registro-evidence-card-head">
+                        <span className="kv-registro-evidence-card-num font-mono">Logro {index + 1}</span>
+                        <button
+                          type="button"
+                          className="kv-registro-evidence-remove"
+                          onClick={() => removeLogro(card.id)}
+                          aria-label="Eliminar logro"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                      {completeHistorial.length > 0 && (
+                        <div className="kv-registro-field">
+                          <label htmlFor={`hist-${card.id}`}>Vincular a experiencia del historial (opcional)</label>
+                          <select
+                            id={`hist-${card.id}`}
+                            className="kv-registro-select"
+                            value={card.historialId ?? ''}
+                            onChange={(e) => {
+                              const id = e.target.value;
+                              if (id) linkLogroToHistorial(card.id, id);
+                              else updateLogro(card.id, { historialId: undefined });
+                            }}
+                          >
+                            <option value="">Seleccionar experiencia...</option>
+                            {completeHistorial.map((h) => (
+                              <option key={h.id} value={h.id}>
+                                {h.cargo} · {h.empresa}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+                      <div className="kv-registro-field">
+                        <label>Título breve</label>
+                        <input
+                          className="kv-registro-input"
+                          placeholder="Ej. Crecimiento de operación comercial 33%"
+                          value={card.titulo}
+                          onChange={(e) => updateLogro(card.id, { titulo: e.target.value })}
+                        />
+                      </div>
+                      <div className="kv-registro-field">
+                        <label>Empresa / contexto</label>
+                        <input
+                          className="kv-registro-input"
+                          placeholder="Ej. Empaquetaduras y Empaques, 2019–2023"
+                          value={card.contexto}
+                          onChange={(e) => updateLogro(card.id, { contexto: e.target.value })}
+                        />
+                      </div>
+                      <div className="kv-registro-field">
+                        <label>Cifra o resultado concreto</label>
+                        <input
+                          className="kv-registro-input"
+                          placeholder="Ej. De COP $9.000M a $12.000M mensuales"
+                          value={card.cifra}
+                          onChange={(e) => updateLogro(card.id, { cifra: e.target.value })}
+                        />
+                      </div>
+                      <div className="kv-registro-field">
+                        <label>Competencia(s) que demuestra</label>
+                        <div className="kv-registro-tag-grid">
+                          {EVIDENCE_COMPETENCY_TAGS.map((tag) => (
+                            <button
+                              key={tag}
+                              type="button"
+                              className={`kv-registro-tag-choice${card.competencias.includes(tag) ? ' selected' : ''}`}
+                              onClick={() => toggleLogroCompetencia(card.id, tag)}
+                            >
+                              {tag}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                  <button type="button" className="kv-registro-add-evidence" onClick={addLogro}>
+                    <Plus size={18} />
+                    Agregar tarjeta de evidencia
+                  </button>
+                  {(profile.logros ?? []).length === 0 && (
+                    <button
+                      type="button"
+                      className="kv-registro-btn-solid kv-registro-btn-solid--block"
+                      onClick={addLogro}
+                    >
+                      Crear primera tarjeta
+                    </button>
+                  )}
+                </div>
               )}
 
               {current.kind === 'sliders' && (
                 <div className="kv-registro-sliders">
-                  {SLIDERS.map((slider) => {
-                    const value = Number(profile[slider.key] ?? 60);
+                  {!profile.nivelRol && (
+                    <p className="kv-registro-field-hint kv-registro-field-hint--warn">
+                      Completa el paso 2 (Rol) para ver las competencias correctas.
+                    </p>
+                  )}
+                  {competencyDefs.map((def) => {
+                    const entry = profile.competencias?.[def.key];
+                    const value = Number(entry?.score ?? 60);
+                    const hasBacking = competencyHasBacking(entry, profile.logros);
+                    const needsEvidence = value >= HIGH_SCORE_THRESHOLD && !hasBacking;
                     return (
-                      <div className="kv-registro-slider-field" key={slider.key}>
+                      <div className="kv-registro-slider-field" key={def.key}>
                         <div className="kv-registro-slider-head">
-                          <span>{slider.label}</span>
+                          <span>{def.label}</span>
                           <b>{value}%</b>
                         </div>
                         <div className="kv-registro-slider-track">
@@ -456,9 +1360,51 @@ export default function RegistroPage() {
                           min={0}
                           max={100}
                           value={value}
-                          onChange={(e) => update({ [slider.key]: e.target.value })}
-                          aria-label={slider.label}
+                          onChange={(e) => updateCompetency(def.key, { score: Number(e.target.value) })}
+                          aria-label={def.label}
                         />
+                        <div className="kv-registro-evidence-link">
+                          <label htmlFor={`ev-${def.key}`}>¿Qué logro respalda este puntaje?</label>
+                          {completeLogros.length > 0 && (
+                            <select
+                              id={`ev-${def.key}`}
+                              className="kv-registro-select"
+                              value={entry?.evidenceId ?? ''}
+                              onChange={(e) =>
+                                updateCompetency(def.key, {
+                                  evidenceId: e.target.value || undefined,
+                                  ejemplo: e.target.value ? undefined : entry?.ejemplo,
+                                })
+                              }
+                            >
+                              <option value="">Vincular tarjeta del paso 7...</option>
+                              {completeLogros.map((l) => (
+                                <option key={l.id} value={l.id}>
+                                  {l.titulo}
+                                </option>
+                              ))}
+                            </select>
+                          )}
+                          <input
+                            className="kv-registro-input"
+                            placeholder="O escribe un ejemplo corto nuevo"
+                            value={entry?.ejemplo ?? ''}
+                            onChange={(e) =>
+                              updateCompetency(def.key, {
+                                ejemplo: e.target.value,
+                                evidenceId: e.target.value ? undefined : entry?.evidenceId,
+                              })
+                            }
+                          />
+                          {hasBacking && (
+                            <span className="kv-registro-backing-ok font-mono">Con respaldo</span>
+                          )}
+                          {needsEvidence && (
+                            <p className="kv-registro-field-hint kv-registro-field-hint--warn">
+                              Este puntaje es más fuerte si lo respaldas con un ejemplo o tarjeta de logro.
+                            </p>
+                          )}
+                        </div>
                       </div>
                     );
                   })}
@@ -499,7 +1445,7 @@ export default function RegistroPage() {
                   </button>
                 )}
               </div>
-              <p className="kv-registro-save-note">
+              <p className="kv-registro-save-note font-mono">
                 Tu perfil es confidencial. Solo el equipo Kova lo usa para evaluar compatibilidad con vacantes.
               </p>
             </div>
