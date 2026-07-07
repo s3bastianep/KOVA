@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { CN_CTA_LABEL_SHORT } from '@/theme/landingConsult';
+import NavLinkItem from '@/components/landing/NavLinkItem';
 
 const navLinks = [
   ['Servicios', '/servicios'],
@@ -20,9 +21,9 @@ export default function Navbar() {
 
         <div className="kv-navlinks">
           {navLinks.map(([label, path]) => (
-            <Link key={path} to={path}>
+            <NavLinkItem key={path} to={path}>
               {label}
-            </Link>
+            </NavLinkItem>
           ))}
         </div>
 

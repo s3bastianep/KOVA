@@ -2,6 +2,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail } from 'lucide-react';
 import { CN } from '@/theme/landingConsult';
 import { LC } from '@/theme/landingCorporate';
+import NavLinkItem from '@/components/landing/NavLinkItem';
 
 const links = [
   ['Servicios', '/servicios'],
@@ -54,9 +55,14 @@ export default function Footer({ variant }) {
         <nav className="flex flex-wrap gap-x-4 gap-y-1">
           {links.map(([label, id]) =>
             id.startsWith('/') ? (
-              <Link key={label} to={id} className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>
+              <NavLinkItem
+                key={label}
+                to={id}
+                className="text-xs"
+                style={{ color: 'rgba(255,255,255,0.45)' }}
+              >
                 {label}
-              </Link>
+              </NavLinkItem>
             ) : (
               <button key={label} type="button" onClick={() => goToSection(id)} className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>
                 {label}

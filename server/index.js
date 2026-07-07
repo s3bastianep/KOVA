@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'node:path';
+import http from 'node:http';
 import { fileURLToPath } from 'node:url';
 import { randomUUID } from 'node:crypto';
 import {
@@ -95,8 +96,46 @@ app.post('/api/bookings', async (req, res) => {
   });
 });
 
+const DASHBOARD_PROXY_ROUTE =
+  /^\/(?:registro|login|postular|dashboard|procesos|candidatos|api\/(?:registro|auth|procesos|vacantes|health)(?:\/|$)|_next\/)/;
+
+function mountDashboardDevProxy() {
+  const dashboardPort = Number(process.env.DASHBOARD_PORT) || 3001;
+  const dashboardHost = process.env.DASHBOARD_HOST || '127.0.0.1';
+
+  app.use((req, res, next) => {
+    if (!DASHBOARD_PROXY_ROUTE.test(req.path)) return next();
+
+    const proxyReq = http.request(
+      {
+        hostname: dashboardHost,
+        port: dashboardPort,
+        path: req.url,
+        method: req.method,
+        headers: { ...req.headers, host: `${dashboardHost}:${dashboardPort}` },
+      },
+      (proxyRes) => {
+        res.writeHead(proxyRes.statusCode ?? 502, proxyRes.headers);
+        proxyRes.pipe(res);
+      },
+    );
+
+    proxyReq.on('error', () => {
+      if (!res.headersSent) {
+        res
+          .status(502)
+          .type('text/plain')
+          .send('El registro requiere el dashboard en ejecución: cd apps/dashboard && npm run dev');
+      }
+    });
+
+    req.pipe(proxyReq);
+  });
+}
+
 async function start() {
   if (isDev) {
+    mountDashboardDevProxy();
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
