@@ -78,7 +78,7 @@ const STEPS = [
     tag: 'Paso 1 de 8',
     short: 'Contacto',
     title: 'Creemos tu perfil comercial',
-    sub: 'Contacto y disponibilidad — sin preguntas incómodas.',
+    sub: '',
     kind: 'contact' as const,
     icon: User,
   },
