@@ -457,12 +457,12 @@ html:has(.kova-landing-wave) {
   letter-spacing: -0.02em;
   margin: 1.75rem 0 1.5rem;
   color: #fff;
-  max-width: 14ch;
+  max-width: 31rem;
 }
 
 @media (min-width: 860px) {
   .kova-landing-wave .kv-hero h1 {
-    max-width: 12ch;
+    max-width: 31rem;
   }
 }
 
@@ -474,7 +474,7 @@ html:has(.kova-landing-wave) {
 .kova-landing-wave .kv-hero-sub {
   display: flex;
   flex-direction: column;
-  gap: 1.125rem;
+  gap: 1rem;
   max-width: 31rem;
   margin-bottom: 2.25rem;
 }
@@ -486,9 +486,7 @@ html:has(.kova-landing-wave) {
   line-height: 1.32;
   letter-spacing: -0.02em;
   color: #fff;
-  max-width: 18ch;
-  padding-left: 1rem;
-  border-left: 3px solid var(--kv-lime);
+  max-width: none;
 }
 
 .kova-landing-wave .kv-hero-sub-lead em {
@@ -501,7 +499,7 @@ html:has(.kova-landing-wave) {
   font-size: clamp(0.875rem, 1.15vw, 0.96875rem);
   line-height: 1.72;
   color: rgba(255, 255, 255, 0.58);
-  max-width: 30rem;
+  max-width: none;
 }
 
 .kova-landing-wave .kv-hero-ctas {

@@ -634,8 +634,7 @@ export default function RegistroPage() {
               Tu perfil comercial, listo para el match
             </h2>
             <p className="kv-registro-aside-lead">
-              No es un formulario genérico: cada respuesta se compara con vacantes reales del
-              pipeline B2B de Kova.
+              Cuéntanos tu experiencia comercial y te avisamos cuando haya una vacante que encaje contigo.
             </p>
 
             <div className="kv-registro-aside-hero">
@@ -1631,9 +1630,6 @@ export default function RegistroPage() {
                   </motion.button>
                 )}
               </div>
-              <p className="kv-registro-save-note font-mono">
-                Tu perfil es confidencial. Solo el equipo Kova lo usa para evaluar compatibilidad con vacantes.
-              </p>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter, Sora } from 'next/font/google';
+import { Inter, JetBrains_Mono, Sora } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 
@@ -12,8 +12,15 @@ const inter = Inter({
 
 const sora = Sora({
   subsets: ['latin'],
-  weight: ['500', '600', '700'],
+  weight: ['400', '500', '600', '700', '800'],
   variable: '--font-sora',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['500', '600'],
+  variable: '--font-mono',
   display: 'swap',
 });
 
@@ -24,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${inter.variable} ${sora.variable}`}>
+    <html lang="es" className={`${inter.variable} ${sora.variable} ${jetbrainsMono.variable}`}>
       <body>
         <Providers>{children}</Providers>
       </body>

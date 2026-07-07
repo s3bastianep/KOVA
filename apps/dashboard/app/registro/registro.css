@@ -1,6 +1,8 @@
 /* KOVA — Registro candidato (landing wave) */
 
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&display=swap');
+html:has(.kv-registro) {
+  font-size: 95%;
+}
 
 .kv-registro {
   --kv-ink: #12140f;
@@ -23,21 +25,40 @@
   background: var(--kv-paper);
   color: var(--kv-ink);
   font-family: var(--font-inter), 'Inter', ui-sans-serif, system-ui, sans-serif;
-  font-size: 16px;
   position: relative;
   overflow-x: hidden;
-  line-height: 1.65;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-.kv-registro .font-heading {
+.kv-registro button,
+.kv-registro input,
+.kv-registro select,
+.kv-registro textarea {
+  font-family: inherit;
+  letter-spacing: inherit;
+}
+
+.kv-registro .font-heading,
+.kv-registro h1,
+.kv-registro h2,
+.kv-registro h3,
+.kv-registro .kv-registro-aside-title,
+.kv-registro .kv-registro-step-title,
+.kv-registro .kv-registro-aside-hero-title {
   font-family: var(--font-sora), 'Sora', ui-sans-serif, sans-serif;
 }
 
-.kv-registro .font-mono {
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
+.kv-registro .font-mono,
+.kv-registro .kv-registro-field-group-title,
+.kv-registro .kv-registro-aside-eyebrow,
+.kv-registro .kv-registro-step-tag,
+.kv-registro .kv-registro-card-topbar-meta,
+.kv-registro .kv-registro-mobile-bar-meta {
+  font-family: var(--font-mono), 'JetBrains Mono', ui-monospace, monospace;
 }
 
 /* Background */
@@ -333,7 +354,7 @@
 }
 
 .kv-registro-ring-label strong {
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-sora), 'Sora', ui-sans-serif, sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
   color: #fff;
@@ -414,7 +435,7 @@
 
 .kv-registro-aside-stat strong {
   display: block;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-sora), 'Sora', ui-sans-serif, sans-serif;
   font-size: 1.0625rem;
   font-weight: 700;
   color: rgba(216, 242, 76, 0.92);
@@ -953,7 +974,6 @@
 .kv-registro-field-group-title {
   margin: 0;
   font-size: 0.75rem;
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--kv-slate);

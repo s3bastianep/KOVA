@@ -312,7 +312,8 @@ export const CN_METHOD = [
 ];
 
 export const CN_SIGNATURE_QUOTE = {
-  setup: 'Un gran vendedor de seguros puede fracasar en reductores industriales.',
+  setup:
+    'Vender seguros y vender reductores industriales no es lo mismo. Un gran perfil en uno puede fracasar en el otro.',
   payoffBefore: 'No es malo: vende ',
   payoffHighlight: 'de otra manera',
   payoffAfter: '. Medimos encaje con su modelo comercial.',
