@@ -10,7 +10,7 @@ import { es } from 'date-fns/locale';
 import { ArrowLeft, CalendarDays, Check, Loader2, Video } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { createBooking, fetchAvailability, checkBookingApi } from '@/api/booking';
-import { formatDateKey, generateTimeSlots, isBookableDateKey } from '@/lib/schedule';
+import { formatDateKey, isBookableDateKey } from '@/lib/schedule';
 
 const DAYS_AHEAD = 45;
 
@@ -59,15 +59,20 @@ export default function BookingScheduler({ alternateContact = null }) {
       return;
     }
 
-    const localSlots = isBookableDateKey(selectedDateKey) ? generateTimeSlots(selectedDateKey) : [];
-    setSlots(localSlots);
+    setSlots([]);
     setSelectedTime(null);
-    setLoadingSlots(localSlots.length === 0);
+    setLoadingSlots(true);
 
     let cancelled = false;
     fetchAvailability(selectedDateKey)
-      .then(({ slots: s }) => {
-        if (!cancelled && s.length) setSlots(s);
+      .then(({ slots: nextSlots, unavailable }) => {
+        if (cancelled) return;
+        if (unavailable) {
+          setApiReady(false);
+          setSlots([]);
+          return;
+        }
+        setSlots(nextSlots);
       })
       .finally(() => {
         if (!cancelled) setLoadingSlots(false);
@@ -89,6 +94,10 @@ export default function BookingScheduler({ alternateContact = null }) {
   const handleConfirm = async (e) => {
     e.preventDefault();
     setError('');
+    if (apiReady === false) {
+      setError('El agendamiento en línea no está disponible. Escríbenos a contacto@kova.com.co.');
+      return;
+    }
     if (!selectedDateKey || !selectedTime) {
       setError('Selecciona fecha y hora.');
       return;
@@ -152,8 +161,8 @@ export default function BookingScheduler({ alternateContact = null }) {
 
       {apiReady === false && (
         <div className="kv-booking-alert">
-          El servidor de citas no responde. En local ejecuta <strong>npm run dev</strong> y abre{' '}
-          <strong>http://localhost:3000</strong>.
+          El agendamiento en línea no está disponible ahora. Escríbenos a{' '}
+          <a href="mailto:contacto@kova.com.co">contacto@kova.com.co</a> y te ayudamos a reservar.
         </div>
       )}
 
@@ -189,6 +198,10 @@ export default function BookingScheduler({ alternateContact = null }) {
                     <div className="kv-booking-loading">
                       <Loader2 className="animate-spin" aria-hidden />
                     </div>
+                  ) : apiReady === false ? (
+                    <p className="kv-booking-empty">
+                      No podemos mostrar horarios en este momento. Usa el correo de contacto o intenta más tarde.
+                    </p>
                   ) : slots.length ? (
                     <>
                       <div className="kv-booking-slots">
@@ -211,7 +224,7 @@ export default function BookingScheduler({ alternateContact = null }) {
                           );
                         })}
                       </div>
-                      {selectedTime && (
+                      {selectedTime && apiReady !== false && (
                         <button
                           type="button"
                           onClick={() => {

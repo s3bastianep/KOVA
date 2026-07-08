@@ -32,9 +32,6 @@ export default function Navbar() {
           <a href={dashboardHref('/login')} className="kova-nav-login kv-nav-login">
             Iniciar sesión
           </a>
-          <a href={dashboardHref('/dashboard')} className="kova-nav-login kv-nav-admin">
-            Administrador
-          </a>
           <Link to="/contacto" className="kv-cta-pill">
             {CN_CTA_LABEL_SHORT}
           </Link>

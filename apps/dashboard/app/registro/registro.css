@@ -167,12 +167,6 @@ html:has(.kv-registro) {
   color: #fff;
 }
 
-@media (max-width: 639px) {
-  .kv-registro-nav-link--admin {
-    display: none;
-  }
-}
-
 /* Signal strip */
 
 .kv-registro-signal {
@@ -538,6 +532,19 @@ html:has(.kv-registro) {
   color: var(--kv-lime);
 }
 
+.kv-registro-draft-note {
+  margin: 1rem 0 0;
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.75rem;
+  background: rgba(216, 242, 76, 0.08);
+  border: 1px solid rgba(216, 242, 76, 0.18);
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
 @media (max-width: 960px) {
   .kv-registro-layout {
     padding-top: 1rem;
@@ -624,6 +631,12 @@ html:has(.kv-registro) {
 
   .kv-registro-save-note {
     display: none;
+  }
+
+  .kv-registro-save-note--mobile {
+    display: block;
+    margin: 0 0 0.75rem;
+    text-align: left;
   }
 
   .kv-registro-field-row {
@@ -924,6 +937,31 @@ html:has(.kv-registro) {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+}
+
+.kv-registro-sales--compact .kv-registro-sales-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.15rem;
+}
+
+@media (min-width: 900px) {
+  .kv-registro-sales--compact .kv-registro-sales-grid {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  .kv-registro-sales--compact .kv-registro-sales-grid > .kv-registro-section:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .kv-registro-sales--compact .kv-registro-section {
+    padding: 1.1rem 1.15rem 1.2rem 1.25rem;
+  }
+
+  .kv-registro-sales--compact .kv-registro-section-body {
+    gap: 1.1rem;
+  }
 }
 
 .kv-registro-section {
@@ -1340,6 +1378,24 @@ html:has(.kv-registro) {
   box-shadow: 0 0 0 3px var(--kv-indigo-soft);
 }
 
+.kv-registro-input--invalid {
+  border-color: rgba(196, 30, 58, 0.45);
+  box-shadow: 0 0 0 2px rgba(196, 30, 58, 0.08);
+}
+
+.kv-registro-month-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.kv-registro-field-format-hint {
+  margin: 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--kv-slate);
+}
+
 .kv-registro-textarea {
   min-height: 120px;
   resize: vertical;
@@ -1624,6 +1680,37 @@ html:has(.kv-registro) {
   padding: 0.95rem 1.5rem 1.1rem 1.75rem;
   border-top: 1px solid rgba(215, 217, 206, 0.9);
   background: #fff;
+}
+
+.kv-registro-step-blockers {
+  margin-bottom: 0.85rem;
+  padding: 0.8rem 0.95rem;
+  border-radius: 0.75rem;
+  background: rgba(51, 65, 196, 0.05);
+  border: 1px solid rgba(51, 65, 196, 0.14);
+}
+
+.kv-registro-step-blockers-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--kv-ink);
+}
+
+.kv-registro-step-blockers ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--kv-slate);
+}
+
+.kv-registro-step-blockers li + li {
+  margin-top: 0.2rem;
+}
+
+.kv-registro-save-note--mobile {
+  display: none;
 }
 
 .kv-registro-btn-row {

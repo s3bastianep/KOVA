@@ -69,6 +69,15 @@ import {
   type LanguageEntry,
   type CertificationEntry,
 } from '@/lib/candidate-commercial-profile';
+import {
+  clearRegistroDraft,
+  formatMonthYearDisplay,
+  getStepBlockers,
+  loadRegistroDraft,
+  parseMonthYearInput,
+  saveRegistroDraft,
+  slugifyField,
+} from './registro-utils';
 
 const CRM_OTHER = 'Otro';
 
@@ -217,6 +226,75 @@ function SalesSection({ title, children }: { title: string; children: React.Reac
   );
 }
 
+function MonthYearInput({
+  id,
+  value,
+  onChange,
+  disabled,
+  required,
+}: {
+  id: string;
+  value: string;
+  onChange: (normalized: string) => void;
+  disabled?: boolean;
+  required?: boolean;
+}) {
+  const [display, setDisplay] = useState(() => formatMonthYearDisplay(value));
+  const [invalid, setInvalid] = useState(false);
+
+  useEffect(() => {
+    setDisplay(formatMonthYearDisplay(value));
+    setInvalid(false);
+  }, [value]);
+
+  return (
+    <div className="kv-registro-month-field">
+      <input
+        id={id}
+        className={`kv-registro-input${invalid ? ' kv-registro-input--invalid' : ''}`}
+        type="text"
+        inputMode="numeric"
+        autoComplete="off"
+        placeholder="MM/AAAA"
+        disabled={disabled}
+        required={required}
+        value={display}
+        aria-describedby={`${id}-hint`}
+        onChange={(e) => {
+          const raw = e.target.value;
+          setDisplay(raw);
+          if (!raw.trim()) {
+            setInvalid(false);
+            onChange('');
+            return;
+          }
+          const parsed = parseMonthYearInput(raw);
+          if (parsed === null) {
+            setInvalid(true);
+            return;
+          }
+          setInvalid(false);
+          onChange(parsed);
+        }}
+        onBlur={() => {
+          if (!display.trim()) return;
+          const parsed = parseMonthYearInput(display);
+          if (parsed && parsed !== '') {
+            setDisplay(formatMonthYearDisplay(parsed));
+            onChange(parsed);
+            setInvalid(false);
+          } else if (parsed === '') {
+            setInvalid(false);
+          }
+        }}
+      />
+      <p className="kv-registro-field-format-hint font-mono" id={`${id}-hint`}>
+        Formato MM/AAAA · Ej. 03/2020
+      </p>
+    </div>
+  );
+}
+
 function ChoiceField({
   label,
   value,
@@ -224,6 +302,7 @@ function ChoiceField({
   onSelect,
   compact = false,
   required = false,
+  namePrefix,
 }: {
   label: string;
   value?: string;
@@ -231,7 +310,9 @@ function ChoiceField({
   onSelect: (option: string) => void;
   compact?: boolean;
   required?: boolean;
+  namePrefix?: string;
 }) {
+  const fieldSlug = namePrefix ?? slugifyField(label);
   const compactCols = compact
     ? options.length <= 2
       ? ' kv-registro-choice-grid--cols-2'
@@ -263,11 +344,13 @@ function ChoiceField({
           const selected = value === option;
           return (
             <button
-              key={option}
+              key={`${fieldSlug}-${option}`}
               type="button"
+              name={fieldSlug}
               className={`kv-registro-choice${selected ? ' selected' : ''}${compact ? ' kv-registro-choice--compact' : ''}`}
               onClick={() => onSelect(option)}
               aria-pressed={selected}
+              aria-label={`${label}: ${option}`}
             >
               <span className="kv-registro-choice-text">{option}</span>
               {!compact && (
@@ -340,9 +423,6 @@ function RegistroShell({ children }: { children: React.ReactNode }) {
           <a href="/login" className="kv-registro-nav-link">
             Iniciar sesión
           </a>
-          <a href="/dashboard" className="kv-registro-nav-link kv-registro-nav-link--admin">
-            Administrador
-          </a>
           <a href="/" className="kv-registro-nav-link">
             Volver al inicio
           </a>
@@ -359,6 +439,24 @@ export default function RegistroPage() {
   const [done, setDone] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [draftNote, setDraftNote] = useState(false);
+
+  useEffect(() => {
+    const draft = loadRegistroDraft();
+    if (!draft) return;
+    setProfile(draft.profile);
+    setStep(Math.min(Math.max(0, draft.step), STEPS.length - 1));
+    setDraftNote(true);
+  }, []);
+
+  useEffect(() => {
+    if (done) return;
+    saveRegistroDraft({
+      profile,
+      step,
+      savedAt: new Date().toISOString(),
+    });
+  }, [profile, step, done]);
 
   const goToStep = (target: number) => {
     if (target < 0 || target >= STEPS.length || target === step) return;
@@ -443,6 +541,11 @@ export default function RegistroPage() {
     }
     return true;
   }, [step, profile, completeLogros.length, completeHistorial.length]);
+
+  const stepBlockers = useMemo(
+    () => getStepBlockers(step, profile, completeHistorial.length, completeLogros.length),
+    [step, profile, completeHistorial.length, completeLogros.length],
+  );
 
   useEffect(() => {
     if (step === 2) {
@@ -667,6 +770,7 @@ export default function RegistroPage() {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message ?? 'Error al registrar');
+      clearRegistroDraft();
       setDone(json.message);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al registrar');
@@ -764,6 +868,11 @@ export default function RegistroPage() {
               <Lock strokeWidth={2} aria-hidden />
               <span>Datos confidenciales · solo equipo Kova</span>
             </div>
+            <p className="kv-registro-draft-note font-mono">
+              {draftNote
+                ? 'Retomamos tu borrador guardado en este dispositivo.'
+                : 'Tu progreso se guarda automáticamente. Puedes cerrar y volver después.'}
+            </p>
           </div>
         </aside>
 
@@ -917,6 +1026,7 @@ export default function RegistroPage() {
                     <ChoiceField
                       compact
                       required
+                      namePrefix="disponibilidad-inicio"
                       label="Inicio"
                       value={profile.disponibilidad}
                       options={AVAILABILITY_OPTIONS}
@@ -925,6 +1035,7 @@ export default function RegistroPage() {
                     <ChoiceField
                       compact
                       required
+                      namePrefix="disponibilidad-viajar"
                       label="Viajar"
                       value={profile.disponibilidadViajar}
                       options={TRAVEL_OPTIONS}
@@ -933,6 +1044,7 @@ export default function RegistroPage() {
                     <ChoiceField
                       compact
                       required
+                      namePrefix="disponibilidad-reubicacion"
                       label="Cambio de ciudad"
                       value={profile.disponibilidadReubicacion}
                       options={RELOCATION_OPTIONS}
@@ -966,6 +1078,7 @@ export default function RegistroPage() {
                 <>
                   <ChoiceField
                     required
+                    namePrefix="rol-nivel"
                     label="Nivel del rol"
                     value={profile.nivelRol}
                     options={ROLE_LEVEL_OPTIONS}
@@ -973,6 +1086,7 @@ export default function RegistroPage() {
                   />
                   <ChoiceField
                     required
+                    namePrefix="rol-funcion"
                     label="Función principal"
                     value={profile.funcionPrincipal}
                     options={ROLE_FUNCTION_OPTIONS}
@@ -980,6 +1094,7 @@ export default function RegistroPage() {
                   />
                   <ChoiceField
                     required
+                    namePrefix="rol-objetivo"
                     label="¿Qué estás buscando en tu próximo reto?"
                     value={profile.objetivoProfesional}
                     options={PROFESSIONAL_OBJECTIVE_OPTIONS}
@@ -987,6 +1102,7 @@ export default function RegistroPage() {
                   />
                   <ChoiceField
                     required
+                    namePrefix="rol-tamano-equipo"
                     label="Tamaño de equipo que has liderado"
                     value={profile.tamanoEquipo}
                     options={TEAM_SIZE_OPTIONS}
@@ -1078,26 +1194,23 @@ export default function RegistroPage() {
                             <FieldLabel htmlFor={`inicio-${entry.id}`} required>
                               Fecha de inicio
                             </FieldLabel>
-                            <input
+                            <MonthYearInput
                               id={`inicio-${entry.id}`}
-                              className="kv-registro-input"
-                              type="month"
                               value={entry.fechaInicio}
-                              onChange={(e) => updateHistorial(entry.id, { fechaInicio: e.target.value })}
+                              onChange={(fechaInicio) => updateHistorial(entry.id, { fechaInicio })}
                             />
                           </div>
                           <div className="kv-registro-field">
                             <FieldLabel htmlFor={`fin-${entry.id}`} required={!entry.trabajoActual}>
                               Fecha de fin
                             </FieldLabel>
-                            <input
+                            <MonthYearInput
                               id={`fin-${entry.id}`}
-                              className="kv-registro-input"
-                              type="month"
                               value={entry.fechaFin ?? ''}
                               disabled={entry.trabajoActual}
-                              onChange={(e) =>
-                                updateHistorial(entry.id, { fechaFin: e.target.value, trabajoActual: false })
+                              required={!entry.trabajoActual}
+                              onChange={(fechaFin) =>
+                                updateHistorial(entry.id, { fechaFin, trabajoActual: false })
                               }
                             />
                           </div>
@@ -1128,6 +1241,7 @@ export default function RegistroPage() {
                           />
                         </div>
                         <ChoiceField
+                          namePrefix={`historial-equipo-${entry.id}`}
                           label="Tamaño de equipo liderado en ese cargo (si aplica)"
                           value={entry.tamanoEquipo ?? ''}
                           options={TEAM_SIZE_OPTIONS}
@@ -1334,10 +1448,12 @@ export default function RegistroPage() {
               )}
 
               {current.kind === 'sales' && (
-                <div className="kv-registro-sales">
+                <div className="kv-registro-sales kv-registro-sales--compact">
+                  <div className="kv-registro-sales-grid">
                   <SalesSection title="Estilo de venta">
                     <ChoiceField
                       required
+                      namePrefix="venta-tipo"
                       label="Tipo de venta"
                       value={profile.tipoVenta}
                       options={['Consultiva', 'Transaccional']}
@@ -1345,6 +1461,7 @@ export default function RegistroPage() {
                     />
                     <ChoiceField
                       required
+                      namePrefix="venta-naturaleza"
                       label="Naturaleza de la venta"
                       value={profile.naturaleza}
                       options={['Técnica', 'Relacional']}
@@ -1352,6 +1469,7 @@ export default function RegistroPage() {
                     />
                     <ChoiceField
                       required
+                      namePrefix="venta-enfoque"
                       label="Enfoque principal"
                       value={profile.enfoque}
                       options={['Prospección (hunter)', 'Manejo de cuentas (farmer)']}
@@ -1390,6 +1508,8 @@ export default function RegistroPage() {
                             type="button"
                             className={`kv-registro-tag-choice${profile.tickets?.includes(item) ? ' selected' : ''}`}
                             onClick={() => toggleTag('tickets', item)}
+                            aria-pressed={profile.tickets?.includes(item)}
+                            aria-label={`Ticket promedio manejado: ${item}`}
                           >
                             {item}
                           </button>
@@ -1410,6 +1530,7 @@ export default function RegistroPage() {
                   <SalesSection title="Sobre el cliente">
                     <ChoiceField
                       required
+                      namePrefix="venta-tipo-cliente"
                       label="Tipo de cliente"
                       value={profile.tipoCliente}
                       options={CLIENT_TYPE_OPTIONS}
@@ -1417,6 +1538,7 @@ export default function RegistroPage() {
                     />
                     <ChoiceField
                       required
+                      namePrefix="venta-interlocutor"
                       label="Nivel de interlocutor habitual"
                       value={profile.nivelInterlocutor}
                       options={INTERLOCUTOR_OPTIONS}
@@ -1424,6 +1546,7 @@ export default function RegistroPage() {
                     />
                     <ChoiceField
                       required
+                      namePrefix="venta-canal"
                       label="Canal de venta"
                       value={profile.canalVenta}
                       options={SALES_CHANNEL_OPTIONS}
@@ -1434,6 +1557,7 @@ export default function RegistroPage() {
                   <SalesSection title="Alcance y herramientas">
                     <ChoiceField
                       required
+                      namePrefix="venta-cobertura"
                       label="Cobertura geográfica"
                       value={profile.coberturaGeografica}
                       options={GEO_COVERAGE_OPTIONS}
@@ -1441,6 +1565,7 @@ export default function RegistroPage() {
                     />
                     <ChoiceField
                       required
+                      namePrefix="venta-cartera"
                       label="Número de cuentas en cartera"
                       value={profile.cuentasCartera}
                       options={PORTFOLIO_SIZE_OPTIONS}
@@ -1480,12 +1605,14 @@ export default function RegistroPage() {
                     )}
                     <ChoiceField
                       required
+                      namePrefix="venta-comision"
                       label="Estructura de comisión familiarizada"
                       value={profile.estructuraComision}
                       options={COMMISSION_OPTIONS}
                       onSelect={(v) => update({ estructuraComision: v })}
                     />
                   </SalesSection>
+                  </div>
                 </div>
               )}
 
@@ -1505,6 +1632,8 @@ export default function RegistroPage() {
                           type="button"
                           className={`kv-registro-tag-choice${profile.industrias?.includes(item) ? ' selected' : ''}`}
                           onClick={() => toggleTag('industrias', item)}
+                          aria-pressed={profile.industrias?.includes(item)}
+                          aria-label={`Industria: ${item}`}
                         >
                           {item}
                         </button>
@@ -1600,6 +1729,8 @@ export default function RegistroPage() {
                               type="button"
                               className={`kv-registro-tag-choice${card.competencias.includes(tag) ? ' selected' : ''}`}
                               onClick={() => toggleLogroCompetencia(card.id, tag)}
+                              aria-pressed={card.competencias.includes(tag)}
+                              aria-label={`Competencia del logro: ${tag}`}
                             >
                               {tag}
                             </button>
@@ -1705,6 +1836,22 @@ export default function RegistroPage() {
             </div>
 
             <div className="kv-registro-card-footer">
+              {!canNext && step < STEPS.length - 1 && stepBlockers.length > 0 ? (
+                <div className="kv-registro-step-blockers" role="status" aria-live="polite">
+                  <p className="kv-registro-step-blockers-title">Para continuar:</p>
+                  <ul>
+                    {stepBlockers.slice(0, 4).map((blocker) => (
+                      <li key={blocker}>{blocker}</li>
+                    ))}
+                    {stepBlockers.length > 4 ? (
+                      <li>y {stepBlockers.length - 4} campo(s) más</li>
+                    ) : null}
+                  </ul>
+                </div>
+              ) : null}
+              <p className="kv-registro-save-note kv-registro-save-note--mobile font-mono">
+                Tu progreso se guarda en este dispositivo. Puedes cerrar y volver después.
+              </p>
               <div className={`kv-registro-btn-row${step > 0 ? '' : ' kv-registro-btn-row--end'}`}>
                 {step > 0 ? (
                   <button type="button" className="kv-registro-btn-ghost" onClick={() => goToStep(step - 1)}>

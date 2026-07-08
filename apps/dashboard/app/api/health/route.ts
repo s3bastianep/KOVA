@@ -5,5 +5,11 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   const hasDb = Boolean(process.env.DATABASE_URL?.trim());
   const mock = isMockMode();
-  return Response.json({ ok: true, service: 'kova-talent-os', database: hasDb, mockMode: mock });
+  return Response.json({
+    ok: true,
+    service: 'kova-talent-os',
+    booking: true,
+    database: hasDb,
+    mockMode: mock,
+  });
 }
