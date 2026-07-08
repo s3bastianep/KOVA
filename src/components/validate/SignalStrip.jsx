@@ -15,7 +15,7 @@ export default function SignalStrip() {
       </div>
 
       <div className="kv-signal-wave-wrap">
-        <svg className="kv-signal-wave" viewBox="0 0 1600 130" preserveAspectRatio="none">
+        <svg className="kv-signal-wave" viewBox="0 0 1600 130" preserveAspectRatio="none" shapeRendering="geometricPrecision">
           <path
             d="M0,60 C60,20 120,20 180,60 C240,100 300,100 360,60 C420,20 480,20 540,60 C580,85 610,74 645,66"
             fill="none"

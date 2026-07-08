@@ -62,9 +62,9 @@
     @apply bg-background text-foreground font-body;
     color: #3D3D3D;
     overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: auto;
+    text-rendering: geometricPrecision;
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
   }
 
   h1, h2, h3, h4 {

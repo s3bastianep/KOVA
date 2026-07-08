@@ -1,7 +1,8 @@
 /* KOVA — Registro candidato (landing wave) */
 
 html:has(.kv-registro) {
-  font-size: 90.25%;
+  font-size: 100%;
+  text-rendering: geometricPrecision;
 }
 
 .kv-registro {
@@ -29,9 +30,13 @@ html:has(.kv-registro) {
   overflow-x: hidden;
   line-height: 1.6;
   letter-spacing: -0.01em;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: auto;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: auto;
+}
+
+.kv-registro svg {
+  shape-rendering: geometricPrecision;
 }
 
 .kv-registro button,
@@ -705,7 +710,6 @@ html:has(.kv-registro) {
 
 .kv-registro-segment--active {
   background: var(--kv-lime);
-  box-shadow: 0 0 8px rgba(216, 242, 76, 0.4);
 }
 
 .kv-registro-insight {
@@ -758,7 +762,6 @@ html:has(.kv-registro) {
   background: var(--kv-lime);
   margin-right: 0.45rem;
   vertical-align: middle;
-  box-shadow: 0 0 0 3px rgba(216, 242, 76, 0.25);
 }
 
 .kv-registro-card-top {
