@@ -272,6 +272,12 @@ function RegistroShell({ children }: { children: React.ReactNode }) {
         </a>
         <div className="kv-registro-nav-end">
           <span className="kv-registro-nav-pill font-mono">Constructor de perfil comercial</span>
+          <a href="/login" className="kv-registro-nav-link">
+            Iniciar sesión
+          </a>
+          <a href="/dashboard" className="kv-registro-nav-link kv-registro-nav-link--admin">
+            Administrador
+          </a>
           <a href="/" className="kv-registro-nav-link">
             Volver al inicio
           </a>

@@ -179,8 +179,41 @@ html:has(.kova-landing-wave) {
   background: var(--kv-indigo-dark) !important;
 }
 
+.kova-landing-wave .kv-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
 .kova-landing-wave .kv-nav .kova-nav-login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--kv-nav-muted);
+  text-decoration: none;
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.kova-landing-wave .kv-nav .kova-nav-login:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.kova-landing-wave .kv-nav .kv-nav-admin {
   display: none;
+}
+
+@media (min-width: 900px) {
+  .kova-landing-wave .kv-nav .kv-nav-admin {
+    display: inline-flex;
+  }
 }
 
 /* Hero */

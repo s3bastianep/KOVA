@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { CN_CTA_LABEL_SHORT } from '@/theme/landingConsult';
+import { dashboardHref } from '@/lib/dashboardLinks';
 import NavLinkItem from '@/components/landing/NavLinkItem';
 
 const navLinks = [
@@ -27,9 +28,17 @@ export default function Navbar() {
           ))}
         </div>
 
-        <Link to="/contacto" className="kv-cta-pill">
-          {CN_CTA_LABEL_SHORT}
-        </Link>
+        <div className="kv-nav-actions">
+          <a href={dashboardHref('/login')} className="kova-nav-login kv-nav-login">
+            Iniciar sesión
+          </a>
+          <a href={dashboardHref('/dashboard')} className="kova-nav-login kv-nav-admin">
+            Administrador
+          </a>
+          <Link to="/contacto" className="kv-cta-pill">
+            {CN_CTA_LABEL_SHORT}
+          </Link>
+        </div>
       </div>
     </nav>
   );
