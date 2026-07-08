@@ -3,7 +3,33 @@ import type { Candidate } from '@prisma/client';
 import { prisma } from './prisma';
 import { AuthUser, getUserFromRequest, unauthorized } from './auth';
 
+async function tryLinkCandidateUser(candidate: Candidate, userId: string) {
+  if (candidate.userId === userId) return candidate;
+  if (candidate.userId) return null;
+
+  try {
+    return await prisma.candidate.update({
+      where: { id: candidate.id },
+      data: { userId },
+    });
+  } catch (error) {
+    console.error('[candidate-auth] auto-link userId failed:', error);
+    return candidate;
+  }
+}
+
 export async function getCandidateForUser(user: AuthUser): Promise<Candidate | null> {
+  if (user.candidateId) {
+    try {
+      const byId = await prisma.candidate.findFirst({
+        where: { id: user.candidateId, tenantId: user.tenantId },
+      });
+      if (byId) return tryLinkCandidateUser(byId, user.id);
+    } catch (error) {
+      console.error('[candidate-auth] lookup by candidateId failed:', error);
+    }
+  }
+
   try {
     const linked = await prisma.candidate.findFirst({ where: { userId: user.id } });
     if (linked) return linked;
@@ -11,29 +37,19 @@ export async function getCandidateForUser(user: AuthUser): Promise<Candidate | n
     console.error('[candidate-auth] lookup by userId failed:', error);
   }
 
+  const email = user.email.trim().toLowerCase();
+  if (!email) return null;
+
   try {
     const byEmail = await prisma.candidate.findFirst({
       where: {
         tenantId: user.tenantId,
-        email: { equals: user.email, mode: 'insensitive' },
+        email,
       },
       orderBy: { createdAt: 'desc' },
     });
     if (!byEmail) return null;
-
-    if (!byEmail.userId) {
-      try {
-        return await prisma.candidate.update({
-          where: { id: byEmail.id },
-          data: { userId: user.id },
-        });
-      } catch (linkError) {
-        console.error('[candidate-auth] auto-link userId failed:', linkError);
-        return byEmail;
-      }
-    }
-
-    return byEmail.userId === user.id ? byEmail : null;
+    return tryLinkCandidateUser(byEmail, user.id);
   } catch (error) {
     console.error('[candidate-auth] lookup by email failed:', error);
     return null;

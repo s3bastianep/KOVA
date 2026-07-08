@@ -1,5 +1,4 @@
 import { NextRequest } from 'next/server';
-import { requireCandidateUser } from '@/lib/candidate-auth';
 import { prisma } from '@/lib/prisma';
 import {
   calculateProfileCompleteness,
@@ -7,6 +6,7 @@ import {
 } from '@/lib/candidate-commercial-profile';
 import { isMockMode } from '@/lib/mock';
 import { cvSummaryFromMetadata } from '@/lib/portal-profile';
+import { handlePortalRoute } from '@/lib/portal-api';
 import {
   computeCandidateVacancyCompatibility,
   PORTAL_OPEN_VACANCY_STATUSES,
@@ -32,11 +32,9 @@ function countRecommendedVacancies(
 }
 
 export async function GET(req: NextRequest) {
-  try {
-    const auth = await requireCandidateUser(req);
-    if (auth instanceof Response) return auth;
-
-    const { user, candidate } = auth;
+  return handlePortalRoute(
+    req,
+    async ({ user, candidate }) => {
 
     if (isMockMode()) {
       return Response.json({
@@ -141,11 +139,7 @@ export async function GET(req: NextRequest) {
       },
       nextSteps,
     });
-  } catch (error) {
-    console.error('[portal/dashboard] GET failed:', error);
-    return Response.json(
-      { message: 'No pudimos cargar tu dashboard. Intenta de nuevo en unos segundos.' },
-      { status: 500 },
-    );
-  }
+    },
+    'portal/dashboard',
+  );
 }

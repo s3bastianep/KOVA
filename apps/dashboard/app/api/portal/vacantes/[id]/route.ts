@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { getQuestionById, standardQuestionsFromMetadata } from '@/lib/standard-questions';
-import { requireCandidateUser } from '@/lib/candidate-auth';
+import { handlePortalRoute } from '@/lib/portal-api';
 import { profileFromCandidate } from '@/lib/compatibility';
 import { prisma } from '@/lib/prisma';
 import { isMockMode } from '@/lib/mock';
@@ -12,11 +12,10 @@ import {
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const auth = await requireCandidateUser(req);
-  if (auth instanceof Response) return auth;
-
-  const { id } = await params;
-  const { user, candidate } = auth;
+  return handlePortalRoute(
+    req,
+    async ({ user, candidate }) => {
+      const { id } = await params;
 
   if (isMockMode()) {
     return Response.json({
@@ -92,4 +91,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     questions,
     suggestedAnswers,
   });
+    },
+    'portal/vacantes/[id]',
+  );
 }

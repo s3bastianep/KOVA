@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { requireCandidateUser } from '@/lib/candidate-auth';
+import { handlePortalRoute } from '@/lib/portal-api';
 import { profileFromCandidate } from '@/lib/compatibility';
 import { runCandidateAddedAutomation } from '@/lib/automations';
 import { prisma } from '@/lib/prisma';
@@ -12,14 +12,12 @@ import {
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const auth = await requireCandidateUser(req);
-  if (auth instanceof Response) return auth;
-
-  const { id: vacancyId } = await params;
-  const body = await req.json().catch(() => ({}));
-  const extraAnswers = (body.answers ?? {}) as Record<string, string | number | string[]>;
-
-  const { user, candidate } = auth;
+  return handlePortalRoute(
+    req,
+    async ({ user, candidate }) => {
+      const { id: vacancyId } = await params;
+      const body = await req.json().catch(() => ({}));
+      const extraAnswers = (body.answers ?? {}) as Record<string, string | number | string[]>;
 
   if (isMockMode()) {
     return Response.json({
@@ -145,4 +143,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     stage: result.stage,
     message: `¡Listo! Tu postulación a ${vacancy.title} fue registrada con ${compatibility}% de compatibilidad.`,
   });
+    },
+    'portal/vacantes/[id]/aplicar',
+  );
 }

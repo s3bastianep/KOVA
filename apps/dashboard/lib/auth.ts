@@ -65,21 +65,39 @@ export async function getUserFromRequest(req: NextRequest): Promise<AuthUser | n
       };
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: payload.sub },
-      select: {
-        id: true,
-        email: true,
-        firstName: true,
-        lastName: true,
-        role: true,
-        tenantId: true,
-        companyId: true,
-        status: true,
-      },
-    });
-    if (!user || user.status !== 'ACTIVE') return null;
-    return user;
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: payload.sub },
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          role: true,
+          tenantId: true,
+          companyId: true,
+          status: true,
+        },
+      });
+      if (!user || user.status !== 'ACTIVE') return null;
+      return {
+        ...user,
+        candidateId: payload.candidateId ?? null,
+      };
+    } catch (dbError) {
+      console.error('[auth] DB lookup failed, falling back to JWT payload:', dbError);
+      if (payload.role !== 'CANDIDATE') return null;
+      return {
+        id: payload.sub,
+        email: payload.email,
+        firstName: payload.firstName ?? '',
+        lastName: payload.lastName ?? '',
+        role: 'CANDIDATE',
+        tenantId: payload.tenantId,
+        companyId: payload.companyId ?? null,
+        candidateId: payload.candidateId ?? null,
+      };
+    }
   } catch {
     return null;
   }
