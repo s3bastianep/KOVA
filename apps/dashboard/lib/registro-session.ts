@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto';
 import type { CommercialProfile } from './candidate-commercial-profile';
 import { profileToStandardAnswers, splitFullName } from './candidate-commercial-profile';
 
@@ -89,8 +88,12 @@ export function splitProfileName(profile: CommercialProfile, body: Record<string
   };
 }
 
+/** Browser-safe UUID (no node:crypto — that breaks client bundles). */
 export function newResumeToken() {
-  return randomUUID();
+  if (typeof globalThis.crypto?.randomUUID === 'function') {
+    return globalThis.crypto.randomUUID();
+  }
+  return `resume-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 }
 
 export function mergeRegistroMetadata(

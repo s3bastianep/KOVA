@@ -1,7 +1,6 @@
 import type { CommercialProfile } from './candidate-commercial-profile';
 import type { CvExtractionResult } from './cv-extract';
 import { applyCvSuggestions } from './cv-extract';
-import { readRegistroMetadata, type RegistroMetadata } from './registro-session';
 
 export type OnboardingStep =
   | 'welcome'
@@ -21,11 +20,17 @@ export type OnboardingCounts = {
   cursos: number;
 };
 
-export function isOnboardingComplete(meta: RegistroMetadata) {
+type OnboardingMeta = {
+  profileStatus?: string;
+  onboardingStep?: OnboardingStep;
+  cvExtraction?: unknown;
+};
+
+export function isOnboardingComplete(meta: OnboardingMeta) {
   return meta.profileStatus === 'complete' || meta.onboardingStep === 'done';
 }
 
-export function resolveOnboardingStep(meta: RegistroMetadata, hasCv: boolean): OnboardingStep {
+export function resolveOnboardingStep(meta: OnboardingMeta, hasCv: boolean): OnboardingStep {
   if (isOnboardingComplete(meta)) return 'done';
   const saved = meta.onboardingStep;
   if (saved && saved !== 'welcome') return saved;
@@ -162,6 +167,7 @@ export const SMART_QUESTIONS: SmartQuestion[] = [
   },
 ];
 
-export function readOnboardingMeta(metadata: unknown) {
-  return readRegistroMetadata(metadata);
+export function readOnboardingMeta(metadata: unknown): OnboardingMeta {
+  if (!metadata || typeof metadata !== 'object') return {};
+  return metadata as OnboardingMeta;
 }
