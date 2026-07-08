@@ -38,7 +38,7 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}): Prom
   if (res.status === 401 && typeof window !== 'undefined' && !isAuthRequest) {
     localStorage.removeItem('kova_access_token');
     localStorage.removeItem('kova_refresh_token');
-    window.location.href = '/login';
+    window.location.href = loginPathForStoredUser();
     throw new Error('Unauthorized');
   }
 
@@ -110,7 +110,7 @@ async function uploadPortalCv(file: File) {
   if (res.status === 401 && typeof window !== 'undefined') {
     localStorage.removeItem('kova_access_token');
     localStorage.removeItem('kova_refresh_token');
-    window.location.href = '/login';
+    window.location.href = loginPathForStoredUser();
     throw new Error('Unauthorized');
   }
 
@@ -331,4 +331,9 @@ export function getStoredUser(): AuthUser | null {
   if (typeof window === 'undefined') return null;
   const raw = localStorage.getItem('kova_user');
   return raw ? JSON.parse(raw) : null;
+}
+
+function loginPathForStoredUser() {
+  const role = getStoredUser()?.role;
+  return role === 'CANDIDATE' ? '/login' : '/acceso';
 }

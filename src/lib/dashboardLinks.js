@@ -1,5 +1,5 @@
 /** Rutas servidas por Next.js (dashboard), no por el router de la landing. */
-const DASHBOARD_PREFIXES = ['/registro', '/login', '/postular', '/dashboard', '/portal'];
+const DASHBOARD_PREFIXES = ['/registro', '/login', '/acceso', '/postular', '/dashboard', '/portal'];
 
 export function isDashboardPath(path) {
   return DASHBOARD_PREFIXES.some((prefix) => path === prefix || path.startsWith(`${prefix}/`));

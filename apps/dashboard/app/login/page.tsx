@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Iniciar sesión | Kova',
-  description: 'Acceso al panel comercial de Kova.',
+  description: 'Accede a tu portal de candidato y postula a vacantes comerciales.',
 };
 
 // Evita que el login quede cacheado estáticamente por un año (s-maxage) y

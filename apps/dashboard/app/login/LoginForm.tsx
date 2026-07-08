@@ -1,11 +1,47 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { ArrowLeft, ArrowRight, Loader2, Lock, Mail } from 'lucide-react';
-import { authApi, saveSession } from '@/lib/api';
+import { authApi, clearSession, saveSession } from '@/lib/api';
 import './login.css';
 
-export function LoginForm() {
+type LoginMode = 'candidate' | 'staff';
+
+const COPY: Record<
+  LoginMode,
+  {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    cardSub: string;
+    submit: string;
+    footer: ReactNode;
+  }
+> = {
+  candidate: {
+    eyebrow: 'Candidatos · Kova',
+    title: 'Tu espacio para oportunidades comerciales',
+    lead: 'Ingresa a tu portal, revisa vacantes compatibles con tu perfil y da seguimiento a tus postulaciones.',
+    cardSub: 'Acceso a tu portal de candidato.',
+    submit: 'Entrar a mi portal',
+    footer: (
+      <>
+        ¿No tienes cuenta? <a href="/registro">Crea tu perfil gratis</a>
+      </>
+    ),
+  },
+  staff: {
+    eyebrow: 'Talent intelligence · Kova',
+    title: 'El panel detrás del match comercial',
+    lead: 'Vacantes, candidatos, evaluaciones y agenda en un solo lugar. Para equipos que contratan con criterio y evidencia.',
+    cardSub: 'Acceso para el equipo Kova.',
+    submit: 'Entrar al panel',
+    footer: null,
+  },
+};
+
+export function LoginForm({ mode = 'candidate' }: { mode?: LoginMode }) {
+  const copy = COPY[mode];
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(true);
@@ -18,8 +54,21 @@ export function LoginForm() {
     setError('');
     try {
       const data = await authApi.login(email, password, remember);
+
+      if (mode === 'candidate' && data.user.role !== 'CANDIDATE') {
+        clearSession();
+        setError('Esta página es solo para candidatos. Si eres del equipo Kova, usa el acceso interno.');
+        return;
+      }
+
+      if (mode === 'staff' && data.user.role === 'CANDIDATE') {
+        clearSession();
+        setError('Los candidatos deben iniciar sesión en la página pública de acceso.');
+        return;
+      }
+
       saveSession(data);
-      window.location.assign(data.user.role === 'CANDIDATE' ? '/portal' : '/dashboard');
+      window.location.assign(mode === 'candidate' ? '/portal' : '/dashboard');
     } catch (err) {
       const msg = err instanceof Error ? err.message : '';
       setError(msg && msg !== 'Unauthorized' ? msg : 'Correo o contraseña incorrectos');
@@ -45,12 +94,9 @@ export function LoginForm() {
 
       <div className="kv-login-stage">
         <aside className="kv-login-aside">
-          <p className="kv-login-eyebrow">Talent intelligence · Kova</p>
-          <h1 className="kv-login-title">El panel detrás del match comercial</h1>
-          <p className="kv-login-lead">
-            Vacantes, candidatos, evaluaciones y agenda en un solo lugar. Para equipos que contratan
-            con criterio y evidencia, no solo intuición.
-          </p>
+          <p className="kv-login-eyebrow">{copy.eyebrow}</p>
+          <h1 className="kv-login-title">{copy.title}</h1>
+          <p className="kv-login-lead">{copy.lead}</p>
         </aside>
 
         <form onSubmit={submit} className="kv-login-card">
@@ -61,7 +107,7 @@ export function LoginForm() {
 
           <div className="kv-login-card-head">
             <h2 className="kv-login-card-title">Iniciar sesión</h2>
-            <p className="kv-login-card-sub">Acceso para candidatos y equipo Kova.</p>
+            <p className="kv-login-card-sub">{copy.cardSub}</p>
           </div>
 
           {error ? (
@@ -129,16 +175,13 @@ export function LoginForm() {
               </>
             ) : (
               <>
-                Entrar al panel
+                {copy.submit}
                 <ArrowRight className="w-4 h-4" aria-hidden />
               </>
             )}
           </button>
 
-          <p className="kv-login-footer">
-            ¿Buscas oportunidades comerciales?{' '}
-            <a href="/registro">Crea tu perfil de candidato</a>
-          </p>
+          {copy.footer ? <p className="kv-login-footer">{copy.footer}</p> : null}
         </form>
       </div>
     </div>

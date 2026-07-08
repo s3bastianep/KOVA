@@ -10,7 +10,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   useEffect(() => {
     const token = localStorage.getItem('kova_access_token');
-    if (!token) router.replace('/login');
+    if (!token) router.replace('/acceso');
   }, [router]);
 
   return (

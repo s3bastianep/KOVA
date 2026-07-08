@@ -15,7 +15,7 @@ export function Sidebar() {
     const refresh = localStorage.getItem('kova_refresh_token') ?? undefined;
     try { await authApi.logout(refresh); } catch { /* ignore */ }
     clearSession();
-    router.push('/login');
+    router.push('/acceso');
   };
 
   return (
