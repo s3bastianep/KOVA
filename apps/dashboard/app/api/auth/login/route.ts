@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { randomBytes } from 'crypto';
 import { prisma } from '../../../../lib/prisma';
 import { signToken } from '../../../../lib/auth';
+import { getCandidateForUser } from '../../../../lib/candidate-auth';
 import { isMockMode, MOCK_USER } from '../../../../lib/mock';
 
 export const dynamic = 'force-dynamic';
@@ -79,12 +80,7 @@ export async function POST(req: NextRequest) {
       companyId: user.companyId,
       ...(user.role === 'CANDIDATE'
         ? {
-            candidateId: (
-              await prisma.candidate.findFirst({
-                where: { userId: user.id },
-                select: { id: true },
-              })
-            )?.id ?? null,
+            candidateId: (await getCandidateForUser(user))?.id ?? null,
           }
         : {}),
     };
