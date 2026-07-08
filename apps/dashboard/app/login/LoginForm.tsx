@@ -55,10 +55,9 @@ export function LoginForm() {
         <form onSubmit={submit} className="kova-card p-8 sm:p-9 space-y-6 kova-animate-in shadow-[var(--kova-shadow-lg)]">
           <div className="flex items-center gap-3">
             <div
-              className="w-11 h-11 rounded-2xl flex items-center justify-center text-white font-heading font-bold"
+              className="kova-sidebar-logo-mark text-sm"
               style={{
-                background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))',
-                boxShadow: '0 10px 24px -8px rgba(51, 65, 196, 0.45)',
+                boxShadow: '0 10px 24px -8px rgba(216, 242, 76, 0.35)',
               }}
             >
               K

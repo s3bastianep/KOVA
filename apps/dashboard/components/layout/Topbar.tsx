@@ -108,21 +108,18 @@ export function Topbar() {
       {menuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-[var(--kova-navy)]/20 backdrop-blur-sm" onClick={() => setMenuOpen(false)} />
-          <aside className="absolute inset-y-0 left-0 w-[min(300px,88vw)] flex flex-col shadow-2xl kova-animate-in" style={{ background: 'var(--kova-surface-2)' }}>
-            <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b" style={{ borderColor: 'var(--kova-border)' }}>
+          <aside className="kova-sidebar absolute inset-y-0 left-0 w-[min(300px,88vw)] flex flex-col shadow-2xl kova-animate-in border-r">
+            <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
               <div className="flex items-center gap-3">
-                <div
-                  className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-heading font-bold"
-                  style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}
-                >
+                <div className="kova-sidebar-logo-mark text-sm" aria-hidden>
                   K
                 </div>
                 <div>
-                  <p className="font-heading font-bold text-sm" style={{ color: 'var(--kova-navy)' }}>Kova Talent OS</p>
-                  <p className="text-[10px]" style={{ color: 'var(--kova-navy-muted)' }}>Reclutamiento comercial</p>
+                  <p className="kova-sidebar-brand font-heading font-bold text-sm">Kova Talent OS</p>
+                  <p className="kova-sidebar-brand-sub text-[10px]">Reclutamiento comercial</p>
                 </div>
               </div>
-              <button type="button" onClick={() => setMenuOpen(false)} aria-label="Cerrar menú" className="p-2 rounded-xl text-slate-400 hover:bg-slate-100">
+              <button type="button" onClick={() => setMenuOpen(false)} aria-label="Cerrar menú" className="p-2 rounded-xl transition-colors" style={{ color: 'var(--kv-nav-muted)' }}>
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -138,7 +135,7 @@ export function Topbar() {
                       onClick={() => setMenuOpen(false)}
                       className={cn('kova-nav-item', active && 'kova-nav-item-active pl-4')}
                     >
-                      <Icon className={cn('w-[18px] h-[18px] shrink-0', active ? 'text-[var(--kova-blue)]' : 'text-[var(--kv-nav-muted)]')} />
+                      <Icon className="w-[18px] h-[18px] shrink-0" />
                       <span className="truncate">{label}</span>
                     </Link>
                   );
@@ -148,19 +145,18 @@ export function Topbar() {
               <Link
                 href="/procesos/nuevo"
                 onClick={() => setMenuOpen(false)}
-                className="mt-4 flex items-center gap-3 px-3 py-3 rounded-2xl border"
-                style={{ borderColor: 'rgba(51, 65, 196, 0.15)', background: 'var(--kova-blue-soft)' }}
+                className="kova-sidebar-quick mt-4 flex items-center gap-3 px-3 py-3 rounded-2xl border"
               >
-                <Sparkles className="w-4 h-4 text-[var(--kova-blue)]" />
-                <span className="text-sm font-semibold text-[var(--kova-blue)]">Nuevo proceso</span>
+                <Sparkles className="w-4 h-4" style={{ color: 'var(--kova-lime)' }} />
+                <span className="kova-sidebar-quick-title text-sm font-semibold">Nuevo proceso</span>
               </Link>
             </nav>
 
-            <div className="p-3 border-t" style={{ borderColor: 'var(--kova-border)' }}>
+            <div className="kova-sidebar-footer p-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
               <button
                 type="button"
                 onClick={logout}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-500 hover:bg-slate-50"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors"
               >
                 <LogOut className="w-[18px] h-[18px] shrink-0" />
                 Cerrar sesión
