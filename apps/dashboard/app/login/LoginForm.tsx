@@ -6,13 +6,6 @@ import { ArrowLeft, ArrowRight, Loader2, Lock, Mail } from 'lucide-react';
 import { authApi, saveSession } from '@/lib/api';
 import './login.css';
 
-const FEATURES = [
-  'Pipeline comercial',
-  'Base de talento',
-  'Agenda y solicitudes',
-  'Informes Kova',
-];
-
 export function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -60,13 +53,6 @@ export function LoginForm() {
             Vacantes, candidatos, evaluaciones y agenda en un solo lugar. Para equipos que contratan
             con criterio y evidencia, no solo intuición.
           </p>
-          <div className="kv-login-chips">
-            {FEATURES.map((item) => (
-              <div key={item} className="kv-login-chip">
-                {item}
-              </div>
-            ))}
-          </div>
         </aside>
 
         <form onSubmit={submit} className="kv-login-card">

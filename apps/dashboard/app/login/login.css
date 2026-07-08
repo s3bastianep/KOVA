@@ -123,25 +123,8 @@
   font-size: 1rem;
   line-height: 1.65;
   color: rgba(255, 255, 255, 0.52);
-  margin: 0 0 1.75rem;
+  margin: 0;
   max-width: 28rem;
-}
-
-.kv-login-chips {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.65rem;
-  max-width: 22rem;
-}
-
-.kv-login-chip {
-  padding: 0.75rem 0.9rem;
-  border-radius: 0.75rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--kv-line);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.78);
 }
 
 .kv-login-card {
