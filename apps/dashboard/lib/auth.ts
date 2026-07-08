@@ -15,6 +15,7 @@ export interface AuthUser {
   role: UserRole;
   tenantId: string;
   companyId?: string | null;
+  candidateId?: string | null;
 }
 
 export function signToken(user: AuthUser): string {
@@ -27,6 +28,7 @@ export function signToken(user: AuthUser): string {
       firstName: user.firstName,
       lastName: user.lastName,
       companyId: user.companyId,
+      ...(user.candidateId ? { candidateId: user.candidateId } : {}),
     },
     JWT_SECRET,
     { expiresIn: JWT_EXPIRES_IN } as jwt.SignOptions,
@@ -47,6 +49,7 @@ export async function getUserFromRequest(req: NextRequest): Promise<AuthUser | n
       firstName?: string;
       lastName?: string;
       companyId?: string | null;
+      candidateId?: string | null;
     };
 
     if (isMockMode()) {
@@ -58,6 +61,7 @@ export async function getUserFromRequest(req: NextRequest): Promise<AuthUser | n
         role: payload.role,
         tenantId: payload.tenantId,
         companyId: payload.companyId ?? null,
+        candidateId: payload.candidateId ?? null,
       };
     }
 

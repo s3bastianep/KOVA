@@ -77,6 +77,16 @@ export async function POST(req: NextRequest) {
       role: user.role,
       tenantId: user.tenantId,
       companyId: user.companyId,
+      ...(user.role === 'CANDIDATE'
+        ? {
+            candidateId: (
+              await prisma.candidate.findFirst({
+                where: { userId: user.id },
+                select: { id: true },
+              })
+            )?.id ?? null,
+          }
+        : {}),
     };
 
     return Response.json({

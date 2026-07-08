@@ -8,6 +8,7 @@ export interface AuthUser {
   role: string;
   tenantId: string;
   companyId?: string | null;
+  candidateId?: string | null;
 }
 
 export interface LoginResponse {
@@ -55,9 +56,158 @@ export const authApi = {
       method: 'POST',
       body: JSON.stringify({ email, password, rememberMe }),
     }),
+  candidateRegister: (body: {
+    nombre: string;
+    email: string;
+    telefono: string;
+    ciudad: string;
+    password: string;
+    consentimientoDatos: boolean;
+  }) =>
+    apiFetch<LoginResponse>('/auth/candidate/register', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
   me: () => apiFetch<AuthUser>('/auth/me'),
   logout: (refreshToken?: string) =>
     apiFetch('/auth/logout', { method: 'POST', body: JSON.stringify({ refreshToken }) }),
+};
+
+export type PortalDashboard = {
+  greeting: string;
+  profileCompleteness: number;
+  stats: {
+    vacantesRecomendadas: number;
+    aplicacionesActivas: number;
+    entrevistasProximas: number;
+    hasCv: boolean;
+  };
+  nextSteps: Array<{ id: string; label: string; href: string; done: boolean }>;
+};
+
+export type PortalCvSummary = {
+  fileName: string;
+  importedAt: string | null;
+  textLength: number | null;
+};
+
+export type PortalPerfilResponse = {
+  candidateId: string;
+  profile: Record<string, unknown>;
+  cv: PortalCvSummary | null;
+};
+
+async function uploadPortalCv(file: File) {
+  const token = getToken();
+  const formData = new FormData();
+  formData.append('file', file);
+  const res = await fetch(`${API_URL}/portal/cv`, {
+    method: 'POST',
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: formData,
+  });
+
+  if (res.status === 401 && typeof window !== 'undefined') {
+    localStorage.removeItem('kova_access_token');
+    localStorage.removeItem('kova_refresh_token');
+    window.location.href = '/login';
+    throw new Error('Unauthorized');
+  }
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error((err as { message?: string }).message ?? `Error al subir (${res.status})`);
+  }
+
+  return res.json();
+}
+
+export type PortalVacancyListItem = {
+  id: string;
+  title: string;
+  companyName: string;
+  city: string | null;
+  modality: string | null;
+  compatibility: number;
+  alreadyApplied: boolean;
+};
+
+export type PortalVacancyDetail = {
+  id: string;
+  title: string;
+  companyName: string;
+  city: string | null;
+  modality: string | null;
+  description: string | null;
+  compatibility: number;
+  alreadyApplied: boolean;
+  application: { id: string; stage: string; score: number | null } | null;
+  questions: Array<{
+    id: string;
+    label: string;
+    category: string;
+    inputType: 'select' | 'multiselect';
+    options: string[];
+    helpText?: string;
+    maxSelections?: number;
+    suggestedValue?: string;
+  }>;
+};
+
+export type PortalApplication = {
+  id: string;
+  vacancyId: string;
+  title: string;
+  companyName: string;
+  city: string | null;
+  stage: string;
+  stageLabel: string;
+  compatibility: number;
+  appliedAt: string;
+  updatedAt: string;
+  rejected: boolean;
+  rejectReason: string | null;
+};
+
+export const portalApi = {
+  dashboard: () => apiFetch<PortalDashboard>('/portal/dashboard'),
+  perfil: () => apiFetch<PortalPerfilResponse>('/portal/perfil'),
+  updatePerfil: (profile: Record<string, unknown>) =>
+    apiFetch<{ ok: boolean; profile: Record<string, unknown>; message: string }>('/portal/perfil', {
+      method: 'PATCH',
+      body: JSON.stringify({ profile }),
+    }),
+  vacantes: (minMatch = 0) =>
+    apiFetch<{ vacantes: PortalVacancyListItem[]; total: number }>(
+      `/portal/vacantes${minMatch > 0 ? `?minMatch=${minMatch}` : ''}`,
+    ),
+  vacante: (id: string) => apiFetch<PortalVacancyDetail>(`/portal/vacantes/${id}`),
+  aplicar: (id: string, answers?: Record<string, string | string[]>) =>
+    apiFetch<{
+      ok: boolean;
+      compatibility: number;
+      message: string;
+      applicationId: string;
+      stage: string;
+      alreadyApplied?: boolean;
+    }>(`/portal/vacantes/${id}/aplicar`, {
+      method: 'POST',
+      body: JSON.stringify({ answers: answers ?? {} }),
+    }),
+  aplicaciones: () =>
+    apiFetch<{ aplicaciones: PortalApplication[]; total: number }>('/portal/aplicaciones'),
+  uploadCv: uploadPortalCv,
+  downloadCv: async () => {
+    const token = getToken();
+    const res = await fetch(`${API_URL}/portal/cv`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error((err as { message?: string }).message ?? 'No pudimos descargar tu HV');
+    }
+    return res.blob();
+  },
 };
 
 export const dashboardApi = {

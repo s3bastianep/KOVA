@@ -19,6 +19,7 @@ type Props = {
   onSkip: () => void;
   onApply: (profile: CommercialProfile) => void;
   onFileCaptured?: (file: File) => void;
+  uploadCv?: (file: File) => Promise<CvExtractionResult>;
   leading?: boolean;
   compact?: boolean;
 };
@@ -32,6 +33,7 @@ export function CvImportPanel({
   onSkip,
   onApply,
   onFileCaptured,
+  uploadCv,
   leading = false,
   compact = false,
 }: Props) {
@@ -59,7 +61,9 @@ export function CvImportPanel({
     onFileCaptured?.(file);
     onPhaseChange('uploading');
     try {
-      const result = await uploadRegistroCv(file, candidateId, resumeToken);
+      const uploader =
+        uploadCv ?? ((f: File) => uploadRegistroCv(f, candidateId, resumeToken));
+      const result = await uploader(file);
       const aligned = enrichCvExtraction(result, profile);
       setExtraction(aligned);
       setSelected(new Set(aligned.reviewFields.filter((f) => f.defaultSelected).map((f) => f.key)));

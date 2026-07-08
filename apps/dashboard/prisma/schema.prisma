@@ -17,6 +17,7 @@ enum UserRole {
   COORDINATOR
   CONSULTANT
   CLIENT
+  CANDIDATE
 }
 
 enum UserStatus {
@@ -209,6 +210,7 @@ model User {
 
   tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   company         Company?         @relation("ClientUser", fields: [companyId], references: [id])
+  candidate       Candidate?       @relation("CandidateUser")
   sessions        Session[]
   refreshTokens   RefreshToken[]
   assignedCompanies CompanyConsultant[]
@@ -498,9 +500,11 @@ model Candidate {
   profileSummary  String?         @db.Text
   flaggedRisks    Json?
   metadata        Json?
+  userId          String?         @unique
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
 
+  user            User?           @relation("CandidateUser", fields: [userId], references: [id], onDelete: SetNull)
   vacancies       CandidateVacancy[]
   experiences     WorkExperience[]
   educations      Education[]

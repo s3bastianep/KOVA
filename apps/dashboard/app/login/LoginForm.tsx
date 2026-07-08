@@ -21,7 +21,7 @@ export function LoginForm() {
     try {
       const data = await authApi.login(email, password, remember);
       saveSession(data);
-      router.push('/dashboard');
+      router.push(data.user.role === 'CANDIDATE' ? '/portal' : '/dashboard');
     } catch (err) {
       const msg = err instanceof Error ? err.message : '';
       setError(msg && msg !== 'Unauthorized' ? msg : 'Correo o contraseña incorrectos');
@@ -63,7 +63,7 @@ export function LoginForm() {
 
           <div className="kv-login-card-head">
             <h2 className="kv-login-card-title">Iniciar sesión</h2>
-            <p className="kv-login-card-sub">Acceso para el equipo Kova y cuentas habilitadas.</p>
+            <p className="kv-login-card-sub">Acceso para candidatos y equipo Kova.</p>
           </div>
 
           {error ? (
