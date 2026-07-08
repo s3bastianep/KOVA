@@ -1,13 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, Loader2, Lock, Mail, MapPin, Phone, User } from 'lucide-react';
 import { authApi, saveSession } from '@/lib/api';
 import '../login/login.css';
 
 export function SignupForm() {
-  const router = useRouter();
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
@@ -31,7 +29,7 @@ export function SignupForm() {
         consentimientoDatos: consent,
       });
       saveSession(data);
-      router.push('/portal');
+      window.location.assign('/portal');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No pudimos crear tu cuenta');
     } finally {

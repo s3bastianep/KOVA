@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
+import DashboardPathEscape from './components/DashboardPathEscape';
 import Landing from './pages/Landing';
 
 const PageNotFound = lazy(() => import('./lib/PageNotFound'));
@@ -18,6 +19,7 @@ const Servicios = lazy(() => import('./pages/Servicios'));
 function App() {
   return (
     <Router>
+      <DashboardPathEscape />
       <ScrollToTop />
       <Suspense fallback={null}>
         <Routes>

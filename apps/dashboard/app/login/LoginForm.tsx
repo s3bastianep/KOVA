@@ -1,13 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, Loader2, Lock, Mail } from 'lucide-react';
 import { authApi, saveSession } from '@/lib/api';
 import './login.css';
 
 export function LoginForm() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(true);
@@ -21,7 +19,7 @@ export function LoginForm() {
     try {
       const data = await authApi.login(email, password, remember);
       saveSession(data);
-      router.push(data.user.role === 'CANDIDATE' ? '/portal' : '/dashboard');
+      window.location.assign(data.user.role === 'CANDIDATE' ? '/portal' : '/dashboard');
     } catch (err) {
       const msg = err instanceof Error ? err.message : '';
       setError(msg && msg !== 'Unauthorized' ? msg : 'Correo o contraseña incorrectos');
