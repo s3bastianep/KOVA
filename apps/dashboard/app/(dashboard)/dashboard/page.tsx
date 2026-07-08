@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import {
@@ -230,16 +230,20 @@ export default function DashboardPage() {
         <SectionCard title="Rendimiento general" footer={<Link href="/reportes" className="text-xs inline-flex items-center gap-1 hover:underline font-medium" style={{ color: 'var(--kova-blue)' }}>Ver reporte completo <ArrowRight className="w-3 h-3" /></Link>}>
           <div className="flex flex-col sm:flex-row xl:flex-col items-center gap-4 flex-1 justify-center">
             <Donut buckets={distribution.buckets} centerValue={`${avgScore}%`} centerLabel="Promedio" />
-            <div className="w-full space-y-2">
+            <div className="w-full grid grid-cols-[minmax(0,1fr)_5.25rem_2rem] gap-x-3 gap-y-2.5 text-xs items-center">
               {distribution.buckets.map((b, idx) => (
-                <div key={b.label} className="flex items-center justify-between gap-2 text-xs">
-                  <span className="flex items-center gap-2 text-slate-700 font-medium min-w-0">
+                <Fragment key={b.label}>
+                  <span className="flex items-center gap-2 font-medium min-w-0" style={{ color: 'var(--kova-navy)' }}>
                     <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: b.color }} />
-                    {['Excelentes', 'Buenos', 'Regulares', 'Bajos'][idx]}
+                    <span className="truncate">{['Excelentes', 'Buenos', 'Regulares', 'Bajos'][idx]}</span>
                   </span>
-                  <span className="text-slate-500 shrink-0">{b.label}</span>
-                  <span className="font-semibold text-slate-800 tabular-nums shrink-0">{b.count}</span>
-                </div>
+                  <span className="text-right tabular-nums" style={{ color: 'var(--kova-navy-muted)' }}>
+                    {b.label}
+                  </span>
+                  <span className="text-right font-semibold tabular-nums" style={{ color: 'var(--kova-navy)' }}>
+                    {b.count}
+                  </span>
+                </Fragment>
               ))}
             </div>
           </div>
