@@ -203,8 +203,7 @@ export default function DashboardPage() {
       <div className="grid xl:grid-cols-[1fr_300px] gap-4 items-stretch">
         <SectionCard title="Pipeline del proceso de selección" className="min-h-[280px]">
           <div className="relative mt-1">
-            <div className="hidden lg:block absolute top-[2.75rem] left-[6%] right-[6%] h-0.5 bg-slate-200/90 z-0" />
-            <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-2.5 relative z-10">
+            <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-2.5">
               {CLIENT_JOURNEY_STAGES.map((stage, i) => (
                 <div key={stage.id} className="flex flex-col items-center text-center min-h-[132px]">
                   <div
