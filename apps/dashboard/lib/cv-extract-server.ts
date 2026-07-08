@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { type CvFileFormat, cvFormatLabel, detectCvFileFormat } from './cv-file-formats';
 import { extractCvFromText, type CvExtractionResult } from './cv-extract';
+import { htmlToStructuredText, normalizeCvText } from './cv-text-pipeline';
 
 export class CvFileReadError extends Error {
   constructor(message: string) {
@@ -18,13 +19,25 @@ export class CvFileReadError extends Error {
 export const CvPdfReadError = CvFileReadError;
 
 function assertReadableText(text: string, format: CvFileFormat): string {
-  const trimmed = text.trim();
-  if (trimmed.length < 40) {
+  const normalized = normalizeCvText(text);
+  if (normalized.length < 40) {
     throw new CvFileReadError(
       `El ${cvFormatLabel(format)} tiene muy poco texto legible. Exporta tu hoja de vida con texto seleccionable (formato ATS).`,
     );
   }
-  return trimmed;
+  return normalized;
+}
+
+function joinPdfPages(textResult: { text?: string; pages?: Array<{ text?: string }> }): string {
+  const pageTexts = (textResult.pages ?? [])
+    .map((page) => page.text?.trim())
+    .filter((t): t is string => Boolean(t));
+
+  if (pageTexts.length > 1) {
+    return normalizeCvText(pageTexts.join('\n\n'));
+  }
+
+  return normalizeCvText(textResult.text ?? '');
 }
 
 export async function extractCvFromFileBuffer(
@@ -59,8 +72,27 @@ export async function extractCvFromDocxBuffer(
 
   try {
     const mammoth = await import('mammoth');
-    const { value } = await mammoth.extractRawText({ buffer });
-    const text = assertReadableText(value ?? '', 'docx');
+    const htmlResult = await mammoth.convertToHtml(
+      { buffer },
+      {
+        styleMap: [
+          "p[style-name='Heading 1'] => h1",
+          "p[style-name='Heading 2'] => h2",
+          "p[style-name='Título 1'] => h1",
+          "p[style-name='Título 2'] => h2",
+        ],
+      },
+    );
+
+    let text = htmlToStructuredText(htmlResult.value ?? '');
+
+    if (text.length < 80) {
+      const rawResult = await mammoth.extractRawText({ buffer });
+      const rawText = normalizeCvText(rawResult.value ?? '');
+      if (rawText.length > text.length) text = rawText;
+    }
+
+    text = assertReadableText(text, 'docx');
     return { result: extractCvFromText(text, fileName), text };
   } catch (err) {
     if (err instanceof CvFileReadError) throw err;
@@ -78,7 +110,8 @@ export async function extractCvFromDocBuffer(
     const WordExtractor = (await import('word-extractor')).default;
     const extractor = new WordExtractor();
     const doc = await extractor.extract(tempPath);
-    const text = assertReadableText(doc.getBody() ?? '', 'doc');
+    const parts = [doc.getBody(), doc.getHeaders({ includeFooters: false })].filter(Boolean);
+    const text = assertReadableText(parts.join('\n\n'), 'doc');
     return { result: extractCvFromText(text, fileName), text };
   } catch (err) {
     if (err instanceof CvFileReadError) throw err;
@@ -100,8 +133,12 @@ export async function extractCvFromPdfBuffer(
     const { PDFParse } = await import('pdf-parse');
     const parser = new PDFParse({ data: new Uint8Array(buffer) });
     try {
-      const textResult = await parser.getText();
-      const text = assertReadableText(textResult.text ?? '', 'pdf');
+      const textResult = await parser.getText({
+        lineThreshold: 4,
+        cellThreshold: 7,
+        pageJoiner: '\n\n',
+      });
+      const text = assertReadableText(joinPdfPages(textResult), 'pdf');
       return { result: extractCvFromText(text, fileName), text };
     } finally {
       await parser.destroy();

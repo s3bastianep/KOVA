@@ -10,6 +10,12 @@ import {
   newLanguageEntry,
   newWorkHistoryEntry,
 } from './commercial-profile-builder';
+import {
+  isCurrentDateToken,
+  normalizeCvText,
+  parseSpanishMonthToken,
+  toLineArray,
+} from './cv-text-pipeline';
 
 export const CV_MAX_BYTES = 5 * 1024 * 1024;
 
@@ -68,26 +74,29 @@ const COLOMBIAN_CITIES = [
 ];
 
 const EXPERIENCE_SECTION =
-  /^(experiencia\s*(laboral|profesional)?|trayectoria\s*profesional|historial\s*laboral|work\s*experience|employment\s*history|experiencia)$/i;
+  /^(experiencia\s*(laboral|profesional)?|trayectoria\s*profesional|historial\s*laboral|work\s*experience|employment\s*history|experiencia|antecedentes\s*laborales|experiencia\s*relevante|experiencia\s*comercial)$/i;
 
 const EDUCATION_SECTION =
-  /^(formaci[oó]n\s*(acad[eé]mica)?|educaci[oó]n|estudios|education|academic\s*background)$/i;
+  /^(formaci[oó]n\s*(acad[eé]mica)?|educaci[oó]n|estudios|education|academic\s*background|formaci[oó]n\s*acad[eé]mica)$/i;
 
-const LANGUAGE_SECTION = /^(idiomas?|languages?)$/i;
+const LANGUAGE_SECTION = /^(idiomas?|languages?|idiomas\s*y\s*habilidades)$/i;
+
+const CONTACT_SECTION = /^(datos\s*personales|informaci[oó]n\s*personal|contacto|contact|perfil\s*profesional|resumen\s*profesional)$/i;
+
+const SECTION_STOP =
+  /^(experiencia|trayectoria|historial|formaci[oó]n|educaci[oó]n|estudios|idiomas?|habilidades|competencias|referencias|certificaciones|logros|resumen|perfil|contacto|datos\s*personales)/i;
+
+const JOB_TITLE_HINT =
+  /^(ejecutivo|ejecutiva|gerente|director|directora|coordinador|coordinadora|asesor|asesora|consultor|consultora|representante|vendedor|vendedora|analista|profesional|especialista|l[ií]der|jefe|subgerente|comercial|sales|account|business)/i;
 
 const DATE_RANGE =
-  /(?:(0?[1-9]|1[0-2])[\/\-.](\d{4})|(\d{4})[\/\-.](0?[1-9]|1[0-2]))\s*(?:[-–—a]\s*|to\s+)(?:(0?[1-9]|1[0-2])[\/\-.](\d{4})|(\d{4})[\/\-.](0?[1-9]|1[0-2])|actual(?:idad)?|presente?|hoy|current)/i;
+  /(?:(0?[1-9]|1[0-2])[\/\-.](\d{4})|(\d{4})[\/\-.](0?[1-9]|1[0-2]))\s*(?:[-–—a]\s*|to\s+|hasta\s+)(?:(0?[1-9]|1[0-2])[\/\-.](\d{4})|(\d{4})[\/\-.](0?[1-9]|1[0-2])|actual(?:idad)?|presente?|hoy|current|al\s+presente)/i;
 
-const YEAR_ONLY_RANGE = /(\d{4})\s*[-–—]\s*(\d{4}|actual(?:idad)?|presente?|hoy|current)/i;
+const YEAR_ONLY_RANGE =
+  /(\d{4})\s*[-–—]\s*(\d{4}|actual(?:idad)?|presente?|hoy|current|al\s+presente)/i;
 
-function normalizeText(raw: string): string {
-  return raw
-    .replace(/\r\n/g, '\n')
-    .replace(/\u00a0/g, ' ')
-    .replace(/[ \t]+\n/g, '\n')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
-}
+const SPANISH_MONTH_RANGE =
+  /\b(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre|ene|feb|mar|abr|may|jun|jul|ago|sep|sept|oct|nov|dic)\.?\s+(\d{4})\s*(?:[-–—a]|to|hasta)\s*(?:(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre|ene|feb|mar|abr|may|jun|jul|ago|sep|sept|oct|nov|dic)\.?\s+(\d{4})|(actual(?:idad)?|presente?|hoy|current|al\s+presente))/i;
 
 function cleanPhone(raw: string): string {
   const digits = raw.replace(/[^\d+]/g, '');
@@ -98,15 +107,29 @@ function cleanPhone(raw: string): string {
 }
 
 function extractEmail(text: string): string | undefined {
-  const match = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-  return match?.[0]?.toLowerCase();
+  const matches = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g);
+  if (!matches?.length) return undefined;
+
+  const filtered = matches
+    .map((m) => m.toLowerCase())
+    .filter((m) => !/(noreply|no-reply|example\.com|email\.com|correo\.com)/.test(m));
+
+  return (filtered[0] ?? matches[0])?.toLowerCase();
 }
 
 function extractPhone(text: string): string | undefined {
+  const labeled = text.match(
+    /(?:tel[eé]fono|tel\.?|m[oó]vil|cel(?:ular)?|phone|whatsapp|wa)\s*[:\-]?\s*([+\d\s().-]{8,20})/i,
+  );
+  if (labeled?.[1]) {
+    const cleaned = cleanPhone(labeled[1]);
+    if (cleaned.replace(/\D/g, '').length >= 10) return cleaned;
+  }
+
   const patterns = [
     /(?:\+57\s*)?(?:\(\d{1,3}\)\s*)?3\d{2}[\s.-]?\d{3}[\s.-]?\d{4}/,
     /\+57\s*\d{10}/,
-    /3\d{9}/,
+    /\b3\d{9}\b/,
   ];
   for (const pattern of patterns) {
     const match = text.match(pattern);
@@ -133,18 +156,17 @@ function extractCity(text: string): string | undefined {
 }
 
 function extractName(text: string, email?: string): string | undefined {
-  const lines = text
-    .split('\n')
-    .map((l) => l.trim())
-    .filter((l) => l.length > 2 && l.length < 60);
+  const headerLines = toLineArray(text.slice(0, 2200)).slice(0, 12);
+  const skip =
+    /^(curriculum|hoja\s+de\s+vida|cv|resume|perfil|contacto|datos\s+personales|email|correo|tel[eé]fono|linkedin|portafolio|resumen)/i;
 
-  const skip = /^(curriculum|hoja\s+de\s+vida|cv|resume|perfil|contacto|datos\s+personales|email|correo|tel[eé]fono)/i;
-
-  for (const line of lines.slice(0, 8)) {
+  for (const line of headerLines) {
     if (skip.test(line)) continue;
-    if (/@/.test(line)) continue;
+    if (/@|https?:\/\//i.test(line)) continue;
     if (/\d{3,}/.test(line)) continue;
-  if (DATE_RANGE.test(line) || YEAR_ONLY_RANGE.test(line)) continue;
+    if (DATE_RANGE.test(line) || YEAR_ONLY_RANGE.test(line) || SPANISH_MONTH_RANGE.test(line)) continue;
+    if (JOB_TITLE_HINT.test(line) && line.split(/\s+/).length <= 6) continue;
+    if (SECTION_STOP.test(line) && line.length < 40) continue;
 
     const words = line.split(/\s+/).filter(Boolean);
     if (words.length >= 2 && words.length <= 5 && /^[A-Za-zÁÉÍÓÚáéíóúñÑ'.-]+$/.test(line)) {
@@ -157,6 +179,7 @@ function extractName(text: string, email?: string): string | undefined {
   if (email) {
     const local = email.split('@')[0];
     const guess = local
+      .replace(/\d+/g, '')
       .replace(/[._-]+/g, ' ')
       .split(' ')
       .filter((p) => p.length > 1)
@@ -167,6 +190,15 @@ function extractName(text: string, email?: string): string | undefined {
   }
 
   return undefined;
+}
+
+function extractContactFields(text: string) {
+  const header = text.slice(0, 2800);
+  const email = extractEmail(header) ?? extractEmail(text);
+  const telefono = extractPhone(header) ?? extractPhone(text);
+  const ciudad = extractCity(header) ?? extractCity(text);
+  const nombre = extractName(header, email) ?? extractName(text, email);
+  return { nombre, email, telefono, ciudad };
 }
 
 function parseMonthYear(month?: string, year?: string, altYear?: string, altMonth?: string): string {
@@ -184,7 +216,7 @@ function parseMonthYear(month?: string, year?: string, altYear?: string, altMont
 function parseDateRange(line: string): { start: string; end?: string; current: boolean } | null {
   const full = line.match(DATE_RANGE);
   if (full) {
-    const current = /actual|presente?|hoy|current/i.test(full[0]);
+    const current = isCurrentDateToken(full[0]);
     const start = parseMonthYear(full[1], full[2], full[3], full[4]);
     let end: string | undefined;
     if (!current) {
@@ -193,29 +225,94 @@ function parseDateRange(line: string): { start: string; end?: string; current: b
     if (start) return { start, end, current };
   }
 
+  const spanish = line.match(SPANISH_MONTH_RANGE);
+  if (spanish) {
+    const startMonth = parseSpanishMonthToken(spanish[1]);
+    const startYear = spanish[2];
+    const endMonthToken = spanish[3];
+    const endYear = spanish[4];
+    const currentToken = spanish[5];
+    const current = Boolean(currentToken && isCurrentDateToken(currentToken));
+    if (!startMonth) return null;
+    const start = `${startYear}-${startMonth}`;
+    let end: string | undefined;
+    if (!current && endMonthToken) {
+      const endMonth = parseSpanishMonthToken(endMonthToken);
+      if (endMonth) end = `${endYear ?? startYear}-${endMonth}`;
+    }
+    return { start, end, current };
+  }
+
   const years = line.match(YEAR_ONLY_RANGE);
   if (years) {
-    const current = /actual|presente?|hoy|current/i.test(years[2]);
+    const current = isCurrentDateToken(years[2]);
     const start = `${years[1]}-01`;
     const end = current ? undefined : `${years[2]}-12`;
     return { start, end, current };
   }
 
+  const since = line.match(/\b(?:desde|from)\s+(\d{4})\b/i);
+  if (since) {
+    const current = /actual|presente?|current/i.test(line);
+    return { start: `${since[1]}-01`, end: current ? undefined : undefined, current };
+  }
+
   return null;
+}
+
+function stripDateTokens(line: string): string {
+  return line
+    .replace(DATE_RANGE, '')
+    .replace(SPANISH_MONTH_RANGE, '')
+    .replace(YEAR_ONLY_RANGE, '')
+    .replace(/\b(?:desde|from)\s+\d{4}\b/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function parseRoleCompanyLine(line: string): { cargo?: string; empresa?: string } {
+  const cleaned = stripDateTokens(line);
+  if (!cleaned || cleaned.length < 3) return {};
+
+  const atMatch = cleaned.match(/^(.+?)\s+(?:en|at|@)\s+(.+)$/i);
+  if (atMatch) {
+    return { cargo: atMatch[1].trim(), empresa: atMatch[2].trim() };
+  }
+
+  const pipeParts = cleaned.split(/\s*[|•/]\s*/).filter(Boolean);
+  if (pipeParts.length >= 2) {
+    return { cargo: pipeParts[0].trim(), empresa: pipeParts[1].trim() };
+  }
+
+  const dashParts = cleaned.split(/\s+[-–—]\s+/).filter(Boolean);
+  if (dashParts.length === 2 && dashParts[0].length < 60 && dashParts[1].length < 60) {
+    const aLooksTitle = JOB_TITLE_HINT.test(dashParts[0]) || dashParts[0].split(' ').length <= 5;
+    const bLooksCompany = !JOB_TITLE_HINT.test(dashParts[1]) || /\b(sas|ltda|s\.a|inc|corp|group|colombia)\b/i.test(dashParts[1]);
+    if (aLooksTitle && bLooksCompany) {
+      return { cargo: dashParts[0].trim(), empresa: dashParts[1].trim() };
+    }
+    return { empresa: dashParts[0].trim(), cargo: dashParts[1].trim() };
+  }
+
+  return { cargo: cleaned };
 }
 
 function inferRoleLevel(text: string): string | undefined {
   const lower = text.toLowerCase();
+  const recent = lower.slice(0, 3500);
   const rules: Array<[RegExp, string]> = [
     [/gerente\s+general|vp\s+comercial|vicepresidente\s+comercial/, 'Gerente General comercial'],
-    [/\bdirector\b.*comercial|commercial\s+director/, 'Director'],
-    [/\b(jefe|gerente)\b.*comercial|sales\s+manager/, 'Jefe o Gerente'],
-    [/\bcoordinador\b.*comercial|coordinator/, 'Coordinador'],
-    [/\b(ejecutivo|representante|asesor)\b.*comercial|account\s+executive|sales\s+rep/, 'Ejecutivo comercial'],
+    [/\bdirector(a)?\b.*comercial|commercial\s+director|sales\s+director/, 'Director'],
+    [/\b(jefe|gerente)\b.*comercial|sales\s+manager|regional\s+manager/, 'Jefe o Gerente'],
+    [/\bcoordinador(a)?\b.*comercial|sales\s+coordinator/, 'Coordinador'],
+    [
+      /\b(ejecutivo|ejecutiva|representante|asesor|asesora|account\s+executive|sales\s+rep|business\s+development)\b/,
+      'Ejecutivo comercial',
+    ],
   ];
 
   for (const [pattern, level] of rules) {
-    if (pattern.test(lower) && (ROLE_LEVEL_OPTIONS as readonly string[]).includes(level)) {
+    if (pattern.test(recent) && (ROLE_LEVEL_OPTIONS as readonly string[]).includes(level)) {
       return level;
     }
   }
@@ -281,17 +378,27 @@ function extractWorkHistory(lines: string[]): WorkHistoryEntry[] {
   const expStart = findSectionIndex(lines, EXPERIENCE_SECTION);
   const eduStart = findSectionIndex(lines, EDUCATION_SECTION);
   const langStart = findSectionIndex(lines, LANGUAGE_SECTION);
+  const contactStart = findSectionIndex(lines, CONTACT_SECTION);
 
-  const sectionEnds = [eduStart, langStart].filter((i) => i >= 0);
+  const sectionEnds = [eduStart, langStart, contactStart].filter((i) => i >= 0);
   const sectionEnd = sectionEnds.length ? Math.min(...sectionEnds) : -1;
-  const sectionLines =
+  let sectionLines =
     expStart >= 0
       ? sliceSection(lines, expStart, sectionEnd)
-      : lines.filter((l) => DATE_RANGE.test(l) || YEAR_ONLY_RANGE.test(l));
+      : lines.filter((l) => DATE_RANGE.test(l) || YEAR_ONLY_RANGE.test(l) || SPANISH_MONTH_RANGE.test(l));
+
+  if (sectionLines.length === 0) {
+    sectionLines = lines.filter(
+      (l, idx) =>
+        idx > 3 &&
+        (DATE_RANGE.test(l) || YEAR_ONLY_RANGE.test(l) || SPANISH_MONTH_RANGE.test(l) || JOB_TITLE_HINT.test(l)),
+    );
+  }
 
   const entries: WorkHistoryEntry[] = [];
   let current: Partial<WorkHistoryEntry> | null = null;
   const descLines: string[] = [];
+  let linesSinceDate = 0;
 
   const flush = () => {
     if (!current) return;
@@ -306,9 +413,12 @@ function extractWorkHistory(lines: string[]): WorkHistoryEntry[] {
     if (entry.cargo || entry.empresa) entries.push(entry);
     current = null;
     descLines.length = 0;
+    linesSinceDate = 0;
   };
 
   for (const line of sectionLines) {
+    if (SECTION_STOP.test(line) && line.length < 50) continue;
+
     const dates = parseDateRange(line);
     if (dates) {
       flush();
@@ -317,31 +427,55 @@ function extractWorkHistory(lines: string[]): WorkHistoryEntry[] {
         fechaFin: dates.end,
         trabajoActual: dates.current,
       };
+      linesSinceDate = 0;
 
-      const withoutDates = line.replace(DATE_RANGE, '').replace(YEAR_ONLY_RANGE, '').trim();
-      const parts = withoutDates.split(/\s*[|•\-–—@]\s*/).filter(Boolean);
-      if (parts.length >= 2) {
-        current.cargo = parts[0];
-        current.empresa = parts[1];
-      } else if (parts.length === 1 && parts[0].length > 2) {
-        current.cargo = parts[0];
-      }
+      const roleCompany = parseRoleCompanyLine(line);
+      if (roleCompany.cargo) current.cargo = roleCompany.cargo;
+      if (roleCompany.empresa) current.empresa = roleCompany.empresa;
       continue;
     }
 
     if (!current) continue;
+    linesSinceDate += 1;
 
-    if (!current.empresa && line.length < 80 && !/[.!?]{2,}/.test(line)) {
-      if (!current.cargo) current.cargo = line;
-      else if (!current.empresa) current.empresa = line;
-      else descLines.push(line);
-    } else {
-      descLines.push(line);
+    const roleCompany = parseRoleCompanyLine(line);
+    if (!current.cargo && roleCompany.cargo) {
+      current.cargo = roleCompany.cargo;
+      if (roleCompany.empresa) current.empresa = roleCompany.empresa;
+      continue;
     }
+    if (!current.empresa && roleCompany.empresa && linesSinceDate <= 2) {
+      current.empresa = roleCompany.empresa;
+      continue;
+    }
+
+    if (linesSinceDate === 1 && !current.empresa && line.length < 80 && !/[.!?]{2,}/.test(line)) {
+      if (JOB_TITLE_HINT.test(current.cargo ?? '') || (current.cargo?.split(' ').length ?? 0) <= 6) {
+        current.empresa = line;
+        continue;
+      }
+    }
+
+    if (linesSinceDate <= 1 && !current.cargo && line.length < 80) {
+      current.cargo = line;
+      continue;
+    }
+
+    descLines.push(line);
   }
 
   flush();
-  return entries.slice(0, 6);
+  return dedupeWorkEntries(entries).slice(0, 8);
+}
+
+function dedupeWorkEntries(entries: WorkHistoryEntry[]): WorkHistoryEntry[] {
+  const seen = new Set<string>();
+  return entries.filter((entry) => {
+    const key = `${entry.cargo}|${entry.empresa}|${entry.fechaInicio}`.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function extractEducation(lines: string[]): EducationEntry[] {
@@ -356,21 +490,39 @@ function extractEducation(lines: string[]): EducationEntry[] {
   const entries: EducationEntry[] = [];
 
   for (const line of sectionLines) {
-    if (line.length < 6) continue;
+    if (line.length < 6 || SECTION_STOP.test(line)) continue;
+
     const entry = newEducationEntry();
     entry.nivel = inferEducationLevel(line);
-    entry.titulo = line.slice(0, 120);
-    const instMatch = line.match(
-      /(?:universidad|universidad|instituto|politécnico|politecnico|escuela|facultad)\s+[^,|•\n]{3,60}/i,
+
+    const uniMatch = line.match(
+      /(?:universidad|instituto|polit[eé]cnico|escuela|facultad|university|college)\s+(?:de\s+)?[^,|•\n/]{3,80}/i,
     );
-    entry.institucion = instMatch?.[0]?.trim() ?? '';
-    if (!entry.institucion && /universidad|ingenier[ií]a|administraci[oó]n|marketing|negocios/i.test(line)) {
-      entry.institucion = line.slice(0, 80);
+    const degreeMatch = line.match(
+      /(?:ingenier[ií]a|administraci[oó]n|marketing|negocios|contadur[ií]a|derecho|econom[ií]a|comunicaci[oó]n|psicolog[ií]a|pregrado|maestr[ií]a|especializaci[oó]n|mba|tecn[oó]logo|t[eé]cnico)[^,|•\n/]*/i,
+    );
+
+    entry.institucion = uniMatch?.[0]?.trim() ?? '';
+    entry.titulo = degreeMatch?.[0]?.trim() || line.slice(0, 120);
+
+    if (!entry.institucion && /universidad|instituto|escuela/i.test(line)) {
+      entry.institucion = line.slice(0, 90);
     }
+
     if (entry.titulo.trim()) entries.push(entry);
   }
 
-  return entries.slice(0, 4);
+  return dedupeEducation(entries).slice(0, 5);
+}
+
+function dedupeEducation(entries: EducationEntry[]): EducationEntry[] {
+  const seen = new Set<string>();
+  return entries.filter((entry) => {
+    const key = `${entry.titulo}|${entry.institucion}`.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function extractLanguages(lines: string[]): LanguageEntry[] {
@@ -516,29 +668,26 @@ export function alignCvReviewWithProfile(
 }
 
 export function extractCvFromText(text: string, fileName = 'cv.pdf'): CvExtractionResult {
-  const normalized = normalizeText(text);
+  const normalized = normalizeCvText(text);
   const warnings: string[] = [];
 
   if (normalized.length < 80) {
-    warnings.push('Poco texto legible en el PDF. Revisa que no sea solo una imagen escaneada.');
+    warnings.push('Poco texto legible en el archivo. Revisa que no sea solo una imagen escaneada.');
   }
 
-  const lines = normalized.split('\n').map((l) => l.trim()).filter(Boolean);
-  const email = extractEmail(normalized);
-  const telefono = extractPhone(normalized);
-  const ciudad = extractCity(normalized);
-  const nombre = extractName(normalized, email);
+  const lines = toLineArray(normalized);
+  const contact = extractContactFields(normalized);
   const historialLaboral = extractWorkHistory(lines);
   const formacion = extractEducation(lines);
   const idiomas = extractLanguages(lines);
-  const nivelRol = inferRoleLevel(normalized);
+  const nivelRol = inferRoleLevel(normalized) ?? inferRoleLevel(historialLaboral[0]?.cargo ?? '');
   const anios = estimateYears(historialLaboral);
 
   const suggestions: CvExtractionSuggestions = {
-    nombre,
-    email,
-    telefono,
-    ciudad,
+    nombre: contact.nombre,
+    email: contact.email,
+    telefono: contact.telefono,
+    ciudad: contact.ciudad,
     anios,
     nivelRol,
     historialLaboral: historialLaboral.length ? historialLaboral : undefined,
