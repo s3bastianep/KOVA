@@ -1,0 +1,313 @@
+/* Login — ink + lime (landing Kova) */
+
+.kv-login {
+  --kv-ink: #12140f;
+  --kv-paper: #edefea;
+  --kv-lime: #d8f24c;
+  --kv-lime-soft: rgba(216, 242, 76, 0.14);
+  --kv-slate: #a7aba0;
+  --kv-line: rgba(255, 255, 255, 0.1);
+  min-height: 100vh;
+  background: var(--kv-ink);
+  color: #fff;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.kv-login-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 50% at 10% -5%, rgba(216, 242, 76, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 45% 40% at 95% 100%, rgba(51, 65, 196, 0.12) 0%, transparent 50%),
+    var(--kv-ink);
+}
+
+.kv-login-nav {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem clamp(1.25rem, 4vw, 2.75rem);
+  border-bottom: 1px solid var(--kv-line);
+}
+
+.kv-login-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-family: var(--font-sora), 'Sora', ui-sans-serif, sans-serif;
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: #fff;
+  text-decoration: none;
+}
+
+.kv-login-logo-mark {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--kv-lime);
+  flex-shrink: 0;
+}
+
+.kv-login-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--kv-slate);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.kv-login-back:hover {
+  color: var(--kv-lime);
+}
+
+.kv-login-stage {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: center;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2.75rem) 3rem;
+}
+
+@media (min-width: 960px) {
+  .kv-login-stage {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 3rem;
+  }
+}
+
+.kv-login-aside {
+  display: none;
+}
+
+@media (min-width: 960px) {
+  .kv-login-aside {
+    display: block;
+    padding-right: 1rem;
+  }
+}
+
+.kv-login-eyebrow {
+  font-family: var(--font-mono), 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--kv-lime);
+  margin: 0 0 1rem;
+  font-weight: 600;
+}
+
+.kv-login-title {
+  font-family: var(--font-sora), 'Sora', ui-sans-serif, sans-serif;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  margin: 0 0 1rem;
+  color: #fff;
+}
+
+.kv-login-lead {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.52);
+  margin: 0 0 1.75rem;
+  max-width: 28rem;
+}
+
+.kv-login-chips {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+  max-width: 22rem;
+}
+
+.kv-login-chip {
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--kv-line);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.kv-login-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--kv-line);
+  border-radius: 1.25rem;
+  padding: clamp(1.5rem, 4vw, 2rem);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+  position: relative;
+  overflow: hidden;
+}
+
+.kv-login-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--kv-lime);
+}
+
+.kv-login-card-head {
+  margin-bottom: 1.5rem;
+}
+
+.kv-login-card-title {
+  font-family: var(--font-sora), 'Sora', ui-sans-serif, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.35rem;
+  color: #fff;
+}
+
+.kv-login-card-sub {
+  margin: 0;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.48);
+  line-height: 1.5;
+}
+
+.kv-login-error {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  color: #ffb4bc;
+  background: rgba(232, 92, 107, 0.12);
+  border: 1px solid rgba(232, 92, 107, 0.28);
+}
+
+.kv-login-field {
+  margin-bottom: 1rem;
+}
+
+.kv-login-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: 0.45rem;
+}
+
+.kv-login-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0 0.9rem;
+  min-height: 2.85rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kv-login-input-wrap:focus-within {
+  border-color: rgba(216, 242, 76, 0.45);
+  box-shadow: 0 0 0 3px rgba(216, 242, 76, 0.12);
+}
+
+.kv-login-input-wrap svg {
+  color: rgba(255, 255, 255, 0.35);
+  flex-shrink: 0;
+}
+
+.kv-login-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+  padding: 0.65rem 0;
+}
+
+.kv-login-input::placeholder {
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.kv-login-remember {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  margin: 0.25rem 0 1.25rem;
+}
+
+.kv-login-remember input {
+  accent-color: var(--kv-lime);
+}
+
+.kv-login-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  border: none;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--kv-lime);
+  color: var(--kv-ink);
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.kv-login-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.kv-login-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.kv-login-footer {
+  margin-top: 1.25rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--kv-line);
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: center;
+}
+
+.kv-login-footer a {
+  color: var(--kv-lime);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.kv-login-footer a:hover {
+  text-decoration: underline;
+}
+
+.kv-login-mobile-back {
+  display: inline-flex;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 960px) {
+  .kv-login-mobile-back {
+    display: none;
+  }
+}

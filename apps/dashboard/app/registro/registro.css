@@ -654,6 +654,12 @@ html:has(.kv-registro) {
     gap: 0.65rem;
   }
 
+  .kv-registro-btn-save {
+    margin-inline: 0;
+    width: 100%;
+    text-align: center;
+  }
+
   .kv-registro-btn-ghost {
     width: 100%;
     text-align: center;
@@ -1718,6 +1724,22 @@ html:has(.kv-registro) {
   justify-content: space-between;
   align-items: center;
   gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.kv-registro-btn-save {
+  margin-inline: auto 0;
+}
+
+.kv-registro-saved-banner {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: rgba(216, 242, 76, 0.16);
+  border: 1px solid rgba(92, 110, 18, 0.18);
+  color: var(--kv-ink);
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
 .kv-registro-btn-row--end {

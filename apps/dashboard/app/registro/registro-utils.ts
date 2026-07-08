@@ -15,6 +15,9 @@ export type RegistroDraft = {
   profile: CommercialProfile;
   step: number;
   savedAt: string;
+  candidateId?: string;
+  resumeToken?: string;
+  accountCreated?: boolean;
 };
 
 export function slugifyField(label: string): string {
@@ -95,6 +98,30 @@ export function clearRegistroDraft() {
   } catch {
     /* ignore */
   }
+}
+
+export async function resumeRegistroSession(candidateId: string, resumeToken: string) {
+  const params = new URLSearchParams({ candidateId, token: resumeToken });
+  const res = await fetch(`/api/registro/resume?${params}`);
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(json.message ?? 'No pudimos recuperar tu sesión.');
+  return json as {
+    profile: CommercialProfile;
+    step: number;
+    accountCreated: boolean;
+    candidateId: string;
+  };
+}
+
+export async function postRegistro(payload: Record<string, unknown>) {
+  const res = await fetch('/api/registro', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(json.message ?? 'Error al guardar');
+  return json;
 }
 
 function workEntryBlockers(entry: WorkHistoryEntry, index: number): string[] {

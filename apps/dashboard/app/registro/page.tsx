@@ -72,9 +72,10 @@ import {
 import {
   clearRegistroDraft,
   formatMonthYearDisplay,
-  getStepBlockers,
   loadRegistroDraft,
   parseMonthYearInput,
+  postRegistro,
+  resumeRegistroSession,
   saveRegistroDraft,
   slugifyField,
 } from './registro-utils';
@@ -84,9 +85,9 @@ const CRM_OTHER = 'Otro';
 const STEPS = [
   {
     tag: 'Paso 1 de 8',
-    short: 'Contacto',
-    title: 'Creemos tu perfil comercial',
-    sub: '',
+    short: 'Cuenta',
+    title: 'Crea tu cuenta',
+    sub: 'Datos básicos para empezar. Después completarás tu perfil comercial por partes, a tu ritmo.',
     kind: 'contact' as const,
     icon: User,
   },
@@ -439,14 +440,49 @@ export default function RegistroPage() {
   const [done, setDone] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [draftNote, setDraftNote] = useState(false);
+  const [accountCreated, setAccountCreated] = useState(false);
+  const [candidateId, setCandidateId] = useState<string | null>(null);
+  const [resumeToken, setResumeToken] = useState<string | null>(null);
+  const [savedBanner, setSavedBanner] = useState('');
 
   useEffect(() => {
-    const draft = loadRegistroDraft();
-    if (!draft) return;
-    setProfile(draft.profile);
-    setStep(Math.min(Math.max(0, draft.step), STEPS.length - 1));
-    setDraftNote(true);
+    let cancelled = false;
+
+    async function hydrate() {
+      const draft = loadRegistroDraft();
+      if (!draft) return;
+
+      setProfile(draft.profile);
+      setStep(Math.min(Math.max(0, draft.step), STEPS.length - 1));
+      setDraftNote(true);
+
+      if (draft.candidateId && draft.resumeToken) {
+        setCandidateId(draft.candidateId);
+        setResumeToken(draft.resumeToken);
+        setAccountCreated(Boolean(draft.accountCreated));
+
+        try {
+          const remote = await resumeRegistroSession(draft.candidateId, draft.resumeToken);
+          if (cancelled) return;
+          if (remote.profile && typeof remote.profile === 'object') {
+            setProfile((prev) => ({ ...prev, ...remote.profile }));
+          }
+          if (typeof remote.step === 'number') {
+            setStep(Math.min(Math.max(0, remote.step), STEPS.length - 1));
+          }
+          setAccountCreated(Boolean(remote.accountCreated));
+        } catch {
+          /* local draft sigue disponible */
+        }
+      }
+    }
+
+    hydrate();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -455,13 +491,18 @@ export default function RegistroPage() {
       profile,
       step,
       savedAt: new Date().toISOString(),
+      candidateId: candidateId ?? undefined,
+      resumeToken: resumeToken ?? undefined,
+      accountCreated,
     });
-  }, [profile, step, done]);
+  }, [profile, step, done, candidateId, resumeToken, accountCreated]);
 
   const goToStep = (target: number) => {
     if (target < 0 || target >= STEPS.length || target === step) return;
+    if (target > 0 && !accountCreated) return;
     setStep(target);
     setError('');
+    setSavedBanner('');
   };
 
   const current = STEPS[step];
@@ -541,11 +582,6 @@ export default function RegistroPage() {
     }
     return true;
   }, [step, profile, completeLogros.length, completeHistorial.length]);
-
-  const stepBlockers = useMemo(
-    () => getStepBlockers(step, profile, completeHistorial.length, completeLogros.length),
-    [step, profile, completeHistorial.length, completeLogros.length],
-  );
 
   useEffect(() => {
     if (step === 2) {
@@ -758,18 +794,82 @@ export default function RegistroPage() {
     });
   };
 
-  const submit = async () => {
+  const registroPayload = () => {
+    const { firstName, lastName } = splitFullName(profile.nombre ?? '');
+    return { profile, firstName, lastName, step };
+  };
+
+  const createAccount = async () => {
+    setLoading(true);
+    setError('');
+    setSavedBanner('');
+    try {
+      const json = await postRegistro({
+        action: 'account',
+        ...registroPayload(),
+      });
+      setCandidateId(json.candidateId);
+      setResumeToken(json.resumeToken);
+      setAccountCreated(true);
+      setSavedBanner(json.message ?? 'Cuenta creada. Continúa tu perfil cuando quieras.');
+      setStep(1);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al crear la cuenta');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const persistProgress = async (options?: { announce?: boolean }) => {
+    if (!accountCreated || !candidateId || !resumeToken) return;
+    setSaving(true);
+    setError('');
+    try {
+      const json = await postRegistro({
+        action: 'progress',
+        ...registroPayload(),
+        candidateId,
+        resumeToken,
+      });
+      if (options?.announce !== false) {
+        setSavedBanner(json.message ?? 'Progreso guardado. Puedes continuar después.');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al guardar el progreso');
+      throw err;
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const saveProgress = async () => {
+    await persistProgress({ announce: true });
+  };
+
+  const continueStep = async () => {
+    if (!canNext) return;
+    try {
+      if (accountCreated) await persistProgress({ announce: false });
+      goToStep(step + 1);
+    } catch {
+      /* error shown */
+    }
+  };
+
+  const publishProfile = async () => {
+    if (!accountCreated || !candidateId || !resumeToken) {
+      setError('Primero crea tu cuenta con tus datos básicos.');
+      return;
+    }
     setLoading(true);
     setError('');
     try {
-      const { firstName, lastName } = splitFullName(profile.nombre ?? '');
-      const res = await fetch('/api/registro', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile, firstName, lastName }),
+      const json = await postRegistro({
+        action: 'publish',
+        ...registroPayload(),
+        candidateId,
+        resumeToken,
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.message ?? 'Error al registrar');
       clearRegistroDraft();
       setDone(json.message);
     } catch (err) {
@@ -841,8 +941,8 @@ export default function RegistroPage() {
                     <button
                       type="button"
                       className={`kv-registro-stepper-item kv-registro-stepper-item--${state}`}
-                      onClick={() => i < step && goToStep(i)}
-                      disabled={i > step}
+                      onClick={() => i <= step && goToStep(i)}
+                      disabled={i > step || (i > 0 && !accountCreated)}
                       aria-current={i === step ? 'step' : undefined}
                     >
                       <span className="kv-registro-stepper-dot">
@@ -869,9 +969,11 @@ export default function RegistroPage() {
               <span>Datos confidenciales · solo equipo Kova</span>
             </div>
             <p className="kv-registro-draft-note font-mono">
-              {draftNote
-                ? 'Retomamos tu borrador guardado en este dispositivo.'
-                : 'Tu progreso se guarda automáticamente. Puedes cerrar y volver después.'}
+              {accountCreated
+                ? 'Tu cuenta y tu progreso se guardan automáticamente. Puedes cerrar y volver después.'
+                : draftNote
+                  ? 'Retomamos tu borrador en este dispositivo. Crea tu cuenta para guardar en Kova.'
+                  : 'Primero crea tu cuenta. Luego completa tu perfil por partes, a tu ritmo.'}
             </p>
           </div>
         </aside>
@@ -891,8 +993,8 @@ export default function RegistroPage() {
                   aria-selected={i === step}
                   aria-label={`${s.short}${i < step ? ', completado' : i === step ? ', actual' : ''}`}
                   className={`kv-registro-segment${i < step ? ' kv-registro-segment--done' : ''}${i === step ? ' kv-registro-segment--active' : ''}`}
-                  onClick={() => i < step && goToStep(i)}
-                  disabled={i > step}
+                  onClick={() => i <= step && goToStep(i)}
+                  disabled={i > step || (i > 0 && !accountCreated)}
                 />
               ))}
             </div>
@@ -909,8 +1011,8 @@ export default function RegistroPage() {
                     aria-selected={i === step}
                     aria-label={`${s.short}${i < step ? ', completado' : i === step ? ', actual' : ''}`}
                     className={`kv-registro-segment${i < step ? ' kv-registro-segment--done' : ''}${i === step ? ' kv-registro-segment--active' : ''}`}
-                    onClick={() => i < step && goToStep(i)}
-                    disabled={i > step}
+                    onClick={() => i <= step && goToStep(i)}
+                    disabled={i > step || (i > 0 && !accountCreated)}
                   />
                 ))}
               </div>
@@ -1833,24 +1935,18 @@ export default function RegistroPage() {
               )}
 
               {error && <p className="kv-registro-error">{error}</p>}
+              {savedBanner && !error ? (
+                <p className="kv-registro-saved-banner" role="status">
+                  {savedBanner}
+                </p>
+              ) : null}
             </div>
 
             <div className="kv-registro-card-footer">
-              {!canNext && step < STEPS.length - 1 && stepBlockers.length > 0 ? (
-                <div className="kv-registro-step-blockers" role="status" aria-live="polite">
-                  <p className="kv-registro-step-blockers-title">Para continuar:</p>
-                  <ul>
-                    {stepBlockers.slice(0, 4).map((blocker) => (
-                      <li key={blocker}>{blocker}</li>
-                    ))}
-                    {stepBlockers.length > 4 ? (
-                      <li>y {stepBlockers.length - 4} campo(s) más</li>
-                    ) : null}
-                  </ul>
-                </div>
-              ) : null}
               <p className="kv-registro-save-note kv-registro-save-note--mobile font-mono">
-                Tu progreso se guarda en este dispositivo. Puedes cerrar y volver después.
+                {accountCreated
+                  ? 'Puedes guardar y volver después en cualquier paso del perfil.'
+                  : 'Crea tu cuenta para guardar tu progreso en Kova.'}
               </p>
               <div className={`kv-registro-btn-row${step > 0 ? '' : ' kv-registro-btn-row--end'}`}>
                 {step > 0 ? (
@@ -1858,12 +1954,32 @@ export default function RegistroPage() {
                     Atrás
                   </button>
                 ) : null}
-                {step < STEPS.length - 1 ? (
+                {accountCreated && step > 0 ? (
+                  <button
+                    type="button"
+                    className="kv-registro-btn-ghost kv-registro-btn-save"
+                    disabled={saving || loading}
+                    onClick={saveProgress}
+                  >
+                    {saving ? 'Guardando...' : 'Guardar y continuar después'}
+                  </button>
+                ) : null}
+                {step === 0 ? (
                   <button
                     type="button"
                     className="kv-registro-btn-solid"
-                    disabled={!canNext}
-                    onClick={() => goToStep(step + 1)}
+                    disabled={!canNext || loading}
+                    onClick={createAccount}
+                  >
+                    {loading ? 'Creando cuenta...' : 'Crear mi cuenta'}
+                    <ChevronRight strokeWidth={2} aria-hidden />
+                  </button>
+                ) : step < STEPS.length - 1 ? (
+                  <button
+                    type="button"
+                    className="kv-registro-btn-solid"
+                    disabled={!canNext || loading || saving}
+                    onClick={continueStep}
                   >
                     Continuar
                     <ChevronRight strokeWidth={2} aria-hidden />
@@ -1872,8 +1988,8 @@ export default function RegistroPage() {
                   <button
                     type="button"
                     className="kv-registro-btn-solid kv-registro-btn-solid--lime"
-                    disabled={loading}
-                    onClick={submit}
+                    disabled={loading || saving}
+                    onClick={publishProfile}
                   >
                     {loading ? 'Guardando...' : 'Publicar mi perfil'}
                     {!loading && <ChevronRight strokeWidth={2} aria-hidden />}
