@@ -1,8 +1,15 @@
 /* Kova landing — wave v2 (report card + signal strip) */
 
 html:has(.kova-landing-wave) {
-  font-size: 100%;
+  font-size: 16px;
   text-rendering: geometricPrecision;
+  zoom: 0.95;
+}
+
+@supports not (zoom: 1) {
+  html:has(.kova-landing-wave) {
+    font-size: 15px;
+  }
 }
 
 .kova-landing-wave {

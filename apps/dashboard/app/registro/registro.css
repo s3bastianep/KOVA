@@ -1,8 +1,15 @@
 /* KOVA — Registro candidato (landing wave) */
 
 html:has(.kv-registro) {
-  font-size: 100%;
+  font-size: 16px;
   text-rendering: geometricPrecision;
+  zoom: 0.95;
+}
+
+@supports not (zoom: 1) {
+  html:has(.kv-registro) {
+    font-size: 15px;
+  }
 }
 
 .kv-registro {
