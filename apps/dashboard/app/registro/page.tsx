@@ -232,8 +232,16 @@ function ChoiceField({
   compact?: boolean;
   required?: boolean;
 }) {
+  const compactCols = compact
+    ? options.length <= 2
+      ? ' kv-registro-choice-grid--cols-2'
+      : options.length === 3
+        ? ' kv-registro-choice-grid--cols-3'
+        : ' kv-registro-choice-grid--cols-auto'
+    : '';
+
   const gridClass = compact
-    ? ' kv-registro-choice-grid--compact'
+    ? ` kv-registro-choice-grid--compact${compactCols}`
     : options.length > 2
       ? ' kv-registro-choice-grid--wide'
       : '';
@@ -822,7 +830,7 @@ export default function RegistroPage() {
 
             <div key={step} className="kv-registro-card-body kv-registro-step-panel">
               {current.kind === 'contact' && (
-                <div className="kv-registro-form-stack kv-registro-form-stack--compact">
+                <div className="kv-registro-form-stack">
                   <div className="kv-registro-field-row">
                     <div className={`kv-registro-field${!profile.nombre?.trim() ? ' kv-registro-field--incomplete' : ''}`}>
                       <FieldLabel htmlFor="nombre" required>
@@ -902,7 +910,7 @@ export default function RegistroPage() {
                     </div>
                   </div>
 
-                  <div className="kv-registro-field-group kv-registro-field-group--compact">
+                  <div className="kv-registro-field-group">
                     <h3 className="kv-registro-field-group-title kv-registro-field-group-title--required">
                       Disponibilidad <RequiredMark />
                     </h3>
@@ -933,7 +941,7 @@ export default function RegistroPage() {
                   </div>
 
                   <label
-                    className={`kv-registro-consent kv-registro-consent--compact${
+                    className={`kv-registro-consent${
                       !profile.consentimientoDatos ? ' kv-registro-consent--incomplete' : ''
                     }`}
                   >
