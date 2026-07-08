@@ -81,7 +81,7 @@ export default function Contacto() {
               </a>
             </div>
 
-            <div className="kv-contact-booking">
+            <div className="kv-contact-booking" id="agendar">
               <div className="kv-booking-stage">
                 <Suspense fallback={<div className="kv-booking-loading" aria-busy="true" />}>
                   <BookingScheduler

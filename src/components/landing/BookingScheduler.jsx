@@ -1,40 +1,47 @@
 import { useEffect, useMemo, useState } from 'react';
-import {
-  addDays,
-  format,
-  isBefore,
-  isSameDay,
-  startOfDay,
-} from 'date-fns';
+import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { ArrowLeft, CalendarDays, Check, Loader2, Video } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { createBooking, fetchAvailability, checkBookingApi } from '@/api/booking';
-import { formatDateKey, isBookableDateKey } from '@/lib/schedule';
+import {
+  SCHEDULE,
+  addDaysToDateKey,
+  bogotaNowParts,
+  bogotaTodayDate,
+  isBookableDateKey,
+  localDateToKey,
+} from '@/lib/schedule';
 
-const DAYS_AHEAD = 45;
-
-function isSelectableDay(date, minDate, maxDate) {
-  const day = startOfDay(date);
-  if (isBefore(day, minDate) && !isSameDay(day, minDate)) return false;
-  if (day > maxDate) return false;
-  return isBookableDateKey(formatDateKey(day));
+function isSelectableDay(date) {
+  if (!date) return false;
+  return isBookableDateKey(localDateToKey(date));
 }
 
-function BookingDayContent({ date, activeModifiers = {} }) {
-  const human = format(date, "d 'de' MMMM 'de' yyyy", { locale: es });
-  const label = activeModifiers.disabled ? `${human} (no disponible)` : `Seleccionar ${human}`;
+function BookingDay({ date, displayMonth, ...buttonProps }) {
+  const dateKey = localDateToKey(date);
+  const human = format(date, "EEEE d 'de' MMMM 'de' yyyy", { locale: es });
+  const unavailable = !isBookableDateKey(dateKey);
+  const label = unavailable ? `${human}, no disponible` : `Seleccionar ${human}`;
+
   return (
-    <>
-      <span aria-hidden="true">{date.getDate()}</span>
-      <span className="sr-only">{label}</span>
-    </>
+    <button {...buttonProps} type="button" aria-label={label}>
+      {date.getDate()}
+    </button>
   );
 }
 
 export default function BookingScheduler({ alternateContact = null }) {
-  const today = useMemo(() => startOfDay(new Date()), []);
-  const maxDate = useMemo(() => addDays(today, DAYS_AHEAD), [today]);
+  const todayKey = useMemo(() => bogotaNowParts().dateKey, []);
+  const today = useMemo(() => bogotaTodayDate(), [todayKey]);
+  const maxDate = useMemo(
+    () => {
+      const maxKey = addDaysToDateKey(todayKey, SCHEDULE.daysAhead);
+      const [y, m, d] = maxKey.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    },
+    [todayKey],
+  );
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
@@ -44,10 +51,19 @@ export default function BookingScheduler({ alternateContact = null }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [confirmed, setConfirmed] = useState(null);
-  const [form, setForm] = useState({ nombre: '', correo: '', telefono: '', empresa: '' });
+  const [form, setForm] = useState({
+    nombre: '',
+    correo: '',
+    telefono: '',
+    empresa: '',
+    rolVacante: '',
+  });
   const [apiReady, setApiReady] = useState(null);
 
-  const selectedDateKey = selectedDate ? formatDateKey(selectedDate) : null;
+  const selectedDateKey = selectedDate ? localDateToKey(selectedDate) : null;
+  const selectedDateLabel = selectedDate
+    ? format(selectedDate, "EEEE d 'de' MMMM 'de' yyyy", { locale: es })
+    : '';
 
   useEffect(() => {
     checkBookingApi().then(setApiReady);
@@ -84,7 +100,7 @@ export default function BookingScheduler({ alternateContact = null }) {
   }, [selectedDateKey]);
 
   const handleSelectDate = (day) => {
-    if (!day || !isSelectableDay(day, today, maxDate)) return;
+    if (!day || !isSelectableDay(day)) return;
     setSelectedDate(day);
     setStep('schedule');
     setSelectedTime(null);
@@ -111,7 +127,11 @@ export default function BookingScheduler({ alternateContact = null }) {
       const result = await createBooking({
         date: selectedDateKey,
         time: selectedTime,
-        ...form,
+        nombre: form.nombre,
+        correo: form.correo,
+        telefono: form.telefono,
+        empresa: form.empresa,
+        rolVacante: form.rolVacante.trim() || undefined,
       });
       setConfirmed(result.booking);
       setStep('done');
@@ -149,7 +169,7 @@ export default function BookingScheduler({ alternateContact = null }) {
             <h2 className="font-display">Agendar una consultoría</h2>
             <p className="kv-booking-meta font-mono">
               <Video className="kv-booking-meta-icon" aria-hidden />
-              30 min · Videollamada · Lun a vie
+              30 min · Videollamada · Lun a vie · Hora Colombia
             </p>
           </div>
           <div className="kv-booking-step-pills font-mono" aria-hidden>
@@ -170,7 +190,7 @@ export default function BookingScheduler({ alternateContact = null }) {
         <div className="kv-booking-body">
           <div className="kv-booking-schedule-grid">
             <div className="kv-booking-calendar-wrap">
-              <p className="kv-booking-panel-label font-mono">
+              <p className="kv-booking-panel-label font-mono" id="booking-calendar-label">
                 <CalendarDays className="kv-booking-panel-icon" aria-hidden />
                 Seleccione un día
               </p>
@@ -179,16 +199,17 @@ export default function BookingScheduler({ alternateContact = null }) {
                 selected={selectedDate}
                 onSelect={handleSelectDate}
                 locale={es}
-                components={{ DayContent: BookingDayContent }}
+                components={{ Day: BookingDay }}
                 fromDate={today}
                 toDate={maxDate}
-                disabled={(date) => !isSelectableDay(date, today, maxDate)}
+                disabled={(date) => !isSelectableDay(date)}
                 defaultMonth={today}
+                aria-labelledby="booking-calendar-label"
                 className="kova-booking-calendar kv-booking-calendar p-0 w-full"
               />
             </div>
 
-            <div className="kv-booking-slots-panel">
+            <div className="kv-booking-slots-panel" aria-live="polite">
               {selectedDate ? (
                 <>
                   <p className="kv-booking-panel-label font-mono capitalize">
@@ -197,6 +218,7 @@ export default function BookingScheduler({ alternateContact = null }) {
                   {loadingSlots ? (
                     <div className="kv-booking-loading">
                       <Loader2 className="animate-spin" aria-hidden />
+                      <span className="sr-only">Cargando horarios disponibles</span>
                     </div>
                   ) : apiReady === false ? (
                     <p className="kv-booking-empty">
@@ -204,14 +226,17 @@ export default function BookingScheduler({ alternateContact = null }) {
                     </p>
                   ) : slots.length ? (
                     <>
-                      <div className="kv-booking-slots">
+                      <div className="kv-booking-slots" role="group" aria-label={`Horarios para ${selectedDateLabel}`}>
                         {slots.map((slot) => {
                           const isSelected = selectedTime === slot;
+                          const slotId = `booking-slot-${slot.replace(':', '')}`;
                           return (
                             <button
                               key={slot}
+                              id={slotId}
                               type="button"
-                              aria-label={`Seleccionar horario ${slot}`}
+                              name="booking-slot"
+                              aria-label={`Horario ${slot} del ${selectedDateLabel}`}
                               aria-pressed={isSelected}
                               onClick={() => {
                                 setSelectedTime(slot);
@@ -227,6 +252,8 @@ export default function BookingScheduler({ alternateContact = null }) {
                       {selectedTime && apiReady !== false && (
                         <button
                           type="button"
+                          id="booking-continue"
+                          aria-label={`Continuar con horario ${selectedTime} del ${selectedDateLabel}`}
                           onClick={() => {
                             setStep('details');
                             setError('');
@@ -253,7 +280,12 @@ export default function BookingScheduler({ alternateContact = null }) {
         </div>
       ) : (
         <form onSubmit={handleConfirm} className="kv-booking-body kv-booking-form">
-          <button type="button" onClick={() => setStep('schedule')} className="kv-booking-back">
+          <button
+            type="button"
+            onClick={() => setStep('schedule')}
+            className="kv-booking-back"
+            aria-label="Volver a cambiar fecha y horario"
+          >
             <ArrowLeft aria-hidden />
             Cambiar horario
           </button>
@@ -325,11 +357,32 @@ export default function BookingScheduler({ alternateContact = null }) {
                 required
               />
             </div>
+            <div>
+              <label htmlFor="booking-rol" className="kv-booking-label">
+                ¿Qué rol comercial quiere contratar? <span className="kv-booking-optional">(opcional)</span>
+              </label>
+              <input
+                id="booking-rol"
+                name="rolVacante"
+                type="text"
+                value={form.rolVacante}
+                onChange={(e) => setForm({ ...form, rolVacante: e.target.value })}
+                className="kv-booking-input"
+                placeholder="Ej. Ejecutivo B2B SaaS, jefe comercial regional…"
+                autoComplete="off"
+              />
+            </div>
           </div>
 
           {error && <p className="kv-booking-error kv-booking-error--box">{error}</p>}
 
-          <button type="submit" disabled={submitting} className="kv-btn-solid kv-booking-submit">
+          <button
+            type="submit"
+            id="booking-submit"
+            disabled={submitting}
+            className="kv-btn-solid kv-booking-submit"
+            aria-label="Enviar solicitud de consultoría"
+          >
             {submitting ? 'Enviando...' : 'Enviar solicitud'}
           </button>
         </form>

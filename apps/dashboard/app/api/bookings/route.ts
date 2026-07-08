@@ -36,13 +36,14 @@ export async function POST(req: NextRequest) {
     return Response.json({ error }, { status: 400, headers: CORS_HEADERS });
   }
 
-  const { date, time, nombre, correo, telefono, empresa } = body as {
+  const { date, time, nombre, correo, telefono, empresa, rolVacante } = body as {
     date: string;
     time: string;
     nombre: string;
     correo: string;
     telefono: string;
     empresa: string;
+    rolVacante?: string;
   };
 
   const available = await isSlotAvailable(date, time);
@@ -61,6 +62,9 @@ export async function POST(req: NextRequest) {
       requesterEmail: correo,
       requesterPhone: telefono,
       companyName: empresa,
+      notes: typeof rolVacante === 'string' && rolVacante.trim()
+        ? `Rol a contratar: ${rolVacante.trim()}`
+        : undefined,
     });
 
     return Response.json(
