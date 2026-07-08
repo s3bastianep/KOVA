@@ -49,6 +49,7 @@ export type CommercialProfile = {
   email?: string;
   telefono?: string;
   ciudad?: string;
+  modalidadTrabajo?: string;
   disponibilidad?: string;
   disponibilidadViajar?: string;
   disponibilidadReubicacion?: string;

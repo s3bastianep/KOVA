@@ -5,7 +5,7 @@ import {
   commercialProfileFromMetadata,
 } from '@/lib/candidate-commercial-profile';
 import { isMockMode } from '@/lib/mock';
-import { cvSummaryFromMetadata } from '@/lib/portal-profile';
+import { cvSummaryFromMetadata, getProfileGaps } from '@/lib/portal-profile';
 import { handlePortalRoute } from '@/lib/portal-api';
 import {
   computeCandidateVacancyCompatibility,
@@ -37,19 +37,55 @@ export async function GET(req: NextRequest) {
     async ({ user, candidate }) => {
 
     if (isMockMode()) {
+      const commercialProfile = commercialProfileFromMetadata(candidate.metadata) ?? {
+        nombre: `${candidate.firstName} ${candidate.lastName}`.trim(),
+        email: candidate.email ?? user.email,
+        telefono: candidate.phone ?? undefined,
+        ciudad: candidate.city ?? undefined,
+      };
+      const profileCompleteness = calculateProfileCompleteness(commercialProfile);
+      const hasCv = Boolean(
+        (candidate.metadata as { cvFileName?: string } | null)?.cvFileName ||
+          (commercialProfile.historialLaboral?.length ?? 0) > 0,
+      );
+
+      const profileGaps = getProfileGaps(commercialProfile, hasCv);
+
       return Response.json({
         greeting: user.firstName,
-        profileCompleteness: 18,
+        profileCompleteness,
+        profileGaps,
         stats: {
           vacantesRecomendadas: 3,
           aplicacionesActivas: 0,
           entrevistasProximas: 0,
-          hasCv: false,
+          hasCv,
         },
         nextSteps: [
-          { id: 'perfil', label: 'Completa tu perfil personal', href: '/portal/perfil', done: false },
-          { id: 'documentos', label: 'Sube tu hoja de vida', href: '/portal/documentos', done: false },
-          { id: 'comercial', label: 'Define tu perfil comercial', href: '/portal/comercial', done: false },
+          {
+            id: 'perfil',
+            label: 'Completa tu perfil personal',
+            href: '/portal/perfil',
+            done: Boolean(
+              commercialProfile.telefono &&
+                commercialProfile.ciudad &&
+                commercialProfile.disponibilidad &&
+                commercialProfile.disponibilidadViajar &&
+                commercialProfile.disponibilidadReubicacion,
+            ),
+          },
+          {
+            id: 'documentos',
+            label: 'Sube tu hoja de vida',
+            href: '/portal/documentos',
+            done: hasCv,
+          },
+          {
+            id: 'comercial',
+            label: 'Define tu perfil comercial',
+            href: '/portal/comercial',
+            done: Boolean(commercialProfile.nivelRol && commercialProfile.tipoVenta),
+          },
         ],
       });
     }
@@ -128,9 +164,12 @@ export async function GET(req: NextRequest) {
       },
     ];
 
+    const profileGaps = getProfileGaps(commercialProfile, hasCv);
+
     return Response.json({
       greeting: user.firstName,
       profileCompleteness,
+      profileGaps,
       stats: {
         vacantesRecomendadas,
         aplicacionesActivas,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Trash2 } from 'lucide-react';
 import type {
   CommercialProfile,
   EducationEntry,
@@ -8,218 +8,228 @@ import type {
   WorkHistoryEntry,
 } from '@/lib/candidate-commercial-profile';
 import {
+  EDUCATION_LEVEL_OPTIONS,
+  LANGUAGE_LEVEL_OPTIONS,
+  LANGUAGE_OPTIONS,
   newEducationEntry,
   newLanguageEntry,
   newWorkHistoryEntry,
 } from '@/lib/commercial-profile-builder';
-import { formatMonthYearDisplay } from '@/app/registro/registro-utils';
 
 type Props = {
   profile: CommercialProfile;
   onChange: (profile: CommercialProfile) => void;
 };
 
-type EditTarget =
-  | { type: 'work'; id: string }
-  | { type: 'edu'; id: string }
-  | { type: 'lang'; id: string }
-  | null;
+function ordinalLabel(index: number, kind: 'experiencia' | 'formación' | 'idioma'): string {
+  return `${index + 1}ª ${kind}`;
+}
+
+function CardHeader({
+  label,
+  onDelete,
+}: {
+  label: string;
+  onDelete: () => void;
+}) {
+  return (
+    <div className="portal-onboarding-work-card__head">
+      <p className="portal-onboarding-work-card__badge">{label}</p>
+      <button type="button" className="portal-onboarding-card-delete" onClick={onDelete}>
+        <Trash2 className="w-3.5 h-3.5" aria-hidden />
+        Eliminar
+      </button>
+    </div>
+  );
+}
 
 export function PortalOnboardingReviewCards({ profile, onChange }: Props) {
-  const [editing, setEditing] = useState<EditTarget>(null);
-  const [draft, setDraft] = useState<WorkHistoryEntry | EducationEntry | LanguageEntry | null>(null);
-
-  const openWork = (entry: WorkHistoryEntry) => {
-    setEditing({ type: 'work', id: entry.id });
-    setDraft({ ...entry });
-  };
-
-  const openEdu = (entry: EducationEntry) => {
-    setEditing({ type: 'edu', id: entry.id });
-    setDraft({ ...entry });
-  };
-
-  const openLang = (entry: LanguageEntry) => {
-    setEditing({ type: 'lang', id: entry.id });
-    setDraft({ ...entry });
-  };
-
-  const saveEdit = () => {
-    if (!editing || !draft) return;
-    if (editing.type === 'work') {
-      const historialLaboral = (profile.historialLaboral ?? []).map((e) =>
-        e.id === editing.id ? (draft as WorkHistoryEntry) : e,
-      );
-      onChange({ ...profile, historialLaboral });
-    } else if (editing.type === 'edu') {
-      const formacion = (profile.formacion ?? []).map((e) =>
-        e.id === editing.id ? (draft as EducationEntry) : e,
-      );
-      onChange({ ...profile, formacion });
-    } else if (editing.type === 'lang') {
-      const idiomas = (profile.idiomas ?? []).map((e) =>
-        e.id === editing.id ? (draft as LanguageEntry) : e,
-      );
-      onChange({ ...profile, idiomas });
-    }
-    setEditing(null);
-    setDraft(null);
-  };
-
   const work = profile.historialLaboral ?? [];
   const edu = profile.formacion ?? [];
   const langs = profile.idiomas ?? [];
   const certs = profile.certificaciones ?? [];
 
+  const updateWork = (id: string, patch: Partial<WorkHistoryEntry>) => {
+    onChange({
+      ...profile,
+      historialLaboral: work.map((entry) => (entry.id === id ? { ...entry, ...patch } : entry)),
+    });
+  };
+
+  const updateEdu = (id: string, patch: Partial<EducationEntry>) => {
+    onChange({
+      ...profile,
+      formacion: edu.map((entry) => (entry.id === id ? { ...entry, ...patch } : entry)),
+    });
+  };
+
+  const updateLang = (id: string, patch: Partial<LanguageEntry>) => {
+    onChange({
+      ...profile,
+      idiomas: langs.map((entry) => (entry.id === id ? { ...entry, ...patch } : entry)),
+    });
+  };
+
+  const removeWork = (id: string) => {
+    onChange({ ...profile, historialLaboral: work.filter((entry) => entry.id !== id) });
+  };
+
+  const removeEdu = (id: string) => {
+    onChange({ ...profile, formacion: edu.filter((entry) => entry.id !== id) });
+  };
+
+  const removeLang = (id: string) => {
+    onChange({ ...profile, idiomas: langs.filter((entry) => entry.id !== id) });
+  };
+
   return (
     <div className="space-y-2">
-      {editing && draft ? (
-        <div className="portal-onboarding-card mb-6 space-y-3">
-          <h3 className="font-semibold">Editar</h3>
-          {editing.type === 'work' ? (
-            <>
-              <label className="block text-sm">
-                Empresa
-                <input
-                  className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
-                  value={(draft as WorkHistoryEntry).empresa}
-                  onChange={(e) => setDraft({ ...(draft as WorkHistoryEntry), empresa: e.target.value })}
-                />
-              </label>
-              <label className="block text-sm">
-                Cargo
-                <input
-                  className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
-                  value={(draft as WorkHistoryEntry).cargo}
-                  onChange={(e) => setDraft({ ...(draft as WorkHistoryEntry), cargo: e.target.value })}
-                />
-              </label>
-              <label className="block text-sm">
-                Fecha inicio
-                <input
-                  className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
-                  value={(draft as WorkHistoryEntry).fechaInicio}
-                  onChange={(e) => setDraft({ ...(draft as WorkHistoryEntry), fechaInicio: e.target.value })}
-                />
-              </label>
-              <label className="block text-sm">
-                Fecha fin
-                <input
-                  className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
-                  value={(draft as WorkHistoryEntry).fechaFin ?? ''}
-                  onChange={(e) => setDraft({ ...(draft as WorkHistoryEntry), fechaFin: e.target.value })}
-                />
-              </label>
-              <label className="block text-sm">
-                Descripción
-                <textarea
-                  className="mt-1 w-full rounded-lg border px-3 py-2 text-sm min-h-[80px]"
-                  value={(draft as WorkHistoryEntry).descripcion}
-                  onChange={(e) => setDraft({ ...(draft as WorkHistoryEntry), descripcion: e.target.value })}
-                />
-              </label>
-            </>
-          ) : null}
-          {editing.type === 'edu' ? (
-            <>
-              <label className="block text-sm">
-                Institución
-                <input
-                  className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
-                  value={(draft as EducationEntry).institucion}
-                  onChange={(e) => setDraft({ ...(draft as EducationEntry), institucion: e.target.value })}
-                />
-              </label>
-              <label className="block text-sm">
-                Título
-                <input
-                  className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
-                  value={(draft as EducationEntry).titulo}
-                  onChange={(e) => setDraft({ ...(draft as EducationEntry), titulo: e.target.value })}
-                />
-              </label>
-              <label className="block text-sm">
-                Año
-                <input
-                  className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
-                  value={(draft as EducationEntry).anioGraduacion ?? ''}
-                  onChange={(e) =>
-                    setDraft({ ...(draft as EducationEntry), anioGraduacion: e.target.value })
-                  }
-                />
-              </label>
-            </>
-          ) : null}
-          {editing.type === 'lang' ? (
-            <>
-              <label className="block text-sm">
-                Idioma
-                <input
-                  className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
-                  value={(draft as LanguageEntry).idioma}
-                  onChange={(e) => setDraft({ ...(draft as LanguageEntry), idioma: e.target.value })}
-                />
-              </label>
-              <label className="block text-sm">
-                Nivel
-                <input
-                  className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
-                  value={(draft as LanguageEntry).nivel}
-                  onChange={(e) => setDraft({ ...(draft as LanguageEntry), nivel: e.target.value })}
-                />
-              </label>
-            </>
-          ) : null}
-          <div className="flex gap-2 pt-2">
-            <button type="button" className="portal-onboarding-btn flex-1" onClick={saveEdit}>
-              Guardar
-            </button>
-            <button
-              type="button"
-              className="portal-onboarding-btn portal-onboarding-btn--ghost flex-1"
-              onClick={() => {
-                setEditing(null);
-                setDraft(null);
-              }}
-            >
-              Cancelar
-            </button>
-          </div>
-        </div>
-      ) : null}
-
-      <p className="portal-onboarding-section-title">💼 Experiencia</p>
+      <p className="portal-onboarding-section-title">Experiencia laboral</p>
       {work.length === 0 ? (
-        <p className="text-sm text-[var(--kova-muted)]">Sin experiencia detectada.</p>
+        <p className="portal-onboarding-muted">No detectamos experiencia en tu hoja de vida. Agrega tu primera experiencia.</p>
       ) : (
-        work.map((entry) => (
-          <article key={entry.id} className="portal-onboarding-review-card mb-3">
-            <h3>{entry.cargo || 'Cargo'}</h3>
-            <p>{entry.empresa}</p>
-            <p className="text-xs font-mono mt-1">
-              {formatMonthYearDisplay(entry.fechaInicio)}
-              {' — '}
-              {entry.trabajoActual ? 'Actualidad' : formatMonthYearDisplay(entry.fechaFin ?? '')}
-            </p>
-            <button type="button" onClick={() => openWork(entry)}>
-              Editar
-            </button>
+        work.map((entry, index) => (
+          <article key={entry.id} className="portal-onboarding-work-card">
+            <CardHeader label={ordinalLabel(index, 'experiencia')} onDelete={() => removeWork(entry.id)} />
+
+            <label className="portal-onboarding-work-field">
+              <span className="portal-onboarding-work-field__label">Empresa</span>
+              <input
+                className="portal-onboarding-field"
+                value={entry.empresa}
+                placeholder="Nombre de la empresa"
+                onChange={(e) => updateWork(entry.id, { empresa: e.target.value })}
+              />
+            </label>
+
+            <label className="portal-onboarding-work-field">
+              <span className="portal-onboarding-work-field__label">Cargo</span>
+              <input
+                className="portal-onboarding-field"
+                value={entry.cargo}
+                placeholder="Ej. Director Comercial"
+                onChange={(e) => updateWork(entry.id, { cargo: e.target.value })}
+              />
+            </label>
+
+            <div className="portal-onboarding-work-period">
+              <span className="portal-onboarding-work-period__title">¿Sigues trabajando aquí?</span>
+
+              <div className="portal-onboarding-end-toggle" role="group" aria-label="¿Sigues trabajando aquí?">
+                <button
+                  type="button"
+                  className={`portal-onboarding-end-toggle__btn${entry.trabajoActual ? ' is-on' : ''}`}
+                  onClick={() => updateWork(entry.id, { trabajoActual: true, fechaFin: undefined })}
+                >
+                  Sí
+                </button>
+                <button
+                  type="button"
+                  className={`portal-onboarding-end-toggle__btn${!entry.trabajoActual ? ' is-on' : ''}`}
+                  onClick={() => updateWork(entry.id, { trabajoActual: false })}
+                >
+                  No
+                </button>
+              </div>
+
+              <div className="portal-onboarding-work-period__dates">
+                <label className="portal-onboarding-work-field">
+                  <span className="portal-onboarding-work-field__label">Inicio</span>
+                  <input
+                    className="portal-onboarding-field portal-onboarding-field--date"
+                    value={entry.fechaInicio}
+                    placeholder="MM/AAAA"
+                    onChange={(e) => updateWork(entry.id, { fechaInicio: e.target.value })}
+                  />
+                </label>
+
+                {entry.trabajoActual ? (
+                  <div className="portal-onboarding-work-field">
+                    <span className="portal-onboarding-work-field__label">Fin</span>
+                    <div className="portal-onboarding-current-badge">Actualidad</div>
+                  </div>
+                ) : (
+                  <label className="portal-onboarding-work-field">
+                    <span className="portal-onboarding-work-field__label">Fin</span>
+                    <input
+                      className="portal-onboarding-field portal-onboarding-field--date"
+                      value={entry.fechaFin ?? ''}
+                      placeholder="MM/AAAA"
+                      onChange={(e) => updateWork(entry.id, { fechaFin: e.target.value, trabajoActual: false })}
+                    />
+                  </label>
+                )}
+              </div>
+            </div>
+
+            <label className="portal-onboarding-work-field">
+              <span className="portal-onboarding-work-field__label">Qué hiciste en este cargo</span>
+              <textarea
+                className="portal-onboarding-field portal-onboarding-field--textarea"
+                value={entry.descripcion}
+                placeholder="Describe tus responsabilidades y logros en esta empresa"
+                rows={4}
+                onChange={(e) => updateWork(entry.id, { descripcion: e.target.value })}
+              />
+            </label>
           </article>
         ))
       )}
 
-      <p className="portal-onboarding-section-title">🎓 Formación</p>
+      <p className="portal-onboarding-section-title">Formación académica</p>
       {edu.length === 0 ? (
-        <p className="text-sm text-[var(--kova-muted)]">Sin estudios detectados.</p>
+        <p className="portal-onboarding-muted">No detectamos estudios en tu hoja de vida. Agrega tu primera formación.</p>
       ) : (
-        edu.map((entry) => (
-          <article key={entry.id} className="portal-onboarding-review-card mb-3">
-            <h3>{entry.institucion}</h3>
-            <p>{entry.titulo}</p>
-            {entry.anioGraduacion ? <p className="text-xs font-mono mt-1">{entry.anioGraduacion}</p> : null}
-            <button type="button" onClick={() => openEdu(entry)}>
-              Editar
-            </button>
+        edu.map((entry, index) => (
+          <article key={entry.id} className="portal-onboarding-work-card">
+            <CardHeader label={ordinalLabel(index, 'formación')} onDelete={() => removeEdu(entry.id)} />
+
+            <label className="portal-onboarding-work-field">
+              <span className="portal-onboarding-work-field__label">Institución</span>
+              <input
+                className="portal-onboarding-field"
+                value={entry.institucion}
+                placeholder="Universidad, colegio o instituto"
+                onChange={(e) => updateEdu(entry.id, { institucion: e.target.value })}
+              />
+            </label>
+
+            <label className="portal-onboarding-work-field">
+              <span className="portal-onboarding-work-field__label">Título o carrera</span>
+              <input
+                className="portal-onboarding-field"
+                value={entry.titulo}
+                placeholder="Ej. Administración de Empresas"
+                onChange={(e) => updateEdu(entry.id, { titulo: e.target.value })}
+              />
+            </label>
+
+            <div className="portal-onboarding-work-dates">
+              <label className="portal-onboarding-work-field">
+                <span className="portal-onboarding-work-field__label">Nivel</span>
+                <select
+                  className="portal-onboarding-field portal-onboarding-field--select"
+                  value={entry.nivel}
+                  onChange={(e) => updateEdu(entry.id, { nivel: e.target.value })}
+                >
+                  <option value="">Selecciona nivel</option>
+                  {EDUCATION_LEVEL_OPTIONS.map((level) => (
+                    <option key={level} value={level}>
+                      {level}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="portal-onboarding-work-field">
+                <span className="portal-onboarding-work-field__label">Año de graduación</span>
+                <input
+                  className="portal-onboarding-field"
+                  value={entry.anioGraduacion ?? ''}
+                  placeholder="AAAA"
+                  onChange={(e) => updateEdu(entry.id, { anioGraduacion: e.target.value })}
+                />
+              </label>
+            </div>
           </article>
         ))
       )}
@@ -238,48 +248,73 @@ export function PortalOnboardingReviewCards({ profile, onChange }: Props) {
 
       <p className="portal-onboarding-section-title">Idiomas</p>
       {langs.length === 0 ? (
-        <p className="text-sm text-[var(--kova-muted)]">Sin idiomas detectados.</p>
+        <p className="portal-onboarding-muted">Sin idiomas detectados.</p>
       ) : (
-        langs.map((entry) => (
-          <article key={entry.id} className="portal-onboarding-review-card mb-3">
-            <h3>{entry.idioma}</h3>
-            <p>{entry.nivel}</p>
-            <button type="button" onClick={() => openLang(entry)}>
-              Editar
-            </button>
+        langs.map((entry, index) => (
+          <article key={entry.id} className="portal-onboarding-work-card">
+            <CardHeader label={ordinalLabel(index, 'idioma')} onDelete={() => removeLang(entry.id)} />
+            <div className="portal-onboarding-work-dates">
+              <label className="portal-onboarding-work-field">
+                <span className="portal-onboarding-work-field__label">Idioma</span>
+                <select
+                  className="portal-onboarding-field portal-onboarding-field--select"
+                  value={entry.idioma}
+                  onChange={(e) => updateLang(entry.id, { idioma: e.target.value })}
+                >
+                  <option value="">Selecciona idioma</option>
+                  {LANGUAGE_OPTIONS.map((lang) => (
+                    <option key={lang} value={lang}>
+                      {lang}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="portal-onboarding-work-field">
+                <span className="portal-onboarding-work-field__label">Nivel</span>
+                <select
+                  className="portal-onboarding-field portal-onboarding-field--select"
+                  value={entry.nivel}
+                  onChange={(e) => updateLang(entry.id, { nivel: e.target.value })}
+                >
+                  <option value="">Selecciona nivel</option>
+                  {LANGUAGE_LEVEL_OPTIONS.map((level) => (
+                    <option key={level} value={level}>
+                      {level}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
           </article>
         ))
       )}
 
       <button
         type="button"
-        className="text-sm font-semibold text-[var(--kova-indigo)] mt-2"
+        className="portal-onboarding-link mt-2"
         onClick={() => {
           const entry = newWorkHistoryEntry();
           onChange({ ...profile, historialLaboral: [...work, entry] });
-          openWork(entry);
         }}
       >
         + Agregar experiencia
       </button>
       <button
         type="button"
-        className="text-sm font-semibold text-[var(--kova-indigo)] mt-2 ml-4"
+        className="portal-onboarding-link mt-2 ml-4"
         onClick={() => {
           const entry = newEducationEntry();
           onChange({ ...profile, formacion: [...edu, entry] });
-          openEdu(entry);
         }}
       >
         + Agregar estudio
       </button>
       <button
         type="button"
-        className="text-sm font-semibold text-[var(--kova-indigo)] mt-2 ml-4"
+        className="portal-onboarding-link mt-2 ml-4"
         onClick={() => {
           const entry = newLanguageEntry();
           onChange({ ...profile, idiomas: [...langs, entry] });
-          openLang(entry);
         }}
       >
         + Agregar idioma

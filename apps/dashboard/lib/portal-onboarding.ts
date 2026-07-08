@@ -1,6 +1,6 @@
 import type { CommercialProfile } from './candidate-commercial-profile';
 import type { CvExtractionResult } from './cv-extract';
-import { applyCvSuggestions } from './cv-extract';
+import { applyCvSuggestions, normalizeEducation, normalizeWorkHistory } from './cv-extract';
 
 export type OnboardingStep =
   | 'welcome'
@@ -64,7 +64,14 @@ export function applyFullCvExtraction(
   extraction: CvExtractionResult,
 ): CommercialProfile {
   const keys = extraction.reviewFields.map((f) => f.key);
-  return applyCvSuggestions(profile, extraction.suggestions, keys) as CommercialProfile;
+  let next = applyCvSuggestions(profile, extraction.suggestions, keys) as CommercialProfile;
+  if (next.historialLaboral?.length) {
+    next = { ...next, historialLaboral: normalizeWorkHistory(next.historialLaboral) };
+  }
+  if (next.formacion?.length) {
+    next = { ...next, formacion: normalizeEducation(next.formacion) };
+  }
+  return next;
 }
 
 export function onboardingProgressPercent(step: OnboardingStep) {
@@ -99,7 +106,7 @@ export type SmartQuestion = {
   subtitle?: string;
   options: string[];
   multi: boolean;
-  field: keyof CommercialProfile | 'modalidadesPreferidas' | 'indicadores';
+  field: keyof CommercialProfile | 'indicadores';
 };
 
 export const SMART_QUESTIONS: SmartQuestion[] = [
@@ -247,11 +254,28 @@ export const SMART_QUESTIONS: SmartQuestion[] = [
     field: 'coberturaGeografica',
   },
   {
-    id: 'modalidad',
-    title: '¿Qué disponibilidad tienes?',
-    options: ['Viajar', 'Cambio de ciudad', 'Remoto', 'Híbrido', 'Presencial'],
+    id: 'modalidad-trabajo',
+    title: '¿Qué modalidad de trabajo prefieres?',
+    subtitle: 'Selecciona todas las que aceptarías.',
+    options: ['Presencial', 'Híbrido', 'Remoto'],
     multi: true,
-    field: 'modalidadesPreferidas',
+    field: 'modalidadTrabajo',
+  },
+  {
+    id: 'viajar-trabajo',
+    title: '¿Puedes viajar por trabajo?',
+    subtitle: 'Viajes ocasionales o frecuentes por la empresa.',
+    options: ['Sí', 'No', 'Ocasionalmente'],
+    multi: false,
+    field: 'disponibilidadViajar',
+  },
+  {
+    id: 'reubicacion',
+    title: '¿Estarías dispuesto a cambiar de ciudad?',
+    subtitle: 'Por una oportunidad laboral.',
+    options: ['Sí', 'No', 'A evaluar'],
+    multi: false,
+    field: 'disponibilidadReubicacion',
   },
   {
     id: 'salario',

@@ -4,6 +4,11 @@ import {
   commercialProfileFromMetadata,
 } from './candidate-commercial-profile';
 import {
+  isEducationComplete,
+  isLanguageComplete,
+  isWorkHistoryComplete,
+} from './commercial-profile-builder';
+import {
   buildCandidatePayload,
   mergeRegistroMetadata,
   readRegistroMetadata,
@@ -164,4 +169,62 @@ export function cvSummaryFromMetadata(metadata: unknown) {
     importedAt: meta.cvImportedAt ?? null,
     textLength: meta.cvTextLength ?? null,
   };
+}
+
+export type ProfileGapItem = {
+  id: string;
+  label: string;
+  href: string;
+};
+
+export function getProfileGaps(profile: CommercialProfile, hasCv: boolean): ProfileGapItem[] {
+  const gaps: ProfileGapItem[] = [];
+
+  if (!profile.telefono?.trim()) {
+    gaps.push({ id: 'telefono', label: 'Teléfono de contacto', href: '/portal/perfil' });
+  }
+  if (!profile.ciudad?.trim()) {
+    gaps.push({ id: 'ciudad', label: 'Ciudad de residencia', href: '/portal/perfil' });
+  }
+  if (!profile.disponibilidad?.trim()) {
+    gaps.push({ id: 'disponibilidad', label: 'Cuándo puedes empezar', href: '/portal/perfil' });
+  }
+  if (!profile.disponibilidadViajar?.trim()) {
+    gaps.push({ id: 'viajar', label: 'Disponibilidad para viajar', href: '/portal/perfil' });
+  }
+  if (!profile.disponibilidadReubicacion?.trim()) {
+    gaps.push({ id: 'reubicacion', label: 'Disponibilidad para reubicación', href: '/portal/perfil' });
+  }
+
+  const historial = profile.historialLaboral ?? [];
+  if (!hasCv && historial.length === 0) {
+    gaps.push({ id: 'cv', label: 'Hoja de vida o experiencia laboral', href: '/portal/documentos' });
+  } else if (historial.length > 0 && !historial.some(isWorkHistoryComplete)) {
+    gaps.push({ id: 'experiencia', label: 'Revisa y completa tu experiencia laboral', href: '/portal/experiencia' });
+  }
+
+  if (!profile.nivelRol?.trim()) {
+    gaps.push({ id: 'nivelRol', label: 'Nivel de rol comercial', href: '/portal/comercial' });
+  }
+  if (!profile.objetivoProfesional?.trim()) {
+    gaps.push({ id: 'objetivo', label: 'Objetivo profesional', href: '/portal/comercial' });
+  }
+  if (!profile.tipoVenta?.trim()) {
+    gaps.push({ id: 'tipoVenta', label: 'Tipo de venta', href: '/portal/comercial' });
+  }
+  if (!(profile.industrias?.length ?? 0)) {
+    gaps.push({ id: 'industrias', label: 'Industrias de experiencia', href: '/portal/comercial' });
+  }
+  if (!profile.expectativaSalarial?.trim()) {
+    gaps.push({ id: 'salario', label: 'Expectativa salarial', href: '/portal/comercial' });
+  }
+
+  if (!(profile.formacion ?? []).some(isEducationComplete)) {
+    gaps.push({ id: 'formacion', label: 'Formación académica', href: '/portal/formacion' });
+  }
+  if (!(profile.idiomas ?? []).some(isLanguageComplete)) {
+    gaps.push({ id: 'idiomas', label: 'Nivel de idiomas', href: '/portal/formacion' });
+  }
+
+  return gaps;
 }

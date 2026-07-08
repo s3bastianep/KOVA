@@ -7,7 +7,7 @@ import {
   persistPortalProfile,
   profileFromCandidate,
 } from '@/lib/portal-profile';
-import { isMockMode } from '@/lib/mock';
+import { isMockMode, updateMockPortalProfile } from '@/lib/mock';
 import { handlePortalRoute } from '@/lib/portal-api';
 import { isOnboardingComplete, readOnboardingMeta, resolveOnboardingStep } from '@/lib/portal-onboarding';
 
@@ -18,19 +18,16 @@ export async function GET(req: NextRequest) {
     req,
     async ({ candidate }) => {
       if (isMockMode()) {
+        const profile = profileFromCandidate(candidate);
+        const meta = readOnboardingMeta(candidate.metadata);
+        const cv = cvSummaryFromMetadata(candidate.metadata);
         return Response.json({
           candidateId: candidate.id,
-          profile: {
-            nombre: 'María López',
-            email: 'maria@correo.com',
-            telefono: '+57 300 000 0000',
-            ciudad: 'Bogotá',
-            consentimientoDatos: true,
-          } satisfies CommercialProfile,
-          cv: null,
-          onboardingStep: 'welcome',
-          onboardingComplete: false,
-          profileStatus: 'account_only',
+          profile,
+          cv,
+          onboardingStep: resolveOnboardingStep(meta, Boolean(cv)),
+          onboardingComplete: isOnboardingComplete(meta),
+          profileStatus: meta.profileStatus ?? 'account_only',
         });
       }
 
@@ -60,11 +57,20 @@ export async function PATCH(req: NextRequest) {
       const completeOnboarding = Boolean(body.completeOnboarding);
 
       if (isMockMode()) {
+        const current = profileFromCandidate(candidate);
+        const merged = mergeCommercialProfile(current, patch);
+        updateMockPortalProfile(user.id, merged, {
+          onboardingStep: completeOnboarding
+            ? 'done'
+            : (onboardingStep as import('@/lib/registro-session').OnboardingStep | undefined),
+          profileStatus: completeOnboarding ? 'complete' : onboardingStep ? 'in_progress' : undefined,
+        });
         return Response.json({
           ok: true,
-          profile: { ...profileFromCandidate(candidate), ...patch },
+          profile: merged,
           message: 'Perfil actualizado.',
           onboardingComplete: completeOnboarding,
+          onboardingStep: completeOnboarding ? 'done' : onboardingStep,
         });
       }
 

@@ -83,6 +83,7 @@ export type PortalDashboard = {
     hasCv: boolean;
   };
   nextSteps: Array<{ id: string; label: string; href: string; done: boolean }>;
+  profileGaps: Array<{ id: string; label: string; href: string }>;
 };
 
 export type PortalCvSummary = {

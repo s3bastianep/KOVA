@@ -89,6 +89,137 @@ const SECTION_STOP =
 const JOB_TITLE_HINT =
   /^(ejecutivo|ejecutiva|gerente|director|directora|coordinador|coordinadora|asesor|asesora|consultor|consultora|representante|vendedor|vendedora|analista|profesional|especialista|l[ií]der|jefe|subgerente|comercial|sales|account|business)/i;
 
+const COMPANY_HINT =
+  /\b(s\.?a\.?s?\.?|s\.?a\.?|ltda|inc|corp|group|colombia|holding|cia|compañ[ií]a|empresa|bank|banco|solutions|technologies|tech)\b/i;
+
+function looksLikeDescription(text: string): boolean {
+  const t = text.trim();
+  if (!t) return false;
+  if (t.length > 90) return true;
+  if (
+    /^(responsable|encargad|l[ií]der|gesti[oó]n|desarroll|implement|coordin|administr|asegur|logr|definir|ejecutar|liderar)/i.test(
+      t,
+    )
+  ) {
+    return true;
+  }
+  if ((t.match(/[.!?]/g) ?? []).length >= 1 && t.length > 45) return true;
+  if (t.split(/\s+/).length > 12) return true;
+  return false;
+}
+
+function looksLikeJobTitle(text: string): boolean {
+  const t = text.trim();
+  if (!t || looksLikeDescription(t) || t.length > 70) return false;
+  if (JOB_TITLE_HINT.test(t)) return true;
+  return t.split(/\s+/).length <= 6 && !/[,;]/.test(t);
+}
+
+function looksLikeCompany(text: string): boolean {
+  const t = text.trim();
+  if (!t || looksLikeDescription(t)) return false;
+  if (COMPANY_HINT.test(t)) return true;
+  return t.length <= 55 && t.split(/\s+/).length <= 7 && !looksLikeJobTitle(t);
+}
+
+export function normalizeWorkHistoryEntry(entry: WorkHistoryEntry): WorkHistoryEntry {
+  let cargo = entry.cargo?.trim() ?? '';
+  let empresa = entry.empresa?.trim() ?? '';
+  let descripcion = entry.descripcion?.trim() ?? '';
+
+  if (looksLikeDescription(cargo)) {
+    if (!descripcion) descripcion = cargo;
+    cargo = '';
+  }
+
+  if (!empresa && cargo) {
+    const atMatch = cargo.match(/^(.+?)\s+(?:en|at|@)\s+(.+)$/i);
+    if (atMatch) {
+      const maybeCargo = atMatch[1].trim();
+      const maybeEmpresa = atMatch[2].trim();
+      if (looksLikeJobTitle(maybeCargo) || maybeCargo.split(/\s+/).length <= 6) {
+        cargo = maybeCargo;
+        empresa = maybeEmpresa;
+      }
+    }
+  }
+
+  if (!cargo && empresa && looksLikeJobTitle(empresa) && !looksLikeCompany(empresa)) {
+    cargo = empresa;
+    empresa = '';
+  }
+
+  if (empresa && looksLikeDescription(empresa)) {
+    if (!descripcion) descripcion = empresa;
+    empresa = '';
+  }
+
+  return { ...entry, cargo, empresa, descripcion };
+}
+
+export function normalizeWorkHistory(entries: WorkHistoryEntry[]): WorkHistoryEntry[] {
+  return dedupeWorkEntries(entries.map(normalizeWorkHistoryEntry));
+}
+
+function normalizeWorkText(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function workEntriesMatch(a: WorkHistoryEntry, b: WorkHistoryEntry): boolean {
+  const cargoA = normalizeWorkText(a.cargo ?? '');
+  const cargoB = normalizeWorkText(b.cargo ?? '');
+  const empA = normalizeWorkText(a.empresa ?? '');
+  const empB = normalizeWorkText(b.empresa ?? '');
+
+  if (cargoA && cargoB && empA && empB && cargoA === cargoB && empA === empB) {
+    return true;
+  }
+
+  if (empA && empB && empA === empB && a.fechaInicio && b.fechaInicio && a.fechaInicio === b.fechaInicio) {
+    return true;
+  }
+
+  const descA = normalizeWorkText(a.descripcion ?? '').slice(0, 120);
+  const descB = normalizeWorkText(b.descripcion ?? '').slice(0, 120);
+  if (descA.length >= 40 && descA === descB) {
+    return true;
+  }
+
+  return false;
+}
+
+function mergeWorkEntries(base: WorkHistoryEntry, incoming: WorkHistoryEntry): WorkHistoryEntry {
+  const descripcion =
+    (base.descripcion?.length ?? 0) >= (incoming.descripcion?.length ?? 0)
+      ? base.descripcion
+      : incoming.descripcion;
+
+  return normalizeWorkHistoryEntry({
+    ...base,
+    cargo: base.cargo?.trim() || incoming.cargo?.trim() || '',
+    empresa: base.empresa?.trim() || incoming.empresa?.trim() || '',
+    fechaInicio: base.fechaInicio || incoming.fechaInicio || '',
+    fechaFin: base.fechaFin || incoming.fechaFin,
+    trabajoActual: Boolean(base.trabajoActual || incoming.trabajoActual),
+    descripcion: descripcion ?? '',
+  });
+}
+
+function isNoiseWorkLine(line: string): boolean {
+  const trimmed = line.trim();
+  if (!trimmed) return true;
+  if (/^[•\-*●○▪·]\s*$/.test(trimmed)) return true;
+  if (/^(responsabilidades|funciones|logros|principales\s+logros|actividades)\s*:?\s*$/i.test(trimmed)) {
+    return true;
+  }
+  return false;
+}
+
 const DATE_RANGE =
   /(?:(0?[1-9]|1[0-2])[\/\-.](\d{4})|(\d{4})[\/\-.](0?[1-9]|1[0-2]))\s*(?:[-–—a]\s*|to\s+|hasta\s+)(?:(0?[1-9]|1[0-2])[\/\-.](\d{4})|(\d{4})[\/\-.](0?[1-9]|1[0-2])|actual(?:idad)?|presente?|hoy|current|al\s+presente)/i;
 
@@ -286,15 +417,26 @@ function parseRoleCompanyLine(line: string): { cargo?: string; empresa?: string 
 
   const dashParts = cleaned.split(/\s+[-–—]\s+/).filter(Boolean);
   if (dashParts.length === 2 && dashParts[0].length < 60 && dashParts[1].length < 60) {
-    const aLooksTitle = JOB_TITLE_HINT.test(dashParts[0]) || dashParts[0].split(' ').length <= 5;
-    const bLooksCompany = !JOB_TITLE_HINT.test(dashParts[1]) || /\b(sas|ltda|s\.a|inc|corp|group|colombia)\b/i.test(dashParts[1]);
+    const aLooksTitle = looksLikeJobTitle(dashParts[0]);
+    const bLooksCompany = looksLikeCompany(dashParts[1]);
     if (aLooksTitle && bLooksCompany) {
+      return { cargo: dashParts[0].trim(), empresa: dashParts[1].trim() };
+    }
+    if (looksLikeCompany(dashParts[0]) && looksLikeJobTitle(dashParts[1])) {
+      return { empresa: dashParts[0].trim(), cargo: dashParts[1].trim() };
+    }
+    if (aLooksTitle) {
       return { cargo: dashParts[0].trim(), empresa: dashParts[1].trim() };
     }
     return { empresa: dashParts[0].trim(), cargo: dashParts[1].trim() };
   }
 
-  return { cargo: cleaned };
+  if (looksLikeDescription(cleaned)) return {};
+  if (looksLikeJobTitle(cleaned)) return { cargo: cleaned };
+  if (looksLikeCompany(cleaned)) return { empresa: cleaned };
+  if (cleaned.length <= 50) return { cargo: cleaned };
+
+  return {};
 }
 
 function inferRoleLevel(text: string): string | undefined {
@@ -374,6 +516,28 @@ function sliceSection(lines: string[], start: number, end: number): string[] {
   return lines.slice(start + 1, end >= 0 ? end : undefined).map((l) => l.trim()).filter(Boolean);
 }
 
+function assignPreDateLines(entry: Partial<WorkHistoryEntry>, buffer: string[]) {
+  const lines = buffer.map((l) => l.trim()).filter(Boolean);
+  if (lines.length === 0) return;
+
+  if (lines.length >= 2) {
+    const first = lines[lines.length - 2];
+    const second = lines[lines.length - 1];
+    if (!entry.cargo && looksLikeJobTitle(first)) entry.cargo = first;
+    if (!entry.empresa) entry.empresa = second;
+    if (!entry.cargo && looksLikeJobTitle(second) && looksLikeCompany(first)) {
+      entry.cargo = second;
+      entry.empresa = first;
+    }
+    return;
+  }
+
+  const only = lines[0];
+  if (looksLikeJobTitle(only)) entry.cargo = only;
+  else if (looksLikeCompany(only)) entry.empresa = only;
+  else entry.cargo = only;
+}
+
 function extractWorkHistory(lines: string[]): WorkHistoryEntry[] {
   const expStart = findSectionIndex(lines, EXPERIENCE_SECTION);
   const eduStart = findSectionIndex(lines, EDUCATION_SECTION);
@@ -398,6 +562,7 @@ function extractWorkHistory(lines: string[]): WorkHistoryEntry[] {
   const entries: WorkHistoryEntry[] = [];
   let current: Partial<WorkHistoryEntry> | null = null;
   const descLines: string[] = [];
+  const preDateBuffer: string[] = [];
   let linesSinceDate = 0;
 
   const flush = () => {
@@ -410,36 +575,75 @@ function extractWorkHistory(lines: string[]): WorkHistoryEntry[] {
     entry.fechaFin = current.fechaFin;
     entry.trabajoActual = Boolean(current.trabajoActual);
     entry.descripcion = descLines.join(' ').trim().slice(0, 500);
-    if (entry.cargo || entry.empresa) entries.push(entry);
+    const normalized = normalizeWorkHistoryEntry(entry);
+    if (
+      normalized.cargo ||
+      normalized.empresa ||
+      normalized.fechaInicio ||
+      normalized.descripcion
+    ) {
+      entries.push(normalized);
+    }
     current = null;
     descLines.length = 0;
     linesSinceDate = 0;
   };
 
   for (const line of sectionLines) {
+    if (isNoiseWorkLine(line)) continue;
     if (SECTION_STOP.test(line) && line.length < 50) continue;
 
     const dates = parseDateRange(line);
     if (dates) {
       flush();
-      current = {
+
+      const last = entries[entries.length - 1];
+      const pending = {
+        ...newWorkHistoryEntry(),
         fechaInicio: dates.start,
         fechaFin: dates.end,
         trabajoActual: dates.current,
       };
-      linesSinceDate = 0;
-
+      assignPreDateLines(pending, preDateBuffer);
       const roleCompany = parseRoleCompanyLine(line);
-      if (roleCompany.cargo) current.cargo = roleCompany.cargo;
-      if (roleCompany.empresa) current.empresa = roleCompany.empresa;
+      if (roleCompany.cargo && !pending.cargo) pending.cargo = roleCompany.cargo;
+      if (roleCompany.empresa && !pending.empresa) pending.empresa = roleCompany.empresa;
+
+      if (last && workEntriesMatch(last, pending)) {
+        entries[entries.length - 1] = mergeWorkEntries(last, pending);
+        preDateBuffer.length = 0;
+        current = null;
+        continue;
+      }
+
+      current = {
+        fechaInicio: dates.start,
+        fechaFin: dates.end,
+        trabajoActual: dates.current,
+        cargo: pending.cargo,
+        empresa: pending.empresa,
+      };
+      preDateBuffer.length = 0;
+      linesSinceDate = 0;
       continue;
     }
 
-    if (!current) continue;
+    if (!current) {
+      preDateBuffer.push(line);
+      if (preDateBuffer.length > 3) preDateBuffer.shift();
+      continue;
+    }
+
+    if (descLines.length > 0 && looksLikeJobTitle(line)) {
+      flush();
+      preDateBuffer.push(line);
+      continue;
+    }
+
     linesSinceDate += 1;
 
     const roleCompany = parseRoleCompanyLine(line);
-    if (!current.cargo && roleCompany.cargo) {
+    if (!current.cargo && roleCompany.cargo && looksLikeJobTitle(roleCompany.cargo)) {
       current.cargo = roleCompany.cargo;
       if (roleCompany.empresa) current.empresa = roleCompany.empresa;
       continue;
@@ -449,11 +653,24 @@ function extractWorkHistory(lines: string[]): WorkHistoryEntry[] {
       continue;
     }
 
-    if (linesSinceDate === 1 && !current.empresa && line.length < 80 && !/[.!?]{2,}/.test(line)) {
-      if (JOB_TITLE_HINT.test(current.cargo ?? '') || (current.cargo?.split(' ').length ?? 0) <= 6) {
-        current.empresa = line;
-        continue;
-      }
+    if (linesSinceDate === 1 && !current.empresa && line.length < 80 && looksLikeCompany(line)) {
+      current.empresa = line;
+      continue;
+    }
+
+    if (linesSinceDate <= 2 && !current.cargo && looksLikeJobTitle(line)) {
+      current.cargo = line;
+      continue;
+    }
+
+    if (linesSinceDate <= 2 && !current.empresa && looksLikeCompany(line)) {
+      current.empresa = line;
+      continue;
+    }
+
+    if (looksLikeDescription(line) || line.length > 40) {
+      descLines.push(line);
+      continue;
     }
 
     if (linesSinceDate <= 1 && !current.cargo && line.length < 80) {
@@ -465,17 +682,174 @@ function extractWorkHistory(lines: string[]): WorkHistoryEntry[] {
   }
 
   flush();
-  return dedupeWorkEntries(entries).slice(0, 8);
+  return normalizeWorkHistory(entries).slice(0, 8);
 }
 
 function dedupeWorkEntries(entries: WorkHistoryEntry[]): WorkHistoryEntry[] {
-  const seen = new Set<string>();
-  return entries.filter((entry) => {
-    const key = `${entry.cargo}|${entry.empresa}|${entry.fechaInicio}`.toLowerCase();
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
+  const result: WorkHistoryEntry[] = [];
+
+  for (const entry of entries) {
+    const duplicateIdx = result.findIndex((existing) => workEntriesMatch(existing, entry));
+    if (duplicateIdx >= 0) {
+      result[duplicateIdx] = mergeWorkEntries(result[duplicateIdx], entry);
+    } else {
+      result.push(entry);
+    }
+  }
+
+  return result;
+}
+
+function looksLikeInstitution(text: string): boolean {
+  const t = text.trim();
+  if (!t) return false;
+  return /^(pontificia\s+)?(universidad|instituto|polit[eé]cnico|escuela|facultad|colegio|sena|university|college)\b/i.test(
+    t,
+  );
+}
+
+function isRecognizedEducationalInstitution(text: string): boolean {
+  const t = text.trim();
+  if (!t || isCertificationLine(t)) return false;
+  if (/coursera|udemy|platzi|edx|linkedin|hubspot|google\s/i.test(t)) return false;
+  return looksLikeInstitution(t) || /\b(sena|colegio)\b/i.test(t);
+}
+
+function isOnlyEducationLevel(text: string): boolean {
+  const lower = text.trim().toLowerCase();
+  return (EDUCATION_LEVEL_OPTIONS as readonly string[]).some((level) => level.toLowerCase() === lower);
+}
+
+function isCertificationLine(text: string): boolean {
+  return /coursera|udemy|platzi|edx|linkedin\s+learning|google\s+(data|ads|analytics)|hubspot|certificaci[oó]n|diplomado\s+en|curso\s+de|nanodegree/i.test(
+    text,
+  );
+}
+
+function parseEducationLine(line: string): {
+  titulo?: string;
+  institucion?: string;
+  anioGraduacion?: string;
+} {
+  const cleaned = line.trim();
+  if (!cleaned || cleaned.length < 4) return {};
+
+  const yearMatch = cleaned.match(/\b((?:19|20)\d{2})\b/);
+  const anioGraduacion = yearMatch?.[1];
+  let text = cleaned
+    .replace(/\b(?:19|20)\d{2}\b/g, '')
+    .replace(/[,\-|•]\s*$/g, '')
+    .trim();
+
+  if (isCertificationLine(text) || isOnlyEducationLevel(text)) {
+    return anioGraduacion ? { anioGraduacion } : {};
+  }
+
+  if (looksLikeInstitution(text) && !/\s+en\s+/i.test(text)) {
+    return { institucion: text, anioGraduacion };
+  }
+
+  const pipeParts = text.split(/\s*[|•/]\s*/).filter(Boolean);
+  if (pipeParts.length >= 2) {
+    const a = pipeParts[0].trim();
+    const b = pipeParts[1].trim();
+    if (looksLikeInstitution(b)) return { titulo: a, institucion: b, anioGraduacion };
+    if (looksLikeInstitution(a)) return { titulo: b, institucion: a, anioGraduacion };
+    return { titulo: a, institucion: b, anioGraduacion };
+  }
+
+  const instEnd = text.match(
+    /^(.+?)\s+((?:pontificia\s+)?universidad|instituto|polit[eé]cnico|escuela|facultad|university|college|sena)\s+(.+)$/i,
+  );
+  if (instEnd) {
+    return {
+      titulo: instEnd[1].replace(/[,\-|•]\s*$/g, '').trim(),
+      institucion: `${instEnd[2]} ${instEnd[3]}`.trim(),
+      anioGraduacion,
+    };
+  }
+
+  if (looksLikeInstitution(text)) return { institucion: text, anioGraduacion };
+
+  const degreeMatch = text.match(
+    /^(profesional|tecn[oó]logo|t[eé]cnico|especialista|magister|maestr[ií]a|pregrado|bachiller)\b/i,
+  );
+  if (degreeMatch) return { titulo: text, anioGraduacion };
+
+  return { titulo: text, anioGraduacion };
+}
+
+export function normalizeEducationEntry(entry: EducationEntry): EducationEntry {
+  let titulo = entry.titulo?.trim() ?? '';
+  let institucion = entry.institucion?.trim() ?? '';
+  let nivel = entry.nivel?.trim() ?? '';
+  let anioGraduacion = entry.anioGraduacion?.trim();
+
+  if (titulo && looksLikeInstitution(titulo) && !institucion) {
+    institucion = titulo;
+    titulo = '';
+  }
+
+  if (titulo && !institucion) {
+    const split = parseEducationLine(titulo);
+    if (split.titulo) titulo = split.titulo;
+    if (split.institucion) institucion = split.institucion;
+    if (split.anioGraduacion && !anioGraduacion) anioGraduacion = split.anioGraduacion;
+  }
+
+  if (titulo && institucion) {
+    const instLower = institucion.toLowerCase();
+    if (titulo.toLowerCase() === instLower) titulo = '';
+    else if (titulo.toLowerCase().includes(instLower)) {
+      titulo = titulo.replace(new RegExp(institucion, 'i'), '').replace(/^[\s,\-|•]+|[\s,\-|•]+$/g, '').trim();
+    }
+  }
+
+  if (!nivel && titulo) nivel = inferEducationLevel(titulo);
+
+  return { ...entry, titulo, institucion, nivel, anioGraduacion };
+}
+
+function isValidEducationEntry(entry: EducationEntry): boolean {
+  const titulo = entry.titulo?.trim() ?? '';
+  const institucion = entry.institucion?.trim() ?? '';
+  if (!institucion || !isRecognizedEducationalInstitution(institucion)) return false;
+  if (isCertificationLine(`${titulo} ${institucion}`)) return false;
+  if (titulo && isOnlyEducationLevel(titulo)) return false;
+  return true;
+}
+
+function educationEntriesMatch(a: EducationEntry, b: EducationEntry): boolean {
+  const tituloA = a.titulo.trim().toLowerCase();
+  const tituloB = b.titulo.trim().toLowerCase();
+  const instA = a.institucion.trim().toLowerCase();
+  const instB = b.institucion.trim().toLowerCase();
+
+  if (tituloA && tituloB && tituloA === tituloB) {
+    return !instA || !instB || instA === instB || instA.includes(instB) || instB.includes(instA);
+  }
+
+  if (tituloA && tituloB && (tituloA.includes(tituloB) || tituloB.includes(tituloA))) {
+    return instA === instB || !instA || !instB;
+  }
+
+  if (instA && instB && instA === instB && !tituloA && !tituloB) return true;
+
+  return false;
+}
+
+function mergeEducationEntries(base: EducationEntry, incoming: EducationEntry): EducationEntry {
+  return normalizeEducationEntry({
+    ...base,
+    titulo: base.titulo.trim() || incoming.titulo.trim(),
+    institucion: base.institucion.trim() || incoming.institucion.trim(),
+    nivel: base.nivel.trim() || incoming.nivel.trim(),
+    anioGraduacion: base.anioGraduacion?.trim() || incoming.anioGraduacion?.trim(),
   });
+}
+
+export function normalizeEducation(entries: EducationEntry[]): EducationEntry[] {
+  return dedupeEducation(entries.map(normalizeEducationEntry).filter(isValidEducationEntry));
 }
 
 function extractEducation(lines: string[]): EducationEntry[] {
@@ -488,41 +862,87 @@ function extractEducation(lines: string[]): EducationEntry[] {
   const sectionLines = eduStart >= 0 ? sliceSection(lines, eduStart, sectionEnd) : [];
 
   const entries: EducationEntry[] = [];
+  let current: Partial<EducationEntry> | null = null;
+
+  const flush = () => {
+    if (!current) return;
+    const entry = normalizeEducationEntry({
+      ...newEducationEntry(),
+      ...current,
+    });
+    if (isValidEducationEntry(entry)) entries.push(entry);
+    current = null;
+  };
 
   for (const line of sectionLines) {
-    if (line.length < 6 || SECTION_STOP.test(line)) continue;
-
-    const entry = newEducationEntry();
-    entry.nivel = inferEducationLevel(line);
-
-    const uniMatch = line.match(
-      /(?:universidad|instituto|polit[eé]cnico|escuela|facultad|university|college)\s+(?:de\s+)?[^,|•\n/]{3,80}/i,
-    );
-    const degreeMatch = line.match(
-      /(?:ingenier[ií]a|administraci[oó]n|marketing|negocios|contadur[ií]a|derecho|econom[ií]a|comunicaci[oó]n|psicolog[ií]a|pregrado|maestr[ií]a|especializaci[oó]n|mba|tecn[oó]logo|t[eé]cnico)[^,|•\n/]*/i,
-    );
-
-    entry.institucion = uniMatch?.[0]?.trim() ?? '';
-    entry.titulo = degreeMatch?.[0]?.trim() || line.slice(0, 120);
-
-    if (!entry.institucion && /universidad|instituto|escuela/i.test(line)) {
-      entry.institucion = line.slice(0, 90);
+    if (line.length < 4 || (SECTION_STOP.test(line) && line.length < 50)) continue;
+    if (isCertificationLine(line)) {
+      flush();
+      continue;
     }
 
-    if (entry.titulo.trim()) entries.push(entry);
+    const yearOnly = line.match(/^\s*((?:19|20)\d{2})\s*$/);
+    if (yearOnly) {
+      if (current) current.anioGraduacion = yearOnly[1];
+      continue;
+    }
+
+    const parsed = parseEducationLine(line);
+
+    if (parsed.titulo && parsed.institucion) {
+      flush();
+      current = {
+        titulo: parsed.titulo,
+        institucion: parsed.institucion,
+        nivel: inferEducationLevel(parsed.titulo),
+        anioGraduacion: parsed.anioGraduacion,
+      };
+      flush();
+      continue;
+    }
+
+    if (parsed.institucion && !parsed.titulo) {
+      if (current?.institucion) flush();
+      if (!current) current = {};
+      current.institucion = parsed.institucion;
+      if (parsed.anioGraduacion) current.anioGraduacion = parsed.anioGraduacion;
+      continue;
+    }
+
+    if (parsed.titulo) {
+      if (current?.titulo && current?.institucion) flush();
+      if (current?.titulo && !current.institucion) {
+        current = null;
+      }
+      if (!current) current = {};
+      current.titulo = parsed.titulo;
+      current.nivel = inferEducationLevel(parsed.titulo);
+      if (parsed.anioGraduacion) current.anioGraduacion = parsed.anioGraduacion;
+      continue;
+    }
+
+    if (parsed.anioGraduacion && current) {
+      current.anioGraduacion = parsed.anioGraduacion;
+    }
   }
 
-  return dedupeEducation(entries).slice(0, 5);
+  flush();
+  return normalizeEducation(entries).slice(0, 5);
 }
 
 function dedupeEducation(entries: EducationEntry[]): EducationEntry[] {
-  const seen = new Set<string>();
-  return entries.filter((entry) => {
-    const key = `${entry.titulo}|${entry.institucion}`.toLowerCase();
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+  const result: EducationEntry[] = [];
+
+  for (const entry of entries) {
+    const duplicateIdx = result.findIndex((existing) => educationEntriesMatch(existing, entry));
+    if (duplicateIdx >= 0) {
+      result[duplicateIdx] = mergeEducationEntries(result[duplicateIdx], entry);
+    } else {
+      result.push(entry);
+    }
+  }
+
+  return result;
 }
 
 function extractLanguages(lines: string[]): LanguageEntry[] {
@@ -736,14 +1156,11 @@ export function applyCvSuggestions(
   if (selected.has('nivelRol') && suggestions.nivelRol) next.nivelRol = suggestions.nivelRol;
 
   if (selected.has('historialLaboral') && suggestions.historialLaboral?.length) {
-    const existing = (next.historialLaboral ?? []).filter((e) => e.cargo?.trim() || e.empresa?.trim());
-    next.historialLaboral =
-      existing.length > 0 ? [...existing, ...suggestions.historialLaboral] : suggestions.historialLaboral;
+    next.historialLaboral = normalizeWorkHistory(suggestions.historialLaboral);
   }
 
   if (selected.has('formacion') && suggestions.formacion?.length) {
-    const existing = (next.formacion ?? []).filter((e) => e.titulo?.trim() || e.institucion?.trim());
-    next.formacion = existing.length > 0 ? [...existing, ...suggestions.formacion] : suggestions.formacion;
+    next.formacion = normalizeEducation(suggestions.formacion);
   }
 
   if (selected.has('idiomas') && suggestions.idiomas?.length) {

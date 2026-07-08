@@ -1,5 +1,8 @@
+import fs from 'fs';
+import path from 'path';
 import { computeProcessPipelineMetrics } from './process-metrics';
 import { mapCandidateProcessHistory } from './candidate-process-history';
+import type { CommercialProfile } from './candidate-commercial-profile';
 
 export const MOCK_USER = {
   id: 'mock-user-001',
@@ -988,4 +991,134 @@ export function isMockMode() {
   if (process.env.USE_MOCK === 'true') return true;
   const url = process.env.DATABASE_URL?.trim();
   return !url;
+}
+
+type MockPortalCandidate = {
+  id: string;
+  tenantId: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string | null;
+  phone: string | null;
+  city: string | null;
+  metadata: {
+    profileStatus: 'account_only' | 'in_progress' | 'complete';
+    onboardingStep: 'welcome' | 'cv_upload' | 'cv_analyzing' | 'cv_summary' | 'cv_review' | 'bridge' | 'questions' | 'done';
+    commercialProfile: CommercialProfile;
+  };
+};
+
+const MOCK_PORTAL_FILE = path.join(process.cwd(), '.mock-data', 'portal-candidates.json');
+
+function loadMockPortalStore(): Map<string, MockPortalCandidate> {
+  try {
+    if (!fs.existsSync(MOCK_PORTAL_FILE)) return new Map();
+    const raw = JSON.parse(fs.readFileSync(MOCK_PORTAL_FILE, 'utf8')) as Record<string, MockPortalCandidate>;
+    return new Map(Object.entries(raw));
+  } catch {
+    return new Map();
+  }
+}
+
+function saveMockPortalStore(store: Map<string, MockPortalCandidate>) {
+  const dir = path.dirname(MOCK_PORTAL_FILE);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(MOCK_PORTAL_FILE, JSON.stringify(Object.fromEntries(store), null, 2), 'utf8');
+}
+
+const mockPortalCandidates = loadMockPortalStore();
+
+export function upsertMockPortalCandidate(input: {
+  userId: string;
+  tenantId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  telefono?: string;
+  ciudad?: string;
+  commercialProfile: CommercialProfile;
+}) {
+  const existing = mockPortalCandidates.get(input.userId);
+  const candidate: MockPortalCandidate = {
+    id: existing?.id ?? `mock-candidate-${input.userId}`,
+    tenantId: input.tenantId,
+    userId: input.userId,
+    firstName: input.firstName,
+    lastName: input.lastName,
+    email: input.email,
+    phone: input.telefono ?? null,
+    city: input.ciudad ?? null,
+    metadata: {
+      profileStatus: existing?.metadata.profileStatus ?? 'account_only',
+      onboardingStep: existing?.metadata.onboardingStep ?? 'welcome',
+      commercialProfile: input.commercialProfile,
+    },
+  };
+  mockPortalCandidates.set(input.userId, candidate);
+  saveMockPortalStore(mockPortalCandidates);
+  return candidate;
+}
+
+export function getMockPortalCandidate(userId: string) {
+  return mockPortalCandidates.get(userId) ?? null;
+}
+
+export function getMockPortalCandidateByEmail(email: string) {
+  const normalized = email.trim().toLowerCase();
+  for (const candidate of mockPortalCandidates.values()) {
+    if (candidate.email?.trim().toLowerCase() === normalized) return candidate;
+  }
+  return null;
+}
+
+export function ensureMockPortalCandidate(input: {
+  userId: string;
+  tenantId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  telefono?: string;
+  ciudad?: string;
+}) {
+  const existing = getMockPortalCandidate(input.userId) ?? getMockPortalCandidateByEmail(input.email);
+  if (existing) {
+    if (existing.userId !== input.userId) {
+      mockPortalCandidates.delete(existing.userId);
+      existing.userId = input.userId;
+      mockPortalCandidates.set(input.userId, existing);
+      saveMockPortalStore(mockPortalCandidates);
+    }
+    return existing;
+  }
+  return upsertMockPortalCandidate({
+    ...input,
+    commercialProfile: {
+      nombre: `${input.firstName} ${input.lastName}`.trim(),
+      email: input.email,
+      telefono: input.telefono ?? '',
+      ...(input.ciudad ? { ciudad: input.ciudad } : {}),
+      consentimientoDatos: true,
+    },
+  });
+}
+
+export function updateMockPortalProfile(
+  userId: string,
+  profile: CommercialProfile,
+  patch?: { onboardingStep?: MockPortalCandidate['metadata']['onboardingStep']; profileStatus?: MockPortalCandidate['metadata']['profileStatus'] },
+) {
+  const existing = getMockPortalCandidate(userId);
+  if (!existing) return null;
+  existing.metadata.commercialProfile = profile;
+  if (patch?.onboardingStep) existing.metadata.onboardingStep = patch.onboardingStep;
+  if (patch?.profileStatus) existing.metadata.profileStatus = patch.profileStatus;
+  existing.firstName = profile.nombre?.split(' ')[0] ?? existing.firstName;
+  existing.lastName = profile.nombre?.split(' ').slice(1).join(' ') || existing.lastName;
+  existing.email = profile.email ?? existing.email;
+  existing.phone = profile.telefono ?? existing.phone;
+  existing.city = profile.ciudad ?? existing.city;
+  mockPortalCandidates.set(userId, existing);
+  saveMockPortalStore(mockPortalCandidates);
+  return existing;
 }

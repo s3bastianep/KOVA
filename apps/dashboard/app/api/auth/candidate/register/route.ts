@@ -4,7 +4,7 @@ import { randomBytes } from 'crypto';
 import { prisma } from '@/lib/prisma';
 import { signToken } from '@/lib/auth';
 import { getPublicTenantId } from '@/lib/public-tenant';
-import { isMockMode } from '@/lib/mock';
+import { isMockMode, upsertMockPortalCandidate } from '@/lib/mock';
 import { splitFullName } from '@/lib/candidate-commercial-profile';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
 
@@ -61,6 +61,22 @@ export async function POST(req: NextRequest) {
       companyId: null,
       candidateId: `mock-cand-${Date.now()}`,
     };
+    upsertMockPortalCandidate({
+      userId: authUser.id,
+      tenantId: authUser.tenantId,
+      firstName,
+      lastName,
+      email,
+      telefono: telefono || undefined,
+      ciudad: ciudad || undefined,
+      commercialProfile: {
+        nombre,
+        email,
+        telefono,
+        ...(ciudad ? { ciudad } : {}),
+        consentimientoDatos: true,
+      },
+    });
     return Response.json({
       user: authUser,
       accessToken: signToken(authUser),

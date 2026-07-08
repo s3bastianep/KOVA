@@ -1,6 +1,98 @@
 .portal-onboarding {
-  max-width: 42rem;
+  max-width: 40rem;
   margin: 0 auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.portal-onboarding--welcome {
+  max-width: 32rem;
+  padding: 0.5rem 0 2rem;
+}
+
+.portal-onboarding-shell {
+  background: var(--kv-ink);
+  border: 1px solid rgba(237, 239, 234, 0.14);
+  border-radius: var(--kova-radius-lg);
+  padding: 2.25rem 2rem 2rem;
+  box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.55);
+  color: var(--kv-paper-2);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-shell__header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.portal-onboarding-eyebrow {
+  display: inline-block;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(237, 239, 234, 0.55);
+  margin-bottom: 0.875rem;
+}
+
+.portal-onboarding-shell__header h1 {
+  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-size: clamp(1.75rem, 3.5vw, 2.125rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0 0 0.875rem;
+}
+
+.portal-onboarding-lead {
+  margin: 0 auto;
+  max-width: 26rem;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: rgba(237, 239, 234, 0.78);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 1.125rem 0 0;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(237, 239, 234, 0.16);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(237, 239, 234, 0.85);
+}
+
+.portal-onboarding-progress-block {
+  margin-bottom: 1.5rem;
+}
+
+.portal-onboarding-progress-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(237, 239, 234, 0.55);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-progress-head strong {
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
 }
 
 .portal-onboarding-hero {
@@ -13,36 +105,174 @@
   font-size: clamp(1.75rem, 4vw, 2.25rem);
   font-weight: 700;
   margin: 0.5rem 0;
+  letter-spacing: -0.02em;
+  color: var(--kv-ink);
 }
 
 .portal-onboarding-hero p {
-  color: var(--kova-muted);
+  color: var(--kv-slate);
   margin: 0;
   line-height: 1.6;
 }
 
 .portal-onboarding-card {
-  background: var(--kova-panel);
+  background: var(--kv-paper-2);
   border: 1px solid var(--kova-border);
-  border-radius: 1.25rem;
+  border-radius: var(--kova-radius);
   padding: 1.5rem;
-  box-shadow: var(--kova-shadow-sm);
+  box-shadow: var(--kova-shadow-xs);
+}
+
+.portal-onboarding--upload {
+  max-width: 32rem;
+  padding: 0.5rem 0 2rem;
+}
+
+.portal-onboarding-shell__header--compact {
+  margin-bottom: 1.5rem;
+}
+
+.portal-onboarding-shell__header--compact h1 {
+  font-size: clamp(1.5rem, 3vw, 1.875rem);
+  margin-bottom: 0.5rem;
+}
+
+.portal-onboarding-shell__header.text-left {
+  text-align: left;
+}
+
+.portal-onboarding-shell__header.text-left h1,
+.portal-onboarding-shell__header.text-left .portal-onboarding-lead {
+  text-align: left;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.portal-onboarding-muted {
+  font-size: 0.875rem;
+  color: rgba(237, 239, 234, 0.55);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-link {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--kova-lime);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-field,
+.portal-onboarding-shell input:not([type='file']),
+.portal-onboarding-shell textarea,
+.portal-onboarding-shell select {
+  width: 100%;
+  border-radius: 0.625rem;
+  border: 1px solid rgba(237, 239, 234, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-field::placeholder,
+.portal-onboarding-shell input::placeholder,
+.portal-onboarding-shell textarea::placeholder {
+  color: rgba(237, 239, 234, 0.4);
+}
+
+.portal-onboarding-upload-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1.5rem 1.75rem;
+  border: 1px solid rgba(237, 239, 234, 0.16);
+  border-radius: var(--kova-radius);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.portal-onboarding-upload-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--kova-lime);
+  color: var(--kv-ink);
+  margin-bottom: 1rem;
+}
+
+.portal-onboarding-upload-title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #ffffff;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-upload-or {
+  margin: 0.75rem 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(237, 239, 234, 0.5);
+  text-transform: lowercase;
+}
+
+.portal-onboarding-upload-btn {
+  margin-top: 0;
+  width: auto;
+  min-width: 14rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  cursor: pointer;
+}
+
+.portal-onboarding-upload-hint {
+  margin: 1rem 0 0;
+  font-size: 0.75rem;
+  color: rgba(237, 239, 234, 0.5);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-error {
+  margin: 1rem 0 0;
+  font-size: 0.875rem;
+  color: #ff8a8a;
+  text-align: center;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-busy {
+  margin: 1rem 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: rgba(237, 239, 234, 0.72);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
 .portal-onboarding-drop {
-  border: 2px dashed rgba(18, 20, 15, 0.14);
-  border-radius: 1rem;
+  border: 1.5px dashed var(--kv-line);
+  border-radius: var(--kova-radius);
   padding: 2.5rem 1.5rem;
   text-align: center;
-  background: var(--kova-paper-2);
+  background: var(--kv-paper);
   transition: border-color 0.2s ease, background 0.2s ease;
   cursor: pointer;
 }
 
 .portal-onboarding-drop:hover,
 .portal-onboarding-drop--active {
-  border-color: rgba(216, 242, 76, 0.65);
-  background: rgba(216, 242, 76, 0.08);
+  border-color: rgba(92, 110, 18, 0.35);
+  background: var(--kova-green-soft);
 }
 
 .portal-onboarding-btn {
@@ -54,27 +284,41 @@
   padding: 0.95rem 1.25rem;
   border: none;
   border-radius: 999px;
-  font-size: 0.95rem;
+  font-size: 0.9375rem;
   font-weight: 600;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
   cursor: pointer;
   background: var(--kova-lime);
   color: var(--kv-ink);
-  transition: transform 0.15s ease;
+  transition: filter 0.15s ease;
+}
+
+.portal-onboarding-btn--primary {
+  margin-top: 1.75rem;
+  min-height: 3rem;
+  background: var(--kova-lime);
+  color: var(--kv-ink);
+}
+
+.portal-onboarding-btn--ghost {
+  background: transparent;
+  border: 1.5px solid rgba(237, 239, 234, 0.35);
+  color: #ffffff;
+}
+
+.portal-onboarding-btn--back {
+  background: transparent;
+  border: 1.5px solid rgba(237, 239, 234, 0.35);
+  color: #ffffff;
 }
 
 .portal-onboarding-btn:hover:not(:disabled) {
-  transform: translateY(-1px);
+  filter: brightness(1.04);
 }
 
 .portal-onboarding-btn:disabled {
   opacity: 0.55;
   cursor: not-allowed;
-}
-
-.portal-onboarding-btn--ghost {
-  background: transparent;
-  border: 1px solid var(--kova-border);
-  color: var(--kova-navy);
 }
 
 .portal-onboarding-analyze {
@@ -85,27 +329,33 @@
   font-family: var(--font-sora), 'Sora', sans-serif;
   font-size: 1.35rem;
   margin: 0 0 0.35rem;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.portal-onboarding-analyze p {
+  color: rgba(237, 239, 234, 0.72);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
 .portal-onboarding-progress {
-  height: 0.45rem;
+  height: 3px;
   border-radius: 999px;
-  background: var(--kova-line);
+  background: rgba(237, 239, 234, 0.18);
   overflow: hidden;
-  margin: 1.25rem 0 1.5rem;
 }
 
 .portal-onboarding-progress > span {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--kova-indigo), var(--kova-lime-dark));
+  background: var(--kova-lime);
   transition: width 0.45s ease;
 }
 
 .portal-onboarding-steps {
   list-style: none;
-  margin: 0;
+  margin: 1.25rem 0 0;
   padding: 0;
   display: grid;
   gap: 0.65rem;
@@ -115,12 +365,14 @@
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  font-size: 0.9rem;
-  color: var(--kova-muted);
+  font-size: 0.875rem;
+  color: rgba(237, 239, 234, 0.55);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
 .portal-onboarding-steps li.is-done {
-  color: var(--kova-navy);
+  color: #ffffff;
+  font-weight: 500;
 }
 
 .portal-onboarding-summary-item {
@@ -128,8 +380,10 @@
   align-items: center;
   gap: 0.65rem;
   padding: 0.75rem 0;
-  border-bottom: 1px solid var(--kova-border);
+  border-bottom: 1px solid rgba(237, 239, 234, 0.12);
   font-size: 0.95rem;
+  color: #ffffff;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
 .portal-onboarding-summary-item:last-child {
@@ -137,29 +391,32 @@
 }
 
 .portal-onboarding-review-card {
-  border: 1px solid var(--kova-border);
-  border-radius: 1rem;
+  border: 1px solid rgba(237, 239, 234, 0.14);
+  border-radius: var(--kova-radius-sm);
   padding: 1rem 1.1rem;
-  background: var(--kova-panel);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .portal-onboarding-review-card h3 {
   font-size: 1rem;
   font-weight: 600;
   margin: 0 0 0.2rem;
+  color: #ffffff;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
 .portal-onboarding-review-card p {
   margin: 0;
   font-size: 0.875rem;
-  color: var(--kova-muted);
+  color: rgba(237, 239, 234, 0.72);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
 .portal-onboarding-review-card button {
   margin-top: 0.75rem;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--kova-indigo);
+  color: var(--kova-lime);
   background: none;
   border: none;
   cursor: pointer;
@@ -167,37 +424,404 @@
 }
 
 .portal-onboarding-section-title {
-  font-size: 0.75rem;
+  font-size: 0.625rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--kova-muted);
+  letter-spacing: 0.14em;
+  color: rgba(237, 239, 234, 0.55);
   margin: 1.5rem 0 0.75rem;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-work-card {
+  border: 1px solid rgba(237, 239, 234, 0.14);
+  border-radius: var(--kova-radius-sm);
+  padding: 1.1rem 1.1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.04);
+  margin-bottom: 0.875rem;
+  display: grid;
+  gap: 0.875rem;
+}
+
+.portal-onboarding-work-card__badge {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--kova-lime);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-work-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.portal-onboarding-card-delete {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: none;
+  background: transparent;
+  color: rgba(255, 138, 138, 0.9);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  cursor: pointer;
+  padding: 0.2rem 0;
+  white-space: nowrap;
+}
+
+.portal-onboarding-card-delete:hover {
+  color: #ff8a8a;
+}
+
+.portal-onboarding-work-field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.portal-onboarding-work-field__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(237, 239, 234, 0.72);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-work-field__hint {
+  font-size: 0.6875rem;
+  color: rgba(237, 239, 234, 0.45);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-work-period {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.9rem 0.95rem;
+  border: 1px solid rgba(237, 239, 234, 0.12);
+  border-radius: var(--kova-radius-sm);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.portal-onboarding-work-period__title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(237, 239, 234, 0.72);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-work-period__dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.portal-onboarding-field--date {
+  max-width: 11rem;
+}
+
+.portal-onboarding-current-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.65rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 0.625rem;
+  border: 1px solid rgba(204, 234, 98, 0.35);
+  background: rgba(204, 234, 98, 0.12);
+  color: var(--kova-lime);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  max-width: 11rem;
+}
+
+.portal-onboarding-end-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: fit-content;
+}
+
+.portal-onboarding-end-toggle__btn {
+  border: 1.5px solid rgba(237, 239, 234, 0.28);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(237, 239, 234, 0.82);
+  min-width: 2.75rem;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+  text-align: center;
+  line-height: 1.1;
+}
+
+.portal-onboarding-end-toggle__btn.is-on {
+  border-color: var(--kova-lime);
+  background: var(--kova-lime);
+  color: var(--kv-ink);
+}
+
+.portal-onboarding-work-dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.portal-onboarding-field--textarea {
+  min-height: 5.5rem;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.portal-onboarding-field--select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, rgba(237, 239, 234, 0.65) 50%),
+    linear-gradient(135deg, rgba(237, 239, 234, 0.65) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% + 2px),
+    calc(100% - 12px) calc(50% + 2px);
+  background-size:
+    6px 6px,
+    6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 2rem;
+}
+
+.portal-onboarding-field--select option {
+  color: var(--kv-ink);
+  background: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .portal-onboarding-work-period__dates,
+  .portal-onboarding-work-dates {
+    grid-template-columns: 1fr;
+  }
+
+  .portal-onboarding-field--date,
+  .portal-onboarding-current-badge {
+    max-width: none;
+  }
+
+  .portal-onboarding-end-toggle__btn {
+    font-size: 0.6875rem;
+    padding: 0.3rem 0.75rem;
+  }
 }
 
 .portal-onboarding-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.55rem 0.85rem;
-  border-radius: 999px;
-  border: 1px solid var(--kova-border);
-  background: var(--kova-panel);
-  font-size: 0.875rem;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 0.625rem;
+  border: 1.5px solid rgba(237, 239, 234, 0.22);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  color: #ffffff;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  -webkit-font-smoothing: antialiased;
+  text-align: left;
+  width: 100%;
 }
 
 .portal-onboarding-chip--on {
-  border-color: rgba(51, 65, 196, 0.35);
-  background: rgba(51, 65, 196, 0.08);
-  color: var(--kova-indigo);
+  border-color: var(--kova-lime);
+  background: rgba(204, 234, 98, 0.14);
+  color: #ffffff;
+}
+
+.portal-onboarding-chip--on svg {
+  color: var(--kova-lime);
 }
 
 .portal-onboarding-chips {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.portal-onboarding--questions {
+  max-width: 32rem;
+  padding: 0.5rem 0 2rem;
+}
+
+.portal-onboarding-question-shell {
+  padding: 1.5rem 1.35rem 1.35rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.portal-onboarding-question-header {
+  display: grid;
+  gap: 0.625rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid rgba(237, 239, 234, 0.1);
+}
+
+.portal-onboarding-question-body {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.portal-onboarding-question-footer {
+  display: grid;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid rgba(237, 239, 234, 0.1);
+}
+
+.portal-onboarding-question-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(237, 239, 234, 0.55);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-question-title {
+  margin: 0;
+  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.portal-onboarding-question-subtitle {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: rgba(237, 239, 234, 0.65);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-question-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 0.5rem;
+  margin-top: 0;
+}
+
+.portal-onboarding-question-exit {
+  justify-self: center;
+  border: none;
+  background: transparent;
+  color: rgba(237, 239, 234, 0.55);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  cursor: pointer;
+  padding: 0.15rem 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.portal-onboarding-question-exit:hover {
+  color: rgba(237, 239, 234, 0.85);
+}
+
+.portal-onboarding-question-footer .portal-onboarding-save-state {
+  margin: 0;
+  min-height: 1rem;
+  text-align: center;
+}
+
+.portal-onboarding-question-footer .portal-onboarding-btn {
+  min-height: 2.65rem;
+  padding: 0.7rem 1rem;
+  font-size: 0.875rem;
+}
+
+.portal-onboarding-btn--continue {
+  margin-top: 0;
+}
+
+.portal-onboarding-checklist li.is-done {
+  color: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .portal-onboarding-question-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .portal-onboarding-chips {
+    grid-template-columns: 1fr;
+  }
+}
+
+.portal-onboarding-checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+
+.portal-onboarding-checklist li {
+  display: grid;
+  grid-template-columns: 1.25rem 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.875rem 0;
+  font-size: 0.875rem;
+  color: rgba(237, 239, 234, 0.62);
+  border-bottom: 1px solid rgba(237, 239, 234, 0.12);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-checklist li:first-child {
+  padding-top: 0;
+}
+
+.portal-onboarding-checklist li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.portal-onboarding-checklist__label {
+  font-weight: 500;
+}
+
+.portal-onboarding-checklist__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(237, 239, 234, 0.35);
+}
+
+.portal-onboarding-checklist li.is-done .portal-onboarding-checklist__icon {
+  color: var(--kova-lime);
+}
+
+.portal-onboarding-checklist__eta {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(237, 239, 234, 0.45);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .portal-onboarding-tasklist {
@@ -217,25 +841,32 @@
 }
 
 .portal-onboarding-tasklist li small {
-  color: var(--kova-muted);
+  color: var(--kv-nav-muted);
 }
 
 .portal-onboarding-save-state {
   min-height: 1.25rem;
-  font-size: 0.8125rem;
-  color: var(--kova-muted);
-  margin: 0.5rem 0 1rem;
-}
-
-.portal-onboarding-question-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  margin-top: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(237, 239, 234, 0.55);
+  margin: 0.75rem 0 0;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
 html.portal-onboarding-active .kova-sidebar nav,
 html.portal-onboarding-active .kova-sidebar .kova-sidebar-footer {
-  opacity: 0.35;
+  opacity: 0.45;
   pointer-events: none;
+}
+
+html.portal-onboarding-active .kova-animate-in {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+html.portal-onboarding-active .kova-topbar {
+  background: var(--kv-paper-2);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }

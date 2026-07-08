@@ -8,7 +8,7 @@ import {
   TRAVEL_OPTIONS,
   type CommercialProfile,
 } from '@/lib/candidate-commercial-profile';
-import { portalApi } from '@/lib/api';
+import { portalApi, getStoredUser } from '@/lib/api';
 
 export function PortalPerfilForm() {
   const [profile, setProfile] = useState<CommercialProfile | null>(null);
@@ -18,10 +18,21 @@ export function PortalPerfilForm() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
+    const stored = getStoredUser();
     portalApi
       .perfil()
       .then((data) => setProfile(data.profile as CommercialProfile))
-      .catch((err) => setError(err instanceof Error ? err.message : 'Error al cargar'))
+      .catch((err) => {
+        if (stored) {
+          setProfile({
+            nombre: `${stored.firstName} ${stored.lastName}`.trim(),
+            email: stored.email,
+            telefono: '',
+            consentimientoDatos: true,
+          });
+        }
+        setError(err instanceof Error ? err.message : 'Error al cargar');
+      })
       .finally(() => setLoading(false));
   }, []);
 
