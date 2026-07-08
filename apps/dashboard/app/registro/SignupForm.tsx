@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowLeft, ArrowRight, Loader2, Lock, Mail, MapPin, Phone, User } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Loader2, Lock, Mail, Phone, User } from 'lucide-react';
 import { authApi, saveSession } from '@/lib/api';
 import '../login/login.css';
 
@@ -9,7 +9,6 @@ export function SignupForm() {
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
-  const [ciudad, setCiudad] = useState('');
   const [password, setPassword] = useState('');
   const [consent, setConsent] = useState(false);
   const [error, setError] = useState('');
@@ -24,7 +23,7 @@ export function SignupForm() {
         nombre,
         email,
         telefono,
-        ciudad,
+        ciudad: '',
         password,
         consentimientoDatos: consent,
       });
@@ -57,8 +56,8 @@ export function SignupForm() {
           <p className="kv-login-eyebrow">Candidatos · Kova</p>
           <h1 className="kv-login-title">Tu espacio para oportunidades comerciales</h1>
           <p className="kv-login-lead">
-            Crea tu cuenta en menos de un minuto. Después completas tu perfil por módulos, a tu
-            ritmo, desde tu dashboard personal.
+            Crea tu cuenta en 30 segundos. Después subes tu hoja de vida y nosotros completamos tu
+            perfil por ti.
           </p>
         </aside>
 
@@ -117,43 +116,22 @@ export function SignupForm() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div className="kv-login-field">
-              <label htmlFor="signup-telefono" className="kv-login-label">
-                Teléfono
-              </label>
-              <div className="kv-login-input-wrap">
-                <Phone className="w-4 h-4" aria-hidden />
-                <input
-                  id="signup-telefono"
-                  type="tel"
-                  autoComplete="tel"
-                  placeholder="+57 300 000 0000"
-                  value={telefono}
-                  onChange={(e) => setTelefono(e.target.value)}
-                  required
-                  className="kv-login-input"
-                />
-              </div>
-            </div>
-
-            <div className="kv-login-field">
-              <label htmlFor="signup-ciudad" className="kv-login-label">
-                Ciudad
-              </label>
-              <div className="kv-login-input-wrap">
-                <MapPin className="w-4 h-4" aria-hidden />
-                <input
-                  id="signup-ciudad"
-                  type="text"
-                  autoComplete="address-level2"
-                  placeholder="Bogotá"
-                  value={ciudad}
-                  onChange={(e) => setCiudad(e.target.value)}
-                  required
-                  className="kv-login-input"
-                />
-              </div>
+          <div className="kv-login-field">
+            <label htmlFor="signup-telefono" className="kv-login-label">
+              Teléfono
+            </label>
+            <div className="kv-login-input-wrap">
+              <Phone className="w-4 h-4" aria-hidden />
+              <input
+                id="signup-telefono"
+                type="tel"
+                autoComplete="tel"
+                placeholder="+57 300 000 0000"
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+                required
+                className="kv-login-input"
+              />
             </div>
           </div>
 
@@ -196,7 +174,7 @@ export function SignupForm() {
               </>
             ) : (
               <>
-                Crear cuenta y entrar
+                Crear cuenta
                 <ArrowRight className="w-4 h-4" aria-hidden />
               </>
             )}

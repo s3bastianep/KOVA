@@ -8,6 +8,7 @@ import {
   mergeRegistroMetadata,
   readRegistroMetadata,
   splitProfileName,
+  type OnboardingStep,
 } from './registro-session';
 import { prisma } from './prisma';
 
@@ -93,6 +94,66 @@ export async function persistPortalProfile(
   });
 
   return payload.commercialProfile;
+}
+
+export async function persistPortalOnboarding(
+  tenantId: string,
+  candidateId: string,
+  patch: {
+    profile?: Partial<CommercialProfile>;
+    onboardingStep?: OnboardingStep;
+    profileStatus?: 'account_only' | 'in_progress' | 'complete';
+  },
+) {
+  const candidate = await prisma.candidate.findFirst({
+    where: { id: candidateId, tenantId },
+    select: {
+      metadata: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phone: true,
+      city: true,
+      linkedinUrl: true,
+    },
+  });
+  if (!candidate) throw new Error('Candidato no encontrado');
+
+  const prevMeta = readRegistroMetadata(candidate.metadata);
+  const currentProfile = profileFromCandidate(candidate);
+  const mergedProfile = patch.profile ? mergeCommercialProfile(currentProfile, patch.profile) : currentProfile;
+
+  const metadata = mergeRegistroMetadata(prevMeta, {
+    commercialProfile: mergedProfile,
+    onboardingStep: patch.onboardingStep ?? prevMeta.onboardingStep,
+    profileStatus: patch.profileStatus ?? prevMeta.profileStatus,
+  });
+
+  if (patch.profile) {
+    const { firstName, lastName } = splitProfileName(mergedProfile, {});
+    const payload = buildCandidatePayload(mergedProfile, firstName, lastName);
+    metadata.commercialProfile = payload.commercialProfile;
+    metadata.standardAnswers = payload.standardAnswers;
+
+    await prisma.candidate.update({
+      where: { id: candidateId },
+      data: {
+        firstName,
+        lastName,
+        email: payload.email,
+        phone: payload.phone,
+        city: payload.city,
+        metadata: metadata as Prisma.InputJsonValue,
+      },
+    });
+    return mergedProfile;
+  }
+
+  await prisma.candidate.update({
+    where: { id: candidateId },
+    data: { metadata: metadata as Prisma.InputJsonValue },
+  });
+  return mergedProfile;
 }
 
 export function cvSummaryFromMetadata(metadata: unknown) {

@@ -1,0 +1,207 @@
+.portal-onboarding {
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+.portal-onboarding-hero {
+  text-align: center;
+  padding: 2.5rem 1rem 2rem;
+}
+
+.portal-onboarding-hero h1 {
+  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+  margin: 0.5rem 0;
+}
+
+.portal-onboarding-hero p {
+  color: var(--kova-muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.portal-onboarding-card {
+  background: var(--kova-panel);
+  border: 1px solid var(--kova-border);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  box-shadow: var(--kova-shadow-sm);
+}
+
+.portal-onboarding-drop {
+  border: 2px dashed rgba(18, 20, 15, 0.14);
+  border-radius: 1rem;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: var(--kova-paper-2);
+  transition: border-color 0.2s ease, background 0.2s ease;
+  cursor: pointer;
+}
+
+.portal-onboarding-drop:hover,
+.portal-onboarding-drop--active {
+  border-color: rgba(216, 242, 76, 0.65);
+  background: rgba(216, 242, 76, 0.08);
+}
+
+.portal-onboarding-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.95rem 1.25rem;
+  border: none;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--kova-lime);
+  color: var(--kv-ink);
+  transition: transform 0.15s ease;
+}
+
+.portal-onboarding-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.portal-onboarding-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.portal-onboarding-btn--ghost {
+  background: transparent;
+  border: 1px solid var(--kova-border);
+  color: var(--kova-navy);
+}
+
+.portal-onboarding-analyze {
+  padding: 2rem 1.5rem;
+}
+
+.portal-onboarding-analyze h2 {
+  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-size: 1.35rem;
+  margin: 0 0 0.35rem;
+}
+
+.portal-onboarding-progress {
+  height: 0.45rem;
+  border-radius: 999px;
+  background: var(--kova-line);
+  overflow: hidden;
+  margin: 1.25rem 0 1.5rem;
+}
+
+.portal-onboarding-progress > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--kova-indigo), var(--kova-lime-dark));
+  transition: width 0.45s ease;
+}
+
+.portal-onboarding-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.portal-onboarding-steps li {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.9rem;
+  color: var(--kova-muted);
+}
+
+.portal-onboarding-steps li.is-done {
+  color: var(--kova-navy);
+}
+
+.portal-onboarding-summary-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--kova-border);
+  font-size: 0.95rem;
+}
+
+.portal-onboarding-summary-item:last-child {
+  border-bottom: none;
+}
+
+.portal-onboarding-review-card {
+  border: 1px solid var(--kova-border);
+  border-radius: 1rem;
+  padding: 1rem 1.1rem;
+  background: var(--kova-panel);
+}
+
+.portal-onboarding-review-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.2rem;
+}
+
+.portal-onboarding-review-card p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--kova-muted);
+}
+
+.portal-onboarding-review-card button {
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--kova-indigo);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.portal-onboarding-section-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--kova-muted);
+  margin: 1.5rem 0 0.75rem;
+}
+
+.portal-onboarding-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--kova-border);
+  background: var(--kova-panel);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.portal-onboarding-chip--on {
+  border-color: rgba(51, 65, 196, 0.35);
+  background: rgba(51, 65, 196, 0.08);
+  color: var(--kova-indigo);
+}
+
+.portal-onboarding-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+html.portal-onboarding-active .kova-sidebar nav,
+html.portal-onboarding-active .kova-sidebar .kova-sidebar-footer {
+  opacity: 0.35;
+  pointer-events: none;
+}

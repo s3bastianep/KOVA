@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
   const password = String(body.password ?? '');
   const consentimientoDatos = Boolean(body.consentimientoDatos);
 
-  if (!nombre || !email || !telefono || !ciudad || !password) {
+  if (!nombre || !email || !telefono || !password) {
     return Response.json({ message: 'Completa todos los campos obligatorios' }, { status: 400 });
   }
 
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
       nombre,
       email,
       telefono,
-      ciudad,
+      ...(ciudad ? { ciudad } : {}),
       consentimientoDatos: true,
     };
 
@@ -99,13 +99,14 @@ export async function POST(req: NextRequest) {
           lastName,
           email,
           phone: telefono,
-          city: ciudad,
+          city: ciudad || null,
           source: 'Portal candidato',
           status: 'ACTIVE',
           metadata: {
             registrationType: 'portal_signup',
             registeredAt: new Date().toISOString(),
             profileStatus: 'account_only',
+            onboardingStep: 'welcome',
             commercialProfile,
           },
         },

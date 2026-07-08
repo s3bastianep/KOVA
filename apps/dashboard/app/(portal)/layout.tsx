@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { PortalSidebar } from '@/components/portal/PortalSidebar';
 import { PortalTopbar } from '@/components/portal/PortalTopbar';
-import { getStoredUser } from '@/lib/api';
+import { getStoredUser, portalApi } from '@/lib/api';
 
 export default function PortalLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const token = localStorage.getItem('kova_access_token');
@@ -18,8 +19,20 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
     }
     if (user && user.role !== 'CANDIDATE') {
       router.replace('/dashboard');
+      return;
     }
-  }, [router]);
+
+    portalApi
+      .perfil()
+      .then((data) => {
+        if (!data.onboardingComplete && pathname !== '/portal') {
+          router.replace('/portal');
+        }
+      })
+      .catch(() => {
+        /* ignore — page handles errors */
+      });
+  }, [router, pathname]);
 
   return (
     <div className="min-h-screen flex kova-shell-bg">

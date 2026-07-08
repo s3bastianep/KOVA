@@ -60,7 +60,7 @@ export const authApi = {
     nombre: string;
     email: string;
     telefono: string;
-    ciudad: string;
+    ciudad?: string;
     password: string;
     consentimientoDatos: boolean;
   }) =>
@@ -95,6 +95,9 @@ export type PortalPerfilResponse = {
   candidateId: string;
   profile: Record<string, unknown>;
   cv: PortalCvSummary | null;
+  onboardingStep?: string;
+  onboardingComplete?: boolean;
+  profileStatus?: string;
 };
 
 async function uploadPortalCv(file: File) {
@@ -176,6 +179,21 @@ export const portalApi = {
     apiFetch<{ ok: boolean; profile: Record<string, unknown>; message: string }>('/portal/perfil', {
       method: 'PATCH',
       body: JSON.stringify({ profile }),
+    }),
+  updateOnboarding: (body: {
+    profile?: Record<string, unknown>;
+    onboardingStep?: string;
+    completeOnboarding?: boolean;
+  }) =>
+    apiFetch<{
+      ok: boolean;
+      profile: Record<string, unknown>;
+      message: string;
+      onboardingComplete?: boolean;
+      onboardingStep?: string;
+    }>('/portal/perfil', {
+      method: 'PATCH',
+      body: JSON.stringify(body),
     }),
   vacantes: (minMatch = 0) =>
     apiFetch<{ vacantes: PortalVacancyListItem[]; total: number }>(

@@ -4,11 +4,22 @@ import { profileToStandardAnswers, splitFullName } from './candidate-commercial-
 
 export type RegistroProfileStatus = 'account_only' | 'in_progress' | 'complete';
 
+export type OnboardingStep =
+  | 'welcome'
+  | 'cv_upload'
+  | 'cv_analyzing'
+  | 'cv_summary'
+  | 'cv_review'
+  | 'bridge'
+  | 'questions'
+  | 'done';
+
 export type RegistroMetadata = {
   registrationType?: string;
   registeredAt?: string;
   accountCreatedAt?: string;
   profileStatus?: RegistroProfileStatus;
+  onboardingStep?: OnboardingStep;
   registroStep?: number;
   resumeToken?: string;
   commercialProfile?: CommercialProfile;

@@ -3,11 +3,13 @@ import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
 import {
   cvSummaryFromMetadata,
   mergeCommercialProfile,
+  persistPortalOnboarding,
   persistPortalProfile,
   profileFromCandidate,
 } from '@/lib/portal-profile';
 import { isMockMode } from '@/lib/mock';
 import { handlePortalRoute } from '@/lib/portal-api';
+import { isOnboardingComplete, readOnboardingMeta, resolveOnboardingStep } from '@/lib/portal-onboarding';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,13 +28,22 @@ export async function GET(req: NextRequest) {
             consentimientoDatos: true,
           } satisfies CommercialProfile,
           cv: null,
+          onboardingStep: 'welcome',
+          onboardingComplete: false,
+          profileStatus: 'account_only',
         });
       }
+
+      const meta = readOnboardingMeta(candidate.metadata);
+      const cv = cvSummaryFromMetadata(candidate.metadata);
 
       return Response.json({
         candidateId: candidate.id,
         profile: profileFromCandidate(candidate),
-        cv: cvSummaryFromMetadata(candidate.metadata),
+        cv,
+        onboardingStep: resolveOnboardingStep(meta, Boolean(cv)),
+        onboardingComplete: isOnboardingComplete(meta),
+        profileStatus: meta.profileStatus ?? 'account_only',
       });
     },
     'portal/perfil',
@@ -44,21 +55,53 @@ export async function PATCH(req: NextRequest) {
     req,
     async ({ user, candidate }) => {
       const body = await req.json().catch(() => ({}));
-      const patch = (body.profile ?? body) as Partial<CommercialProfile>;
+      const patch = (body.profile ?? {}) as Partial<CommercialProfile>;
+      const onboardingStep = body.onboardingStep as string | undefined;
+      const completeOnboarding = Boolean(body.completeOnboarding);
 
       if (isMockMode()) {
         return Response.json({
           ok: true,
-          profile: patch,
+          profile: { ...profileFromCandidate(candidate), ...patch },
           message: 'Perfil actualizado.',
+          onboardingComplete: completeOnboarding,
+        });
+      }
+
+      if (completeOnboarding) {
+        const profile = await persistPortalOnboarding(user.tenantId, candidate.id, {
+          profile: patch,
+          onboardingStep: 'done',
+          profileStatus: 'complete',
+        });
+        return Response.json({
+          ok: true,
+          profile,
+          message: '¡Perfil completado!',
+          onboardingComplete: true,
+          onboardingStep: 'done',
+        });
+      }
+
+      if (onboardingStep) {
+        const profile = await persistPortalOnboarding(user.tenantId, candidate.id, {
+          profile: Object.keys(patch).length > 0 ? patch : undefined,
+          onboardingStep: onboardingStep as import('@/lib/registro-session').OnboardingStep,
+          profileStatus: 'in_progress',
+        });
+        return Response.json({
+          ok: true,
+          profile,
+          message: 'Progreso guardado.',
+          onboardingStep,
         });
       }
 
       const current = profileFromCandidate(candidate);
       const merged = mergeCommercialProfile(current, patch);
 
-      if (!merged.nombre?.trim() || !merged.email?.trim() || !merged.telefono?.trim() || !merged.ciudad?.trim()) {
-        return Response.json({ message: 'Nombre, correo, teléfono y ciudad son obligatorios.' }, { status: 400 });
+      if (!merged.nombre?.trim() || !merged.email?.trim() || !merged.telefono?.trim()) {
+        return Response.json({ message: 'Nombre, correo y teléfono son obligatorios.' }, { status: 400 });
       }
 
       if (!/.+@.+\..+/.test(merged.email)) {

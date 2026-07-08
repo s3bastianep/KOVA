@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
@@ -13,6 +13,9 @@ import {
   Upload,
 } from 'lucide-react';
 import { portalApi, type PortalDashboard } from '@/lib/api';
+import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
+import type { OnboardingStep } from '@/lib/portal-onboarding';
+import { PortalOnboardingFlow } from '@/components/portal/onboarding/PortalOnboardingFlow';
 
 function StatCard({
   label,
@@ -48,36 +51,7 @@ function StatCard({
   return inner;
 }
 
-export default function PortalDashboardPage() {
-  const [data, setData] = useState<PortalDashboard | null>(null);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    portalApi
-      .dashboard()
-      .then(setData)
-      .catch((err) => setError(err instanceof Error ? err.message : 'Error al cargar'))
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-24 text-[var(--kova-muted)]">
-        <Loader2 className="w-6 h-6 animate-spin mr-2" />
-        Cargando tu espacio...
-      </div>
-    );
-  }
-
-  if (error || !data) {
-    return (
-      <div className="kova-card rounded-2xl border p-8 text-center">
-        <p className="text-[var(--kova-muted)]">{error || 'No pudimos cargar el dashboard'}</p>
-      </div>
-    );
-  }
-
+function PortalFullDashboard({ data }: { data: PortalDashboard }) {
   return (
     <div className="space-y-8">
       <section className="kova-card rounded-3xl border p-6 lg:p-8 overflow-hidden relative">
@@ -97,8 +71,7 @@ export default function PortalDashboardPage() {
             Hola, {data.greeting}
           </h1>
           <p className="text-[var(--kova-muted)] max-w-xl">
-            Completa tu perfil por módulos para recibir vacantes compatibles con tu experiencia
-            comercial.
+            Tu perfil está listo. Explora vacantes compatibles con tu experiencia comercial.
           </p>
 
           <div className="mt-6 max-w-md">
@@ -121,7 +94,7 @@ export default function PortalDashboardPage() {
 
       <section className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard
-          label="Vacantes recomendadas"
+          label="Vacantes compatibles"
           value={data.stats.vacantesRecomendadas}
           icon={FileText}
           href="/portal/vacantes"
@@ -169,10 +142,9 @@ export default function PortalDashboardPage() {
         </div>
 
         <div className="kova-card rounded-2xl border p-6 flex flex-col">
-          <h2 className="font-heading text-lg font-bold mb-2">Sube tu hoja de vida</h2>
+          <h2 className="font-heading text-lg font-bold mb-2">Actualiza tu hoja de vida</h2>
           <p className="text-sm text-[var(--kova-muted)] mb-6 flex-1">
-            Importa PDF o Word para prellenar experiencia, formación e idiomas. Tú revisas antes de
-            guardar.
+            Mantén tu perfil al día para recibir mejores recomendaciones.
           </p>
           <Link
             href="/portal/documentos"
@@ -180,10 +152,78 @@ export default function PortalDashboardPage() {
             style={{ background: 'var(--kova-lime)', color: 'var(--kv-ink)' }}
           >
             <Upload className="w-4 h-4" />
-            Subir archivo
+            Gestionar documentos
           </Link>
         </div>
       </section>
     </div>
   );
+}
+
+export default function PortalDashboardPage() {
+  const [data, setData] = useState<PortalDashboard | null>(null);
+  const [profile, setProfile] = useState<CommercialProfile | null>(null);
+  const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>('welcome');
+  const [onboardingComplete, setOnboardingComplete] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  const load = useCallback(() => {
+    setLoading(true);
+    Promise.all([portalApi.perfil(), portalApi.dashboard().catch(() => null)])
+      .then(([perfil, dashboard]) => {
+        setProfile(perfil.profile as CommercialProfile);
+        setOnboardingComplete(Boolean(perfil.onboardingComplete));
+        setOnboardingStep((perfil.onboardingStep as OnboardingStep) ?? 'welcome');
+        if (dashboard) setData(dashboard);
+      })
+      .catch((err) => setError(err instanceof Error ? err.message : 'Error al cargar'))
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const handleOnboardingComplete = () => {
+    setOnboardingComplete(true);
+    load();
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-24 text-[var(--kova-muted)]">
+        <Loader2 className="w-6 h-6 animate-spin mr-2" />
+        Cargando tu espacio...
+      </div>
+    );
+  }
+
+  if (error && !profile) {
+    return (
+      <div className="kova-card rounded-2xl border p-8 text-center">
+        <p className="text-[var(--kova-muted)]">{error}</p>
+      </div>
+    );
+  }
+
+  if (!onboardingComplete && profile) {
+    return (
+      <PortalOnboardingFlow
+        initialProfile={profile}
+        initialStep={onboardingStep === 'done' ? 'welcome' : onboardingStep}
+        onComplete={handleOnboardingComplete}
+      />
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="kova-card rounded-2xl border p-8 text-center">
+        <p className="text-[var(--kova-muted)]">{error || 'No pudimos cargar el dashboard'}</p>
+      </div>
+    );
+  }
+
+  return <PortalFullDashboard data={data} />;
 }
