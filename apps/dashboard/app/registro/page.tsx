@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Briefcase,
   Building2,
@@ -162,6 +162,133 @@ const EMPTY_PROFILE: CommercialProfile = {
   tamanoEquipo: '0',
 };
 
+function FieldLabel({
+  htmlFor,
+  children,
+  required,
+  optional,
+}: {
+  htmlFor?: string;
+  children: React.ReactNode;
+  required?: boolean;
+  optional?: boolean;
+}) {
+  return (
+    <label
+      htmlFor={htmlFor}
+      className={[
+        'kv-field-label',
+        required ? 'kv-field-label--required' : '',
+        optional ? 'kv-field-label--optional' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
+      {children}
+      {required ? (
+        <span className="kv-field-required" aria-hidden="true">
+          {' '}
+          *
+        </span>
+      ) : null}
+      {optional ? <span className="kv-field-optional"> (opcional)</span> : null}
+    </label>
+  );
+}
+
+function getStepMissingItems(
+  step: number,
+  profile: CommercialProfile,
+  completeHistorial: WorkHistoryEntry[],
+  completeLogros: EvidenceCard[],
+): string[] {
+  const missing: string[] = [];
+
+  if (step === 0) {
+    if (!profile.nombre?.trim()) missing.push('Nombre completo');
+    if (!profile.ciudad?.trim()) missing.push('Ciudad');
+    if (!profile.email?.trim()) missing.push('Correo electrónico');
+    else if (!/.+@.+\..+/.test(profile.email)) missing.push('Un correo electrónico válido');
+    if (!profile.telefono?.trim()) missing.push('Teléfono');
+    if (!profile.disponibilidad) missing.push('Disponibilidad de inicio');
+    if (!profile.disponibilidadViajar) missing.push('Disponibilidad para viajar');
+    if (!profile.disponibilidadReubicacion) missing.push('Disponibilidad de cambio de ciudad');
+    if (!profile.consentimientoDatos) missing.push('Aceptación del uso de tus datos');
+    return missing;
+  }
+
+  if (step === 1) {
+    if (!profile.nivelRol) missing.push('Nivel del rol');
+    if (!profile.funcionPrincipal) missing.push('Función principal');
+    if (!profile.objetivoProfesional) missing.push('Objetivo profesional');
+    if (profile.tamanoEquipo == null || profile.tamanoEquipo === '') {
+      missing.push('Tamaño de equipo liderado');
+    }
+    return missing;
+  }
+
+  if (step === 2) {
+    if ((profile.historialLaboral ?? []).length === 0) {
+      missing.push('Agregar al menos una experiencia laboral');
+    } else if (completeHistorial.length === 0) {
+      missing.push('Completar cargo, empresa, sector, fechas y descripción en una experiencia');
+    }
+    return missing;
+  }
+
+  if (step === 3) {
+    if (!(profile.formacion ?? []).some(isEducationComplete)) {
+      missing.push('Al menos una formación (nivel, título e institución)');
+    }
+    if (!(profile.idiomas ?? []).some(isLanguageComplete)) {
+      missing.push('Al menos un idioma con su nivel');
+    }
+    if (!profile.expectativaSalarial) missing.push('Rango salarial esperado');
+    return missing;
+  }
+
+  if (step === 4) {
+    if (!profile.tipoVenta) missing.push('Tipo de venta');
+    if (!profile.naturaleza) missing.push('Naturaleza de la venta');
+    if (!profile.enfoque) missing.push('Enfoque principal');
+    if (!profile.ciclo) missing.push('Ciclo de venta típico');
+    const tickets = profile.tickets ?? [];
+    if (tickets.length === 0) missing.push('Al menos un ticket promedio');
+    else if (tickets.length > 1 && !profile.ticketPrincipal) {
+      missing.push('Ticket con mayor experiencia');
+    }
+    if (!profile.tipoCliente) missing.push('Tipo de cliente');
+    if (!profile.nivelInterlocutor) missing.push('Nivel de interlocutor');
+    if (!profile.canalVenta) missing.push('Canal de venta');
+    if (!profile.coberturaGeografica) missing.push('Cobertura geográfica');
+    if (!profile.cuentasCartera) missing.push('Número de cuentas en cartera');
+    if (!profile.crmVentas) missing.push('CRM que manejas');
+    else if (profile.crmVentas === CRM_OTHER && !profile.crmVentasOtro?.trim()) {
+      missing.push('Nombre del CRM');
+    }
+    if (!profile.estructuraComision) missing.push('Estructura de comisión');
+    return missing;
+  }
+
+  if (step === 5) {
+    const industries = profile.industrias ?? [];
+    if (industries.length === 0) missing.push('Al menos una industria');
+    else if (industries.length > 1 && !profile.industriaPrincipal) {
+      missing.push('Industria principal');
+    }
+    return missing;
+  }
+
+  if (step === 6) {
+    if (completeLogros.length === 0) {
+      missing.push('Al menos una tarjeta de evidencia completa');
+    }
+    return missing;
+  }
+
+  return missing;
+}
+
 function SalesSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="kv-registro-section">
@@ -177,12 +304,14 @@ function ChoiceField({
   options,
   onSelect,
   compact = false,
+  required = false,
 }: {
   label: string;
   value?: string;
   options: readonly string[] | string[];
   onSelect: (option: string) => void;
   compact?: boolean;
+  required?: boolean;
 }) {
   const gridClass = compact
     ? ' kv-registro-choice-grid--compact'
@@ -191,8 +320,17 @@ function ChoiceField({
       : '';
 
   return (
-    <div className={`kv-registro-field kv-registro-field--choice${compact ? ' kv-registro-field--compact' : ''}`}>
-      <label>{label}</label>
+    <div
+      className={[
+        'kv-registro-field',
+        'kv-registro-field--choice',
+        compact ? 'kv-registro-field--compact' : '',
+        required && !value ? 'kv-registro-field--incomplete' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
+      <FieldLabel required={required}>{label}</FieldLabel>
       <div className={`kv-registro-choice-grid${gridClass}`}>
         {options.map((option) => {
           const selected = value === option;
@@ -378,6 +516,41 @@ export default function RegistroPage() {
     }
     return true;
   }, [step, profile, completeLogros.length, completeHistorial.length]);
+
+  const stepMissing = useMemo(
+    () => getStepMissingItems(step, profile, completeHistorial, completeLogros),
+    [step, profile, completeHistorial, completeLogros],
+  );
+
+  useEffect(() => {
+    if (step === 2) {
+      setProfile((prev) => {
+        if ((prev.historialLaboral ?? []).length > 0) return prev;
+        return { ...prev, historialLaboral: [newWorkHistoryEntry()] };
+      });
+    }
+    if (step === 3) {
+      setProfile((prev) => {
+        let changed = false;
+        const next = { ...prev };
+        if ((prev.formacion ?? []).length === 0) {
+          next.formacion = [newEducationEntry()];
+          changed = true;
+        }
+        if ((prev.idiomas ?? []).length === 0) {
+          next.idiomas = [newLanguageEntry()];
+          changed = true;
+        }
+        return changed ? next : prev;
+      });
+    }
+    if (step === 6) {
+      setProfile((prev) => {
+        if ((prev.logros ?? []).length > 0) return prev;
+        return { ...prev, logros: [newEvidenceCard()] };
+      });
+    }
+  }, [step]);
 
   const update = (patch: Partial<CommercialProfile>) => {
     setProfile((prev) => ({ ...prev, ...patch }));
@@ -734,29 +907,41 @@ export default function RegistroPage() {
             </div>
 
             <div key={step} className="kv-registro-card-body kv-registro-step-panel">
+              <p className="kv-registro-step-legend">
+                Los campos con <span className="kv-field-required">*</span> son obligatorios para continuar.
+              </p>
+
               {current.kind === 'contact' && (
                 <div className="kv-registro-form-stack kv-registro-form-stack--compact">
                   <div className="kv-registro-field-row">
-                    <div className="kv-registro-field">
-                      <label htmlFor="nombre">Nombre completo</label>
+                    <div className={`kv-registro-field${!profile.nombre?.trim() ? ' kv-registro-field--incomplete' : ''}`}>
+                      <FieldLabel htmlFor="nombre" required>
+                        Nombre completo
+                      </FieldLabel>
                       <div className="kv-registro-input-wrap">
                         <User strokeWidth={2} aria-hidden />
                         <input
                           id="nombre"
                           type="text"
+                          required
+                          autoComplete="name"
                           placeholder="Ej. María López"
                           value={profile.nombre ?? ''}
                           onChange={(e) => update({ nombre: e.target.value })}
                         />
                       </div>
                     </div>
-                    <div className="kv-registro-field">
-                      <label htmlFor="ciudad">Ciudad</label>
+                    <div className={`kv-registro-field${!profile.ciudad?.trim() ? ' kv-registro-field--incomplete' : ''}`}>
+                      <FieldLabel htmlFor="ciudad" required>
+                        Ciudad
+                      </FieldLabel>
                       <div className="kv-registro-input-wrap">
                         <MapPin strokeWidth={2} aria-hidden />
                         <input
                           id="ciudad"
                           type="text"
+                          required
+                          autoComplete="address-level2"
                           placeholder="Ej. Bogotá"
                           value={profile.ciudad ?? ''}
                           onChange={(e) => update({ ciudad: e.target.value })}
@@ -765,26 +950,40 @@ export default function RegistroPage() {
                     </div>
                   </div>
                   <div className="kv-registro-field-row">
-                    <div className="kv-registro-field">
-                      <label htmlFor="email">Correo</label>
+                    <div
+                      className={`kv-registro-field${
+                        !profile.email?.trim() || (profile.email && !/.+@.+\..+/.test(profile.email))
+                          ? ' kv-registro-field--incomplete'
+                          : ''
+                      }`}
+                    >
+                      <FieldLabel htmlFor="email" required>
+                        Correo
+                      </FieldLabel>
                       <div className="kv-registro-input-wrap">
                         <Mail strokeWidth={2} aria-hidden />
                         <input
                           id="email"
                           type="email"
+                          required
+                          autoComplete="email"
                           placeholder="tu@correo.com"
                           value={profile.email ?? ''}
                           onChange={(e) => update({ email: e.target.value })}
                         />
                       </div>
                     </div>
-                    <div className="kv-registro-field">
-                      <label htmlFor="telefono">Teléfono</label>
+                    <div className={`kv-registro-field${!profile.telefono?.trim() ? ' kv-registro-field--incomplete' : ''}`}>
+                      <FieldLabel htmlFor="telefono" required>
+                        Teléfono
+                      </FieldLabel>
                       <div className="kv-registro-input-wrap">
                         <Phone strokeWidth={2} aria-hidden />
                         <input
                           id="telefono"
                           type="tel"
+                          required
+                          autoComplete="tel"
                           placeholder="300 123 4567"
                           value={profile.telefono ?? ''}
                           onChange={(e) => update({ telefono: e.target.value })}
@@ -794,9 +993,12 @@ export default function RegistroPage() {
                   </div>
 
                   <div className="kv-registro-field-group kv-registro-field-group--compact">
-                    <h3 className="kv-registro-field-group-title">Disponibilidad</h3>
+                    <h3 className="kv-registro-field-group-title">
+                      Disponibilidad <span className="kv-field-required">*</span>
+                    </h3>
                     <ChoiceField
                       compact
+                      required
                       label="Inicio"
                       value={profile.disponibilidad}
                       options={AVAILABILITY_OPTIONS}
@@ -804,6 +1006,7 @@ export default function RegistroPage() {
                     />
                     <ChoiceField
                       compact
+                      required
                       label="Viajar"
                       value={profile.disponibilidadViajar}
                       options={TRAVEL_OPTIONS}
@@ -811,6 +1014,7 @@ export default function RegistroPage() {
                     />
                     <ChoiceField
                       compact
+                      required
                       label="Cambio de ciudad"
                       value={profile.disponibilidadReubicacion}
                       options={RELOCATION_OPTIONS}
@@ -818,14 +1022,25 @@ export default function RegistroPage() {
                     />
                   </div>
 
-                  <label className="kv-registro-consent kv-registro-consent--compact">
+                  <label
+                    className={`kv-registro-consent kv-registro-consent--compact${
+                      !profile.consentimientoDatos ? ' kv-registro-consent--incomplete' : ''
+                    }`}
+                  >
                     <input
                       type="checkbox"
+                      required
                       checked={Boolean(profile.consentimientoDatos)}
                       onChange={(e) => update({ consentimientoDatos: e.target.checked })}
                     />
                     <span>
-                      Acepto el uso de mis datos para matching comercial (Ley 1581).
+                      <strong>
+                        Acepto el uso de mis datos para matching comercial (Ley 1581).
+                        <span className="kv-field-required" aria-hidden="true">
+                          {' '}
+                          *
+                        </span>
+                      </strong>
                     </span>
                   </label>
                 </div>
@@ -834,31 +1049,37 @@ export default function RegistroPage() {
               {current.kind === 'role' && (
                 <>
                   <ChoiceField
+                    required
                     label="Nivel del rol"
                     value={profile.nivelRol}
                     options={ROLE_LEVEL_OPTIONS}
                     onSelect={(v) => update({ nivelRol: v })}
                   />
                   <ChoiceField
+                    required
                     label="Función principal"
                     value={profile.funcionPrincipal}
                     options={ROLE_FUNCTION_OPTIONS}
                     onSelect={(v) => update({ funcionPrincipal: v })}
                   />
                   <ChoiceField
+                    required
                     label="¿Qué estás buscando en tu próximo reto?"
                     value={profile.objetivoProfesional}
                     options={PROFESSIONAL_OBJECTIVE_OPTIONS}
                     onSelect={(v) => update({ objetivoProfesional: v })}
                   />
                   <ChoiceField
+                    required
                     label="Tamaño de equipo que has liderado"
                     value={profile.tamanoEquipo}
                     options={TEAM_SIZE_OPTIONS}
                     onSelect={(v) => update({ tamanoEquipo: v })}
                   />
                   <div className="kv-registro-field">
-                    <label htmlFor="anios">Años de experiencia comercial (opcional)</label>
+                    <FieldLabel htmlFor="anios" optional>
+                      Años de experiencia comercial
+                    </FieldLabel>
                     <input
                       id="anios"
                       className="kv-registro-input"
@@ -904,7 +1125,7 @@ export default function RegistroPage() {
 
                       <SalesSection title="Datos básicos">
                         <div className="kv-registro-field">
-                          <label>Cargo</label>
+                          <FieldLabel required>Cargo</FieldLabel>
                           <input
                             className="kv-registro-input"
                             placeholder="Ej. Gerente comercial regional"
@@ -914,7 +1135,7 @@ export default function RegistroPage() {
                         </div>
                         <div className="kv-registro-field-row">
                           <div className="kv-registro-field">
-                            <label>Empresa</label>
+                            <FieldLabel required>Empresa</FieldLabel>
                             <input
                               className="kv-registro-input"
                               placeholder="Nombre de la empresa"
@@ -923,7 +1144,7 @@ export default function RegistroPage() {
                             />
                           </div>
                           <div className="kv-registro-field">
-                            <label>Sector / industria de la empresa</label>
+                            <FieldLabel required>Sector / industria de la empresa</FieldLabel>
                             <select
                               className="kv-registro-select"
                               value={entry.sector}
@@ -938,7 +1159,9 @@ export default function RegistroPage() {
                         </div>
                         <div className="kv-registro-field-row">
                           <div className="kv-registro-field">
-                            <label htmlFor={`inicio-${entry.id}`}>Fecha de inicio</label>
+                            <FieldLabel htmlFor={`inicio-${entry.id}`} required>
+                              Fecha de inicio
+                            </FieldLabel>
                             <input
                               id={`inicio-${entry.id}`}
                               className="kv-registro-input"
@@ -948,7 +1171,9 @@ export default function RegistroPage() {
                             />
                           </div>
                           <div className="kv-registro-field">
-                            <label htmlFor={`fin-${entry.id}`}>Fecha de fin</label>
+                            <FieldLabel htmlFor={`fin-${entry.id}`} required={!entry.trabajoActual}>
+                              Fecha de fin
+                            </FieldLabel>
                             <input
                               id={`fin-${entry.id}`}
                               className="kv-registro-input"
@@ -978,7 +1203,7 @@ export default function RegistroPage() {
 
                       <SalesSection title="Contexto del rol">
                         <div className="kv-registro-field">
-                          <label>Descripción breve de funciones</label>
+                          <FieldLabel required>Descripción breve de funciones</FieldLabel>
                           <textarea
                             className="kv-registro-textarea kv-registro-textarea--compact"
                             placeholder="2-3 líneas sobre tu rol, responsabilidades y alcance..."
@@ -1039,7 +1264,7 @@ export default function RegistroPage() {
                         </div>
                         <div className="kv-registro-field-row">
                           <div className="kv-registro-field">
-                            <label>Nivel educativo</label>
+                            <FieldLabel required>Nivel educativo</FieldLabel>
                             <select
                               className="kv-registro-select"
                               value={edu.nivel}
@@ -1052,7 +1277,7 @@ export default function RegistroPage() {
                             </select>
                           </div>
                           <div className="kv-registro-field">
-                            <label>Año de graduación (opcional)</label>
+                            <FieldLabel optional>Año de graduación</FieldLabel>
                             <input
                               className="kv-registro-input"
                               type="number"
@@ -1065,7 +1290,7 @@ export default function RegistroPage() {
                           </div>
                         </div>
                         <div className="kv-registro-field">
-                          <label>Título obtenido</label>
+                          <FieldLabel required>Título obtenido</FieldLabel>
                           <input
                             className="kv-registro-input"
                             placeholder="Ej. Administración de Empresas"
@@ -1074,7 +1299,7 @@ export default function RegistroPage() {
                           />
                         </div>
                         <div className="kv-registro-field">
-                          <label>Institución</label>
+                          <FieldLabel required>Institución</FieldLabel>
                           <input
                             className="kv-registro-input"
                             placeholder="Ej. Universidad de los Andes"
@@ -1095,7 +1320,7 @@ export default function RegistroPage() {
                     {(profile.idiomas ?? []).map((lang, index) => (
                       <div key={lang.id} className="kv-registro-field-row kv-registro-lang-row">
                         <div className="kv-registro-field">
-                          <label>Idioma {index + 1}</label>
+                          <FieldLabel required>Idioma {index + 1}</FieldLabel>
                           <select
                             className="kv-registro-select"
                             value={lang.idioma}
@@ -1108,7 +1333,7 @@ export default function RegistroPage() {
                           </select>
                         </div>
                         <div className="kv-registro-field">
-                          <label>Nivel</label>
+                          <FieldLabel required>Nivel</FieldLabel>
                           <select
                             className="kv-registro-select"
                             value={lang.nivel}
@@ -1176,6 +1401,7 @@ export default function RegistroPage() {
 
                   <SalesSection title="Expectativas">
                     <ChoiceField
+                      required
                       label="Rango salarial mensual esperado (fijo + variable estimado)"
                       value={profile.expectativaSalarial}
                       options={SALARY_EXPECTATION_OPTIONS}
@@ -1195,25 +1421,30 @@ export default function RegistroPage() {
                 <div className="kv-registro-sales">
                   <SalesSection title="Estilo de venta">
                     <ChoiceField
+                      required
                       label="Tipo de venta"
                       value={profile.tipoVenta}
                       options={['Consultiva', 'Transaccional']}
                       onSelect={(v) => update({ tipoVenta: v })}
                     />
                     <ChoiceField
+                      required
                       label="Naturaleza de la venta"
                       value={profile.naturaleza}
                       options={['Técnica', 'Relacional']}
                       onSelect={(v) => update({ naturaleza: v })}
                     />
                     <ChoiceField
+                      required
                       label="Enfoque principal"
                       value={profile.enfoque}
                       options={['Prospección (hunter)', 'Manejo de cuentas (farmer)']}
                       onSelect={(v) => update({ enfoque: v })}
                     />
-                    <div className="kv-registro-field">
-                      <label htmlFor="ciclo">Ciclo de venta típico</label>
+                    <div className={`kv-registro-field${!profile.ciclo ? ' kv-registro-field--incomplete' : ''}`}>
+                      <FieldLabel htmlFor="ciclo" required>
+                        Ciclo de venta típico
+                      </FieldLabel>
                       <select
                         id="ciclo"
                         className="kv-registro-select"
@@ -1226,8 +1457,12 @@ export default function RegistroPage() {
                         ))}
                       </select>
                     </div>
-                    <div className="kv-registro-field">
-                      <label>Ticket promedio manejado</label>
+                    <div
+                      className={`kv-registro-field${
+                        (profile.tickets?.length ?? 0) === 0 ? ' kv-registro-field--incomplete' : ''
+                      }`}
+                    >
+                      <FieldLabel required>Ticket promedio manejado</FieldLabel>
                       <p className="kv-registro-field-hint">
                         Puedes seleccionar más de uno. Si eliges varios, indica con cuál tienes mayor
                         experiencia.
@@ -1247,6 +1482,7 @@ export default function RegistroPage() {
                     </div>
                     {(profile.tickets?.length ?? 0) > 1 && (
                       <ChoiceField
+                        required
                         label="¿Con cuál tienes mayor experiencia?"
                         value={profile.ticketPrincipal}
                         options={profile.tickets ?? []}
@@ -1257,18 +1493,21 @@ export default function RegistroPage() {
 
                   <SalesSection title="Sobre el cliente">
                     <ChoiceField
+                      required
                       label="Tipo de cliente"
                       value={profile.tipoCliente}
                       options={CLIENT_TYPE_OPTIONS}
                       onSelect={(v) => update({ tipoCliente: v })}
                     />
                     <ChoiceField
+                      required
                       label="Nivel de interlocutor habitual"
                       value={profile.nivelInterlocutor}
                       options={INTERLOCUTOR_OPTIONS}
                       onSelect={(v) => update({ nivelInterlocutor: v })}
                     />
                     <ChoiceField
+                      required
                       label="Canal de venta"
                       value={profile.canalVenta}
                       options={SALES_CHANNEL_OPTIONS}
@@ -1278,19 +1517,23 @@ export default function RegistroPage() {
 
                   <SalesSection title="Alcance y herramientas">
                     <ChoiceField
+                      required
                       label="Cobertura geográfica"
                       value={profile.coberturaGeografica}
                       options={GEO_COVERAGE_OPTIONS}
                       onSelect={(v) => update({ coberturaGeografica: v })}
                     />
                     <ChoiceField
+                      required
                       label="Número de cuentas en cartera"
                       value={profile.cuentasCartera}
                       options={PORTFOLIO_SIZE_OPTIONS}
                       onSelect={(v) => update({ cuentasCartera: v })}
                     />
-                    <div className="kv-registro-field">
-                      <label htmlFor="crmVentas">CRM que manejas</label>
+                    <div className={`kv-registro-field${!profile.crmVentas ? ' kv-registro-field--incomplete' : ''}`}>
+                      <FieldLabel htmlFor="crmVentas" required>
+                        CRM que manejas
+                      </FieldLabel>
                       <select
                         id="crmVentas"
                         className="kv-registro-select"
@@ -1320,6 +1563,7 @@ export default function RegistroPage() {
                       </div>
                     )}
                     <ChoiceField
+                      required
                       label="Estructura de comisión familiarizada"
                       value={profile.estructuraComision}
                       options={COMMISSION_OPTIONS}
@@ -1331,8 +1575,12 @@ export default function RegistroPage() {
 
               {current.kind === 'industry' && (
                 <>
-                  <div className="kv-registro-field">
-                    <label>Industrias en las que tienes experiencia</label>
+                  <div
+                    className={`kv-registro-field${
+                      (profile.industrias?.length ?? 0) === 0 ? ' kv-registro-field--incomplete' : ''
+                    }`}
+                  >
+                    <FieldLabel required>Industrias en las que tienes experiencia</FieldLabel>
                     <p className="kv-registro-field-hint">Selecciona todas las que apliquen.</p>
                     <div className="kv-registro-tag-grid">
                       {COMMERCIAL_INDUSTRIES.map((item) => (
@@ -1349,6 +1597,7 @@ export default function RegistroPage() {
                   </div>
                   {(profile.industrias?.length ?? 0) > 1 && (
                     <ChoiceField
+                      required
                       label="Industria principal (mayor experiencia)"
                       value={profile.industriaPrincipal}
                       options={profile.industrias ?? []}
@@ -1400,7 +1649,7 @@ export default function RegistroPage() {
                         </div>
                       )}
                       <div className="kv-registro-field">
-                        <label>Título breve</label>
+                        <FieldLabel required>Título breve</FieldLabel>
                         <input
                           className="kv-registro-input"
                           placeholder="Ej. Crecimiento de operación comercial 33%"
@@ -1409,7 +1658,7 @@ export default function RegistroPage() {
                         />
                       </div>
                       <div className="kv-registro-field">
-                        <label>Empresa / contexto</label>
+                        <FieldLabel required>Empresa / contexto</FieldLabel>
                         <input
                           className="kv-registro-input"
                           placeholder="Empresa y periodo"
@@ -1418,7 +1667,7 @@ export default function RegistroPage() {
                         />
                       </div>
                       <div className="kv-registro-field">
-                        <label>Cifra o resultado concreto</label>
+                        <FieldLabel required>Cifra o resultado concreto</FieldLabel>
                         <input
                           className="kv-registro-input"
                           placeholder="Ej. De COP $9.000M a $12.000M mensuales"
@@ -1427,7 +1676,7 @@ export default function RegistroPage() {
                         />
                       </div>
                       <div className="kv-registro-field">
-                        <label>Competencia(s) que demuestra</label>
+                        <FieldLabel required>Competencia(s) que demuestra</FieldLabel>
                         <div className="kv-registro-tag-grid">
                           {EVIDENCE_COMPETENCY_TAGS.map((tag) => (
                             <button
@@ -1540,6 +1789,16 @@ export default function RegistroPage() {
             </div>
 
             <div className="kv-registro-card-footer">
+              {!canNext && stepMissing.length > 0 && (
+                <div className="kv-registro-step-blockers" role="status" aria-live="polite">
+                  <p className="kv-registro-step-blockers-title">Para continuar, completa:</p>
+                  <ul className="kv-registro-step-blockers-list">
+                    {stepMissing.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <div className={`kv-registro-btn-row${step > 0 ? '' : ' kv-registro-btn-row--end'}`}>
                 {step > 0 ? (
                   <button type="button" className="kv-registro-btn-ghost" onClick={() => goToStep(step - 1)}>
@@ -1551,6 +1810,7 @@ export default function RegistroPage() {
                     type="button"
                     className="kv-registro-btn-solid"
                     disabled={!canNext}
+                    title={!canNext ? stepMissing.join(' · ') : undefined}
                     onClick={() => goToStep(step + 1)}
                   >
                     Continuar

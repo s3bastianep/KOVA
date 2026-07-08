@@ -1076,6 +1076,80 @@ html:has(.kv-registro) {
   color: var(--kv-ink);
 }
 
+.kv-field-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.65rem;
+  letter-spacing: -0.01em;
+  color: var(--kv-ink);
+}
+
+.kv-field-required {
+  color: var(--kv-indigo);
+  font-weight: 700;
+}
+
+.kv-field-optional {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--kv-slate);
+}
+
+.kv-registro-step-legend {
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.65rem;
+  background: var(--kv-paper-2);
+  border: 1px solid var(--kv-line);
+  font-size: 0.8125rem;
+  color: var(--kv-slate);
+  line-height: 1.45;
+}
+
+.kv-registro-field--incomplete .kv-registro-input-wrap,
+.kv-registro-field--incomplete .kv-registro-input,
+.kv-registro-field--incomplete .kv-registro-select,
+.kv-registro-field--incomplete .kv-registro-textarea {
+  border-color: rgba(51, 65, 196, 0.35);
+}
+
+.kv-registro-field--incomplete .kv-registro-choice:not(.selected) {
+  border-color: rgba(51, 65, 196, 0.28);
+}
+
+.kv-registro-consent--incomplete {
+  border-color: rgba(51, 65, 196, 0.35);
+  background: rgba(51, 65, 196, 0.04);
+}
+
+.kv-registro-step-blockers {
+  margin-bottom: 0.85rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.75rem;
+  background: rgba(51, 65, 196, 0.06);
+  border: 1px solid rgba(51, 65, 196, 0.14);
+}
+
+.kv-registro-step-blockers-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--kv-indigo-dark);
+}
+
+.kv-registro-step-blockers-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--kv-slate);
+}
+
+.kv-registro-step-blockers-list li + li {
+  margin-top: 0.15rem;
+}
+
 .kv-registro-field--choice {
   margin-bottom: 0;
 }
