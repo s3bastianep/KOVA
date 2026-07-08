@@ -1,3 +1,5 @@
+import type { CvExtractionResult } from '@/lib/cv-extract';
+import { alignCvReviewWithProfile } from '@/lib/cv-extract';
 import {
   isEducationComplete,
   isEvidenceCardComplete,
@@ -18,6 +20,8 @@ export type RegistroDraft = {
   candidateId?: string;
   resumeToken?: string;
   accountCreated?: boolean;
+  cvImportPhase?: 'offer' | 'uploading' | 'review' | 'done' | 'skipped';
+  cvSkippedOnce?: boolean;
 };
 
 export function slugifyField(label: string): string {
@@ -122,6 +126,29 @@ export async function postRegistro(payload: Record<string, unknown>) {
   const json = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(json.message ?? 'Error al guardar');
   return json;
+}
+
+export async function uploadRegistroCv(
+  file: File,
+  candidateId?: string | null,
+  resumeToken?: string | null,
+): Promise<CvExtractionResult> {
+  const formData = new FormData();
+  formData.append('file', file);
+  if (candidateId) formData.append('candidateId', candidateId);
+  if (resumeToken) formData.append('resumeToken', resumeToken);
+
+  const res = await fetch('/api/registro/cv', {
+    method: 'POST',
+    body: formData,
+  });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(json.message ?? 'No pudimos leer tu PDF.');
+  return json as CvExtractionResult;
+}
+
+export function enrichCvExtraction(result: CvExtractionResult, profile: CommercialProfile): CvExtractionResult {
+  return alignCvReviewWithProfile(result, profile);
 }
 
 function workEntryBlockers(entry: WorkHistoryEntry, index: number): string[] {

@@ -184,6 +184,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       id: d.id,
       name: d.name,
       type: d.type,
+      url: d.url,
       date: d.createdAt.toISOString(),
     })),
     activities: candidate.activities.map((a) => ({

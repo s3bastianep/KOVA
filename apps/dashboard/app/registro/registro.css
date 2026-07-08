@@ -1910,4 +1910,214 @@ html:has(.kv-registro) {
   .kv-registro-ring-fill {
     transition: none;
   }
+
+  .kv-registro-cv-spin {
+    animation: none;
+  }
+}
+
+/* CV import */
+.kv-registro-cv {
+  margin-bottom: var(--kv-gap-section);
+  padding: 1.15rem 1.2rem;
+  border-radius: var(--kv-radius-field);
+  border: 1px solid var(--kv-line);
+  background: linear-gradient(145deg, rgba(216, 242, 76, 0.14), rgba(51, 65, 196, 0.05));
+  box-shadow: var(--kv-shadow-field);
+}
+
+.kv-registro-cv--compact {
+  padding: 0.95rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.kv-registro-cv-head {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  margin-bottom: 0.95rem;
+}
+
+.kv-registro-cv-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.65rem;
+  background: var(--kv-ink);
+  color: var(--kv-lime);
+  flex-shrink: 0;
+}
+
+.kv-registro-cv-title {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+
+.kv-registro-cv-sub {
+  margin: 0.3rem 0 0;
+  font-size: 0.92rem;
+  color: var(--kv-slate);
+  line-height: 1.5;
+}
+
+.kv-registro-cv-drop {
+  position: relative;
+  border: 1.5px dashed var(--kv-indigo);
+  border-radius: var(--kv-radius-field);
+  background: rgba(255, 255, 255, 0.55);
+  min-height: 7.5rem;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.kv-registro-cv-drop--busy {
+  border-style: solid;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.kv-registro-cv-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.kv-registro-cv-drop-inner {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+  padding: 1rem;
+  color: var(--kv-slate);
+  pointer-events: none;
+}
+
+.kv-registro-cv-drop-inner svg {
+  color: var(--kv-indigo);
+}
+
+.kv-registro-cv-link {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--kv-indigo);
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.kv-registro-cv-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--kv-nav-muted);
+}
+
+.kv-registro-cv-error {
+  margin: 0.75rem 0 0;
+  color: var(--kv-required);
+  font-size: 0.9rem;
+}
+
+.kv-registro-cv-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.95rem;
+}
+
+.kv-registro-cv-warnings {
+  margin: 0 0 0.85rem;
+  padding-left: 1.1rem;
+  color: var(--kv-slate);
+  font-size: 0.88rem;
+}
+
+.kv-registro-cv-fields {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.kv-registro-cv-field {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--kv-line);
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+}
+
+.kv-registro-cv-field--on {
+  border-color: var(--kv-indigo);
+  background: rgba(51, 65, 196, 0.06);
+}
+
+.kv-registro-cv-field input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--kv-indigo);
+}
+
+.kv-registro-cv-field-body {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.kv-registro-cv-field-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.kv-registro-cv-field-preview {
+  font-size: 0.84rem;
+  color: var(--kv-slate);
+  line-height: 1.4;
+}
+
+.kv-registro-cv-confidence {
+  font-size: 0.72rem;
+  font-family: var(--font-mono), monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  background: var(--kv-paper-2);
+}
+
+.kv-registro-cv-confidence--high {
+  color: var(--kv-lime-dark);
+  background: var(--kv-lime-soft);
+}
+
+.kv-registro-cv-confidence--medium {
+  color: var(--kv-indigo);
+}
+
+.kv-registro-cv-confidence--low {
+  color: var(--kv-slate);
+}
+
+.kv-registro-cv-empty {
+  margin: 0;
+  color: var(--kv-slate);
+  font-size: 0.92rem;
+}
+
+.kv-registro-cv-spin {
+  animation: kv-registro-spin 0.9s linear infinite;
+}
+
+@keyframes kv-registro-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

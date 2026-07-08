@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Briefcase,
   Building2,
@@ -78,7 +78,11 @@ import {
   resumeRegistroSession,
   saveRegistroDraft,
   slugifyField,
+  uploadRegistroCv,
 } from './registro-utils';
+import { CvImportPanel } from './CvImportPanel';
+
+type CvImportPhase = 'offer' | 'uploading' | 'review' | 'done' | 'skipped';
 
 const CRM_OTHER = 'Otro';
 
@@ -87,7 +91,7 @@ const STEPS = [
     tag: 'Paso 1 de 8',
     short: 'Cuenta',
     title: 'Crea tu cuenta',
-    sub: 'Datos básicos para empezar. Después completarás tu perfil comercial por partes, a tu ritmo.',
+    sub: 'Sube tu HV en PDF para prellenar datos o completa el formulario manualmente.',
     kind: 'contact' as const,
     icon: User,
   },
@@ -95,7 +99,7 @@ const STEPS = [
     tag: 'Paso 2 de 8',
     short: 'Rol',
     title: 'Tu rol y objetivo',
-    sub: 'Define tu nivel, función y hacia dónde quieres ir. Esto determina las competencias del paso 8.',
+    sub: 'Define tu nivel y función. Los pasos comerciales siguen siendo manuales.',
     kind: 'role' as const,
     icon: Briefcase,
   },
@@ -446,6 +450,9 @@ export default function RegistroPage() {
   const [candidateId, setCandidateId] = useState<string | null>(null);
   const [resumeToken, setResumeToken] = useState<string | null>(null);
   const [savedBanner, setSavedBanner] = useState('');
+  const [cvImportPhase, setCvImportPhase] = useState<CvImportPhase>('offer');
+  const [cvSkippedOnce, setCvSkippedOnce] = useState(false);
+  const pendingCvFileRef = useRef<File | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -457,6 +464,8 @@ export default function RegistroPage() {
       setProfile(draft.profile);
       setStep(Math.min(Math.max(0, draft.step), STEPS.length - 1));
       setDraftNote(true);
+      if (draft.cvImportPhase) setCvImportPhase(draft.cvImportPhase);
+      if (draft.cvSkippedOnce) setCvSkippedOnce(true);
 
       if (draft.candidateId && draft.resumeToken) {
         setCandidateId(draft.candidateId);
@@ -494,8 +503,16 @@ export default function RegistroPage() {
       candidateId: candidateId ?? undefined,
       resumeToken: resumeToken ?? undefined,
       accountCreated,
+      cvImportPhase,
+      cvSkippedOnce,
     });
-  }, [profile, step, done, candidateId, resumeToken, accountCreated]);
+  }, [profile, step, done, candidateId, resumeToken, accountCreated, cvImportPhase, cvSkippedOnce]);
+
+  useEffect(() => {
+    if (step === 2 && cvSkippedOnce && cvImportPhase === 'skipped') {
+      setCvImportPhase('offer');
+    }
+  }, [step, cvSkippedOnce, cvImportPhase]);
 
   const goToStep = (target: number) => {
     if (target < 0 || target >= STEPS.length || target === step) return;
@@ -811,7 +828,16 @@ export default function RegistroPage() {
       setCandidateId(json.candidateId);
       setResumeToken(json.resumeToken);
       setAccountCreated(true);
+      setCvImportPhase('offer');
       setSavedBanner(json.message ?? 'Cuenta creada. Continúa tu perfil cuando quieras.');
+      if (pendingCvFileRef.current) {
+        try {
+          await uploadRegistroCv(pendingCvFileRef.current, json.candidateId, json.resumeToken);
+          pendingCvFileRef.current = null;
+        } catch {
+          /* la cuenta ya quedó creada; el CV se puede volver a subir después */
+        }
+      }
       setStep(1);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al crear la cuenta');
@@ -854,6 +880,45 @@ export default function RegistroPage() {
     } catch {
       /* error shown */
     }
+  };
+
+  const handleCvApply = async (nextProfile: CommercialProfile) => {
+    setProfile(nextProfile);
+    setSavedBanner('Datos del CV aplicados. Revisa y ajusta lo que necesites.');
+    if (accountCreated && candidateId && resumeToken) {
+      try {
+        const { firstName, lastName } = splitFullName(nextProfile.nombre ?? '');
+        await postRegistro({
+          action: 'progress',
+          profile: nextProfile,
+          firstName,
+          lastName,
+          step,
+          candidateId,
+          resumeToken,
+        });
+        if (pendingCvFileRef.current) {
+          await uploadRegistroCv(pendingCvFileRef.current, candidateId, resumeToken);
+          pendingCvFileRef.current = null;
+        }
+      } catch {
+        /* el borrador local ya quedó actualizado */
+      }
+    }
+  };
+
+  const showCvImport =
+    cvImportPhase !== 'done' &&
+    ((!accountCreated && step === 0) ||
+      (accountCreated && (step === 1 || (step === 2 && cvSkippedOnce))));
+
+  const handleCvFileCaptured = (file: File) => {
+    pendingCvFileRef.current = file;
+  };
+
+  const handleCvSkip = () => {
+    setCvSkippedOnce(true);
+    setCvImportPhase('skipped');
   };
 
   const publishProfile = async () => {
@@ -1040,6 +1105,21 @@ export default function RegistroPage() {
             </div>
 
             <div key={step} className="kv-registro-card-body kv-registro-step-panel">
+              {showCvImport && (
+                <CvImportPanel
+                  profile={profile}
+                  candidateId={candidateId}
+                  resumeToken={resumeToken}
+                  phase={cvImportPhase}
+                  onPhaseChange={setCvImportPhase}
+                  onSkip={handleCvSkip}
+                  onApply={handleCvApply}
+                  onFileCaptured={handleCvFileCaptured}
+                  leading={step === 0}
+                  compact={step === 2}
+                />
+              )}
+
               {current.kind === 'contact' && (
                 <div className="kv-registro-form-stack">
                   <div className="kv-registro-field-row">

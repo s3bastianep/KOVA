@@ -13,6 +13,14 @@ export type RegistroMetadata = {
   resumeToken?: string;
   commercialProfile?: CommercialProfile;
   standardAnswers?: Record<string, unknown>;
+  cvImportedAt?: string;
+  cvFileName?: string;
+  cvTextLength?: number;
+  cvExtraction?: {
+    suggestions?: unknown;
+    warnings?: string[];
+    reviewFields?: unknown[];
+  };
 };
 
 export function readRegistroMetadata(metadata: unknown): RegistroMetadata {

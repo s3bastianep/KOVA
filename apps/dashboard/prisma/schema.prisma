@@ -883,6 +883,7 @@ model Document {
   url         String
   mimeType    String?
   sizeBytes   Int?
+  content     Bytes?
   uploadedBy  String?
   createdAt   DateTime     @default(now())
 

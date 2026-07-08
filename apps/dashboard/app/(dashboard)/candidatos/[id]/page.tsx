@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import {
   ArrowLeft,
+  FileText,
   Download,
   Mail,
   Phone,
@@ -57,6 +58,7 @@ type Candidate = {
   activities?: { id: string; description: string; type?: string; date: string }[];
   processHistory?: CandidateProcessHistoryItem[];
   processCount?: number;
+  documents?: { id: string; name: string; type: string; url?: string; date: string }[];
 };
 
 const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
@@ -167,6 +169,7 @@ export default function CandidatoDetallePage({ params }: { params: Promise<{ id:
     queryFn: () => dashboardApi.candidate(id),
   });
   const c = data as Candidate | undefined;
+  const cvDoc = c?.documents?.find((d) => d.type === 'CV' && d.url);
 
   return (
     <div className="space-y-5 max-w-[1180px] mx-auto">
@@ -176,6 +179,16 @@ export default function CandidatoDetallePage({ params }: { params: Promise<{ id:
         </Link>
         {c && (
           <div className="flex items-center gap-2">
+            {cvDoc?.url && (
+              <a
+                href={cvDoc.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 text-slate-700 text-sm font-semibold hover:bg-slate-50 transition-colors"
+              >
+                <FileText className="w-4 h-4" /> Ver hoja de vida
+              </a>
+            )}
             <button
               onClick={() => typeof window !== 'undefined' && window.print()}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-white text-sm font-semibold shadow-sm hover:-translate-y-0.5 transition-all"

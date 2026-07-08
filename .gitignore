@@ -40,3 +40,4 @@ data/bookings.json
 .env
 .vite
 .vite-cache
+apps/dashboard/storage/
