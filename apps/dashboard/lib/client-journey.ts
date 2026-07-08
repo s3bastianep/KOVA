@@ -8,6 +8,7 @@ export type ClientJourneyStage = {
   bg: string;
 };
 
+/** Brand-aligned stage palette: indigo progression → lime for onboarding */
 export const CLIENT_JOURNEY_STAGES: ClientJourneyStage[] = [
   {
     id: 'discovery',
@@ -15,8 +16,8 @@ export const CLIENT_JOURNEY_STAGES: ClientJourneyStage[] = [
     label: 'Descubrimiento y diagnóstico',
     shortLabel: 'Discovery',
     description: 'Levantar información del negocio, proceso comercial y necesidad de contratación.',
-    color: '#1A3FAA',
-    bg: '#EEF2FA',
+    color: '#212C93',
+    bg: 'rgba(51, 65, 196, 0.1)',
   },
   {
     id: 'ideal_seller',
@@ -24,8 +25,8 @@ export const CLIENT_JOURNEY_STAGES: ClientJourneyStage[] = [
     label: 'Diseño del vendedor ideal',
     shortLabel: 'Perfil ideal',
     description: 'Definir competencias, experiencia y perfil de éxito del cargo.',
-    color: '#2D5BE3',
-    bg: '#EEF2FA',
+    color: '#3341C4',
+    bg: 'rgba(51, 65, 196, 0.08)',
   },
   {
     id: 'recruitment',
@@ -33,8 +34,8 @@ export const CLIENT_JOURNEY_STAGES: ClientJourneyStage[] = [
     label: 'Reclutamiento',
     shortLabel: 'Reclutamiento',
     description: 'Buscar, contactar y atraer candidatos al proceso.',
-    color: '#0891B2',
-    bg: '#ECFEFF',
+    color: '#3F4BC7',
+    bg: 'rgba(51, 65, 196, 0.07)',
   },
   {
     id: 'evaluation',
@@ -42,8 +43,8 @@ export const CLIENT_JOURNEY_STAGES: ClientJourneyStage[] = [
     label: 'Evaluación',
     shortLabel: 'Evaluación',
     description: 'Aplicar pruebas comerciales y psicotécnicas.',
-    color: '#7C3AED',
-    bg: '#F3E8FF',
+    color: '#4B57CA',
+    bg: 'rgba(51, 65, 196, 0.06)',
   },
   {
     id: 'pre_interview',
@@ -51,8 +52,8 @@ export const CLIENT_JOURNEY_STAGES: ClientJourneyStage[] = [
     label: 'Entrevista personalizada',
     shortLabel: 'Entrevista personalizada',
     description: 'Entrevistar y filtrar aspirantes antes de presentarlos al cliente.',
-    color: '#D97706',
-    bg: '#FFF7E6',
+    color: '#5763CD',
+    bg: 'rgba(51, 65, 196, 0.06)',
   },
   {
     id: 'candidate_definition',
@@ -60,8 +61,8 @@ export const CLIENT_JOURNEY_STAGES: ClientJourneyStage[] = [
     label: 'Definición de candidatos',
     shortLabel: 'Definición candidatos',
     description: 'Seleccionar finalistas alineados al perfil acordado.',
-    color: '#EA580C',
-    bg: '#FFF7ED',
+    color: '#636FD0',
+    bg: 'rgba(51, 65, 196, 0.05)',
   },
   {
     id: 'client_interview',
@@ -69,8 +70,8 @@ export const CLIENT_JOURNEY_STAGES: ClientJourneyStage[] = [
     label: 'Entrevista candidatos',
     shortLabel: 'Entrevista candidatos',
     description: 'Coordinar entrevistas del cliente con finalistas.',
-    color: '#BE185D',
-    bg: '#FDF2F8',
+    color: '#6F7BD3',
+    bg: 'rgba(51, 65, 196, 0.05)',
   },
   {
     id: 'onboarding',
@@ -78,8 +79,8 @@ export const CLIENT_JOURNEY_STAGES: ClientJourneyStage[] = [
     label: 'Selección + Preparación + Estandarización',
     shortLabel: 'Selección + Preparación',
     description: 'Seleccionar, preparar el ingreso y estandarizar el proceso comercial.',
-    color: '#00B27A',
-    bg: '#E6FAF3',
+    color: '#5C6E12',
+    bg: 'rgba(216, 242, 76, 0.28)',
   },
 ];
 

@@ -57,8 +57,8 @@ export function LoginForm() {
             <div
               className="w-11 h-11 rounded-2xl flex items-center justify-center text-white font-heading font-bold"
               style={{
-                background: 'linear-gradient(135deg, var(--kova-blue), #6366F1)',
-                boxShadow: '0 10px 24px -8px rgba(37, 99, 235, 0.55)',
+                background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))',
+                boxShadow: '0 10px 24px -8px rgba(51, 65, 196, 0.45)',
               }}
             >
               K

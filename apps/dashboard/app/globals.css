@@ -3,25 +3,40 @@
 @tailwind utilities;
 
 :root {
-  --kova-navy: #0F172A;
-  --kova-navy-muted: #334155;
-  --kova-blue: #2563EB;
-  --kova-blue-mid: #3B82F6;
-  --kova-blue-soft: #EFF6FF;
-  --kova-green: #10B981;
-  --kova-green-soft: #ECFDF5;
-  --kova-coral: #EF4444;
-  --kova-violet: #7C3AED;
-  --kova-violet-soft: #F5F3FF;
-  --kova-surface: #F4F6FB;
-  --kova-surface-2: #EEF2F8;
-  --kova-border: rgba(15, 23, 42, 0.07);
-  --kova-border-strong: rgba(15, 23, 42, 0.11);
-  --kova-ring: rgba(37, 99, 235, 0.2);
-  --kova-shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
-  --kova-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05), 0 6px 20px -6px rgba(15, 23, 42, 0.08);
-  --kova-shadow-md: 0 4px 12px rgba(15, 23, 42, 0.04), 0 16px 40px -12px rgba(15, 23, 42, 0.12);
-  --kova-shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.06), 0 32px 64px -16px rgba(15, 23, 42, 0.14);
+  /* Brand — aligned with landing / registro */
+  --kv-ink: #12140f;
+  --kv-paper: #edefea;
+  --kv-paper-2: #f6f7f2;
+  --kv-indigo: #3341c4;
+  --kv-indigo-dark: #212c93;
+  --kv-lime: #d8f24c;
+  --kv-lime-dark: #5c6e12;
+  --kv-slate: #6b6f64;
+  --kv-line: #d7d9ce;
+  --kv-nav-muted: #a7aba0;
+  --kv-rose: #e85c6b;
+
+  /* Dashboard semantic aliases */
+  --kova-navy: var(--kv-ink);
+  --kova-navy-muted: var(--kv-slate);
+  --kova-blue: var(--kv-indigo);
+  --kova-blue-mid: var(--kv-indigo-dark);
+  --kova-blue-soft: rgba(51, 65, 196, 0.08);
+  --kova-lime: var(--kv-lime);
+  --kova-green: var(--kv-lime-dark);
+  --kova-green-soft: rgba(216, 242, 76, 0.22);
+  --kova-coral: var(--kv-rose);
+  --kova-violet: var(--kv-indigo);
+  --kova-violet-soft: rgba(51, 65, 196, 0.06);
+  --kova-surface: var(--kv-paper);
+  --kova-surface-2: var(--kv-paper-2);
+  --kova-border: rgba(18, 20, 15, 0.08);
+  --kova-border-strong: rgba(18, 20, 15, 0.12);
+  --kova-ring: rgba(51, 65, 196, 0.22);
+  --kova-shadow-xs: 0 1px 2px rgba(18, 20, 15, 0.04);
+  --kova-shadow-sm: 0 1px 3px rgba(18, 20, 15, 0.05), 0 6px 20px -6px rgba(18, 20, 15, 0.08);
+  --kova-shadow-md: 0 4px 12px rgba(18, 20, 15, 0.04), 0 16px 40px -12px rgba(18, 20, 15, 0.1);
+  --kova-shadow-lg: 0 8px 24px rgba(18, 20, 15, 0.06), 0 32px 64px -16px rgba(18, 20, 15, 0.12);
   --kova-radius: 16px;
   --kova-radius-sm: 12px;
   --kova-radius-lg: 22px;
@@ -38,11 +53,11 @@ body {
   font-family: var(--font-inter), 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   background-color: var(--kova-surface);
   background-image:
-    radial-gradient(900px 480px at 0% -5%, rgba(37, 99, 235, 0.07), transparent 55%),
-    radial-gradient(700px 420px at 100% 0%, rgba(124, 58, 237, 0.05), transparent 50%),
-    radial-gradient(600px 360px at 50% 100%, rgba(16, 185, 129, 0.04), transparent 55%);
+    radial-gradient(900px 480px at 0% -5%, rgba(51, 65, 196, 0.07), transparent 55%),
+    radial-gradient(700px 420px at 100% 0%, rgba(216, 242, 76, 0.06), transparent 50%),
+    radial-gradient(600px 360px at 50% 100%, rgba(18, 20, 15, 0.03), transparent 55%);
   background-attachment: fixed;
-  color: #1E293B;
+  color: var(--kova-navy);
   letter-spacing: -0.008em;
 }
 
@@ -64,8 +79,8 @@ body {
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(520px 280px at 12% 18%, rgba(37, 99, 235, 0.045), transparent 70%),
-    radial-gradient(480px 260px at 88% 12%, rgba(124, 58, 237, 0.04), transparent 68%);
+    radial-gradient(520px 280px at 12% 18%, rgba(51, 65, 196, 0.045), transparent 70%),
+    radial-gradient(480px 260px at 88% 12%, rgba(216, 242, 76, 0.05), transparent 68%);
 }
 
 .kova-main-panel {
@@ -75,7 +90,8 @@ body {
 
 /* ─── Tarjetas ─── */
 .kova-card {
-  @apply bg-white rounded-2xl;
+  @apply rounded-2xl;
+  background: var(--kova-surface-2);
   border: 1px solid var(--kova-border);
   box-shadow: var(--kova-shadow-sm);
 }
@@ -91,35 +107,75 @@ body {
 }
 
 .kova-glass {
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(246, 247, 242, 0.82);
   backdrop-filter: blur(16px) saturate(1.4);
   -webkit-backdrop-filter: blur(16px) saturate(1.4);
-  border: 1px solid rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(215, 217, 206, 0.65);
   box-shadow: var(--kova-shadow-sm);
 }
 
 /* ─── Botones ─── */
 .kova-btn-primary {
-  background: linear-gradient(135deg, var(--kova-blue) 0%, var(--kova-blue-mid) 100%);
-  color: white;
-  box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.45);
+  background: var(--kova-lime);
+  color: var(--kova-navy);
+  font-weight: 600;
+  box-shadow: 0 8px 20px -6px rgba(92, 110, 18, 0.35);
   transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
 }
 
 .kova-btn-primary:hover {
   filter: brightness(1.03);
   transform: translateY(-1px);
-  box-shadow: 0 12px 28px -8px rgba(37, 99, 235, 0.5);
+  box-shadow: 0 12px 28px -8px rgba(92, 110, 18, 0.4);
 }
 
 .kova-btn-primary:active {
   transform: translateY(0);
 }
 
+.kova-btn-indigo {
+  background: linear-gradient(135deg, var(--kova-blue) 0%, var(--kova-blue-mid) 100%);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 8px 20px -6px rgba(51, 65, 196, 0.4);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.kova-btn-indigo:hover {
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+}
+
+.kova-btn-lime {
+  background: var(--kova-lime);
+  color: var(--kova-navy);
+  font-weight: 600;
+  border: 1px solid rgba(92, 110, 18, 0.12);
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.kova-btn-lime:hover {
+  filter: brightness(1.04);
+}
+
+.kova-btn-outline {
+  background: var(--kova-surface-2);
+  color: var(--kova-navy-muted);
+  border: 1px solid var(--kova-border-strong);
+  font-weight: 500;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.kova-btn-outline:hover {
+  background: var(--kova-surface);
+  border-color: rgba(51, 65, 196, 0.2);
+  color: var(--kova-navy);
+}
+
 .kova-btn-secondary {
   @apply inline-flex items-center justify-center gap-2 font-semibold text-sm;
   color: var(--kova-navy);
-  background: white;
+  background: var(--kova-surface-2);
   border: 1px solid var(--kova-border-strong);
   box-shadow: var(--kova-shadow-xs);
   transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
@@ -127,7 +183,7 @@ body {
 
 .kova-btn-secondary:hover {
   background: var(--kova-surface);
-  border-color: rgba(37, 99, 235, 0.2);
+  border-color: rgba(51, 65, 196, 0.2);
   box-shadow: var(--kova-shadow-sm);
 }
 
@@ -141,13 +197,14 @@ body {
 }
 
 .kova-input-shell {
-  @apply flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border bg-white transition-all;
+  @apply flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border transition-all;
+  background: var(--kova-surface-2);
   border-color: var(--kova-border-strong);
   box-shadow: var(--kova-shadow-xs);
 }
 
 .kova-input-shell:focus-within {
-  border-color: rgba(37, 99, 235, 0.35);
+  border-color: rgba(51, 65, 196, 0.35);
   box-shadow: 0 0 0 4px var(--kova-ring), var(--kova-shadow-xs);
 }
 
@@ -158,39 +215,40 @@ body {
 }
 
 .kova-badge-blue {
-  color: #1D4ED8;
+  color: var(--kova-blue-mid);
   background: var(--kova-blue-soft);
-  border-color: rgba(37, 99, 235, 0.12);
+  border-color: rgba(51, 65, 196, 0.14);
 }
 
 .kova-badge-green {
-  color: #047857;
+  color: var(--kova-green);
   background: var(--kova-green-soft);
-  border-color: rgba(16, 185, 129, 0.15);
+  border-color: rgba(92, 110, 18, 0.18);
 }
 
 .kova-badge-neutral {
-  color: #475569;
-  background: #F1F5F9;
-  border-color: rgba(15, 23, 42, 0.06);
+  color: var(--kova-navy-muted);
+  background: var(--kova-surface);
+  border-color: var(--kova-border);
 }
 
 /* ─── Segment control ─── */
 .kova-segment {
-  @apply inline-flex items-center p-1 rounded-xl border bg-white;
+  @apply inline-flex items-center p-1 rounded-xl border;
+  background: var(--kova-surface-2);
   border-color: var(--kova-border-strong);
   box-shadow: var(--kova-shadow-xs);
 }
 
 .kova-segment-item {
   @apply px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all;
-  color: #64748B;
+  color: var(--kova-navy-muted);
 }
 
 .kova-segment-item[data-active='true'] {
-  color: white;
-  background: linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid));
-  box-shadow: 0 4px 12px -4px rgba(37, 99, 235, 0.5);
+  color: var(--kova-navy);
+  background: var(--kova-lime);
+  box-shadow: 0 4px 12px -4px rgba(92, 110, 18, 0.35);
 }
 
 /* ─── Page header ─── */
@@ -199,21 +257,21 @@ body {
   box-shadow: var(--kova-shadow-xs);
 }
 
-/* ─── Sidebar nav (light) ─── */
+/* ─── Sidebar nav ─── */
 .kova-nav-item {
   @apply relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200;
-  color: #64748B;
+  color: var(--kova-navy-muted);
 }
 
 .kova-nav-item:hover {
   color: var(--kova-navy);
-  background: rgba(15, 23, 42, 0.04);
+  background: rgba(18, 20, 15, 0.04);
 }
 
 .kova-nav-item-active {
-  color: #1D4ED8;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(59, 130, 246, 0.06));
-  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.12);
+  color: var(--kova-blue);
+  background: var(--kova-blue-soft);
+  box-shadow: inset 0 0 0 1px rgba(51, 65, 196, 0.14);
 }
 
 .kova-nav-item-active::before {
@@ -240,7 +298,7 @@ a:focus-visible {
 /* ─── Scrollbar ─── */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #CBD5E1 transparent;
+  scrollbar-color: var(--kv-line) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -249,16 +307,16 @@ a:focus-visible {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: var(--kv-line);
   border-radius: 999px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: var(--kv-nav-muted);
 }
 
 ::selection {
-  background: rgba(37, 99, 235, 0.16);
+  background: rgba(51, 65, 196, 0.16);
 }
 
 /* ─── Animaciones ─── */
@@ -286,7 +344,7 @@ a:focus-visible {
 .kova-skeleton {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(90deg, #EEF2F7 0%, #F8FAFC 50%, #EEF2F7 100%);
+  background: linear-gradient(90deg, var(--kova-surface) 0%, var(--kova-surface-2) 50%, var(--kova-surface) 100%);
   border-radius: var(--kova-radius-sm);
 }
 
@@ -358,7 +416,7 @@ a:focus-visible {
 
   .print-area .kova-card {
     box-shadow: none !important;
-    border: 1px solid #E4E8EF !important;
+    border: 1px solid var(--kv-line) !important;
     break-inside: avoid;
   }
 

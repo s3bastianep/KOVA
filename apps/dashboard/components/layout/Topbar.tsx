@@ -49,7 +49,8 @@ export function Topbar() {
           type="button"
           onClick={() => setMenuOpen(true)}
           aria-label="Abrir menú"
-          className="lg:hidden p-2.5 -ml-1 rounded-xl text-slate-500 hover:bg-slate-100/80 transition-colors shrink-0"
+          className="lg:hidden p-2.5 -ml-1 rounded-xl transition-colors shrink-0"
+          style={{ color: 'var(--kova-navy-muted)' }}
         >
           <Menu className="w-5 h-5" />
         </button>
@@ -58,26 +59,27 @@ export function Topbar() {
           onSubmit={search}
           className="kova-input-shell flex-1 max-w-lg rounded-full py-2 focus-within:rounded-2xl transition-[border-radius] duration-200"
         >
-          <Search className="w-4 h-4 text-slate-400 shrink-0" />
+          <Search className="w-4 h-4 shrink-0" style={{ color: 'var(--kv-nav-muted)' }} />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Buscar candidatos, empresas, cargos..."
             aria-label="Buscar"
-            className="kova-input placeholder:text-slate-400"
+            className="kova-input"
+            style={{ color: 'var(--kova-navy)' }}
           />
         </form>
 
         <div className="flex items-center gap-2 lg:gap-3">
           <div
-            className="hidden md:flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-full border bg-white/70"
-            style={{ borderColor: 'var(--kova-border)' }}
+            className="hidden md:flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-full border"
+            style={{ borderColor: 'var(--kova-border)', background: 'rgba(246, 247, 242, 0.85)' }}
           >
             <div
               className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
               style={{
                 background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))',
-                boxShadow: '0 4px 12px -4px rgba(37, 99, 235, 0.45)',
+                boxShadow: '0 4px 12px -4px rgba(51, 65, 196, 0.4)',
               }}
             >
               {initials || 'U'}
@@ -86,7 +88,7 @@ export function Topbar() {
               <p className="text-sm font-semibold leading-tight truncate" style={{ color: 'var(--kova-navy)' }}>
                 {user ? `${user.firstName} ${user.lastName}` : 'Usuario'}
               </p>
-              <p className="text-[11px] text-slate-400 capitalize truncate">
+              <p className="text-[11px] capitalize truncate" style={{ color: 'var(--kova-navy-muted)' }}>
                 {user?.role?.replace('_', ' ').toLowerCase() ?? 'Consultor'}
               </p>
             </div>
@@ -94,7 +96,8 @@ export function Topbar() {
           <button
             type="button"
             onClick={logout}
-            className="p-2.5 rounded-xl hover:bg-red-50 hover:text-red-500 text-slate-400 transition-colors"
+            className="p-2.5 rounded-xl transition-colors"
+            style={{ color: 'var(--kova-navy-muted)' }}
             title="Cerrar sesión"
           >
             <LogOut className="w-4 h-4" />
@@ -104,19 +107,19 @@ export function Topbar() {
 
       {menuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-slate-900/25 backdrop-blur-sm" onClick={() => setMenuOpen(false)} />
-          <aside className="absolute inset-y-0 left-0 w-[min(300px,88vw)] flex flex-col bg-white shadow-2xl kova-animate-in">
+          <div className="absolute inset-0 bg-[var(--kova-navy)]/20 backdrop-blur-sm" onClick={() => setMenuOpen(false)} />
+          <aside className="absolute inset-y-0 left-0 w-[min(300px,88vw)] flex flex-col shadow-2xl kova-animate-in" style={{ background: 'var(--kova-surface-2)' }}>
             <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b" style={{ borderColor: 'var(--kova-border)' }}>
               <div className="flex items-center gap-3">
                 <div
                   className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-heading font-bold"
-                  style={{ background: 'linear-gradient(135deg, var(--kova-blue), #6366F1)' }}
+                  style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}
                 >
                   K
                 </div>
                 <div>
                   <p className="font-heading font-bold text-sm" style={{ color: 'var(--kova-navy)' }}>Kova Talent OS</p>
-                  <p className="text-[10px] text-slate-400">Reclutamiento comercial</p>
+                  <p className="text-[10px]" style={{ color: 'var(--kova-navy-muted)' }}>Reclutamiento comercial</p>
                 </div>
               </div>
               <button type="button" onClick={() => setMenuOpen(false)} aria-label="Cerrar menú" className="p-2 rounded-xl text-slate-400 hover:bg-slate-100">
@@ -135,7 +138,7 @@ export function Topbar() {
                       onClick={() => setMenuOpen(false)}
                       className={cn('kova-nav-item', active && 'kova-nav-item-active pl-4')}
                     >
-                      <Icon className={cn('w-[18px] h-[18px] shrink-0', active ? 'text-[var(--kova-blue)]' : 'text-slate-400')} />
+                      <Icon className={cn('w-[18px] h-[18px] shrink-0', active ? 'text-[var(--kova-blue)]' : 'text-[var(--kv-nav-muted)]')} />
                       <span className="truncate">{label}</span>
                     </Link>
                   );
@@ -146,7 +149,7 @@ export function Topbar() {
                 href="/procesos/nuevo"
                 onClick={() => setMenuOpen(false)}
                 className="mt-4 flex items-center gap-3 px-3 py-3 rounded-2xl border"
-                style={{ borderColor: 'rgba(37, 99, 235, 0.15)', background: 'var(--kova-blue-soft)' }}
+                style={{ borderColor: 'rgba(51, 65, 196, 0.15)', background: 'var(--kova-blue-soft)' }}
               >
                 <Sparkles className="w-4 h-4 text-[var(--kova-blue)]" />
                 <span className="text-sm font-semibold text-[var(--kova-blue)]">Nuevo proceso</span>

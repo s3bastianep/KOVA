@@ -189,7 +189,7 @@ export default function DashboardPage() {
           <p className="text-sm text-slate-600 mt-2 leading-relaxed">Resumen de tu operación comercial hoy.</p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-6 gap-3">
           <KpiCard label="Procesos activos" value={kpis.activeProcesses ?? 0} icon={GitBranch} tint="#EFF6FF" tone="var(--kova-blue)" href="/procesos" />
           <KpiCard label="Candidatos evaluados" value={totalCandidatesEval} icon={Users} tint="#F5F3FF" tone="#7C3AED" href="/candidatos" />
           <KpiCard label="Pruebas realizadas" value={totalTests} icon={ClipboardList} tint="#ECFEFF" tone="#0E7490" href="/evaluaciones" />
@@ -456,15 +456,24 @@ function KpiCard({ label, value, icon: Icon, tint, tone, href }: {
   label: string; value: number | string; icon: React.ElementType; tint: string; tone: string; href: string;
 }) {
   return (
-    <Link href={href} className="kova-card kova-card-hover group px-3.5 py-3.5 sm:px-4 sm:py-4 flex items-center gap-3 h-full min-h-[88px]">
-      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: tint }}>
-        <Icon className="w-[18px] h-[18px] sm:w-5 sm:h-5" style={{ color: tone }} />
+    <Link
+      href={href}
+      className="kova-card kova-card-hover group p-3.5 sm:p-4 flex flex-col gap-2.5 h-full min-h-[108px]"
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: tint }}>
+          <Icon className="w-5 h-5" style={{ color: tone }} />
+        </div>
+        <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-500 shrink-0 mt-0.5" />
       </div>
-      <div className="min-w-0 flex-1">
-        <p className="font-heading text-xl sm:text-2xl font-bold leading-none tabular-nums" style={{ color: 'var(--kova-navy)' }}>{value}</p>
-        <p className="text-[11px] sm:text-xs font-medium text-slate-600 mt-1.5 leading-snug line-clamp-2">{label}</p>
+      <div className="min-w-0 mt-auto">
+        <p className="font-heading text-xl sm:text-2xl font-bold leading-none tabular-nums" style={{ color: 'var(--kova-navy)' }}>
+          {value}
+        </p>
+        <p className="text-[11px] sm:text-xs font-medium text-slate-600 mt-1.5 leading-snug whitespace-normal">
+          {label}
+        </p>
       </div>
-      <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-500 shrink-0 hidden sm:block" />
     </Link>
   );
 }

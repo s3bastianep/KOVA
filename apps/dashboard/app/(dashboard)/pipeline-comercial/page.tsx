@@ -89,7 +89,7 @@ export default function PipelineComercialPage() {
         <div className="flex gap-2">
           {[
             { label: 'Clientes activos', value: stats.active, color: 'var(--kova-blue)' },
-            { label: 'En evaluación+', value: stats.inEvaluation, color: '#7C3AED' },
+            { label: 'En evaluación+', value: stats.inEvaluation, color: 'var(--kova-blue)' },
             { label: 'Onboarding', value: stats.completed, color: 'var(--kova-green)' },
           ].map((s) => (
             <div key={s.label} className="kova-card px-3 py-2 text-center min-w-[90px]">
@@ -237,7 +237,7 @@ export default function PipelineComercialPage() {
                 disabled={!holdReason.trim() || mutation.isPending}
                 onClick={() => mutation.mutate({ companyId: showHoldModal, action: 'hold', reason: holdReason.trim() })}
                 className="px-4 py-2 text-sm rounded-lg text-white disabled:opacity-50"
-                style={{ background: '#D97706' }}
+                style={{ background: 'var(--kova-blue)' }}
               >
                 {mutation.isPending ? 'Guardando...' : 'Confirmar'}
               </button>
@@ -271,7 +271,7 @@ function ClientCard({
 
   return (
     <div
-      className={`rounded-lg border p-2.5 transition-all cursor-pointer ${isSelected ? 'border-[var(--kova-blue)] shadow-sm ring-1 ring-blue-100' : 'border-slate-100 bg-white hover:border-slate-200'}`}
+      className={`rounded-lg border p-2.5 transition-all cursor-pointer ${isSelected ? 'border-[var(--kova-blue)] shadow-sm ring-1 ring-[rgba(51,65,196,0.12)]' : 'border-[var(--kova-border)] bg-[var(--kova-surface-2)] hover:border-[var(--kova-border-strong)]'}`}
       onClick={onSelect}
     >
       <div className="flex items-start gap-2">
@@ -293,7 +293,7 @@ function ClientCard({
             type="button"
             disabled={loading}
             onClick={onAdvance}
-            className="w-full text-[9px] py-1 rounded border border-green-200 text-green-700 bg-green-50 hover:bg-green-100 disabled:opacity-50 flex items-center justify-center gap-0.5"
+            className="w-full text-[9px] py-1 rounded kova-btn-lime disabled:opacity-50 flex items-center justify-center gap-0.5"
           >
             <Check className="w-2.5 h-2.5" /> Avanzar
           </button>
@@ -302,7 +302,7 @@ function ClientCard({
           type="button"
           disabled={loading}
           onClick={onHold}
-          className="w-full text-[9px] py-1 rounded border border-amber-200 text-amber-700 bg-amber-50 hover:bg-amber-100 disabled:opacity-50 flex items-center justify-center gap-0.5"
+          className="w-full text-[9px] py-1 rounded kova-btn-outline disabled:opacity-50 flex items-center justify-center gap-0.5"
         >
           <Pause className="w-2.5 h-2.5" /> No avanzar
         </button>
@@ -349,10 +349,10 @@ function ClientDetailPanel({
                 title={stage.label}
                 className={`rounded-lg px-1 py-2 flex flex-col items-center justify-start gap-1 min-h-[58px] text-center border transition-colors ${
                   active
-                    ? 'border-[var(--kova-blue)] bg-blue-50'
+                    ? 'border-[var(--kova-blue)] bg-[var(--kova-blue-soft)]'
                     : done
-                      ? 'border-green-200 bg-green-50'
-                      : 'border-slate-100 bg-slate-50'
+                      ? 'border-[rgba(92,110,18,0.2)] bg-[var(--kova-green-soft)]'
+                      : 'border-[var(--kova-border)] bg-[var(--kova-surface)]'
                 }`}
               >
                 <span
@@ -361,15 +361,15 @@ function ClientDetailPanel({
                     active
                       ? { background: 'var(--kova-blue)', color: '#fff' }
                       : done
-                        ? { background: 'var(--kova-green)', color: '#fff' }
-                        : { background: '#E2E8F0', color: '#94A3B8' }
+                        ? { background: 'var(--kova-lime)', color: 'var(--kova-navy)' }
+                        : { background: 'var(--kv-line)', color: 'var(--kv-nav-muted)' }
                   }
                 >
                   {stage.order}
                 </span>
                 <span
                   className="text-[8px] leading-[1.15] font-medium line-clamp-2"
-                  style={{ color: active ? 'var(--kova-navy)' : done ? '#047857' : '#94A3B8' }}
+                  style={{ color: active ? 'var(--kova-navy)' : done ? 'var(--kova-green)' : 'var(--kv-nav-muted)' }}
                 >
                   {stage.shortLabel}
                 </span>
@@ -394,8 +394,7 @@ function ClientDetailPanel({
             disabled={loading}
             onClick={onAdvance}
             title={`Avanzar a ${nextStage.shortLabel}`}
-            className="flex-1 min-w-0 text-xs font-medium px-3 py-2.5 rounded-lg text-white disabled:opacity-50 inline-flex items-center justify-center gap-1.5 leading-tight transition-all hover:brightness-95 hover:-translate-y-0.5"
-            style={{ background: 'var(--kova-green)' }}
+            className="flex-1 min-w-0 text-xs font-medium px-3 py-2.5 rounded-lg disabled:opacity-50 inline-flex items-center justify-center gap-1.5 leading-tight transition-all hover:brightness-95 hover:-translate-y-0.5 kova-btn-lime"
           >
             <Check className="w-3.5 h-3.5 shrink-0" />
             <span className="truncate">Avanzar a {nextStage.shortLabel}</span>
@@ -405,7 +404,7 @@ function ClientDetailPanel({
           type="button"
           disabled={loading}
           onClick={onHold}
-          className="shrink-0 text-xs font-medium px-3 py-2.5 rounded-lg border border-amber-200 text-amber-700 bg-amber-50 disabled:opacity-50 inline-flex items-center justify-center gap-1.5 leading-tight transition-colors hover:bg-amber-100"
+          className="shrink-0 text-xs font-medium px-3 py-2.5 rounded-lg disabled:opacity-50 inline-flex items-center justify-center gap-1.5 leading-tight kova-btn-outline"
         >
           <Pause className="w-3.5 h-3.5 shrink-0" />
           No avanzar
@@ -421,11 +420,11 @@ function ClientDetailPanel({
               return (
                 <div key={i} className="text-[10px] text-slate-600 flex gap-1.5">
                   {h.action === 'advance' ? (
-                    <ArrowRight className="w-3 h-3 text-green-500 shrink-0 mt-0.5" />
+                    <ArrowRight className="w-3 h-3 shrink-0 mt-0.5" style={{ color: 'var(--kova-green)' }} />
                   ) : h.action === 'hold' ? (
-                    <Pause className="w-3 h-3 text-amber-500 shrink-0 mt-0.5" />
+                    <Pause className="w-3 h-3 shrink-0 mt-0.5" style={{ color: 'var(--kova-navy-muted)' }} />
                   ) : (
-                    <Check className="w-3 h-3 text-blue-500 shrink-0 mt-0.5" />
+                    <Check className="w-3 h-3 shrink-0 mt-0.5" style={{ color: 'var(--kova-blue)' }} />
                   )}
                   <span>
                     <strong>{stage?.shortLabel}</strong>

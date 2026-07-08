@@ -25,6 +25,8 @@ html:has(.kv-registro) {
   --kv-line: #d7d9ce;
   --kv-nav-muted: #a7aba0;
   --kv-indigo-soft: rgba(51, 65, 196, 0.08);
+  --kv-required: #c41e3a;
+  --kv-required-soft: rgba(196, 30, 58, 0.1);
   --kv-radius: 1.1875rem;
   --kv-shadow: 0 19px 48px rgba(18, 20, 15, 0.06);
   --kv-gap-section: 1.1875rem;
@@ -1076,7 +1078,7 @@ html:has(.kv-registro) {
   color: var(--kv-ink);
 }
 
-.kv-field-label {
+.kv-registro .kv-field-label {
   display: block;
   font-size: 0.9rem;
   font-weight: 600;
@@ -1085,26 +1087,66 @@ html:has(.kv-registro) {
   color: var(--kv-ink);
 }
 
-.kv-field-required {
-  color: var(--kv-indigo);
-  font-weight: 700;
+.kv-registro .kv-field-label--required {
+  padding-right: 0.15rem;
 }
 
-.kv-field-optional {
+.kv-registro .kv-field-required {
+  display: inline-block;
+  margin-left: 0.12rem;
+  color: var(--kv-required);
+  font-weight: 800;
+  font-size: 1.125em;
+  line-height: 1;
+  text-decoration: none;
+  cursor: help;
+  vertical-align: baseline;
+  position: relative;
+  top: 0.02em;
+}
+
+.kv-registro .kv-field-label--required::after {
+  content: ' *';
+  color: var(--kv-required);
+  font-weight: 800;
+  font-size: 1.125em;
+}
+
+.kv-registro .kv-field-label--required .kv-field-required {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.kv-registro .kv-field-optional {
   font-size: 0.8125rem;
   font-weight: 500;
   color: var(--kv-slate);
 }
 
-.kv-registro-step-legend {
-  margin: 0 0 1rem;
-  padding: 0.65rem 0.85rem;
-  border-radius: 0.65rem;
-  background: var(--kv-paper-2);
-  border: 1px solid var(--kv-line);
-  font-size: 0.8125rem;
-  color: var(--kv-slate);
-  line-height: 1.45;
+.kv-registro .kv-registro-field-group-title--required::after {
+  content: ' *';
+  color: var(--kv-required);
+  font-weight: 800;
+  font-size: 1.125em;
+}
+
+.kv-registro .kv-registro-field-group-title--required .kv-field-required {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .kv-registro-field--incomplete .kv-registro-input-wrap,
@@ -1121,33 +1163,6 @@ html:has(.kv-registro) {
 .kv-registro-consent--incomplete {
   border-color: rgba(51, 65, 196, 0.35);
   background: rgba(51, 65, 196, 0.04);
-}
-
-.kv-registro-step-blockers {
-  margin-bottom: 0.85rem;
-  padding: 0.75rem 0.9rem;
-  border-radius: 0.75rem;
-  background: rgba(51, 65, 196, 0.06);
-  border: 1px solid rgba(51, 65, 196, 0.14);
-}
-
-.kv-registro-step-blockers-title {
-  margin: 0 0 0.4rem;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--kv-indigo-dark);
-}
-
-.kv-registro-step-blockers-list {
-  margin: 0;
-  padding-left: 1.1rem;
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  color: var(--kv-slate);
-}
-
-.kv-registro-step-blockers-list li + li {
-  margin-top: 0.15rem;
 }
 
 .kv-registro-field--choice {
