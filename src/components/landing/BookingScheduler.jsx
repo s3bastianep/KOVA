@@ -18,17 +18,12 @@ function isSelectableDay(date) {
   return isBookableDateKey(localDateToKey(date));
 }
 
-function BookingDay({ date, displayMonth, ...buttonProps }) {
-  const dateKey = localDateToKey(date);
+function bookingDayLabel(date, activeModifiers = {}) {
   const human = format(date, "EEEE d 'de' MMMM 'de' yyyy", { locale: es });
-  const unavailable = !isBookableDateKey(dateKey);
-  const label = unavailable ? `${human}, no disponible` : `Seleccionar ${human}`;
-
-  return (
-    <button {...buttonProps} type="button" aria-label={label}>
-      {date.getDate()}
-    </button>
-  );
+  if (activeModifiers.disabled || !isBookableDateKey(localDateToKey(date))) {
+    return `${human}, no disponible`;
+  }
+  return `Seleccionar ${human}`;
 }
 
 export default function BookingScheduler({ alternateContact = null }) {
@@ -199,7 +194,7 @@ export default function BookingScheduler({ alternateContact = null }) {
                 selected={selectedDate}
                 onSelect={handleSelectDate}
                 locale={es}
-                components={{ Day: BookingDay }}
+                labels={{ labelDay: bookingDayLabel }}
                 fromDate={today}
                 toDate={maxDate}
                 disabled={(date) => !isSelectableDay(date)}
