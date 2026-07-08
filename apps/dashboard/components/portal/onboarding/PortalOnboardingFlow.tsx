@@ -39,7 +39,9 @@ export function PortalOnboardingFlow({ initialProfile, initialStep, onComplete }
   const [busy, setBusy] = useState(false);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const inputRef = useRef<HTMLInputElement>(null);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     document.documentElement.classList.add('portal-onboarding-active');
@@ -132,17 +134,60 @@ export function PortalOnboardingFlow({ initialProfile, initialStep, onComplete }
       if (selected.length === 0) continue;
       if (q.field === 'industrias' || q.field === 'herramientas') {
         patch[q.field] = selected;
-      } else if (q.field === 'expectativaSalarial' || q.field === 'crmVentas' || q.field === 'tipoCliente') {
+      } else if (
+        q.field === 'expectativaSalarial' ||
+        q.field === 'industriaPrincipal' ||
+        q.field === 'rol'
+      ) {
         patch[q.field] = selected[0];
+      } else if (q.field === 'crmVentas' || q.field === 'tipoCliente' || q.field === 'nivelInterlocutor') {
+        patch[q.field] = selected.join(', ');
+      } else if (q.field === 'coberturaGeografica') {
+        patch.coberturaGeografica = selected.join(', ');
+      } else if (q.field === 'naturaleza') {
+        patch.naturaleza = selected.join(', ');
       } else if (q.field === 'funcionPrincipal') {
         patch.funcionPrincipal = selected.join(', ');
         if (selected.includes('Hunter')) patch.enfoque = 'Hunter';
         if (selected.includes('Farmer')) patch.enfoque = 'Farmer';
         if (selected.some((s) => s.includes('consultiva'))) patch.tipoVenta = 'Consultiva';
+      } else if (q.field === 'tipoVenta') {
+        patch.tipoVenta = selected.join(', ');
+      } else if (q.field === 'modalidadesPreferidas') {
+        patch.disponibilidad = selected.includes('Remoto')
+          ? 'Remoto'
+          : selected.includes('Híbrido')
+            ? 'Híbrido'
+            : selected.includes('Presencial')
+              ? 'Presencial'
+              : profile.disponibilidad;
+        patch.disponibilidadViajar = selected.includes('Viajar') ? 'Sí' : profile.disponibilidadViajar;
+        patch.disponibilidadReubicacion = selected.includes('Cambio de ciudad')
+          ? 'Sí'
+          : profile.disponibilidadReubicacion;
       }
     }
     return patch;
   };
+
+  useEffect(() => {
+    if (step !== 'cv_review' && step !== 'questions') return;
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => {
+      setSaveStatus('saving');
+      const profilePatch = step === 'questions' ? applyQuestionAnswers() : profile;
+      portalApi
+        .updateOnboarding({
+          onboardingStep: step,
+          profile: profilePatch as Record<string, unknown>,
+        })
+        .then(() => setSaveStatus('saved'))
+        .catch(() => setSaveStatus('error'));
+    }, 450);
+    return () => {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    };
+  }, [answers, profile, step]);
 
   const finishQuestions = async () => {
     setBusy(true);
@@ -169,24 +214,57 @@ export function PortalOnboardingFlow({ initialProfile, initialStep, onComplete }
   const summaryLines = useMemo(
     () =>
       [
+        profile.nombre && 'Nombre',
+        profile.email && 'Correo',
+        profile.telefono && 'Teléfono',
         displayCounts.experiencias > 0 && `${displayCounts.experiencias} experiencias laborales`,
         displayCounts.estudios > 0 && `${displayCounts.estudios} estudios`,
         displayCounts.certificaciones > 0 && `${displayCounts.certificaciones} certificaciones`,
         displayCounts.idiomas > 0 && `${displayCounts.idiomas} idiomas`,
         displayCounts.cursos > 0 && `${displayCounts.cursos} cursos`,
+        (profile.herramientas?.length ?? 0) > 0 && `${profile.herramientas?.length ?? 0} habilidades`,
       ].filter(Boolean) as string[],
-    [displayCounts],
+    [displayCounts, profile],
   );
+
+  const onboardingChecklist = [
+    { id: 'account', label: 'Cuenta creada', eta: '< 1 min', done: true },
+    { id: 'cv', label: 'Subir hoja de vida', eta: '2 min', done: step !== 'welcome' },
+    {
+      id: 'review',
+      label: 'Revisar información',
+      eta: '3 min',
+      done: ['cv_review', 'bridge', 'questions', 'done'].includes(step),
+    },
+    { id: 'sales', label: 'Cuéntanos cómo vendes', eta: '2 min', done: ['questions', 'done'].includes(step) },
+    { id: 'prefs', label: 'Preferencias laborales', eta: '1 min', done: step === 'done' },
+    { id: 'complete', label: 'Perfil completo', eta: 'Listo', done: step === 'done' },
+  ];
+  const checklistDone = onboardingChecklist.filter((item) => item.done).length;
+  const checklistPercent = Math.round((checklistDone / onboardingChecklist.length) * 100);
 
   if (step === 'welcome') {
     return (
       <div className="portal-onboarding">
         <div className="portal-onboarding-hero">
-          <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-[var(--kova-muted)]">
-            Bienvenido a Kova
-          </p>
+          <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-[var(--kova-muted)]">Bienvenido a Kova</p>
           <h1>Hola {firstName} 👋</h1>
-          <p>Antes de comenzar, sube tu hoja de vida.</p>
+          <p>Tu cuenta ya está lista. Sube tu hoja de vida y organizamos la mayor parte de tu perfil por ti.</p>
+        </div>
+        <div className="portal-onboarding-card mb-4">
+          <p className="text-sm font-medium mb-1">Perfil {checklistPercent}%</p>
+          <div className="portal-onboarding-progress !my-3">
+            <span style={{ width: `${checklistPercent}%` }} />
+          </div>
+          <ul className="portal-onboarding-tasklist">
+            {onboardingChecklist.map((item) => (
+              <li key={item.id}>
+                <span>{item.done ? '✓' : '⬜'}</span>
+                <span>{item.label}</span>
+                <small>{item.eta}</small>
+              </li>
+            ))}
+          </ul>
         </div>
         <div className="portal-onboarding-card">
           <button
@@ -197,7 +275,7 @@ export function PortalOnboardingFlow({ initialProfile, initialStep, onComplete }
             }}
           >
             <Upload className="w-4 h-4" />
-            Subir hoja de vida
+            Comenzar
           </button>
         </div>
       </div>
@@ -302,6 +380,11 @@ export function PortalOnboardingFlow({ initialProfile, initialStep, onComplete }
           <h1 className="font-heading text-2xl font-bold">Revisa tu información</h1>
           <p className="text-[var(--kova-muted)] mt-1">No escribes desde cero. Solo corrige lo que haga falta.</p>
         </div>
+        <div className="portal-onboarding-save-state">
+          {saveStatus === 'saving' ? 'Guardando cambios...' : null}
+          {saveStatus === 'saved' ? '✓ Todos los cambios guardados' : null}
+          {saveStatus === 'error' ? 'No pudimos guardar automáticamente. Reintentando...' : null}
+        </div>
         <PortalOnboardingReviewCards profile={profile} onChange={setProfile} />
         <button
           type="button"
@@ -340,12 +423,15 @@ export function PortalOnboardingFlow({ initialProfile, initialStep, onComplete }
 
   if (step === 'questions' && currentQuestion) {
     const selected = answers[currentQuestion.id] ?? [];
+    const questionPercent = Math.round((questionIndex / Math.max(SMART_QUESTIONS.length - 1, 1)) * 100);
     return (
       <div className="portal-onboarding">
         <div className="portal-onboarding-card">
-          <p className="text-xs text-[var(--kova-muted)] mb-2">
-            Pregunta {questionIndex + 1} de {SMART_QUESTIONS.length}
-          </p>
+          <p className="text-xs text-[var(--kova-muted)] mb-1">Paso 3 de 5</p>
+          <div className="portal-onboarding-progress !my-3">
+            <span style={{ width: `${questionPercent}%` }} />
+          </div>
+          <p className="text-xs text-[var(--kova-muted)] mb-2">Pregunta {questionIndex + 1} de {SMART_QUESTIONS.length}</p>
           <h2 className="font-heading text-xl font-bold">{currentQuestion.title}</h2>
           {currentQuestion.subtitle ? (
             <p className="text-sm text-[var(--kova-muted)] mt-1">{currentQuestion.subtitle}</p>
@@ -367,29 +453,43 @@ export function PortalOnboardingFlow({ initialProfile, initialStep, onComplete }
             })}
           </div>
           {error ? <p className="text-sm text-red-600 mt-3">{error}</p> : null}
-          <button
-            type="button"
-            className="portal-onboarding-btn mt-6"
-            disabled={busy || (!currentQuestion.multi && selected.length === 0)}
-            onClick={() => {
-              if (isLastQuestion) void finishQuestions();
-              else setQuestionIndex((i) => i + 1);
-            }}
-          >
-            {busy ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Guardando...
-              </>
-            ) : isLastQuestion ? (
-              'Finalizar'
-            ) : (
-              <>
-                Continuar
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
-          </button>
+          <div className="portal-onboarding-save-state">
+            {saveStatus === 'saving' ? 'Guardando cambios...' : null}
+            {saveStatus === 'saved' ? '✓ Todos los cambios guardados' : null}
+            {saveStatus === 'error' ? 'No pudimos guardar automáticamente. Reintentando...' : null}
+          </div>
+          <div className="portal-onboarding-question-actions">
+            <button
+              type="button"
+              className="portal-onboarding-btn portal-onboarding-btn--ghost"
+              onClick={() => void saveStep('questions')}
+            >
+              ← Guardar y salir
+            </button>
+            <button
+              type="button"
+              className="portal-onboarding-btn"
+              disabled={busy || (!currentQuestion.multi && selected.length === 0)}
+              onClick={() => {
+                if (isLastQuestion) void finishQuestions();
+                else setQuestionIndex((i) => i + 1);
+              }}
+            >
+              {busy ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Guardando...
+                </>
+              ) : isLastQuestion ? (
+                'Finalizar'
+              ) : (
+                <>
+                  Continuar
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     );
