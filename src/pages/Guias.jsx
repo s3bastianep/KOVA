@@ -1,3 +1,4 @@
+import '@/lib/loadLandingPagesStyles';
 import { Link } from 'react-router-dom';
 import SiteLayout from '@/components/landing/SiteLayout';
 import InnerPageHero from '@/components/landing/InnerPageHero';

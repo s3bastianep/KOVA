@@ -1,5 +1,5 @@
+import { lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
-import HeroReportCard from '@/components/validate/HeroReportCard';
 import HeroShootingStars from '@/components/validate/HeroShootingStars';
 import {
   CN_CTA_LABEL,
@@ -8,6 +8,22 @@ import {
   CN_HERO_METHOD_LINK,
   CN_HERO_SUB_BODY,
 } from '@/theme/landingConsult';
+
+const HeroReportCard = lazy(() => import('@/components/validate/HeroReportCard'));
+
+function HeroReportFallback() {
+  return (
+    <div className="kv-report-card kv-hero-report-fallback" aria-hidden>
+      <div className="kv-report-topbar">
+        <div className="kv-report-dots">
+          <span />
+          <span />
+          <span />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Hero() {
   return (
@@ -35,7 +51,9 @@ export default function Hero() {
           </div>
         </div>
         <div className="kv-hero-visual">
-          <HeroReportCard />
+          <Suspense fallback={<HeroReportFallback />}>
+            <HeroReportCard />
+          </Suspense>
         </div>
       </div>
     </section>

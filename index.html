@@ -32,13 +32,93 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&family=Sora:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@500&family=Sora:wght@600;700&display=swap"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@500&family=Sora:wght@600;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@500&family=Sora:wght@600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <style>
+      #kova-static-shell {
+        background: #12140f;
+        color: #edefea;
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        min-height: 100vh;
+      }
+      #kova-static-shell a {
+        color: inherit;
+      }
+      #kova-static-shell .kv-static-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 72rem;
+        margin: 0 auto;
+        padding: 1rem 1.25rem;
+      }
+      #kova-static-shell .kv-static-logo {
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      #kova-static-shell .kv-static-hero {
+        max-width: 40rem;
+        margin: 0 auto;
+        padding: 4rem 1.25rem 5rem;
+      }
+      #kova-static-shell .kv-static-eyebrow {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #d8f24c;
+        margin: 0 0 1rem;
+      }
+      #kova-static-shell h1 {
+        font-family: Sora, Inter, ui-sans-serif, system-ui, sans-serif;
+        font-size: clamp(2rem, 5vw, 3rem);
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        margin: 0 0 1.25rem;
+        font-weight: 700;
+      }
+      #kova-static-shell h1 em {
+        font-style: normal;
+        color: #d8f24c;
+      }
+      #kova-static-shell p {
+        color: #c6c9be;
+        line-height: 1.65;
+        margin: 0 0 1rem;
+      }
+    </style>
     <title>Kova | Reclutamiento especializado en talento comercial</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div id="kova-static-shell">
+        <header class="kv-static-nav">
+          <a href="/" class="kv-static-logo">Kova</a>
+          <a href="/contacto">Agendar consultoría</a>
+        </header>
+        <main class="kv-static-hero">
+          <p class="kv-static-eyebrow">Expertos en perfiles comerciales</p>
+          <h1>Contrate con <em>mayor certeza</em>, no solo con intuición</h1>
+          <p>
+            Cada empresa vende de forma diferente. Analizamos su modelo comercial antes de definir el
+            perfil del cargo y diseñar el proceso de evaluación.
+          </p>
+        </main>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

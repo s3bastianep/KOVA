@@ -1,3 +1,4 @@
+import '@/lib/loadLandingPagesStyles';
 import { lazy, Suspense } from 'react';
 import { Clock, MessageCircle } from 'lucide-react';
 import SiteLayout from '@/components/landing/SiteLayout';

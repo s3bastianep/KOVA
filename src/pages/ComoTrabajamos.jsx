@@ -1,3 +1,4 @@
+import '@/lib/loadLandingPagesStyles';
 import {
   BarChart3,
   Building2,

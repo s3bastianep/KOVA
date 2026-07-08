@@ -1,3 +1,4 @@
+import '@/lib/loadLandingPagesStyles';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check, FileBarChart, Target, Users, X } from 'lucide-react';
 import SiteLayout from '@/components/landing/SiteLayout';
@@ -113,29 +114,26 @@ export default function QuienesSomos() {
 
         <div className="kv-page-band kv-page-band--light">
           <section className="kv-section kv-about-story">
-            <div className="kv-wrap kv-about-story-grid">
-              <div className="kv-about-story-copy">
-                <span className="kv-section-tag font-mono">Por qué nacimos</span>
-                <h2 className="kv-h2 font-display">Nuestra historia</h2>
-                <div className="kv-prose-stack">
-                  <p>
-                    Durante años vimos el mismo patrón: dirección comercial y talento humano alineados
-                    en la urgencia de cubrir la vacante, pero sin un método que midiera si el candidato
-                    realmente podía vender en ese contexto.
-                  </p>
-                  <p>
-                    Kova nació para cambiar eso: primero entender el negocio del cliente, diseñar
-                    evaluaciones a la medida y presentar talento respaldado por evidencia objetiva.
-                  </p>
-                </div>
-              </div>
-              <blockquote className="kv-about-pullquote">
-                <p className="font-display">
-                  El problema no era la falta de candidatos. Era la falta de un proceso que evaluara
-                  competencias comerciales con el rigor que el rol exige.
+            <div className="kv-wrap kv-about-story-inner">
+              <span className="kv-section-tag font-mono">Por qué nacimos</span>
+              <h2 className="kv-h2 font-display">Nuestra historia</h2>
+              <div className="kv-about-story-body">
+                <p>
+                  Durante años vimos el mismo patrón: dirección comercial y talento humano alineados
+                  en la urgencia de cubrir la vacante, pero sin un método que midiera si el candidato
+                  realmente podía vender en ese contexto.
                 </p>
-                <footer className="font-mono">Origen Kova</footer>
-              </blockquote>
+                <aside className="kv-about-story-callout" aria-label="Idea central">
+                  <p className="font-display">
+                    El problema no era la falta de candidatos. Era la falta de un proceso que evaluara
+                    competencias comerciales con el rigor que el rol exige.
+                  </p>
+                </aside>
+                <p>
+                  Kova nació para cambiar eso: primero entender el negocio del cliente, diseñar
+                  evaluaciones a la medida y presentar talento respaldado por evidencia objetiva.
+                </p>
+              </div>
             </div>
           </section>
 
@@ -143,7 +141,7 @@ export default function QuienesSomos() {
             <div className="kv-wrap">
               <div className="kv-section-head-center kv-about-identity-head">
                 <span className="kv-section-tag font-mono">Identidad</span>
-                <h2 className="kv-h2 font-display">Lo que somos — y lo que no</h2>
+                <h2 className="kv-h2 font-display">Lo que somos y lo que no</h2>
                 <p className="kv-section-lead">
                   Claridad desde el primer contacto: Kova es headhunting comercial con método, no
                   reclutamiento genérico.

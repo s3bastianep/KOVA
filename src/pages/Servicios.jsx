@@ -1,3 +1,4 @@
+import '@/lib/loadLandingPagesStyles';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import SiteLayout from '@/components/landing/SiteLayout';

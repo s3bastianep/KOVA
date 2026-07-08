@@ -81,8 +81,8 @@ export const CN_SERVICES = [
       'Terna validada con evidencia documentada',
     ],
     highlight: 'Terna validada en 2–3 semanas.',
-    image: '/images/guia-rotacion-hero.png',
-    imageAlt: 'Equipo comercial en reunión de planificación',
+    image: '/images/servicio-seleccion-hero.png',
+    imageAlt: 'Consultora comercial en reunión de trabajo con laptop',
     tone: 'indigo',
   },
   {
@@ -97,8 +97,8 @@ export const CN_SERVICES = [
       'Criterios de éxito comercial documentados',
     ],
     highlight: 'Ideal para empresas en crecimiento o reestructuración.',
-    image: '/images/guia-habilidades-inline-2.png',
-    imageAlt: 'Consultores y cliente definiendo el perfil comercial',
+    image: '/images/servicio-diagnostico-hero.png',
+    imageAlt: 'Consultores revisando diagnóstico comercial con el cliente',
     tone: 'lime',
   },
   {
