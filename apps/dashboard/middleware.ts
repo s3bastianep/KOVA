@@ -7,6 +7,7 @@ const APP_PREFIXES = [
   '/login',
   '/postular',
   '/registro',
+  '/portal',
   '/dashboard',
   '/empresas',
   '/clientes',
