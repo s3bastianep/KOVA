@@ -7,7 +7,6 @@ import {
   Calendar,
   CheckCircle2,
   ChevronRight,
-  Circle,
   FileText,
   GraduationCap,
   Sparkles,
@@ -15,9 +14,10 @@ import {
   Upload,
   User,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import type { PortalDashboard } from '@/lib/api';
 
-const STEP_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+const STEP_ICONS: Record<string, LucideIcon> = {
   perfil: User,
   documentos: Upload,
   comercial: Target,
@@ -72,7 +72,7 @@ function StatCard({
   label: string;
   value: number | string;
   sublabel?: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   tone: StatTone;
   href?: string;
 }) {

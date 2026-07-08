@@ -12,6 +12,7 @@ import {
   TrendingUp,
   User,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { portalApi } from '@/lib/api';
 import {
   CLIENT_TYPE_OPTIONS,
@@ -69,7 +70,7 @@ function FormSection({
 }: {
   title: string;
   description: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   children: React.ReactNode;
 }) {
   return (

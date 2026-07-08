@@ -9,6 +9,7 @@ import {
   Building2,
   CheckCircle2,
   Filter,
+  MapPin,
   SlidersHorizontal,
   Sparkles,
   Target,

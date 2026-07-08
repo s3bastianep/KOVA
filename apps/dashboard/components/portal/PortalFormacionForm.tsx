@@ -12,6 +12,7 @@ import {
   Sparkles,
   Trash2,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { portalApi } from '@/lib/api';
 import {
   EDUCATION_LEVEL_OPTIONS,
@@ -63,7 +64,7 @@ function FormSection({
 }: {
   title: string;
   description: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   action?: React.ReactNode;
   children: React.ReactNode;
 }) {
