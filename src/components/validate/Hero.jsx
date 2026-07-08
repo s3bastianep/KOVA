@@ -1,6 +1,5 @@
 import { lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
-import HeroShootingStars from '@/components/validate/HeroShootingStars';
 import {
   CN_CTA_LABEL,
   CN_HERO_EYEBROW,
@@ -9,6 +8,7 @@ import {
   CN_HERO_SUB_BODY,
 } from '@/theme/landingConsult';
 
+const HeroShootingStars = lazy(() => import('@/components/validate/HeroShootingStars'));
 const HeroReportCard = lazy(() => import('@/components/validate/HeroReportCard'));
 
 function HeroReportFallback() {
@@ -28,7 +28,9 @@ function HeroReportFallback() {
 export default function Hero() {
   return (
     <section className="kv-hero">
-      <HeroShootingStars />
+      <Suspense fallback={null}>
+        <HeroShootingStars />
+      </Suspense>
       <div className="kv-wrap kv-hero-grid">
         <div className="kv-hero-copy">
           <p className="kv-eyebrow font-mono">{CN_HERO_EYEBROW}</p>

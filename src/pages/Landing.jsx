@@ -1,9 +1,10 @@
 import { lazy, Suspense } from 'react';
 import SiteLayout from '@/components/landing/SiteLayout';
 import Hero from '@/components/validate/Hero';
-import SignalStrip from '@/components/validate/SignalStrip';
+import LazyWhenVisible from '@/components/validate/LazyWhenVisible';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
+const SignalStrip = lazy(() => import('@/components/validate/SignalStrip'));
 const Problema = lazy(() => import('@/components/validate/Problema'));
 const SolucionSection = lazy(() => import('@/components/validate/SolucionSection'));
 const MetodologiaSection = lazy(() => import('@/components/validate/MetodologiaSection'));
@@ -22,24 +23,48 @@ export default function Landing() {
     <SiteLayout>
       <main>
         <Hero />
-        <SignalStrip />
 
-        <Suspense fallback={null}>
-          <div className="kv-page-band kv-page-band--light">
-            <Problema />
-          </div>
+        <LazyWhenVisible minHeight="7rem">
+          <Suspense fallback={null}>
+            <SignalStrip />
+          </Suspense>
+        </LazyWhenVisible>
 
-          <div className="kv-page-band kv-page-band--dark">
-            <SolucionSection />
-          </div>
+        <LazyWhenVisible minHeight="28rem">
+          <Suspense fallback={null}>
+            <div className="kv-page-band kv-page-band--light">
+              <Problema />
+            </div>
+          </Suspense>
+        </LazyWhenVisible>
 
-          <div className="kv-page-band kv-page-band--light">
-            <MetodologiaSection />
-          </div>
+        <LazyWhenVisible minHeight="24rem">
+          <Suspense fallback={null}>
+            <div className="kv-page-band kv-page-band--dark">
+              <SolucionSection />
+            </div>
+          </Suspense>
+        </LazyWhenVisible>
 
-          <ComparacionSection />
-          <CierreLanding />
-        </Suspense>
+        <LazyWhenVisible minHeight="22rem">
+          <Suspense fallback={null}>
+            <div className="kv-page-band kv-page-band--light">
+              <MetodologiaSection />
+            </div>
+          </Suspense>
+        </LazyWhenVisible>
+
+        <LazyWhenVisible minHeight="24rem">
+          <Suspense fallback={null}>
+            <ComparacionSection />
+          </Suspense>
+        </LazyWhenVisible>
+
+        <LazyWhenVisible minHeight="14rem">
+          <Suspense fallback={null}>
+            <CierreLanding />
+          </Suspense>
+        </LazyWhenVisible>
       </main>
     </SiteLayout>
   );

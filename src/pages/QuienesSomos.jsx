@@ -1,4 +1,5 @@
-import '@/lib/loadLandingPagesStyles';
+import '@/styles/landing-wave-inner.css';
+import '@/styles/landing-wave-about.css';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check, FileBarChart, Target, Users, X } from 'lucide-react';
 import SiteLayout from '@/components/landing/SiteLayout';

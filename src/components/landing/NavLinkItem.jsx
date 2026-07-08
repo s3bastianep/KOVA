@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import { dashboardHref, isDashboardPath } from '@/lib/dashboardLinks';
 
+import { prefetchLandingInnerStyles } from '@/lib/prefetchLandingInnerStyles';
+
 function prefetchInnerStyles() {
-  void import('@/lib/loadLandingPagesStyles');
+  void prefetchLandingInnerStyles();
 }
 
 export default function NavLinkItem({ to, className, style, children }) {

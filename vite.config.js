@@ -32,7 +32,10 @@ export default defineConfig({
         manualChunks(id) {
           if (!id.includes('node_modules')) return;
           if (id.includes('react-day-picker') || id.includes('date-fns')) return 'calendar';
-          if (id.includes('react-router') || id.includes('react-dom') || id.includes('/react/')) return 'react-vendor';
+          if (id.includes('lucide-react')) return 'icons';
+          if (id.includes('react-router') || id.includes('react-dom') || id.includes('/react/')) {
+            return 'react-vendor';
+          }
         },
       },
     },

@@ -2,8 +2,8 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 
 const datos = [
-  { num: '6–18×', label: 'el costo de una mala contratación', desc: 'en salarios desperdiciados por rotación. Las empresas lo pierden sin darse cuenta.', color: '#F59E0B', bg: '#FFFBEB' },
-  { num: '3–6 meses', label: 'tarda un vendedor sin inducción estructurada', desc: 'en ser productivo. Con Kova ese tiempo cae a menos de 4 semanas.', color: '#6366F1', bg: '#EEF2FF' },
+  { num: '6 a 18×', label: 'el costo de una mala contratación', desc: 'en salarios desperdiciados por rotación. Las empresas lo pierden sin darse cuenta.', color: '#F59E0B', bg: '#FFFBEB' },
+  { num: '3 a 6 meses', label: 'tarda un vendedor sin inducción estructurada', desc: 'en ser productivo. Con Kova ese tiempo cae a menos de 4 semanas.', color: '#6366F1', bg: '#EEF2FF' },
   { num: '54%', label: 'retención promedio del mercado', desc: 'en perfiles comerciales. Los procesos de Kova logran 94% al primer año.', color: '#10B981', bg: '#ECFDF5' },
 ];
 

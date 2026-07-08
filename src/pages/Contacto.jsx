@@ -1,15 +1,62 @@
-import '@/lib/loadLandingPagesStyles';
-import { lazy, Suspense } from 'react';
+import '@/styles/landing-wave-inner.css';
+import '@/styles/landing-wave-contact.css';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Clock, MessageCircle } from 'lucide-react';
 import SiteLayout from '@/components/landing/SiteLayout';
 import InnerPageHero from '@/components/landing/InnerPageHero';
 import { CN_CTA_NOTE } from '@/theme/landingConsult';
 
-const BookingScheduler = lazy(() => import('@/components/landing/BookingScheduler'));
-
 const PHONE_DISPLAY = '+57 300 000 0000';
 const PHONE_TEL = '+573000000000';
 const WHATSAPP_URL = 'https://wa.me/573000000000';
+
+const BookingScheduler = lazy(() => import('@/components/landing/BookingScheduler'));
+
+function BookingMount() {
+  const ref = useRef(null);
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return undefined;
+
+    if (typeof IntersectionObserver === 'undefined') {
+      setActive(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setActive(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '240px 0px' },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className="kv-booking-stage">
+      {active ? (
+        <Suspense fallback={<div className="kv-booking-loading" aria-busy="true" aria-label="Cargando calendario" />}>
+          <BookingScheduler
+            alternateContact={{
+              phoneDisplay: PHONE_DISPLAY,
+              phoneTel: PHONE_TEL,
+              whatsAppUrl: WHATSAPP_URL,
+            }}
+          />
+        </Suspense>
+      ) : (
+        <div className="kv-booking-loading" aria-hidden />
+      )}
+    </div>
+  );
+}
 
 const trustChips = CN_CTA_NOTE.split('·').map((s) => s.trim());
 
@@ -83,17 +130,7 @@ export default function Contacto() {
             </div>
 
             <div className="kv-contact-booking" id="agendar">
-              <div className="kv-booking-stage">
-                <Suspense fallback={<div className="kv-booking-loading" aria-busy="true" />}>
-                  <BookingScheduler
-                    alternateContact={{
-                      phoneDisplay: PHONE_DISPLAY,
-                      phoneTel: PHONE_TEL,
-                      whatsAppUrl: WHATSAPP_URL,
-                    }}
-                  />
-                </Suspense>
-              </div>
+              <BookingMount />
             </div>
           </div>
         </section>

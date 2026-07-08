@@ -1,0 +1,958 @@
+﻿/* Blog article */
+.kova-landing-wave .kv-guia-hero {
+  background: var(--kv-ink);
+  color: #fff;
+  padding-top: 1.5rem;
+  border-bottom: 3px solid var(--kv-lime);
+}
+
+.kova-landing-wave .kv-guia-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.8125rem;
+  color: var(--kv-nav-muted);
+  margin-bottom: 1.5rem;
+  transition: color 0.2s ease;
+}
+
+.kova-landing-wave .kv-guia-back:hover {
+  color: #fff;
+}
+
+.kova-landing-wave .kv-guia-back-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.kova-landing-wave .kv-guia-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  padding-bottom: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .kova-landing-wave .kv-guia-hero-grid {
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: center;
+    gap: 2.5rem;
+  }
+}
+
+.kova-landing-wave .kv-guia-hero h1 {
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  color: #fff;
+  margin: 1rem 0 0;
+}
+
+.kova-landing-wave .kv-guia-author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.kova-landing-wave .kv-guia-author-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--kv-lime);
+  color: var(--kv-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.kova-landing-wave .kv-guia-author-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.kova-landing-wave .kv-guia-author-role {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.75rem;
+  color: var(--kv-nav-muted);
+}
+
+.kova-landing-wave .kv-guia-hero-media {
+  min-height: 14rem;
+  border-radius: 0.875rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+@media (min-width: 1024px) {
+  .kova-landing-wave .kv-guia-hero-media {
+    min-height: 22rem;
+  }
+}
+
+.kova-landing-wave .kv-guia-hero-media img {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  object-fit: cover;
+}
+
+.kova-landing-wave .kv-guia-body {
+  padding: 2.5rem 0 4rem;
+  background: var(--kv-paper-2);
+}
+
+.kova-landing-wave .kv-guia-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .kova-landing-wave .kv-guia-layout {
+    grid-template-columns: minmax(0, 1fr) 16.5rem;
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .kova-landing-wave .kv-guia-layout {
+    grid-template-columns: 12.5rem minmax(0, 1fr) 16.5rem;
+    gap: 2rem;
+  }
+}
+
+.kova-landing-wave .kv-guia-toc-sticky {
+  position: sticky;
+  top: 5.5rem;
+}
+
+.kova-landing-wave .kv-guia-toc-panel {
+  background: #fff;
+  border: 1px solid var(--kv-line);
+  border-radius: 0.875rem;
+  padding: 1.25rem;
+}
+
+.kova-landing-wave .kv-guia-toc-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.875rem;
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave .kv-guia-toc-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.kova-landing-wave .kv-guia-toc-link {
+  display: block;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  padding: 0.4375rem 0 0.4375rem 0.625rem;
+  border-left: 2px solid transparent;
+  color: var(--kv-slate);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.kova-landing-wave .kv-guia-toc-link--active,
+.kova-landing-wave .kv-guia-toc-link:hover {
+  color: var(--kv-indigo);
+  border-color: var(--kv-lime);
+  font-weight: 600;
+}
+
+.kova-landing-wave .kv-guia-article {
+  background: #fff;
+  border: 1px solid var(--kv-line);
+  border-radius: 0.875rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  min-width: 0;
+}
+
+.kova-landing-wave .kv-guia-sidebar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.kova-landing-wave .kv-guia-sidebar-item {
+  display: block;
+  padding: 0.875rem 1rem;
+  background: #fff;
+  border: 1px solid var(--kv-line);
+  border-radius: 0.75rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kova-landing-wave .kv-guia-sidebar-item:hover {
+  border-color: rgba(51, 65, 196, 0.35);
+  box-shadow: 0 4px 16px rgba(18, 20, 15, 0.06);
+}
+
+.kova-landing-wave .kv-guia-sidebar-item--compact h3 {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.kova-landing-wave .kv-guia-sidebar-thumb {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--kv-line);
+  aspect-ratio: 16 / 10;
+  margin-bottom: 0.75rem;
+}
+
+.kova-landing-wave .kv-guia-sidebar-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kova-landing-wave .kv-guia-sidebar-meta {
+  font-size: 0.625rem;
+  color: var(--kv-slate);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.kova-landing-wave .kv-guia-sidebar-item h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0.25rem 0 0;
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave .kv-guia-sidebar-item p {
+  font-size: 0.75rem;
+  color: var(--kv-slate);
+  line-height: 1.55;
+}
+
+.kova-landing-wave .kv-guia-sidebar-cta {
+  display: block;
+  margin-top: 0.25rem;
+  padding: 1rem 1.125rem;
+  border-radius: 0.875rem;
+  background: var(--kv-ink);
+  border: 1px solid var(--kv-ink);
+  border-top: 3px solid var(--kv-lime);
+  transition: transform 0.2s ease;
+}
+
+.kova-landing-wave .kv-guia-sidebar-cta:hover {
+  transform: translateY(-1px);
+}
+
+.kova-landing-wave .kv-guia-sidebar-cta span {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--kv-lime);
+}
+
+.kova-landing-wave .kv-guia-sidebar-cta .font-display {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin: 0.375rem 0 0.25rem;
+  color: #fff;
+}
+
+.kova-landing-wave .kv-guia-sidebar-cta p:last-child {
+  font-size: 0.75rem;
+  color: var(--kv-nav-muted);
+  line-height: 1.5;
+}
+
+.kova-landing-wave .kv-guia-mobile-footer {
+  border-top: 1px solid var(--kv-line);
+  background: var(--kv-paper-2);
+  padding: 2rem 0;
+}
+
+.kova-landing-wave .kv-guia-mobile-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.kova-landing-wave .kv-guia-mobile-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.kova-landing-wave .kv-guia-mobile-link {
+  display: block;
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid var(--kv-line);
+  border-radius: 0.75rem;
+}
+
+.kova-landing-wave .kv-guia-mobile-link p {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--kv-indigo);
+  margin-bottom: 0.25rem;
+}
+
+.kova-landing-wave .kv-guia-mobile-link span {
+  font-size: 0.6875rem;
+  color: var(--kv-slate);
+}
+
+.kova-landing-wave .kv-guia-toc-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.kova-landing-wave .kv-guia-toc-pill {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 100px;
+  background: #fff;
+  border: 1px solid var(--kv-line);
+  color: var(--kv-indigo);
+}
+
+/* Prose & blocks inside blog articles */
+.kova-landing-wave .kv-guia-body,
+.kova-landing-wave .kv-guia-article,
+.kova-landing-wave .kv-prose {
+  min-width: 0;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  color: var(--kv-slate);
+  font-size: 0.96875rem;
+  line-height: 1.72;
+}
+
+.kova-landing-wave .kv-guia-p {
+  margin-bottom: 1.25rem;
+  color: var(--kv-slate);
+  font-size: 0.96875rem;
+  line-height: 1.72;
+}
+
+.kova-landing-wave .kv-guia-p--lead {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave .kv-guia-p strong,
+.kova-landing-wave .kv-prose strong {
+  color: var(--kv-ink);
+  font-weight: 600;
+}
+
+.kova-landing-wave .kv-guia-section-title,
+.kova-landing-wave .kv-guia-hero h1,
+.kova-landing-wave .kv-guia-numbered h3,
+.kova-landing-wave .kv-guia-issue h3,
+.kova-landing-wave .kv-guia-feature-title,
+.kova-landing-wave .kv-guia-skill-card h4,
+.kova-landing-wave .kv-guia-summary-title,
+.kova-landing-wave .kv-guia-summary-item h4,
+.kova-landing-wave .kv-guia-cta-band-title,
+.kova-landing-wave .kv-guia-toc-title {
+  font-family: 'Sora', ui-sans-serif, sans-serif;
+}
+
+.kova-landing-wave .kv-guia-section-title {
+  font-weight: 700;
+  font-size: clamp(1.35rem, 2.2vw, 1.65rem);
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  color: var(--kv-ink);
+  margin: 2.75rem 0 1.25rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--kv-lime);
+  scroll-margin-top: 6.5rem;
+}
+
+.kova-landing-wave .kv-guia-section-title:first-child {
+  margin-top: 0;
+}
+
+.kova-landing-wave .kv-guia-divider {
+  margin: 2.5rem 0;
+  border: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--kv-lime), var(--kv-line) 45%, transparent);
+}
+
+.kova-landing-wave .kv-guia-quote {
+  margin: 2rem 0;
+  padding: 1.25rem 1.25rem 1.25rem 1.5rem;
+  border-left: 3px solid var(--kv-indigo);
+  background: var(--kv-paper-2);
+  border-radius: 0 0.75rem 0.75rem 0;
+  font-style: italic;
+  color: var(--kv-slate);
+}
+
+.kova-landing-wave .kv-guia-quote p {
+  margin: 0;
+  font-size: 0.96875rem;
+  line-height: 1.72;
+}
+
+.kova-landing-wave .kv-guia-numbered {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--kv-line);
+}
+
+.kova-landing-wave .kv-guia-numbered:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.kova-landing-wave .kv-guia-numbered h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--kv-ink);
+  margin: 0 0 0.625rem;
+  scroll-margin-top: 6.5rem;
+}
+
+.kova-landing-wave .kv-guia-numbered-num {
+  flex-shrink: 0;
+  font-weight: 700;
+  color: var(--kv-indigo);
+}
+
+.kova-landing-wave .kv-guia-numbered p {
+  margin: 0;
+  font-size: 0.96875rem;
+  line-height: 1.72;
+  color: var(--kv-slate);
+}
+
+.kova-landing-wave .kv-guia-issue {
+  margin-bottom: 1.25rem;
+  padding: 1.375rem 1.375rem 1.25rem;
+  background: var(--kv-paper-2);
+  border: 1px solid var(--kv-line);
+  border-radius: 0.875rem;
+  scroll-margin-top: 6.5rem;
+}
+
+.kova-landing-wave .kv-guia-issue h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--kv-ink);
+  margin: 0 0 1rem;
+}
+
+.kova-landing-wave .kv-guia-issue-num {
+  flex-shrink: 0;
+  font-weight: 700;
+  color: var(--kv-indigo);
+}
+
+.kova-landing-wave .kv-guia-issue > p {
+  margin: 0 0 0.875rem;
+  font-size: 0.96875rem;
+  line-height: 1.72;
+  color: var(--kv-slate);
+}
+
+.kova-landing-wave .kv-guia-issue > p:last-of-type {
+  margin-bottom: 0;
+}
+
+.kova-landing-wave .kv-guia-solution {
+  margin-top: 1.125rem;
+  padding: 1rem 1.125rem;
+  background: #fff;
+  border: 1px solid var(--kv-line);
+  border-top: 3px solid var(--kv-lime);
+  border-radius: 0.75rem;
+}
+
+.kova-landing-wave .kv-guia-solution-label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--kv-lime-dark);
+  margin-bottom: 0.5rem;
+}
+
+.kova-landing-wave .kv-guia-solution p:last-child {
+  margin: 0;
+  font-size: 0.96875rem;
+  line-height: 1.7;
+  color: var(--kv-ink);
+  font-weight: 500;
+}
+
+.kova-landing-wave .kv-guia-feature {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin: 2rem 0 2.5rem;
+  border: 1px solid var(--kv-line);
+  border-radius: 0.875rem;
+  overflow: hidden;
+  background: #fff;
+}
+
+@media (min-width: 768px) {
+  .kova-landing-wave .kv-guia-feature {
+    grid-template-columns: 0.9fr 1.1fr;
+  }
+}
+
+.kova-landing-wave .kv-guia-feature-media {
+  min-height: 12rem;
+  background: var(--kv-paper-2);
+}
+
+.kova-landing-wave .kv-guia-feature-media img {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  object-fit: cover;
+}
+
+.kova-landing-wave .kv-guia-feature-body {
+  padding: 1.375rem 1.5rem;
+  background: var(--kv-paper-2);
+  border-left: 3px solid var(--kv-indigo);
+}
+
+@media (max-width: 767px) {
+  .kova-landing-wave .kv-guia-feature-body {
+    border-left: none;
+    border-top: 3px solid var(--kv-indigo);
+  }
+}
+
+.kova-landing-wave .kv-guia-feature-badge {
+  display: inline-block;
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--kv-indigo);
+  background: rgba(51, 65, 196, 0.08);
+  border: 1px solid rgba(51, 65, 196, 0.15);
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.kova-landing-wave .kv-guia-feature-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--kv-ink);
+  margin-bottom: 0.75rem;
+}
+
+.kova-landing-wave .kv-guia-feature-copy p {
+  margin: 0 0 1rem;
+  font-size: 0.96875rem;
+  line-height: 1.7;
+  color: var(--kv-slate);
+}
+
+.kova-landing-wave .kv-guia-feature-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  margin-bottom: 0.75rem;
+}
+
+.kova-landing-wave .kv-guia-feature-stat {
+  padding: 0.75rem 0.875rem;
+  background: #fff;
+  border: 1px solid var(--kv-line);
+  border-radius: 0.625rem;
+  min-width: 7rem;
+}
+
+.kova-landing-wave .kv-guia-feature-stat--wide {
+  flex: 1;
+  min-width: 10rem;
+}
+
+.kova-landing-wave .kv-guia-feature-stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--kv-indigo);
+  margin-bottom: 0.25rem;
+}
+
+.kova-landing-wave .kv-guia-feature-stat--wide .kv-guia-feature-stat-value {
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave .kv-guia-feature-stat-label {
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--kv-slate);
+}
+
+.kova-landing-wave .kv-guia-feature-source {
+  font-size: 0.6875rem;
+  color: var(--kv-slate);
+  margin: 0;
+}
+
+.kova-landing-wave .kv-guia-skills {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin: 1.5rem 0 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .kova-landing-wave .kv-guia-skills {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.kova-landing-wave .kv-guia-skill-card {
+  padding: 1rem 1.125rem;
+  background: var(--kv-paper-2);
+  border: 1px solid var(--kv-line);
+  border-radius: 0.75rem;
+}
+
+.kova-landing-wave .kv-guia-skill-card:nth-child(4n + 1) {
+  border-left: 3px solid var(--kv-indigo);
+}
+
+.kova-landing-wave .kv-guia-skill-card:nth-child(4n + 2) {
+  border-left: 3px solid var(--kv-lime);
+}
+
+.kova-landing-wave .kv-guia-skill-card:nth-child(4n + 3) {
+  border-left: 3px solid var(--kv-rose);
+}
+
+.kova-landing-wave .kv-guia-skill-card:nth-child(4n + 4) {
+  border-left: 3px solid var(--kv-ink);
+}
+
+.kova-landing-wave .kv-guia-skill-card h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--kv-ink);
+  margin: 0 0 0.375rem;
+}
+
+.kova-landing-wave .kv-guia-skill-card p {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--kv-slate);
+}
+
+.kova-landing-wave .kv-guia-callout {
+  margin: 2.5rem 0;
+  padding: 1.375rem 1.5rem;
+  background: var(--kv-paper-2);
+  border: 1px solid var(--kv-line);
+  border-left: 3px solid var(--kv-lime);
+  border-radius: 0.75rem;
+}
+
+.kova-landing-wave .kv-guia-callout-label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--kv-lime-dark);
+  margin-bottom: 0.875rem;
+}
+
+.kova-landing-wave .kv-guia-callout ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.kova-landing-wave .kv-guia-callout li {
+  position: relative;
+  padding-left: 1.125rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave .kv-guia-callout li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--kv-indigo);
+}
+
+.kova-landing-wave .kv-guia-summary {
+  margin: 2.5rem 0;
+  padding: 1.5rem;
+  background: rgba(216, 242, 76, 0.14);
+  border: 1px solid rgba(216, 242, 76, 0.45);
+  border-radius: 0.875rem;
+  scroll-margin-top: 6.5rem;
+}
+
+.kova-landing-wave .kv-guia-summary-title {
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  font-weight: 700;
+  text-align: center;
+  color: var(--kv-ink);
+  margin-bottom: 1.25rem;
+}
+
+.kova-landing-wave .kv-guia-summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.kova-landing-wave .kv-guia-summary-item {
+  display: flex;
+  gap: 0.875rem;
+  padding: 1rem 1.125rem;
+  background: #fff;
+  border: 1px solid var(--kv-line);
+  border-radius: 0.75rem;
+}
+
+.kova-landing-wave .kv-guia-summary-num {
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--kv-indigo);
+}
+
+.kova-landing-wave .kv-guia-summary-item h4 {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--kv-ink);
+  margin: 0 0 0.375rem;
+}
+
+.kova-landing-wave .kv-guia-summary-item p {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  color: var(--kv-slate);
+}
+
+.kova-landing-wave .kv-guia-summary-brand {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.kova-landing-wave .kv-guia-summary-logo {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.5rem;
+  background: var(--kv-indigo);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.kova-landing-wave .kv-guia-summary-brand > span {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--kv-indigo);
+}
+
+.kova-landing-wave .kv-guia-cta-band {
+  margin-top: 2.5rem;
+  padding: 2rem 1.5rem;
+  background: var(--kv-ink);
+  border-radius: 0.875rem;
+  border-top: 3px solid var(--kv-lime);
+  text-align: center;
+}
+
+.kova-landing-wave .kv-guia-cta-band-eyebrow {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--kv-lime);
+  margin-bottom: 0.75rem;
+}
+
+.kova-landing-wave .kv-guia-cta-band-title {
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: #fff;
+  max-width: 28rem;
+  margin: 0 auto 0.75rem;
+}
+
+.kova-landing-wave .kv-guia-cta-band-desc {
+  font-size: 0.96875rem;
+  line-height: 1.65;
+  color: var(--kv-nav-muted);
+  max-width: 26rem;
+  margin: 0 auto 1.5rem;
+}
+
+.kova-landing-wave .kv-guia-cta-band-btn {
+  margin-inline: auto;
+}
+
+.kova-landing-wave .kv-guia-article-cta {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--kv-line);
+}
+
+.kova-landing-wave .kv-guia-article-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.kova-landing-wave .kv-guia-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 1.5rem;
+  border-radius: 100px;
+  font-weight: 600;
+  font-size: 0.90625rem;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.kova-landing-wave .kv-guia-cta-btn--primary {
+  background: var(--kv-lime);
+  color: var(--kv-ink);
+  border: 1px solid var(--kv-lime);
+}
+
+.kova-landing-wave .kv-guia-cta-btn--primary:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.kova-landing-wave .kv-guia-cta-btn--secondary {
+  background: #fff;
+  color: var(--kv-ink);
+  border: 1px solid var(--kv-line);
+}
+
+.kova-landing-wave .kv-guia-cta-btn--secondary:hover {
+  border-color: var(--kv-indigo);
+  background: var(--kv-paper-2);
+}
+
+.kova-landing-wave .kv-prose a.kv-guia-cta-btn--primary {
+  color: var(--kv-ink);
+  font-weight: 600;
+}
+
+.kova-landing-wave .kv-prose a.kv-guia-cta-btn--secondary {
+  color: var(--kv-ink);
+  font-weight: 600;
+}
+
+.kova-landing-wave .kv-guia-figure {
+  margin: 2rem 0;
+}
+
+.kova-landing-wave .kv-guia-figure-frame {
+  border-radius: 0.875rem;
+  overflow: hidden;
+  border: 1px solid var(--kv-line);
+}
+
+.kova-landing-wave .kv-guia-figure-frame img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.kova-landing-wave .kv-guia-figure figcaption {
+  font-size: 0.8125rem;
+  color: var(--kv-slate);
+  margin-top: 0.625rem;
+  line-height: 1.55;
+}
+
+.kova-landing-wave .kv-prose h2,
+.kova-landing-wave .kv-prose .font-heading {
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 1.65rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--kv-ink);
+  margin: 2.5rem 0 1.25rem;
+  scroll-margin-top: 7rem;
+}
+
+.kova-landing-wave .kv-prose h3 {
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--kv-ink);
+  margin: 2rem 0 1rem;
+  scroll-margin-top: 7rem;
+}
+
+.kova-landing-wave .kv-prose p {
+  margin-bottom: 1.25rem;
+}
+
+.kova-landing-wave .kv-prose blockquote {
+  margin: 2rem 0;
+  padding-left: 1.25rem;
+  border-left: 4px solid var(--kv-indigo);
+  font-style: italic;
+  color: var(--kv-slate);
+}
+
+.kova-landing-wave .kv-prose a {
+  color: var(--kv-indigo);
+  font-weight: 500;
+}
+

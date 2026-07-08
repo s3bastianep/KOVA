@@ -63,7 +63,7 @@ export const CN_SERVICES_INTRO =
   'Un proceso estructurado asegura precisión, eficiencia y resultados medibles en cada contratación comercial.';
 
 export const CN_SERVICES_STATS = [
-  { value: '2–3 sem', label: 'terna validada por vacante' },
+  { value: '2 a 3 sem', label: 'terna validada por vacante' },
   { value: '24 h', label: 'informe por candidato' },
   { value: '100%', label: 'evaluados con el mismo criterio' },
 ];
@@ -80,7 +80,7 @@ export const CN_SERVICES = [
       'Entrevistas por competencias comerciales',
       'Terna validada con evidencia documentada',
     ],
-    highlight: 'Terna validada en 2–3 semanas.',
+    highlight: 'Terna validada en 2 a 3 semanas.',
     image: '/images/servicio-seleccion-hero.png',
     imageAlt: 'Consultora comercial en reunión de trabajo con laptop',
     tone: 'indigo',

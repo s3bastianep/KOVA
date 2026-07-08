@@ -31,6 +31,11 @@ const securityHeaders = [
   },
 ];
 
+const immutableCache = {
+  key: 'Cache-Control',
+  value: 'public, max-age=31536000, immutable',
+};
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -38,6 +43,32 @@ const nextConfig = {
   eslint: { ignoreDuringBuilds: true },
   async headers() {
     return [
+      {
+        source: '/assets/:path*',
+        headers: [immutableCache],
+      },
+      {
+        source: '/www/assets/:path*',
+        headers: [immutableCache],
+      },
+      {
+        source: '/images/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=604800, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      {
+        source: '/www/images/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=604800, stale-while-revalidate=86400',
+          },
+        ],
+      },
       {
         source: '/:path*',
         headers: securityHeaders,

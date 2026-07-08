@@ -82,7 +82,7 @@ export default function ImpactSection() {
             { val: '3×', label: 'más rápido que el promedio', sub: 'en tiempo de contratación', color: '#6366F1', bg: '#EEF2FF' },
             { val: '94%', label: 'retención al primer año', sub: 'vs. 54% del mercado', color: '#10B981', bg: '#ECFDF5' },
             { val: '−8 sem', label: 'ahorradas en inducción', sub: 'con proceso estructurado', color: '#0EA5E9', bg: '#F0F9FF' },
-            { val: '6–18×', label: 'costo de una mala contratación', sub: 'en salarios perdidos', color: '#F59E0B', bg: '#FFFBEB' },
+            { val: '6 a 18×', label: 'costo de una mala contratación', sub: 'en salarios perdidos', color: '#F59E0B', bg: '#FFFBEB' },
           ].map(({ val, label, sub, color, bg }) => (
             <div key={val} className="rounded-2xl p-5" style={{ background: bg, border: `1px solid ${color}1A` }}>
               <p className="font-heading font-black text-xl leading-none mb-1.5" style={{ color, letterSpacing: '-0.03em' }}>{val}</p>
@@ -189,7 +189,7 @@ export default function ImpactSection() {
                   <div className="flex items-start justify-between mb-6">
                     <div>
                       <h3 className="font-heading font-bold text-lg" style={{ color: '#0F0A2A' }}>Score de competencias comerciales</h3>
-                      <p className="text-xs mt-1" style={{ color: '#9CA3AF' }}>Perfiles colocados por Kova vs. benchmark del mercado (0–100)</p>
+                      <p className="text-xs mt-1" style={{ color: '#9CA3AF' }}>Perfiles colocados por Kova vs. benchmark del mercado (0 a 100)</p>
                     </div>
                     <div className="flex flex-col gap-1.5 text-xs">
                       <div className="flex items-center gap-1.5"><div className="w-3 h-2 rounded-sm" style={{ background: '#F59E0B' }} /><span style={{ color: '#374151' }}>Perfiles Kova</span></div>

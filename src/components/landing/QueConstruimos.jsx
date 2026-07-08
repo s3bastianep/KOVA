@@ -7,7 +7,7 @@ const servicios = [
     title: 'Buscamos, evaluamos y presentamos a los mejores perfiles comerciales.',
     desc: 'Hacemos todo el proceso: definimos el perfil ideal, buscamos activamente (no esperamos CVs), entrevistamos con metodología por competencias y presentamos una terna validada. Tú solo decides.',
     items: ['Definición del perfil comercial ideal', 'Búsqueda activa, no solo publicaciones', 'Entrevistas por competencias comerciales', 'Assessment de orientación al logro', 'Informe ejecutivo por candidato', 'Garantía de reemplazo'],
-    highlight: 'Entregamos terna en 2–3 semanas.',
+    highlight: 'Entregamos terna en 2 a 3 semanas.',
   },
   {
     id: 'evaluacion', icon: ClipboardList, num: '02', label: 'Evaluación Psicotécnica', color: '#FFF7ED', accent: '#F97316',
@@ -21,14 +21,14 @@ const servicios = [
     title: 'Tu proceso de ventas, estandarizado y vivo en una plataforma interactiva.',
     desc: 'Mapeamos cómo vende tu empresa hoy, identificamos los cuellos de botella y construimos el proceso ideal: etapas, guiones, protocolos y KPIs. Todo queda en una plataforma interactiva donde cualquier asesor puede consultarlo en el momento que lo necesite, no en un PDF que nadie abre.',
     items: ['Mapeo del proceso de ventas actual', 'Diseño del embudo por etapas específicas de tu negocio', 'Guiones de atención, seguimiento y cierre personalizados', 'Protocolos de manejo de objeciones según tu producto', 'KPIs y métricas por rol comercial', 'Plataforma interactiva de consulta permanente para el equipo'],
-    highlight: 'Plataforma activa en 3–4 semanas.',
+    highlight: 'Plataforma activa en 3 a 4 semanas.',
   },
   {
     id: 'capacitacion', icon: BookOpen, num: '04', label: 'Capacitación e Inducción', color: '#F5F3FF', accent: '#7C3AED',
     title: 'Inducción gamificada, personalizada con el proceso real de tu empresa.',
     desc: 'No usamos contenido genérico. Construimos el programa de inducción con el proceso que diseñamos para tu empresa y lo entregamos en formato gamificado: niveles, retos, evaluaciones y certificaciones. El asesor aprende haciendo, no leyendo un manual. Y si tiene una duda en 3 meses, vuelve a la plataforma y la resuelve.',
     items: ['Programa diseñado 100% con tu proceso de ventas real', 'Módulos gamificados: niveles, puntos y certificaciones', 'Evaluaciones prácticas con casos de tu industria', 'Plataforma de acceso permanente para consultas del equipo', 'Actualizaciones del contenido cuando el proceso evoluciona', 'Dashboard de progreso individual por asesor'],
-    highlight: 'Programa gamificado listo en 4–5 semanas.',
+    highlight: 'Programa gamificado listo en 4 a 5 semanas.',
   },
 ];
 

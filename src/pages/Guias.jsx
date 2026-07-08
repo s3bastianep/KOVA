@@ -1,4 +1,5 @@
-import '@/lib/loadLandingPagesStyles';
+import '@/styles/landing-wave-inner.css';
+import '@/styles/landing-wave-guia.css';
 import { Link } from 'react-router-dom';
 import SiteLayout from '@/components/landing/SiteLayout';
 import InnerPageHero from '@/components/landing/InnerPageHero';

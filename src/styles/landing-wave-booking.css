@@ -1,0 +1,462 @@
+﻿/* Booking scheduler â€” wave (dark) */
+.kova-landing-wave .kv-booking-card--dark {
+  background: #12140f;
+  background: var(--kv-ink);
+  color: #fff;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 2px solid var(--kv-lime);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.35);
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-header {
+  padding: 1.125rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+}
+
+.kova-landing-wave .kv-booking-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-header h2 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.375rem;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.52);
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-meta-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--kv-lime);
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-step-pills {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.38);
+  flex-shrink: 0;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-step-pills span.is-active {
+  color: var(--kv-lime);
+  font-weight: 600;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-alert {
+  margin: 1rem 1.25rem 0;
+  font-size: 0.8125rem;
+  border-radius: 0.625rem;
+  padding: 0.625rem 0.75rem;
+  color: var(--kv-lime);
+  background: rgba(216, 242, 76, 0.1);
+  border: 1px solid rgba(216, 242, 76, 0.28);
+}
+
+.kova-landing-wave .kv-booking-body {
+  padding: 1.25rem;
+}
+
+.kova-landing-wave .kv-booking-schedule-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .kova-landing-wave .kv-booking-schedule-grid {
+    grid-template-columns: minmax(0, 1fr) 9.5rem;
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .kova-landing-wave .kv-booking-schedule-grid {
+    grid-template-columns: minmax(0, 1fr) 10.5rem;
+  }
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-panel-label {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.48);
+  margin-bottom: 0.75rem;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-panel-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--kv-lime);
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-slots-panel {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .kova-landing-wave .kv-booking-card--dark .kv-booking-slots-panel {
+    border-top: none;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 0;
+    padding-left: 1.25rem;
+  }
+}
+
+.kova-landing-wave .kv-booking-slots {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.375rem;
+  max-height: 17rem;
+  overflow-y: auto;
+  margin-bottom: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .kova-landing-wave .kv-booking-slots {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-slot {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.5rem 0.625rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  text-align: center;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-slot:hover {
+  border-color: rgba(216, 242, 76, 0.45);
+  background: rgba(216, 242, 76, 0.08);
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-slot.is-selected {
+  border-color: var(--kv-lime);
+  background: var(--kv-lime);
+  color: var(--kv-ink);
+  font-weight: 600;
+}
+
+.kova-landing-wave .kv-booking-continue,
+.kova-landing-wave .kv-booking-submit {
+  width: 100%;
+  justify-content: center;
+  font-size: 0.84375rem;
+  padding: 0.75rem 1.25rem;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-loading {
+  display: flex;
+  justify-content: center;
+  padding: 2.5rem 0;
+  color: var(--kv-lime);
+}
+
+.kova-landing-wave .kv-booking-loading svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-empty {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.48);
+  padding: 0.5rem 0;
+}
+
+.kova-landing-wave .kv-booking-empty--center {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.kova-landing-wave .kv-booking-error {
+  font-size: 0.8125rem;
+  color: var(--kv-rose);
+  margin-top: 1rem;
+}
+
+.kova-landing-wave .kv-booking-error--box {
+  padding: 0.625rem 0.75rem;
+  background: rgba(232, 92, 107, 0.08);
+  border: 1px solid rgba(232, 92, 107, 0.25);
+  border-radius: 0.5rem;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--kv-lime);
+  margin-bottom: 1rem;
+  transition: opacity 0.2s ease;
+}
+
+.kova-landing-wave .kv-booking-back:hover {
+  opacity: 0.75;
+}
+
+.kova-landing-wave .kv-booking-back svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-selected-slot {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.4375rem 0.75rem;
+  background: rgba(216, 242, 76, 0.12);
+  border: 1px solid rgba(216, 242, 76, 0.35);
+  border-radius: 100px;
+  color: #fff;
+  margin-bottom: 1.25rem;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-selected-slot span {
+  color: rgba(255, 255, 255, 0.52);
+}
+
+.kova-landing-wave .kv-booking-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 24rem;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: 0.375rem;
+}
+
+.kova-landing-wave .kv-booking-optional {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.75rem;
+}
+
+.kova-landing-wave .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-input {
+  width: 100%;
+  border-radius: 0.625rem;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-input::placeholder {
+  color: rgba(255, 255, 255, 0.32);
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-input:focus {
+  outline: none;
+  border-color: rgba(216, 242, 76, 0.55);
+  box-shadow: 0 0 0 3px rgba(216, 242, 76, 0.14);
+}
+
+.kova-landing-wave .kv-booking-submit {
+  margin-top: 1.25rem;
+  max-width: 24rem;
+}
+
+.kova-landing-wave .kv-booking-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-footer {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  text-align: center;
+  font-size: 0.6875rem;
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-footer a {
+  font-weight: 600;
+  color: #fff;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-footer a:last-child {
+  color: var(--kv-lime);
+}
+
+.kova-landing-wave .kv-booking-success {
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-success-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: rgba(216, 242, 76, 0.16);
+  color: var(--kv-lime);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.kova-landing-wave .kv-booking-success-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-success h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-success-date {
+  font-size: 0.875rem;
+  color: #fff;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kv-booking-success-note {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.52);
+  line-height: 1.6;
+  max-width: 20rem;
+  margin-inline: auto;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar.rdp {
+  --rdp-cell-size: 2.125rem;
+  margin: 0;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-caption_label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  text-transform: capitalize;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-nav_button {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-nav_button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-head_cell {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-button,
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_button {
+  color: #fff;
+  width: var(--rdp-cell-size, 2.125rem);
+  height: var(--rdp-cell-size, 2.125rem);
+}
+
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-button:hover:not(:disabled),
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_button:hover:not(:disabled) {
+  background: rgba(216, 242, 76, 0.12);
+}
+
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_selected .rdp-button,
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_selected .rdp-button:hover,
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_selected .rdp-day_button,
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_selected .rdp-day_button:hover {
+  background: var(--kv-lime);
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_today:not(.rdp-day_selected) .rdp-button,
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_today:not(.rdp-day_selected) .rdp-day_button {
+  background: rgba(216, 242, 76, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(216, 242, 76, 0.55);
+  font-weight: 600;
+  color: #fff;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_outside .rdp-button,
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_outside .rdp-day_button {
+  color: rgba(255, 255, 255, 0.22);
+}
+
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_disabled .rdp-button,
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_disabled .rdp-day_button {
+  color: rgba(255, 255, 255, 0.18);
+}
+
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-row {
+  display: flex;
+  width: 100%;
+  margin-top: 0.35rem;
+}
+
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-cell {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
+.kova-landing-wave input:focus,
+.kova-landing-wave button:focus-visible {
+  outline-color: var(--kv-indigo);
+}
+

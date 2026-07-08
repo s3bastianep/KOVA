@@ -1,0 +1,237 @@
+﻿/* â”€â”€ Inner pages â”€â”€ */
+
+.kova-landing-wave .kv-inner-hero {
+  background: var(--kv-ink);
+  color: #fff;
+  padding: 4.375rem 0 5.625rem;
+}
+
+.kova-landing-wave .kv-inner-hero--compact {
+  padding: 3.5rem 0 3rem;
+}
+
+.kova-landing-wave .kv-inner-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+@media (min-width: 860px) {
+  .kova-landing-wave .kv-inner-hero-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3.5rem;
+  }
+}
+
+.kova-landing-wave .kv-inner-hero h1 {
+  font-weight: 700;
+  font-size: clamp(2.125rem, 4.4vw, 3.125rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  margin: 1.25rem 0 1.375rem;
+  color: #fff;
+}
+
+.kova-landing-wave .kv-inner-hero h1 em {
+  font-style: normal;
+  color: var(--kv-lime);
+}
+
+.kova-landing-wave .kv-inner-hero-sub {
+  font-size: 1rem;
+  color: #c6c9be;
+  max-width: 32rem;
+  margin-bottom: 1.875rem;
+  line-height: 1.65;
+}
+
+.kova-landing-wave .kv-inner-media {
+  border-radius: 0.875rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+}
+
+.kova-landing-wave .kv-inner-media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.kova-landing-wave .kv-narrow-center {
+  max-width: 42.5rem;
+  margin-inline: auto;
+}
+
+.kova-landing-wave .kv-prose-stack {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.kova-landing-wave .kv-prose-stack p {
+  color: var(--kv-slate);
+  font-size: 0.96875rem;
+  line-height: 1.75;
+}
+
+.kova-landing-wave .kv-prose-emphasis {
+  font-weight: 600;
+  color: var(--kv-ink) !important;
+}
+
+.kova-landing-wave .kv-method-note {
+  margin-top: 0.875rem;
+  padding: 0.875rem 1rem;
+  background: var(--kv-paper-2);
+  border: 1px solid var(--kv-line);
+  border-radius: 0.75rem;
+  font-size: 0.84375rem;
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave .kv-inner-card {
+  background: #fff;
+  border: 1px solid var(--kv-line);
+  border-radius: 0.875rem;
+  padding: 1.5rem 1.375rem;
+}
+
+.kova-landing-wave .kv-inner-card--accent {
+  border-top: 3px solid var(--kv-lime);
+  background: var(--kv-paper-2);
+}
+
+.kova-landing-wave .kv-inner-card h4 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.kova-landing-wave .kv-check-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.kova-landing-wave .kv-check-list li {
+  position: relative;
+  padding-left: 1.25rem;
+  font-size: 0.875rem;
+  color: var(--kv-slate);
+  line-height: 1.55;
+}
+
+.kova-landing-wave .kv-check-list li::before {
+  content: 'âœ“';
+  position: absolute;
+  left: 0;
+  color: var(--kv-indigo);
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.kova-landing-wave .kv-check-list--spaced {
+  gap: 0.875rem;
+}
+
+.kova-landing-wave .kv-check-list--spaced li {
+  font-size: 0.90625rem;
+}
+
+.kova-landing-wave .kv-x-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.kova-landing-wave .kv-x-list li {
+  position: relative;
+  padding-left: 1.25rem;
+  font-size: 0.875rem;
+  color: var(--kv-slate);
+  line-height: 1.55;
+}
+
+.kova-landing-wave .kv-x-list li::before {
+  content: 'âœ•';
+  position: absolute;
+  left: 0;
+  color: var(--kv-rose);
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.kova-landing-wave .kv-light-compare {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.125rem;
+}
+
+@media (min-width: 860px) {
+  .kova-landing-wave .kv-light-compare {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.kova-landing-wave .kv-light-compare-col {
+  border-radius: 0.875rem;
+  padding: 1.5rem 1.375rem;
+  border: 1px solid var(--kv-line);
+  background: #fff;
+}
+
+.kova-landing-wave .kv-light-compare-col--old {
+  border-top: 3px solid var(--kv-rose);
+}
+
+.kova-landing-wave .kv-light-compare-col--new {
+  border-top: 3px solid var(--kv-lime);
+  background: var(--kv-paper-2);
+}
+
+.kova-landing-wave .kv-light-compare-col h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.kova-landing-wave .kv-mission-card {
+  margin-top: 1.5rem;
+  background: #fff;
+  border: 1px solid var(--kv-line);
+  border-radius: 0.875rem;
+  padding: 1.75rem 1.5rem;
+  text-align: center;
+}
+
+.kova-landing-wave .kv-mission-lead {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--kv-ink);
+  margin-bottom: 0.875rem;
+  line-height: 1.35;
+}
+
+.kova-landing-wave .kv-mission-card p:last-child {
+  color: var(--kv-slate);
+  font-size: 0.96875rem;
+  line-height: 1.75;
+}
+
+/* 404 / util */
+.kova-landing-wave .kv-founder-num {
+  font-weight: 800;
+  font-size: 5.5rem;
+  line-height: 0.9;
+  color: var(--kv-indigo);
+}
+
+@media (max-width: 860px) {
+  .kova-landing-wave .kv-founder-num { font-size: 4rem; }
+}

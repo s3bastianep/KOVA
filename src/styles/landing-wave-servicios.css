@@ -1,0 +1,450 @@
+﻿/* Servicios page */
+.kova-landing-wave .kv-servicios-hero {
+  padding-bottom: clamp(3.5rem, 6vw, 5rem);
+}
+
+.kova-landing-wave .kv-servicios-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.75rem;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .kova-landing-wave .kv-servicios-hero-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3.5rem;
+  }
+}
+
+.kova-landing-wave .kv-servicios-hero-copy .kv-inner-hero-sub {
+  margin-bottom: 1.75rem;
+}
+
+.kova-landing-wave .kv-servicios-headline {
+  display: flex;
+  flex-direction: column;
+  font-weight: 700;
+  font-size: clamp(2.375rem, 5.2vw, 3.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin: 1.25rem 0 1.5rem;
+  color: #fff;
+}
+
+.kova-landing-wave .kv-servicios-headline-accent {
+  color: var(--kv-lime);
+}
+
+.kova-landing-wave .kv-servicios-collage {
+  position: relative;
+  min-height: 18rem;
+  padding-bottom: 2rem;
+}
+
+.kova-landing-wave .kv-servicios-collage-main {
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 28px 56px rgba(0, 0, 0, 0.32);
+  aspect-ratio: 4 / 3;
+}
+
+.kova-landing-wave .kv-servicios-collage-main img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kova-landing-wave .kv-servicios-collage-faces {
+  position: absolute;
+  right: -0.25rem;
+  bottom: -1.25rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.kova-landing-wave .kv-servicios-collage-faces img {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2.5px solid var(--kv-ink);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+}
+
+@media (min-width: 640px) {
+  .kova-landing-wave .kv-servicios-collage-faces img {
+    width: 3.75rem;
+    height: 3.75rem;
+  }
+}
+
+.kova-landing-wave .kv-servicios-collage-caption {
+  position: absolute;
+  left: 0.75rem;
+  bottom: -2.75rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.kova-landing-wave .kv-servicios-stats {
+  padding-block: clamp(2rem, 4vw, 2.75rem);
+  border-bottom: 1px solid var(--kv-line);
+}
+
+.kova-landing-wave .kv-servicios-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .kova-landing-wave .kv-servicios-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+.kova-landing-wave .kv-servicios-stat {
+  text-align: center;
+  padding: 1.375rem 1rem;
+  border-radius: 0.875rem;
+  background: #fff;
+  border: 1px solid var(--kv-line);
+  box-shadow: 0 4px 16px rgba(18, 20, 15, 0.04);
+}
+
+.kova-landing-wave .kv-servicios-stat-value {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--kv-ink);
+  letter-spacing: -0.02em;
+  margin: 0 0 0.25rem;
+}
+
+.kova-landing-wave .kv-servicios-stat-label {
+  font-size: 0.8125rem;
+  color: var(--kv-slate);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.kova-landing-wave .kv-servicios-section {
+  padding-block: clamp(3.5rem, 6vw, 5.5rem);
+}
+
+.kova-landing-wave .kv-servicios-head {
+  margin-bottom: clamp(2.25rem, 4vw, 3.25rem);
+}
+
+.kova-landing-wave .kv-servicios-cards {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+
+.kova-landing-wave .kv-servicio-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  border: 1px solid var(--kv-line);
+  background: #fff;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 16px 48px rgba(18, 20, 15, 0.07);
+}
+
+@media (min-width: 900px) {
+  .kova-landing-wave .kv-servicio-card {
+    grid-template-columns: 0.92fr 1.08fr;
+    min-height: 22rem;
+  }
+
+  .kova-landing-wave .kv-servicio-card--reverse {
+    grid-template-columns: 1.08fr 0.92fr;
+  }
+
+  .kova-landing-wave .kv-servicio-card--reverse .kv-servicio-card-media {
+    order: 2;
+  }
+
+  .kova-landing-wave .kv-servicio-card--reverse .kv-servicio-card-body {
+    order: 1;
+  }
+}
+
+.kova-landing-wave .kv-servicio-card-media {
+  position: relative;
+  padding: 1rem;
+  background: linear-gradient(145deg, var(--kv-paper) 0%, #fff 100%);
+  border-bottom: 1px solid var(--kv-line);
+}
+
+@media (min-width: 900px) {
+  .kova-landing-wave .kv-servicio-card-media {
+    padding: 1.25rem;
+    border-bottom: none;
+    border-right: 1px solid var(--kv-line);
+  }
+
+  .kova-landing-wave .kv-servicio-card--reverse .kv-servicio-card-media {
+    border-right: none;
+    border-left: 1px solid var(--kv-line);
+  }
+}
+
+.kova-landing-wave .kv-servicio-card-frame {
+  position: relative;
+  border-radius: 0.875rem;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border: 1px solid rgba(18, 20, 15, 0.08);
+  box-shadow: 0 12px 32px rgba(18, 20, 15, 0.12);
+}
+
+.kova-landing-wave .kv-servicio-card-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 45%,
+    rgba(18, 20, 15, 0.42) 100%
+  );
+  pointer-events: none;
+}
+
+.kova-landing-wave .kv-servicio-card-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kova-landing-wave .kv-servicio-card-num {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.35rem;
+  font-size: clamp(2.5rem, 5vw, 3.25rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--kv-lime);
+  text-shadow: 0 2px 12px rgba(18, 20, 15, 0.35);
+  z-index: 1;
+}
+
+.kova-landing-wave .kv-servicio-card-body {
+  padding: clamp(1.5rem, 3vw, 2.125rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.kova-landing-wave .kv-servicio-card-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--kv-indigo);
+  margin: 0 0 0.75rem;
+  font-weight: 600;
+}
+
+.kova-landing-wave .kv-servicio-card-label::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--kv-lime);
+  flex-shrink: 0;
+}
+
+.kova-landing-wave .kv-servicio-card--indigo {
+  border-top: 3px solid var(--kv-indigo);
+}
+
+.kova-landing-wave .kv-servicio-card--lime {
+  border-top: 3px solid var(--kv-lime-dark);
+}
+
+.kova-landing-wave .kv-servicio-card--ink {
+  border-top: 3px solid var(--kv-ink);
+}
+
+.kova-landing-wave .kv-servicio-title {
+  font-size: clamp(1.3125rem, 2.2vw, 1.625rem);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.018em;
+  color: var(--kv-ink);
+  margin: 0 0 0.75rem;
+}
+
+.kova-landing-wave .kv-servicio-body {
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--kv-slate);
+  margin: 0 0 1.125rem;
+}
+
+.kova-landing-wave .kv-servicio-items {
+  list-style: none;
+  margin: 0 0 1.125rem;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .kova-landing-wave .kv-servicio-items {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1rem;
+  }
+}
+
+.kova-landing-wave .kv-servicio-items li {
+  position: relative;
+  padding-left: 1.125rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave .kv-servicio-items li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45rem;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--kv-lime-dark);
+}
+
+.kova-landing-wave .kv-servicio-card--indigo .kv-servicio-items li::before {
+  background: var(--kv-indigo);
+}
+
+.kova-landing-wave .kv-servicio-card--ink .kv-servicio-items li::before {
+  background: var(--kv-ink);
+}
+
+.kova-landing-wave .kv-servicio-highlight {
+  margin-top: auto;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.6875rem 0.875rem;
+  border-radius: 0.5rem;
+  background: rgba(216, 242, 76, 0.22);
+  border: 1px solid rgba(92, 110, 18, 0.18);
+  color: var(--kv-lime-dark);
+  width: fit-content;
+  max-width: 100%;
+}
+
+.kova-landing-wave .kv-servicio-card--indigo .kv-servicio-highlight {
+  background: rgba(51, 65, 196, 0.08);
+  border-color: rgba(51, 65, 196, 0.16);
+  color: var(--kv-indigo);
+}
+
+.kova-landing-wave .kv-servicio-card--ink .kv-servicio-highlight {
+  background: rgba(18, 20, 15, 0.06);
+  border-color: rgba(18, 20, 15, 0.12);
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave .kv-servicios-method-link {
+  text-align: center;
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
+}
+
+.kova-landing-wave .kv-servicios-method-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--kv-indigo);
+  text-decoration: none;
+  transition: gap 0.2s ease;
+}
+
+.kova-landing-wave .kv-servicios-method-link a:hover {
+  gap: 0.75rem;
+}
+
+.kova-landing-wave .kv-servicios-method-link svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.kova-landing-wave .kv-servicios-team {
+  background: var(--kv-ink);
+  color: #fff;
+}
+
+.kova-landing-wave .kv-servicios-team-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+@media (min-width: 860px) {
+  .kova-landing-wave .kv-servicios-team-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3.5rem;
+  }
+}
+
+.kova-landing-wave .kv-servicios-team-media {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+}
+
+.kova-landing-wave .kv-servicios-team-media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.kova-landing-wave .kv-servicios-team-badge {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.75rem;
+  border-radius: 100px;
+  background: var(--kv-lime);
+  color: var(--kv-ink);
+  font-weight: 600;
+}
+
+.kova-landing-wave .kv-servicios-team-copy .kv-h2 {
+  color: #fff;
+  margin: 0.75rem 0 1rem;
+}
+
+.kova-landing-wave .kv-servicios-team-body {
+  font-size: 1rem;
+  line-height: 1.68;
+  color: rgba(255, 255, 255, 0.62);
+  margin: 0 0 1.5rem;
+  max-width: 32rem;
+}

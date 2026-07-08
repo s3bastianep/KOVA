@@ -1,4 +1,5 @@
-import '@/lib/loadLandingPagesStyles';
+import '@/styles/landing-wave-inner.css';
+import '@/styles/landing-wave-trabajamos.css';
 import {
   BarChart3,
   Building2,

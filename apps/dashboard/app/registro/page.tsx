@@ -111,7 +111,7 @@ const STEPS = [
     tag: 'Paso 4 de 8',
     short: 'Formación',
     title: 'Formación y expectativas',
-    sub: 'Educación, idiomas y rango salarial esperado — clave para un match real con las vacantes.',
+    sub: 'Educación, idiomas y rango salarial esperado. Clave para un match real con las vacantes.',
     kind: 'education' as const,
     icon: GraduationCap,
   },
@@ -151,10 +151,10 @@ const STEPS = [
 
 const STEP_INSIGHTS = [
   'Los perfiles completos tienen prioridad cuando abre una vacante compatible contigo.',
-  'Tu nivel define las competencias del paso 8 — cuanto más preciso, mejor el match.',
+  'Tu nivel define las competencias del paso 8. Cuanto más preciso, mejor el match.',
   'Este historial alimenta tus tarjetas de evidencia y años de experiencia reales.',
   'Educación e idiomas ayudan a filtrar vacantes que sí encajan contigo.',
-  'Usamos la misma estructura que las vacantes B2B — comparación campo a campo.',
+  'Usamos la misma estructura que las vacantes B2B, con comparación campo a campo.',
   'Las industrias donde has vendido pesan fuerte en el scoring de compatibilidad.',
   'Los logros con cifras son la evidencia que diferencia tu perfil del resto.',
   'Competencias con respaldo valen más que un puntaje sin ejemplo concreto.',
