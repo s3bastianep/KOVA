@@ -3,6 +3,27 @@ import type { Candidate } from '@prisma/client';
 import { prisma } from './prisma';
 import { AuthUser, getUserFromRequest, unauthorized } from './auth';
 
+async function createCandidateForUser(user: AuthUser): Promise<Candidate | null> {
+  try {
+    return await prisma.candidate.create({
+      data: {
+        tenantId: user.tenantId,
+        userId: user.id,
+        firstName: user.firstName || 'Candidato',
+        lastName: user.lastName || 'Nuevo',
+        email: user.email?.trim().toLowerCase() || null,
+      },
+    });
+  } catch (error) {
+    console.error('[candidate-auth] auto-create candidate failed:', error);
+    try {
+      return await prisma.candidate.findFirst({ where: { userId: user.id } });
+    } catch {
+      return null;
+    }
+  }
+}
+
 async function tryLinkCandidateUser(candidate: Candidate, userId: string) {
   if (candidate.userId === userId) return candidate;
   if (candidate.userId) return null;
@@ -48,11 +69,11 @@ export async function getCandidateForUser(user: AuthUser): Promise<Candidate | n
       },
       orderBy: { createdAt: 'desc' },
     });
-    if (!byEmail) return null;
+    if (!byEmail) return createCandidateForUser(user);
     return tryLinkCandidateUser(byEmail, user.id);
   } catch (error) {
     console.error('[candidate-auth] lookup by email failed:', error);
-    return null;
+    return createCandidateForUser(user);
   }
 }
 
