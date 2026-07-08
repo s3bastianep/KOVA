@@ -1,12 +1,19 @@
-import { FileBarChart, Target, Users } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Check, FileBarChart, Target, Users, X } from 'lucide-react';
 import SiteLayout from '@/components/landing/SiteLayout';
-import InnerPageHero from '@/components/landing/InnerPageHero';
 import PageCta from '@/components/landing/PageCta';
 import Reveal from '@/components/validate/Reveal';
+import { usePageMeta } from '@/hooks/usePageMeta';
 import {
   CN_COMPARISON_PAIRS,
   CN_CTA_LABEL,
 } from '@/theme/landingConsult';
+
+const stats = [
+  { value: '100%', label: 'Enfoque en talento comercial' },
+  { value: 'Evidencia', label: 'Cada recomendación documentada' },
+  { value: 'LATAM', label: 'Experiencia regional en ventas B2B' },
+];
 
 const pilares = [
   {
@@ -17,13 +24,27 @@ const pilares = [
   {
     icon: Users,
     title: 'Consultores con experiencia real',
-    body: 'Equipo con trayectoria en liderazgo comercial, evaluación de talento y procesos de contratación en empresas de Latinoamérica.',
+    body: 'Equipo con trayectoria en liderazgo comercial, evaluación de talento y procesos de contratación en Latinoamérica.',
   },
   {
     icon: FileBarChart,
     title: 'Metodología con evidencia',
     body: 'Diagnóstico, evaluación estructurada e informe comparativo. Decisiones respaldadas con datos, no con intuición.',
   },
+];
+
+const noSomos = [
+  'Una bolsa de empleo o portal de vacantes.',
+  'Una agencia de RRHH generalista.',
+  'Un proveedor que entrega nombres sin método.',
+  'Capacitaciones genéricas desconectadas del cargo.',
+];
+
+const siSomos = [
+  'Headhunting especializado en perfiles comerciales.',
+  'Consultores con experiencia real en liderazgo comercial.',
+  'Un aliado que opera el proceso, no solo recomienda.',
+  'Metodología propia: diagnóstico, evaluación e informe.',
 ];
 
 const creencias = [
@@ -36,48 +57,127 @@ const creencias = [
 ];
 
 export default function QuienesSomos() {
+  usePageMeta({
+    title: 'Quiénes somos',
+    description:
+      'Kova nació para que las empresas contraten talento comercial con criterio técnico, evidencia documentada y especialización real en ventas.',
+    path: '/quienes-somos',
+  });
+
   return (
     <SiteLayout>
-      <main>
-        <InnerPageHero
-          eyebrow="Acerca de Kova"
-          title="Creamos Kova para solucionar la"
-          highlight="contratación comercial"
-          subtitle="Nacimos de la experiencia en liderazgo comercial y selección. Vimos empresas contratar por currículum e intuición, y descubrir meses después que el perfil no vendía."
-          ctaLabel={CN_CTA_LABEL}
-        >
-          <div className="kv-inner-media">
-            <img src="/images/equipo-kova.png" alt="Equipo Kova" loading="lazy" />
+      <main className="kv-about-page">
+        <section className="kv-inner-hero kv-about-hero">
+          <div className="kv-wrap kv-about-hero-grid">
+            <div className="kv-about-hero-copy">
+              <p className="kv-eyebrow font-mono">Quiénes somos</p>
+              <h1 className="font-display kv-about-headline">
+                <span>Creamos Kova para que la</span>
+                <span className="kv-about-headline-accent">contratación comercial</span>
+                <span>deje de ser una apuesta.</span>
+              </h1>
+              <p className="kv-inner-hero-sub">
+                Nacimos de la experiencia en liderazgo comercial y selección. Vimos empresas contratar
+                por currículum e intuición, y descubrir meses después que el perfil no vendía en su
+                contexto.
+              </p>
+              <Link to="/contacto" className="kv-btn-solid">
+                {CN_CTA_LABEL}
+                <ArrowRight className="kv-about-cta-icon" aria-hidden />
+              </Link>
+            </div>
+
+            <div className="kv-about-hero-visual">
+              <div className="kv-about-hero-frame">
+                <img src="/images/equipo-kova.png" alt="Equipo Kova" loading="eager" />
+              </div>
+              <p className="kv-about-hero-caption font-mono">
+                Especialistas en talento comercial · Latinoamérica
+              </p>
+            </div>
           </div>
-        </InnerPageHero>
+        </section>
+
+        <section className="kv-section kv-about-stats" aria-label="Enfoque Kova">
+          <div className="kv-wrap">
+            <div className="kv-about-stats-grid">
+              {stats.map((stat) => (
+                <div key={stat.label} className="kv-about-stat">
+                  <p className="kv-about-stat-value font-display">{stat.value}</p>
+                  <p className="kv-about-stat-label">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         <div className="kv-page-band kv-page-band--light">
-          <section className="kv-section">
-            <div className="kv-wrap kv-narrow-center">
-              <div className="kv-section-head-center">
+          <section className="kv-section kv-about-story">
+            <div className="kv-wrap kv-about-story-grid">
+              <div className="kv-about-story-copy">
                 <span className="kv-section-tag font-mono">Por qué nacimos</span>
                 <h2 className="kv-h2 font-display">Nuestra historia</h2>
+                <div className="kv-prose-stack">
+                  <p>
+                    Durante años vimos el mismo patrón: dirección comercial y talento humano alineados
+                    en la urgencia de cubrir la vacante, pero sin un método que midiera si el candidato
+                    realmente podía vender en ese contexto.
+                  </p>
+                  <p>
+                    Kova nació para cambiar eso: primero entender el negocio del cliente, diseñar
+                    evaluaciones a la medida y presentar talento respaldado por evidencia objetiva.
+                  </p>
+                </div>
               </div>
-              <div className="kv-prose-stack">
-                <p>
-                  Durante años vimos el mismo patrón: dirección comercial y talento humano alineados en la urgencia
-                  de cubrir la vacante, pero sin un método que midiera si el candidato realmente podía vender en ese
-                  contexto.
+              <blockquote className="kv-about-pullquote">
+                <p className="font-display">
+                  El problema no era la falta de candidatos. Era la falta de un proceso que evaluara
+                  competencias comerciales con el rigor que el rol exige.
                 </p>
-                <p className="kv-prose-emphasis">
-                  El problema no era la falta de candidatos. Era la falta de un proceso que evaluara competencias
-                  comerciales con el rigor que el rol exige.
+                <footer className="font-mono">Origen Kova</footer>
+              </blockquote>
+            </div>
+          </section>
+
+          <section className="kv-section kv-section--paper-2 kv-about-identity">
+            <div className="kv-wrap">
+              <div className="kv-section-head-center kv-about-identity-head">
+                <span className="kv-section-tag font-mono">Identidad</span>
+                <h2 className="kv-h2 font-display">Lo que somos — y lo que no</h2>
+                <p className="kv-section-lead">
+                  Claridad desde el primer contacto: Kova es headhunting comercial con método, no
+                  reclutamiento genérico.
                 </p>
-                <p>
-                  Kova nació para cambiar eso: primero entender el negocio del cliente, diseñar evaluaciones a la medida
-                  y presentar talento respaldado por evidencia objetiva.
-                </p>
+              </div>
+              <div className="kv-about-identity-grid">
+                <div className="kv-about-identity-panel kv-about-identity-panel--no">
+                  <p className="kv-about-identity-label font-mono">No somos</p>
+                  <ul>
+                    {noSomos.map((item) => (
+                      <li key={item}>
+                        <X aria-hidden />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="kv-about-identity-panel kv-about-identity-panel--yes">
+                  <p className="kv-about-identity-label font-mono">Sí somos</p>
+                  <ul>
+                    {siSomos.map((item) => (
+                      <li key={item}>
+                        <Check aria-hidden />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </section>
         </div>
 
-        <section className="kv-section kv-comparison">
+        <section className="kv-section kv-comparison kv-about-compare">
           <div className="kv-wrap">
             <div className="kv-section-head">
               <span className="kv-section-tag kv-section-tag--lime font-mono">Nuestro enfoque</span>
@@ -85,8 +185,8 @@ export default function QuienesSomos() {
                 Lo que hacemos <em className="kv-text-lime">diferente</em>
               </h2>
               <p>
-                La misma vacante evaluada con dos criterios distintos. Así se ve la diferencia entre contratar por
-                intuición y contratar con evidencia.
+                La misma vacante evaluada con dos criterios distintos. Así se ve la diferencia entre
+                contratar por intuición y contratar con evidencia.
               </p>
             </div>
 
@@ -121,7 +221,7 @@ export default function QuienesSomos() {
           </div>
         </section>
 
-        <section className="kv-section kv-section--paper-2">
+        <section className="kv-section kv-section--paper-2 kv-about-pilares-section">
           <div className="kv-wrap">
             <div className="kv-section-head-center">
               <span className="kv-section-tag font-mono">Por qué Kova</span>
@@ -130,10 +230,10 @@ export default function QuienesSomos() {
                 Tres pilares que guían cada proceso de selección comercial que acompañamos.
               </p>
             </div>
-            <div className="kv-contact-benefits kv-about-pilares">
+            <div className="kv-about-pilares-grid">
               {pilares.map(({ icon: Icon, title, body }, i) => (
-                <article key={title} className="kv-contact-benefit">
-                  <div className={`kv-contact-benefit-icon kv-contact-benefit-icon--${(i % 4) + 1}`}>
+                <article key={title} className="kv-about-pilar">
+                  <div className={`kv-about-pilar-icon kv-about-pilar-icon--${i + 1}`}>
                     <Icon aria-hidden />
                   </div>
                   <h3 className="font-display">{title}</h3>
@@ -146,19 +246,19 @@ export default function QuienesSomos() {
 
         <div className="kv-page-band kv-page-band--dark">
           <section className="kv-section kv-about-mission">
-            <div className="kv-wrap kv-narrow-center">
-              <div className="kv-section-head-center">
+            <div className="kv-wrap kv-about-mission-grid">
+              <div className="kv-about-mission-copy">
                 <span className="kv-enfoque-eyebrow font-mono">Misión Kova</span>
-                <h2 className="kv-h2 font-display">Nuestra misión</h2>
+                <h2 className="kv-h2 font-display">Contratar con criterio, no con intuición</h2>
+                <p>
+                  Reemplazamos la contratación basada en suposiciones por un sistema estructurado:
+                  diagnóstico comercial, evaluación por competencias e informe comparativo para que
+                  dirección comercial y talento humano decidan con el mismo criterio.
+                </p>
               </div>
               <div className="kv-about-mission-card">
                 <p className="kv-about-mission-lead font-display">
-                  Ayudar a las empresas a contratar talento comercial con criterio técnico y evidencia documentada
-                </p>
-                <p>
-                  Reemplazamos la contratación basada en intuición por un sistema estructurado: diagnóstico comercial,
-                  evaluación por competencias e informe comparativo para que dirección comercial y talento humano
-                  decidan con el mismo criterio.
+                  Ayudar a las empresas a contratar talento comercial con evidencia documentada
                 </p>
                 <p className="kv-about-mission-tag font-mono">Menos apuestas. Más decisiones informadas.</p>
               </div>
@@ -166,18 +266,19 @@ export default function QuienesSomos() {
           </section>
         </div>
 
-        <section className="kv-section">
+        <section className="kv-section kv-about-values">
           <div className="kv-wrap">
             <div className="kv-section-head-center">
               <span className="kv-section-tag font-mono">Valores Kova</span>
               <h2 className="kv-h2 font-display">Lo que creemos</h2>
               <p className="kv-section-lead">
-                Principios que sostienen cada diagnóstico, cada evaluación y cada recomendación que entregamos.
+                Principios que sostienen cada diagnóstico, cada evaluación y cada recomendación que
+                entregamos.
               </p>
             </div>
-            <div className="kv-phil-grid kv-phil-grid--six">
+            <div className="kv-phil-grid kv-phil-grid--six kv-about-values-grid">
               {creencias.map(({ title, body }, i) => (
-                <Reveal key={title} className="kv-phil-tile">
+                <Reveal key={title} className="kv-phil-tile kv-about-value-tile">
                   <div className="kv-phil-num font-display">{String(i + 1).padStart(2, '0')}</div>
                   <div>
                     <h4 className="font-display">{title}</h4>
