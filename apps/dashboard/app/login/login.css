@@ -7,9 +7,11 @@
   --kv-lime-soft: rgba(216, 242, 76, 0.14);
   --kv-slate: #a7aba0;
   --kv-line: rgba(255, 255, 255, 0.1);
+  --kv-login-input-fill: #181a16;
   min-height: 100vh;
   background: var(--kv-ink);
   color: #fff;
+  color-scheme: dark;
   position: relative;
   overflow-x: hidden;
 }
@@ -199,6 +201,7 @@
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.12);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
 }
 
 .kv-login-input-wrap:focus-within {
@@ -223,6 +226,39 @@
 
 .kv-login-input::placeholder {
   color: rgba(255, 255, 255, 0.28);
+}
+
+/* Evita el fondo blanco/amarillo del autocompletado del navegador */
+@keyframes kv-login-autofill {
+  to {
+    color: #fff;
+    background: var(--kv-login-input-fill);
+  }
+}
+
+.kv-login input.kv-login-input:-webkit-autofill,
+.kv-login input.kv-login-input:-webkit-autofill:hover,
+.kv-login input.kv-login-input:-webkit-autofill:focus,
+.kv-login input.kv-login-input:-webkit-autofill:active {
+  -webkit-text-fill-color: #fff !important;
+  caret-color: #fff;
+  -webkit-box-shadow: 0 0 0 1000px var(--kv-login-input-fill) inset !important;
+  box-shadow: 0 0 0 1000px var(--kv-login-input-fill) inset !important;
+  background-color: var(--kv-login-input-fill) !important;
+  background-clip: padding-box !important;
+  -webkit-background-clip: padding-box !important;
+  animation: kv-login-autofill 0s forwards;
+  transition:
+    background-color 600000s 0s,
+    color 600000s 0s,
+    -webkit-text-fill-color 600000s 0s;
+}
+
+.kv-login input.kv-login-input:autofill {
+  -webkit-text-fill-color: #fff !important;
+  caret-color: #fff;
+  box-shadow: 0 0 0 1000px var(--kv-login-input-fill) inset !important;
+  background-color: var(--kv-login-input-fill) !important;
 }
 
 .kv-login-remember {
