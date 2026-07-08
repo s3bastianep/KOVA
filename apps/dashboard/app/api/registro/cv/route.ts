@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
-import { CV_MAX_BYTES, CvFileReadError, extractCvFromFileBuffer } from '../../../../lib/cv-extract';
+import { CV_MAX_BYTES } from '../../../../lib/cv-extract';
+import { CvFileReadError, extractCvFromFileBuffer } from '../../../../lib/cv-extract-server';
 import { detectCvFileFormat } from '../../../../lib/cv-file-formats';
 import { getPublicTenantId } from '../../../../lib/public-tenant';
 import { isMockMode } from '../../../../lib/mock';
