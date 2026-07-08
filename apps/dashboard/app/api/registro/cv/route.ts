@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
-import { CV_MAX_BYTES, extractCvFromPdfBuffer } from '../../../../lib/cv-extract';
+import { CV_MAX_BYTES, CvFileReadError, extractCvFromFileBuffer } from '../../../../lib/cv-extract';
+import { detectCvFileFormat } from '../../../../lib/cv-file-formats';
 import { getPublicTenantId } from '../../../../lib/public-tenant';
 import { isMockMode } from '../../../../lib/mock';
 import { persistCandidateCvFile } from '../../../../lib/persist-candidate-cv';
@@ -28,13 +29,13 @@ export async function POST(req: NextRequest) {
 
   const file = formData.get('file');
   if (!file || typeof file === 'string') {
-    return Response.json({ message: 'Sube un archivo PDF con tu hoja de vida.' }, { status: 400 });
+    return Response.json({ message: 'Sube tu hoja de vida en PDF o Word.' }, { status: 400 });
   }
 
   const fileName = String(file.name || 'cv.pdf');
   const mime = String(file.type || '').toLowerCase();
-  if (!mime.includes('pdf') && !fileName.toLowerCase().endsWith('.pdf')) {
-    return Response.json({ message: 'Solo aceptamos archivos PDF.' }, { status: 400 });
+  if (!detectCvFileFormat(fileName, mime)) {
+    return Response.json({ message: 'Solo aceptamos PDF, DOC o DOCX.' }, { status: 400 });
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
@@ -42,20 +43,21 @@ export async function POST(req: NextRequest) {
     return Response.json({ message: 'El archivo está vacío.' }, { status: 400 });
   }
   if (buffer.byteLength > CV_MAX_BYTES) {
-    return Response.json({ message: 'El PDF no puede superar 5 MB.' }, { status: 400 });
+    return Response.json({ message: 'El archivo no puede superar 5 MB.' }, { status: 400 });
   }
 
   let extraction;
   let extractedText = '';
   try {
-    const parsed = await extractCvFromPdfBuffer(buffer, fileName);
+    const parsed = await extractCvFromFileBuffer(buffer, fileName, mime);
     extraction = parsed.result;
     extractedText = parsed.text;
-  } catch {
-    return Response.json(
-      { message: 'No pudimos leer el PDF. Verifica que no esté protegido o dañado.' },
-      { status: 422 },
-    );
+  } catch (err) {
+    const message =
+      err instanceof CvFileReadError
+        ? err.message
+        : 'No pudimos leer el archivo. Verifica que no esté protegido o dañado.';
+    return Response.json({ message }, { status: 422 });
   }
 
   const candidateId = String(formData.get('candidateId') ?? '').trim();
@@ -73,6 +75,7 @@ export async function POST(req: NextRequest) {
           buffer,
           extractedText,
           extraction,
+          mime,
         });
       }
     } catch {

@@ -1,11 +1,12 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Check, FileText, Loader2, Upload, X } from 'lucide-react';
 import type { CvExtractionResult } from '@/lib/cv-extract';
 import { applyCvSuggestions } from '@/lib/cv-extract';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
 import { enrichCvExtraction, uploadRegistroCv } from './registro-utils';
+import { CV_FILE_ACCEPT } from '@/lib/cv-file-formats';
 
 type CvImportPhase = 'offer' | 'uploading' | 'review' | 'done' | 'skipped';
 
@@ -46,6 +47,12 @@ export function CvImportPanel({
 
   const activeSelected = selected.size > 0 ? selected : defaultSelected;
 
+  useEffect(() => {
+    if (phase === 'review' && !extraction) {
+      onPhaseChange('offer');
+    }
+  }, [phase, extraction, onPhaseChange]);
+
   const handleFile = async (file: File | null | undefined) => {
     if (!file) return;
     setError('');
@@ -58,7 +65,7 @@ export function CvImportPanel({
       setSelected(new Set(aligned.reviewFields.filter((f) => f.defaultSelected).map((f) => f.key)));
       onPhaseChange('review');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No pudimos leer tu PDF.');
+      setError(err instanceof Error ? err.message : 'No pudimos leer tu archivo.');
       onPhaseChange('offer');
     }
   };
@@ -81,7 +88,17 @@ export function CvImportPanel({
     onPhaseChange('done');
   };
 
-  if (phase === 'done' || phase === 'skipped') return null;
+  const handleRetry = () => {
+    setExtraction(null);
+    setSelected(new Set());
+    setError('');
+    onPhaseChange('offer');
+    if (inputRef.current) inputRef.current.value = '';
+  };
+
+  if (phase === 'done') return null;
+
+  if (phase === 'skipped') return null;
 
   if (phase === 'review' && extraction) {
     return (
@@ -109,9 +126,19 @@ export function CvImportPanel({
         )}
 
         {extraction.reviewFields.length === 0 ? (
-          <p className="kv-registro-cv-empty">
-            No detectamos datos claros en el PDF. Continúa completando el formulario manualmente.
-          </p>
+          <div className="kv-registro-cv-empty-block">
+            <p className="kv-registro-cv-empty">
+              No detectamos datos claros en el archivo. Puedes probar otro archivo o completar el formulario manualmente.
+            </p>
+            <div className="kv-registro-cv-actions">
+              <button type="button" className="kv-registro-btn-solid" onClick={handleRetry}>
+                Probar con otro archivo
+              </button>
+              <button type="button" className="kv-registro-btn-ghost" onClick={onSkip}>
+                Completar manualmente
+              </button>
+            </div>
+          </div>
         ) : (
           <ul className="kv-registro-cv-fields">
             {extraction.reviewFields.map((field) => {
@@ -138,11 +165,12 @@ export function CvImportPanel({
           </ul>
         )}
 
+        {extraction.reviewFields.length > 0 && (
         <div className="kv-registro-cv-actions">
           <button
             type="button"
             className="kv-registro-btn-solid"
-            disabled={extraction.reviewFields.length === 0 || activeSelected.size === 0}
+            disabled={activeSelected.size === 0}
             onClick={handleApply}
           >
             <Check strokeWidth={2} aria-hidden />
@@ -155,7 +183,11 @@ export function CvImportPanel({
           >
             Omitir
           </button>
+          <button type="button" className="kv-registro-btn-ghost" onClick={handleRetry}>
+            Subir otro archivo
+          </button>
         </div>
+        )}
       </section>
     );
   }
@@ -174,8 +206,8 @@ export function CvImportPanel({
             {compact ? 'Importar desde PDF' : leading ? 'Empieza con tu hoja de vida' : 'Ahorra tiempo con tu hoja de vida'}
           </h2>
           <p className="kv-registro-cv-sub">
-            Sube tu CV en PDF y prellenamos contacto, experiencia y formación. Tú revisas y validas antes de
-            guardar.
+            Sube tu hoja de vida en PDF o Word (.doc, .docx). Prellenamos contacto, experiencia y formación. Tú
+            revisas y validas antes de guardar.
           </p>
         </div>
       </div>
@@ -194,25 +226,25 @@ export function CvImportPanel({
         <input
           ref={inputRef}
           type="file"
-          accept="application/pdf,.pdf"
+          accept={CV_FILE_ACCEPT}
           className="kv-registro-cv-input"
           onChange={(e) => void handleFile(e.target.files?.[0])}
         />
         {phase === 'uploading' ? (
           <div className="kv-registro-cv-drop-inner">
             <Loader2 className="kv-registro-cv-spin" strokeWidth={2} aria-hidden />
-            <p>Leyendo tu PDF…</p>
+            <p>Leyendo tu archivo…</p>
           </div>
         ) : (
           <div className="kv-registro-cv-drop-inner">
             <FileText strokeWidth={2} aria-hidden />
             <p>
               <button type="button" className="kv-registro-cv-link" onClick={() => inputRef.current?.click()}>
-                Selecciona un PDF
+                Selecciona un archivo
               </button>
               {' '}o arrástralo aquí
             </p>
-            <p className="kv-registro-cv-hint">Máximo 5 MB · formato ATS recomendado</p>
+            <p className="kv-registro-cv-hint">PDF, DOC o DOCX · máximo 5 MB · formato ATS recomendado</p>
           </div>
         )}
       </div>

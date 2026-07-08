@@ -41,6 +41,7 @@ const nextConfig = {
   reactStrictMode: true,
   outputFileTracingRoot: path.join(__dirname),
   eslint: { ignoreDuringBuilds: true },
+  serverExternalPackages: ['pdf-parse', 'pdfjs-dist', '@napi-rs/canvas', 'mammoth', 'word-extractor'],
   async headers() {
     return [
       {

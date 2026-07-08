@@ -1931,6 +1931,30 @@ html:has(.kv-registro) {
   margin-bottom: 1rem;
 }
 
+.kv-registro-cv-reopen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: var(--kv-gap-section);
+  padding: 0.85rem 1rem;
+  border-radius: var(--kv-radius-field);
+  border: 1px dashed var(--kv-indigo);
+  background: rgba(51, 65, 196, 0.05);
+}
+
+.kv-registro-cv-reopen p {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--kv-slate);
+}
+
+.kv-registro-cv-empty-block {
+  display: grid;
+  gap: 0.75rem;
+}
+
 .kv-registro-cv-head {
   display: flex;
   gap: 0.85rem;

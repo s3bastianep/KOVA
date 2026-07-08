@@ -3,6 +3,7 @@ import { prisma } from './prisma';
 import { cvDownloadUrl, toDbBytes } from './cv-storage';
 import { mergeRegistroMetadata, readRegistroMetadata, type RegistroMetadata } from './registro-session';
 import type { CvExtractionResult } from './cv-extract';
+import { detectCvFileFormat, cvMimeType } from './cv-file-formats';
 
 export async function persistCandidateCvFile(params: {
   tenantId: string;
@@ -12,9 +13,13 @@ export async function persistCandidateCvFile(params: {
   extractedText: string;
   extraction?: CvExtractionResult;
   metadataPatch?: RegistroMetadata;
+  mime?: string;
 }) {
-  const { tenantId, candidateId, fileName, buffer, extractedText, extraction, metadataPatch } = params;
+  const { tenantId, candidateId, fileName, buffer, extractedText, extraction, metadataPatch, mime = '' } =
+    params;
   const url = cvDownloadUrl(candidateId);
+  const format = detectCvFileFormat(fileName, mime);
+  const mimeType = format ? cvMimeType(format) : 'application/octet-stream';
 
   const candidate = await prisma.candidate.findFirst({
     where: { id: candidateId, tenantId },
@@ -45,7 +50,7 @@ export async function persistCandidateCvFile(params: {
   const docData = {
     name: fileName,
     url,
-    mimeType: 'application/pdf',
+    mimeType,
     sizeBytes: buffer.byteLength,
     content: toDbBytes(buffer),
   };

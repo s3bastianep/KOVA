@@ -15,15 +15,19 @@ export { toDbBytes };
 export async function readCandidateCvBuffer(
   tenantId: string,
   candidateId: string,
-): Promise<{ buffer: Buffer; fileName: string } | null> {
+): Promise<{ buffer: Buffer; fileName: string; mimeType: string } | null> {
   const doc = await prisma.document.findFirst({
     where: { tenantId, candidateId, type: 'CV' },
-    select: { id: true, content: true, name: true },
+    select: { id: true, content: true, name: true, mimeType: true },
     orderBy: { createdAt: 'desc' },
   });
 
   if (doc?.content && doc.content.length > 0) {
-    return { buffer: Buffer.from(doc.content), fileName: doc.name };
+    return {
+      buffer: Buffer.from(doc.content),
+      fileName: doc.name,
+      mimeType: doc.mimeType ?? 'application/pdf',
+    };
   }
 
   const legacy = await readCandidateCvPdf(tenantId, candidateId);
@@ -52,5 +56,5 @@ export async function readCandidateCvBuffer(
     });
   }
 
-  return { buffer: legacy, fileName };
+  return { buffer: legacy, fileName, mimeType: doc?.mimeType ?? 'application/pdf' };
 }

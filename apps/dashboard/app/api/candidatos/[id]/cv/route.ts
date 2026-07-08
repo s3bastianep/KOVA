@@ -34,7 +34,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
   return new Response(new Uint8Array(stored.buffer), {
     headers: {
-      'Content-Type': 'application/pdf',
+      'Content-Type': stored.mimeType,
       'Content-Disposition': `inline; filename="${safeName}"`,
       'Cache-Control': 'private, max-age=3600',
     },
