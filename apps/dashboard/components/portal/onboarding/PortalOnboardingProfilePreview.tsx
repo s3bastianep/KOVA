@@ -4,9 +4,7 @@ import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
 import {
   estimatedCompatibility,
   estimatedVacancies,
-  profileExperienceYears,
   profileHeadlineRole,
-  profilePreviewTags,
 } from '@/lib/portal-onboarding-unified';
 
 type Props = {
@@ -26,54 +24,31 @@ function initials(name?: string | null): string {
 export function PortalOnboardingProfilePreview({ profile, percent, prefAnswers, firstName }: Props) {
   const displayName = profile.nombre?.trim() || firstName || 'Tu perfil';
   const role = profileHeadlineRole(profile);
-  const years = profileExperienceYears(profile);
-  const tags = profilePreviewTags(profile, prefAnswers);
   const compatibility = estimatedCompatibility(profile, percent, prefAnswers);
   const vacancies = estimatedVacancies(profile, percent, prefAnswers);
 
   return (
-    <aside className="portal-onboarding-preview" aria-label="Vista previa de tu perfil">
-      <div className="portal-onboarding-preview__card">
-        <div className="portal-onboarding-preview__avatar" aria-hidden>
+    <div className="portal-onboarding-preview-strip" aria-label="Vista previa de tu perfil">
+      <div className="portal-onboarding-preview-strip__identity">
+        <span className="portal-onboarding-preview-strip__avatar" aria-hidden>
           {initials(displayName)}
+        </span>
+        <div className="portal-onboarding-preview-strip__who">
+          <span className="portal-onboarding-preview-strip__name">{displayName}</span>
+          <span className="portal-onboarding-preview-strip__role">{role}</span>
         </div>
-
-        <h3 className="portal-onboarding-preview__name">{displayName}</h3>
-        <p className="portal-onboarding-preview__role">{role}</p>
-
-        {tags.length > 0 ? (
-          <div className="portal-onboarding-preview__tags">
-            {tags.map((tag) => (
-              <span key={tag} className="portal-onboarding-preview__tag">
-                {tag}
-              </span>
-            ))}
-          </div>
-        ) : null}
-
-        {years ? <p className="portal-onboarding-preview__years">{years}</p> : null}
-
-        <div className="portal-onboarding-preview__meter">
-          <div className="portal-onboarding-preview__meter-head">
-            <span>Perfil</span>
-            <strong>{percent}%</strong>
-          </div>
-          <div className="portal-onboarding-progress portal-onboarding-progress--preview" aria-hidden>
-            <span style={{ width: `${percent}%` }} />
-          </div>
-        </div>
-
-        <dl className="portal-onboarding-preview__stats">
-          <div>
-            <dt>Compatibilidad</dt>
-            <dd>{compatibility}%</dd>
-          </div>
-          <div>
-            <dt>Vacantes potenciales</dt>
-            <dd>{vacancies}</dd>
-          </div>
-        </dl>
       </div>
-    </aside>
+      <div className="portal-onboarding-preview-strip__stats">
+        <div className="portal-onboarding-preview-strip__stat">
+          <strong>{compatibility}%</strong>
+          <span>Compatibilidad</span>
+        </div>
+        <div className="portal-onboarding-preview-strip__divider" aria-hidden />
+        <div className="portal-onboarding-preview-strip__stat">
+          <strong>{vacancies}</strong>
+          <span>Vacantes</span>
+        </div>
+      </div>
+    </div>
   );
 }

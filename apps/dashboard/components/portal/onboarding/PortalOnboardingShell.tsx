@@ -28,15 +28,25 @@ export function PortalOnboardingShell({
 }: Props) {
   return (
     <div className={`portal-onboarding portal-onboarding--fullscreen${wide ? ' portal-onboarding--wide' : ''}`}>
-      <div className="portal-onboarding-canvas">
-        <header className="portal-onboarding-topbar portal-onboarding-topbar--fullscreen">
-          <div className="portal-onboarding-topbar__main">
-            <div className="portal-onboarding-topbar__meta">
-              <span className="portal-onboarding-topbar__brand">Perfil</span>
-              <strong className="portal-onboarding-topbar__percent">{percent}%</strong>
+      <div className="portal-onboarding-viewport">
+        <header className="portal-onboarding-header">
+          <div className="portal-onboarding-header__row">
+            <span className="portal-onboarding-header__brand">Perfil</span>
+            <div className="portal-onboarding-header__actions">
+              <span className="portal-onboarding-header__time">
+                <Clock3 className="h-3.5 w-3.5" aria-hidden />
+                {minutesLeft <= 0 ? 'Listo' : `${minutesLeft} min`}
+              </span>
+              {onSaveExit ? (
+                <button type="button" className="portal-onboarding-header__exit" onClick={onSaveExit}>
+                  Salir
+                </button>
+              ) : null}
             </div>
+          </div>
+          <div className="portal-onboarding-header__progress-row">
             <div
-              className="portal-onboarding-progress portal-onboarding-progress--fullscreen"
+              className="portal-onboarding-progress portal-onboarding-progress--header"
               role="progressbar"
               aria-valuenow={percent}
               aria-valuemin={0}
@@ -44,35 +54,26 @@ export function PortalOnboardingShell({
             >
               <span style={{ width: `${percent}%` }} />
             </div>
-          </div>
-          <div className="portal-onboarding-topbar__right">
-            <span className="portal-onboarding-topbar__time">
-              <Clock3 className="h-3.5 w-3.5" aria-hidden />
-              {minutesLeft <= 0 ? 'Listo' : `Te faltan ${minutesLeft} min`}
-            </span>
-            {onSaveExit ? (
-              <button type="button" className="portal-onboarding-topbar__exit" onClick={onSaveExit}>
-                Guardar y salir
-              </button>
-            ) : null}
+            <strong className="portal-onboarding-header__percent">{percent}%</strong>
           </div>
         </header>
 
-        {motivation ? <p className="portal-onboarding-motivation portal-onboarding-motivation--fullscreen">{motivation}</p> : null}
+        <main className="portal-onboarding-main">
+          {preview}
+          {motivation ? <p className="portal-onboarding-motivation">{motivation}</p> : null}
 
-        {preview ? <div className="portal-onboarding-preview-slot">{preview}</div> : null}
+          <div className="portal-onboarding-stage portal-onboarding-card-enter">{children}</div>
 
-        <div className="portal-onboarding-stage portal-onboarding-card-enter">{children}</div>
+          {saveStatus && saveStatus !== 'idle' ? (
+            <p className="portal-onboarding-save-state" aria-live="polite">
+              {saveStatus === 'saving' ? 'Guardando...' : null}
+              {saveStatus === 'saved' ? '✓ Guardado' : null}
+              {saveStatus === 'error' ? 'Error al guardar' : null}
+            </p>
+          ) : null}
+        </main>
 
-        {saveStatus && saveStatus !== 'idle' ? (
-          <p className="portal-onboarding-save-state portal-onboarding-save-state--centered">
-            {saveStatus === 'saving' ? 'Guardando...' : null}
-            {saveStatus === 'saved' ? '✓ Guardado automáticamente' : null}
-            {saveStatus === 'error' ? 'No pudimos guardar. Reintentaremos al continuar.' : null}
-          </p>
-        ) : null}
-
-        {footer}
+        {footer ? <div className="portal-onboarding-bottom">{footer}</div> : null}
       </div>
     </div>
   );
@@ -103,9 +104,7 @@ export function PortalOnboardingFooter({
           <button type="button" className="portal-onboarding-btn portal-onboarding-btn--back" onClick={onBack}>
             {backLabel}
           </button>
-        ) : (
-          <span />
-        )}
+        ) : null}
         <button
           type="button"
           className="portal-onboarding-btn portal-onboarding-btn--primary portal-onboarding-btn--continue"

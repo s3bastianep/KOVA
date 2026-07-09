@@ -579,7 +579,7 @@ export function PortalOnboardingFlow({
       <PortalOnboardingShell
         percent={percent}
         minutesLeft={minutesLeft}
-        motivation={motivation}
+        motivation={previewPanel ? null : motivation}
         onSaveExit={() => void handleSaveExit()}
         preview={previewPanel}
       >
@@ -654,7 +654,7 @@ export function PortalOnboardingFlow({
       <PortalOnboardingShell
         percent={percent}
         minutesLeft={minutesLeft}
-        motivation={motivation}
+        motivation={previewPanel ? null : motivation}
         onSaveExit={() => void handleSaveExit()}
         preview={previewPanel}
         footer={
@@ -729,7 +729,7 @@ export function PortalOnboardingFlow({
       <PortalOnboardingShell
         percent={percent}
         minutesLeft={minutesLeft}
-        motivation={motivation}
+        motivation={previewPanel ? null : motivation}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
         wide
@@ -809,7 +809,7 @@ export function PortalOnboardingFlow({
       <PortalOnboardingShell
         percent={percent}
         minutesLeft={minutesLeft}
-        motivation={motivation}
+        motivation={previewPanel ? null : motivation}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
         preview={previewPanel}
@@ -847,7 +847,7 @@ export function PortalOnboardingFlow({
       <PortalOnboardingShell
         percent={percent}
         minutesLeft={minutesLeft}
-        motivation={motivation}
+        motivation={previewPanel ? null : motivation}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
         preview={previewPanel}
@@ -886,7 +886,7 @@ export function PortalOnboardingFlow({
       <PortalOnboardingShell
         percent={percent}
         minutesLeft={minutesLeft}
-        motivation={motivation}
+        motivation={previewPanel ? null : motivation}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
         preview={previewPanel}
