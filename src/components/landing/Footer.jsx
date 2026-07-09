@@ -31,7 +31,7 @@ export default function Footer({ variant }) {
     return (
       <footer className="kv-footer">
         <div className="kv-wrap">
-          <p className="kv-footer-meta">Kova · Equipos comerciales de alto impacto · Latinoamérica</p>
+          <p className="kv-footer-meta">Kova · Reclutamiento comercial, con evidencia</p>
         </div>
       </footer>
     );

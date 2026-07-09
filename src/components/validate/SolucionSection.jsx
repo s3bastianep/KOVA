@@ -6,7 +6,7 @@ export default function SolucionSection() {
       <div className="kv-wrap">
         <div className="kv-section-head">
           <span className="kv-section-tag kv-section-tag--lime font-mono">La solución</span>
-          <h2 className="kv-h2 kv-h2--light font-display">Equipos comerciales construidos con precisión</h2>
+          <h2 className="kv-h2 kv-h2--light font-display">Candidatos emparejados con precisión</h2>
           <p className="kv-solution-lead">{CN_SOLUTION_INTRO}</p>
         </div>
 

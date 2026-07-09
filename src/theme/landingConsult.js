@@ -42,55 +42,22 @@ export const CN_CTA_LABEL = 'Agendar una consultoría';
 export const CN_CTA_LABEL_SHORT = 'Agendar una consultoría';
 export const CN_CTA_NOTE = '30 minutos · Sin costo · Sin compromiso';
 
-export const CN_BRAND_ANCHOR =
-  'No llenamos vacantes. Construimos equipos comerciales que impulsan el crecimiento.';
-
-export const CN_HERO_EYEBROW = 'Consultora comercial B2B · Latinoamérica';
-export const CN_HERO_HEADLINE = 'No llenamos vacantes.';
-export const CN_HERO_HEADLINE_HIGHLIGHT = 'Construimos equipos que impulsan el crecimiento.';
-export const CN_HERO_SUB_LEAD = 'El reclutamiento es el medio, no el fin';
+export const CN_HERO_EYEBROW = 'Expertos en perfiles comerciales';
+export const CN_HERO_HEADLINE_HIGHLIGHT = 'mayor certeza';
+export const CN_HERO_SUB_LEAD = 'Cada empresa vende de forma diferente';
 export const CN_HERO_SUB_BODY =
-  'Ayudamos a directores comerciales a reducir el riesgo de una mala contratación e incorporar vendedores con alta probabilidad de generar resultados en su contexto específico.';
+  'Por eso analizamos su modelo comercial antes de definir el perfil del cargo y diseñar el proceso de evaluación. Solo presentamos candidatos que demuestran un alto nivel de compatibilidad con la forma en que su organización vende, respaldado por evidencia y criterios consistentes.';
 export const CN_HERO_METHOD_LINK = 'Conocer nuestra metodología';
 export const CN_HERO_NOTE =
-  'Evaluación con evidencia, alineada a cómo vende su empresa — no a plantillas genéricas de RRHH.';
+  'Así luce un informe de evaluación diseñado para apoyar decisiones de contratación con mayor objetividad.';
 
-export const CN_POSITION_TAG = 'Nuestra identidad';
-export const CN_POSITION_HEADLINE = 'No somos una empresa de reclutamiento';
-export const CN_POSITION_LEAD =
-  'Somos una consultora especializada en perfiles comerciales B2B de alto desempeño. No competimos por volumen ni por ser la opción más económica.';
-export const CN_POSITION_PILLARS = [
-  { neg: 'No por precio', pos: 'Por impacto en ventas y retención del equipo' },
-  { neg: 'No por volumen', pos: 'Por precisión en cada incorporación' },
-  { neg: 'No por velocidad', pos: 'Por contratar bien desde la primera vez' },
-];
+export const CN_BRAND_SLOGAN =
+  'Somos el puente entre empresas y talento, creando conexiones estratégicas que generan impacto real.';
 
-export const CN_DIRECTOR_TAG = 'Para directores comerciales';
-export const CN_DIRECTOR_HEADLINE = 'Antes de abrir una búsqueda, estas preguntas importan';
-export const CN_DIRECTOR_LEAD =
-  'Si no puede responderlas con claridad, el proceso ya arranca con riesgo. Nosotros las resolvemos antes de presentar perfiles.';
-export const CN_DIRECTOR_QUESTIONS = [
-  '¿Este perfil encaja con nuestro ciclo de venta, ticket y tipo de cliente?',
-  '¿Puede negociar y cerrar en la complejidad técnica de nuestro producto?',
-  '¿Tiene probabilidad real de cumplir cuota en los primeros 90 días?',
-  '¿Aporta al pipeline o solo ocupa un cupo en el organigrama?',
-  '¿Encaja con la cultura comercial del equipo actual?',
-  '¿Esta contratación es inversión estratégica o trámite administrativo?',
-];
-
-export const CN_MISSION_TAG = 'Misión y visión';
-export const CN_MISSION_HEADLINE = 'Referencia en Latinoamérica para talento comercial B2B';
-export const CN_MISSION_BODY =
-  'Nuestra misión es ayudar a tomar mejores decisiones de contratación para que los equipos vendan más, permanezcan más tiempo y generen mayor impacto en el negocio.';
-export const CN_MISSION_VISION =
-  'Cuando una empresa necesite un gerente comercial, un KAM o un ingeniero de ventas, quiera pensar primero en un socio que entiende su negocio — no en quien llene la vacante más rápido.';
-
-export const CN_BRAND_SLOGAN = CN_BRAND_ANCHOR;
-
-export const CN_BRAND_CLOSE_HEADLINE = 'Construimos equipos comerciales de alto impacto';
+export const CN_BRAND_CLOSE_HEADLINE = 'Somos el puente entre empresas y talento';
 export const CN_BRAND_CLOSE_SUBLINE =
-  'Cada incorporación como inversión estratégica — no como un trámite de recursos humanos.';
-export const CN_BRAND_CLOSE_PROMPT = '¿Hablamos de su próximo perfil comercial?';
+  'Creando conexiones estratégicas que generan impacto real.';
+export const CN_BRAND_CLOSE_PROMPT = '¿Listo para dar el siguiente paso?';
 
 export const CN_SERVICES_INTRO =
   'Un proceso estructurado asegura precisión, eficiencia y resultados medibles en cada contratación comercial.';
@@ -175,31 +142,31 @@ export const CN_SERVICES_HERO_FACES = [
   },
 ];
 
-export const CN_CLOSER_TITLE = '¿Listo para fortalecer su equipo comercial?';
-export const CN_CLOSER_TITLE_HIGHLIGHT = 'equipo comercial';
+export const CN_CLOSER_TITLE = '¿Listo para contratar con mayor certeza?';
+export const CN_CLOSER_TITLE_HIGHLIGHT = 'mayor certeza';
 export const CN_CLOSER_LEAD =
-  'Reducimos el riesgo de una mala contratación y aceleramos el impacto de cada incorporación en ventas, productividad y retención.';
+  'Un proceso de selección diseñado alrededor de su modelo comercial reduce el riesgo de una mala contratación y acelera la productividad de sus vendedores.';
 
 export const CN_PROBLEM_TAG = 'El problema';
 
-export const CN_PROBLEM_HEADLINE = 'Contratar mal cuesta mucho más que un salario';
+export const CN_PROBLEM_HEADLINE = 'La contratación de talento comercial es diferente';
 
 export const CN_PROBLEM_POINTS = [
   {
-    title: 'Meses de capacitación sin ventas',
-    desc: 'El perfil parecía correcto en papel, pero no genera resultados en su ciclo ni con su tipo de cliente.',
+    title: 'Los currículums no revelan quién sabe vender realmente',
+    desc: 'Un CV impresionante puede ocultar que alguien no encaja con su ciclo, ticket o tipo de cliente.',
   },
   {
-    title: 'Oportunidades que se van a la competencia',
-    desc: 'Mientras el equipo absorbe un mal fit, el pipeline se enfría y los clientes no esperan.',
+    title: 'Las entrevistas premian la confianza, no la capacidad',
+    desc: 'El candidato que mejor se vende no siempre es el que mejor vende su producto.',
   },
   {
-    title: 'El director comercial pierde tiempo vendiendo',
-    desc: 'Procesos de selección largos desvían al liderazgo de lo que más importa: cerrar negocios.',
+    title: 'Contratar se convierte en una apuesta',
+    desc: 'Sin un perfil definido ni pruebas alineadas a su modelo comercial, cada decisión es intuición.',
   },
   {
-    title: 'Rotación y costos ocultos',
-    desc: 'Volver a empezar encarece cada error y debilita la confianza del equipo comercial.',
+    title: 'El costo de equivocarse es alto y tardío',
+    desc: 'Cuando el problema aparece, ya invirtió meses en formación, liderazgo y oportunidades perdidas.',
   },
 ];
 
@@ -270,13 +237,13 @@ export const CN_PROBLEM_STEPS = [
 ];
 
 export const CN_SOLUTION_INTRO =
-  'Identificamos personas con alta probabilidad de generar resultados en su contexto: estrategia comercial, ciclo de ventas, cliente, complejidad del producto y cultura del equipo.';
+  'Cada candidato pasa por un proceso de selección basado en evidencia documentada, diseñado para reducir el riesgo de contratación y ajustarse al talento adecuado.';
 
 export const CN_SOLUTION_TILES = [
-  { n: '01', title: 'Diagnóstico del negocio', body: 'Entendemos cómo vende su empresa antes de definir el perfil y el proceso.' },
-  { n: '02', title: 'Evaluación con evidencia', body: 'Medimos competencias comerciales reales, no solo años de experiencia en el CV.' },
-  { n: '03', title: 'Compatibilidad contextual', body: 'Vender minería no es vender software: evaluamos encaje con su industria y ciclo.' },
-  { n: '04', title: 'Kova Score', body: 'Índice predictivo de potencial comercial en su modelo de negocio específico.' },
+  { n: '01', title: 'Ajuste al rol', body: 'El perfil se define a partir de cómo vende su empresa, no de una plantilla genérica.' },
+  { n: '02', title: 'Diagnóstico comercial', body: 'Entendemos su modelo de venta antes de definir el perfil y el proceso de selección.' },
+  { n: '03', title: 'Evaluación con evidencia', body: 'Cada candidato se evalúa con pruebas y criterios técnicos, no con impresión general.' },
+  { n: '04', title: 'Kova Score', body: 'Un índice predictivo que estima el potencial comercial de cada candidato en su modelo de negocio.' },
 ];
 
 export const CN_SCORE_PILL =
@@ -404,13 +371,12 @@ export const CN_PRINCIPLES = [
 ];
 
 export const CN_FOUNDER = {
-  tag: 'Experiencia comercial',
-  years: '9+',
-  yearsLabel: 'años liderando equipos comerciales B2B',
-  sectors: ['Minería', 'Manufactura', 'Energía', 'Tecnología B2B', 'Logística', 'MRO'],
-  headline: 'Pensamos como directores comerciales porque lo hemos sido',
-  summary:
-    'Conocemos el costo de contratar mal: productividad perdida, pipeline frío y rotación — no falta de hojas de vida.',
+  tag: 'Nuestra experiencia',
+  years: '5+',
+  yearsLabel: 'años conociendo el mercado comercial',
+  sectors: ['Minería', 'Consumo masivo', 'Manufactura', 'Tecnología B2B', 'Logística', 'MRO'],
+  headline: 'Ayudamos a potencializar su área comercial con perfiles que realmente encajan',
+  summary: CN_BRAND_SLOGAN,
 };
 
 export const CN_COMPARISON_HEADLINE = 'Selección tradicional frente a metodología Kova';
@@ -478,21 +444,21 @@ export const CN_IMAGES = {
 
 export const CN_TESTIMONIALS = [
   {
-    quote: 'Dejamos de perder trimestres con perfiles que no vendían en nuestro ciclo industrial.',
+    quote: 'Tres perfiles evaluados. Contratamos uno. Sin ruido.',
     name: 'Carolina Méndez',
     role: 'Gerente Comercial',
     company: 'Distribución industrial B2B',
     photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&q=80&auto=format&fit=crop',
   },
   {
-    quote: 'Por primera vez contratamos con criterio de negocio, no solo por buena entrevista.',
+    quote: 'Por primera vez supimos exactamente qué perfil necesitábamos.',
     name: 'Andrés Villalobos',
     role: 'Director de Ventas',
     company: 'Tecnología SaaS',
     photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80&auto=format&fit=crop',
   },
   {
-    quote: 'El equipo comercial estabilizó y el pipeline volvió a crecer en menos de un semestre.',
+    quote: 'El seguimiento a 90 días nos salvó.',
     name: 'Laura Restrepo',
     role: 'VP Comercial',
     company: 'Servicios profesionales',

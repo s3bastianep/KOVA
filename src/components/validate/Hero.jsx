@@ -3,11 +3,9 @@ import { Link } from 'react-router-dom';
 import {
   CN_CTA_LABEL,
   CN_HERO_EYEBROW,
-  CN_HERO_HEADLINE,
   CN_HERO_HEADLINE_HIGHLIGHT,
   CN_HERO_METHOD_LINK,
   CN_HERO_SUB_BODY,
-  CN_HERO_SUB_LEAD,
 } from '@/theme/landingConsult';
 
 const HeroShootingStars = lazy(() => import('@/components/validate/HeroShootingStars'));
@@ -37,10 +35,12 @@ export default function Hero() {
         <div className="kv-hero-copy">
           <p className="kv-eyebrow font-mono">{CN_HERO_EYEBROW}</p>
           <h1 className="font-display">
-            {CN_HERO_HEADLINE} <em>{CN_HERO_HEADLINE_HIGHLIGHT}</em>
+            Contrate con <em>{CN_HERO_HEADLINE_HIGHLIGHT}</em>, no solo con intuición
           </h1>
           <div className="kv-hero-sub">
-            <h2 className="kv-hero-sub-lead font-display">{CN_HERO_SUB_LEAD}</h2>
+            <h2 className="kv-hero-sub-lead font-display">
+              Cada empresa vende de forma <em>diferente</em>
+            </h2>
             <p className="kv-hero-sub-body">{CN_HERO_SUB_BODY}</p>
           </div>
           <div className="kv-hero-ctas">
