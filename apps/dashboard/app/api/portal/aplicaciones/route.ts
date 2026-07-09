@@ -3,6 +3,11 @@ import { stageLabel } from '@/lib/stages';
 import { prisma } from '@/lib/prisma';
 import { isMockMode } from '@/lib/mock';
 import { handlePortalRoute } from '@/lib/portal-api';
+import {
+  portalAplicacionesCacheKey,
+  portalServerCacheGet,
+  portalServerCacheSet,
+} from '@/lib/portal-server-cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,6 +34,12 @@ export async function GET(req: NextRequest) {
           ],
           total: 1,
         });
+      }
+
+      const cacheKey = portalAplicacionesCacheKey(candidate.id);
+      const cached = portalServerCacheGet<{ aplicaciones: unknown[]; total: number }>(cacheKey);
+      if (cached) {
+        return Response.json(cached);
       }
 
       const rows = await prisma.candidateVacancy.findMany({
@@ -70,7 +81,9 @@ export async function GET(req: NextRequest) {
         rejectReason: row.rejectReason,
       }));
 
-      return Response.json({ aplicaciones, total: aplicaciones.length });
+      const payload = { aplicaciones, total: aplicaciones.length };
+      portalServerCacheSet(cacheKey, payload);
+      return Response.json(payload);
     },
     'portal/aplicaciones',
   );

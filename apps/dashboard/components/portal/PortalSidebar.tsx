@@ -23,7 +23,7 @@ export function PortalSidebar() {
   };
 
   return (
-    <aside className="kova-sidebar hidden lg:flex w-[268px] shrink-0 flex-col border-r relative z-20">
+    <aside className="kova-sidebar relative z-20 hidden h-full w-[268px] min-w-[268px] max-w-[268px] shrink-0 flex-col overflow-hidden border-r lg:flex">
       <div className="flex items-center gap-3 px-5 pt-6 pb-5">
         <div className="kova-sidebar-logo-mark" aria-hidden>
           K
@@ -39,15 +39,17 @@ export function PortalSidebar() {
           Mi cuenta
         </p>
         <div className="space-y-1">
-          {PORTAL_NAV.map(({ href, label, icon: Icon, exact }) => {
+          {PORTAL_NAV.map(({ href, label, icon: Icon, exact, ...item }) => {
             const active = exact
               ? pathname === href
               : pathname === href || pathname.startsWith(`${href}/`);
+            const shouldPrefetch = 'prefetch' in item ? item.prefetch !== false : true;
             return (
               <Link
                 key={href}
                 href={href}
-                className={cn('kova-nav-item', active && 'kova-nav-item-active pl-4')}
+                prefetch={shouldPrefetch}
+                className={cn('kova-nav-item kova-nav-item-portal', active && 'kova-nav-item-active')}
               >
                 <Icon className="w-[18px] h-[18px] shrink-0" />
                 <span className="truncate">{label}</span>
@@ -61,7 +63,8 @@ export function PortalSidebar() {
         </p>
         <Link
           href="/portal/documentos"
-          className="kova-sidebar-quick group flex items-center gap-3 px-3 py-3 rounded-2xl border transition-all duration-200"
+          prefetch
+          className="kova-sidebar-quick group flex items-center gap-3 px-3 py-3 rounded-2xl border transition-colors duration-150"
         >
           <span
             className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105"

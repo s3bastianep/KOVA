@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
@@ -16,58 +16,66 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { portalApi, type PortalVacancyListItem } from '@/lib/api';
+import { PORTAL_CACHE_KEYS, portalCacheGet } from '@/lib/portal-cache';
 
 type SortOption = 'match_desc' | 'match_asc' | 'title';
 
-function matchTone(score: number) {
+type MatchTone = {
+  label: string;
+  badgeClass: string;
+  scoreClass: string;
+  accent: string;
+};
+
+function matchTone(score: number): MatchTone {
   if (score >= 80) {
     return {
       label: 'Alta',
-      bg: 'bg-emerald-50',
-      text: 'text-emerald-800',
-      ring: 'ring-emerald-200/70',
-      accent: '#047857',
+      badgeClass:
+        'border-[var(--kova-border)] bg-[var(--kova-green-soft)] text-[var(--kova-green)] ring-[var(--kova-border)]',
+      scoreClass: 'border-[var(--kova-border)] bg-[var(--kova-green-soft)] text-[var(--kova-green)]',
+      accent: 'var(--kova-lime-dark)',
     };
   }
   if (score >= 60) {
     return {
       label: 'Media',
-      bg: 'bg-amber-50',
-      text: 'text-amber-800',
-      ring: 'ring-amber-200/70',
-      accent: '#B45309',
+      badgeClass:
+        'border-[var(--kova-border)] bg-[var(--kova-blue-soft)] text-[var(--kova-blue)] ring-[var(--kova-border)]',
+      scoreClass: 'border-[var(--kova-border)] bg-[var(--kova-blue-soft)] text-[var(--kova-blue)]',
+      accent: 'var(--kova-blue)',
     };
   }
   return {
     label: 'Explorar',
-    bg: 'bg-[var(--kova-surface-2)]',
-    text: 'text-[var(--kova-navy-muted)]',
-    ring: 'ring-[var(--kova-border)]',
-    accent: 'var(--kova-blue)',
+    badgeClass:
+      'border-[var(--kova-border)] bg-[var(--kova-surface-2)] text-[var(--kova-navy-muted)] ring-[var(--kova-border)]',
+    scoreClass: 'border-[var(--kova-border)] bg-[var(--kova-surface-2)] text-[var(--kova-navy-muted)]',
+    accent: 'var(--kova-navy-muted)',
   };
 }
 
 const selectClass =
   'w-full rounded-xl border border-[var(--kova-border)] bg-white px-3.5 py-2.5 text-sm outline-none transition-shadow focus:border-[var(--kova-blue)] focus:ring-2 focus:ring-[var(--kova-ring)]';
 
-function VacancyCard({ vacancy }: { vacancy: PortalVacancyListItem }) {
+const VacancyCard = memo(function VacancyCard({ vacancy }: { vacancy: PortalVacancyListItem }) {
   const tone = matchTone(vacancy.compatibility);
 
   return (
-    <article className="group relative overflow-hidden rounded-2xl border border-[var(--kova-border)] bg-white shadow-[var(--kova-shadow-xs)] transition-all duration-200 hover:border-[var(--kova-border-strong)] hover:shadow-[var(--kova-shadow-md)]">
+    <article className="group relative overflow-hidden rounded-2xl border border-[var(--kova-border)] bg-white shadow-[var(--kova-shadow-xs)] transition-[border-color,box-shadow] duration-150 hover:border-[var(--kova-border-strong)] hover:shadow-[var(--kova-shadow-md)]">
       <div className="absolute inset-y-0 left-0 w-1" style={{ background: tone.accent }} aria-hidden />
 
       <div className="flex flex-col gap-5 p-5 pl-6 sm:flex-row sm:items-center sm:justify-between sm:p-6 sm:pl-7">
         <div className="min-w-0 flex-1 space-y-3">
           <div className="flex flex-wrap items-center gap-2">
             <span
-              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${tone.bg} ${tone.text} ${tone.ring}`}
+              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${tone.badgeClass}`}
             >
               <Target className="h-3 w-3" />
               {vacancy.compatibility}% · {tone.label}
             </span>
             {vacancy.alreadyApplied ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800">
+              <span className="inline-flex items-center gap-1 rounded-full border border-[var(--kova-border)] bg-[var(--kova-green-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--kova-green)]">
                 <CheckCircle2 className="h-3 w-3" />
                 Ya aplicaste
               </span>
@@ -97,20 +105,19 @@ function VacancyCard({ vacancy }: { vacancy: PortalVacancyListItem }) {
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-4 sm:flex-col sm:items-end">
+        <div className="flex shrink-0 items-center gap-3 sm:flex-col sm:items-end sm:gap-4">
           <div
-            className={`flex h-[72px] w-[72px] flex-col items-center justify-center rounded-2xl ring-1 ${tone.bg} ${tone.ring}`}
+            className={`flex h-16 w-16 flex-col items-center justify-center rounded-2xl border ${tone.scoreClass}`}
           >
-            <span className={`font-heading text-2xl font-bold leading-none ${tone.text}`}>
-              {vacancy.compatibility}
-            </span>
+            <span className="font-heading text-2xl font-bold leading-none">{vacancy.compatibility}</span>
             <span className="mt-0.5 text-[9px] font-mono uppercase tracking-wide text-[var(--kova-muted)]">
               Match
             </span>
           </div>
           <Link
             href={`/portal/vacantes/${vacancy.id}`}
-            className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition hover:scale-[1.02]"
+            prefetch
+            className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-transform duration-150 hover:scale-[1.02]"
             style={{ background: 'var(--kova-lime)', color: 'var(--kv-ink)' }}
           >
             {vacancy.alreadyApplied ? 'Ver estado' : 'Ver y aplicar'}
@@ -120,18 +127,14 @@ function VacancyCard({ vacancy }: { vacancy: PortalVacancyListItem }) {
       </div>
     </article>
   );
-}
+});
 
-function LoadingSkeleton() {
+function CardListSkeleton() {
   return (
-    <div className="mx-auto max-w-4xl space-y-8">
-      <div className="kova-card h-44 animate-pulse rounded-3xl border" />
-      <div className="h-16 animate-pulse rounded-2xl border bg-white" />
-      <div className="space-y-4">
-        {[0, 1, 2].map((item) => (
-          <div key={item} className="h-40 animate-pulse rounded-2xl border bg-white" />
-        ))}
-      </div>
+    <div className="space-y-4">
+      {[0, 1, 2].map((item) => (
+        <div key={item} className="h-40 animate-pulse rounded-2xl border bg-white" />
+      ))}
     </div>
   );
 }
@@ -139,14 +142,16 @@ function LoadingSkeleton() {
 export function PortalVacantesClient() {
   const router = useRouter();
   const pathname = usePathname();
-  const [vacantes, setVacantes] = useState<PortalVacancyListItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const cachedVacantes = portalCacheGet<{ vacantes: PortalVacancyListItem[] }>(PORTAL_CACHE_KEYS.vacantes(0));
+  const [vacantes, setVacantes] = useState<PortalVacancyListItem[]>(() => cachedVacantes?.vacantes ?? []);
+  const [loading, setLoading] = useState(() => !cachedVacantes);
   const [error, setError] = useState('');
   const [showApplied, setShowApplied] = useState(false);
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedModality, setSelectedModality] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('match_desc');
   const [queryReady, setQueryReady] = useState(false);
+  const skipUrlSync = useRef(true);
 
   useEffect(() => {
     portalApi
@@ -170,6 +175,10 @@ export function PortalVacantesClient() {
 
   useEffect(() => {
     if (!queryReady) return;
+    if (skipUrlSync.current) {
+      skipUrlSync.current = false;
+      return;
+    }
     const next = new URLSearchParams();
     if (sortBy !== 'match_desc') next.set('sort', sortBy);
     if (selectedCity) next.set('city', selectedCity);
@@ -214,10 +223,7 @@ export function PortalVacantesClient() {
   }, [vacantes]);
 
   const hasActiveFilters = Boolean(selectedCity || selectedModality || showApplied || sortBy !== 'match_desc');
-
-  if (loading) {
-    return <LoadingSkeleton />;
-  }
+  const listLoading = loading && vacantes.length === 0;
 
   return (
     <div className="mx-auto max-w-4xl space-y-8">
@@ -226,7 +232,7 @@ export function PortalVacantesClient() {
           className="pointer-events-none absolute inset-0 opacity-[0.08]"
           style={{
             background:
-              'radial-gradient(circle at top right, var(--kova-lime), transparent 55%), radial-gradient(circle at bottom left, var(--kova-indigo), transparent 50%)',
+              'radial-gradient(circle at top right, var(--kova-lime), transparent 55%), radial-gradient(circle at bottom left, var(--kova-blue), transparent 50%)',
           }}
           aria-hidden
         />
@@ -244,19 +250,19 @@ export function PortalVacantesClient() {
 
           {vacantes.length > 0 ? (
             <div className="flex flex-wrap gap-2.5">
-              <div className="rounded-xl border border-[var(--kova-border)] bg-white/80 px-3.5 py-2 backdrop-blur-sm">
+              <div className="rounded-xl border border-[var(--kova-border)] bg-white px-3.5 py-2">
                 <p className="text-[10px] font-mono uppercase tracking-wide text-[var(--kova-muted)]">
                   Disponibles
                 </p>
                 <p className="font-heading text-xl font-bold">{stats.total}</p>
               </div>
-              <div className="rounded-xl border border-[var(--kova-border)] bg-white/80 px-3.5 py-2 backdrop-blur-sm">
+              <div className="rounded-xl border border-[var(--kova-border)] bg-white px-3.5 py-2">
                 <p className="text-[10px] font-mono uppercase tracking-wide text-[var(--kova-muted)]">
                   Alta compat.
                 </p>
-                <p className="font-heading text-xl font-bold text-emerald-700">{stats.highMatch}</p>
+                <p className="font-heading text-xl font-bold text-[var(--kova-green)]">{stats.highMatch}</p>
               </div>
-              <div className="rounded-xl border border-[var(--kova-border)] bg-white/80 px-3.5 py-2 backdrop-blur-sm">
+              <div className="rounded-xl border border-[var(--kova-border)] bg-white px-3.5 py-2">
                 <p className="text-[10px] font-mono uppercase tracking-wide text-[var(--kova-muted)]">
                   Match prom.
                 </p>
@@ -268,143 +274,151 @@ export function PortalVacantesClient() {
       </section>
 
       {error ? (
-        <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <div
+          role="alert"
+          className="rounded-xl border border-[var(--kova-border)] bg-[var(--kova-surface-2)] px-4 py-3 text-sm text-[var(--kova-navy)]"
+        >
           {error}
         </div>
       ) : null}
 
-      {vacantes.length > 0 ? (
-        <div className="rounded-2xl border border-[var(--kova-border)] bg-white p-4 shadow-[var(--kova-shadow-xs)]">
-          <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-[var(--kova-navy-muted)]">
-            <SlidersHorizontal className="h-4 w-4" />
-            Filtros
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <label className="space-y-1.5">
-              <span className="text-xs font-medium text-[var(--kova-muted)]">Ordenar</span>
-              <select value={sortBy} onChange={(e) => setSortBy(e.target.value as SortOption)} className={selectClass}>
-                <option value="match_desc">Mayor match</option>
-                <option value="match_asc">Menor match</option>
-                <option value="title">Por título</option>
-              </select>
-            </label>
-            <label className="space-y-1.5">
-              <span className="text-xs font-medium text-[var(--kova-muted)]">Ciudad</span>
-              <select value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)} className={selectClass}>
-                <option value="">Todas las ciudades</option>
-                {cities.map((city) => (
-                  <option key={city} value={city}>
-                    {city}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="space-y-1.5">
-              <span className="text-xs font-medium text-[var(--kova-muted)]">Modalidad</span>
-              <select
-                value={selectedModality}
-                onChange={(e) => setSelectedModality(e.target.value)}
-                className={selectClass}
-              >
-                <option value="">Todas las modalidades</option>
-                {modalities.map((modality) => (
-                  <option key={modality} value={modality}>
-                    {modality}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="flex h-full min-h-[70px] cursor-pointer items-center gap-3 rounded-xl border border-[var(--kova-border)] bg-[var(--kova-surface-2)]/50 px-3.5 py-2.5">
-              <input
-                type="checkbox"
-                checked={showApplied}
-                onChange={(e) => setShowApplied(e.target.checked)}
-                className="h-4 w-4 rounded border-[var(--kova-border-strong)]"
-              />
-              <span className="text-sm font-medium leading-snug">Mostrar ya aplicadas</span>
-            </label>
+      {listLoading ? (
+        <CardListSkeleton />
+      ) : vacantes.length > 0 ? (
+        <>
+          <div className="rounded-2xl border border-[var(--kova-border)] bg-white p-4 shadow-[var(--kova-shadow-xs)]">
+            <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-[var(--kova-navy)]">
+              <SlidersHorizontal className="h-4 w-4 text-[var(--kova-blue)]" />
+              Filtros
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <label className="space-y-1.5">
+                <span className="text-xs font-medium text-[var(--kova-muted)]">Ordenar</span>
+                <select value={sortBy} onChange={(e) => setSortBy(e.target.value as SortOption)} className={selectClass}>
+                  <option value="match_desc">Mayor match</option>
+                  <option value="match_asc">Menor match</option>
+                  <option value="title">Por título</option>
+                </select>
+              </label>
+              <label className="space-y-1.5">
+                <span className="text-xs font-medium text-[var(--kova-muted)]">Ciudad</span>
+                <select value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)} className={selectClass}>
+                  <option value="">Todas las ciudades</option>
+                  {cities.map((city) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="space-y-1.5">
+                <span className="text-xs font-medium text-[var(--kova-muted)]">Modalidad</span>
+                <select
+                  value={selectedModality}
+                  onChange={(e) => setSelectedModality(e.target.value)}
+                  className={selectClass}
+                >
+                  <option value="">Todas las modalidades</option>
+                  {modalities.map((modality) => (
+                    <option key={modality} value={modality}>
+                      {modality}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="flex h-full min-h-[70px] cursor-pointer items-center gap-3 rounded-xl border border-[var(--kova-border)] bg-[var(--kova-surface-2)]/50 px-3.5 py-2.5">
+                <input
+                  type="checkbox"
+                  checked={showApplied}
+                  onChange={(e) => setShowApplied(e.target.checked)}
+                  className="h-4 w-4 rounded border-[var(--kova-border-strong)]"
+                />
+                <span className="text-sm font-medium leading-snug">Mostrar ya aplicadas</span>
+              </label>
+            </div>
+
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--kova-border)] pt-4">
+              <p className="text-sm text-[var(--kova-muted)]">
+                Mostrando <strong className="font-semibold text-[var(--kova-navy)]">{filteredVacantes.length}</strong>{' '}
+                de {vacantes.length} vacantes
+              </p>
+              {hasActiveFilters ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedCity('');
+                    setSelectedModality('');
+                    setShowApplied(false);
+                    setSortBy('match_desc');
+                  }}
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--kova-blue)] hover:underline"
+                >
+                  <Filter className="h-3.5 w-3.5" />
+                  Limpiar filtros
+                </button>
+              ) : null}
+            </div>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--kova-border)] pt-4">
-            <p className="text-sm text-[var(--kova-muted)]">
-              Mostrando <strong className="font-semibold text-[var(--kova-navy)]">{filteredVacantes.length}</strong>{' '}
-              de {vacantes.length} vacantes
-            </p>
-            {hasActiveFilters ? (
+          {filteredVacantes.length === 0 ? (
+            <div className="kova-card rounded-3xl border p-10 text-center">
+              <h2 className="font-heading text-lg font-semibold">Ningún resultado</h2>
+              <p className="mx-auto mt-2 max-w-sm text-[var(--kova-muted)]">
+                Ajusta los filtros o incluye vacantes ya aplicadas.
+              </p>
               <button
                 type="button"
                 onClick={() => {
                   setSelectedCity('');
                   setSelectedModality('');
-                  setShowApplied(false);
-                  setSortBy('match_desc');
+                  setShowApplied(true);
                 }}
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--kova-blue)] hover:underline"
+                className="mt-6 inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold"
               >
-                <Filter className="h-3.5 w-3.5" />
                 Limpiar filtros
               </button>
-            ) : null}
-          </div>
-        </div>
-      ) : null}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {filteredVacantes.map((vacancy) => (
+                <VacancyCard key={vacancy.id} vacancy={vacancy} />
+              ))}
 
-      {filteredVacantes.length === 0 ? (
+              <div className="flex items-center justify-between gap-4 rounded-2xl border border-dashed border-[var(--kova-border-strong)] bg-[var(--kova-surface-2)]/50 px-5 py-4">
+                <div className="flex items-start gap-3">
+                  <TrendingUp className="mt-0.5 h-4 w-4 shrink-0 text-[var(--kova-blue)]" />
+                  <p className="text-sm text-[var(--kova-muted)]">
+                    ¿Quieres más matches? Refina tu experiencia, formación y preferencias comerciales.
+                  </p>
+                </div>
+                <Link
+                  href="/portal/preferencias"
+                  prefetch
+                  className="shrink-0 text-sm font-semibold text-[var(--kova-blue)] hover:underline"
+                >
+                  Mejorar perfil
+                </Link>
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
         <div className="kova-card rounded-3xl border p-10 text-center">
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--kova-blue-soft)] text-[var(--kova-blue)]">
             <Briefcase className="h-7 w-7" strokeWidth={1.5} />
           </div>
-          <h2 className="font-heading text-lg font-semibold">
-            {vacantes.length === 0 ? 'Sin vacantes por ahora' : 'Ningún resultado'}
-          </h2>
+          <h2 className="font-heading text-lg font-semibold">Sin vacantes por ahora</h2>
           <p className="mx-auto mt-2 max-w-sm text-[var(--kova-muted)]">
-            {vacantes.length === 0
-              ? 'Completa tu perfil comercial para desbloquear recomendaciones personalizadas.'
-              : 'Ajusta los filtros o incluye vacantes ya aplicadas.'}
+            Completa tus preferencias laborales para desbloquear recomendaciones personalizadas.
           </p>
-          {vacantes.length === 0 ? (
-            <Link
-              href="/portal/comercial"
-              className="mt-6 inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition hover:scale-[1.02]"
-              style={{ background: 'var(--kova-lime)', color: 'var(--kv-ink)' }}
-            >
-              <Sparkles className="h-4 w-4" />
-              Completar perfil comercial
-            </Link>
-          ) : (
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedCity('');
-                setSelectedModality('');
-                setShowApplied(true);
-              }}
-              className="mt-6 inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold"
-            >
-              Limpiar filtros
-            </button>
-          )}
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {filteredVacantes.map((vacancy) => (
-            <VacancyCard key={vacancy.id} vacancy={vacancy} />
-          ))}
-
-          <div className="flex items-center justify-between gap-4 rounded-2xl border border-dashed border-[var(--kova-border-strong)] bg-[var(--kova-surface-2)]/50 px-5 py-4">
-            <div className="flex items-start gap-3">
-              <TrendingUp className="mt-0.5 h-4 w-4 shrink-0 text-[var(--kova-indigo)]" />
-              <p className="text-sm text-[var(--kova-muted)]">
-                ¿Quieres más matches? Refina tu experiencia, formación y preferencias comerciales.
-              </p>
-            </div>
-            <Link
-              href="/portal/comercial"
-              className="shrink-0 text-sm font-semibold text-[var(--kova-indigo)] hover:underline"
-            >
-              Mejorar perfil
-            </Link>
-          </div>
+          <Link
+            href="/portal/preferencias"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition hover:scale-[1.02]"
+            style={{ background: 'var(--kova-lime)', color: 'var(--kv-ink)' }}
+          >
+            <Sparkles className="h-4 w-4" />
+            Completar preferencias
+          </Link>
         </div>
       )}
     </div>

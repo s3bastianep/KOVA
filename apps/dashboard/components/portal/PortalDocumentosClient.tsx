@@ -5,25 +5,37 @@ import Link from 'next/link';
 import { CheckCircle2, ExternalLink, FileText, Loader2 } from 'lucide-react';
 import type { CvExtractionResult } from '@/lib/cv-extract';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
-import { portalApi, type PortalCvSummary } from '@/lib/api';
+import { portalApi, type PortalCvSummary, type PortalPerfilResponse } from '@/lib/api';
+import { PORTAL_CACHE_KEYS, portalCacheGet } from '@/lib/portal-cache';
 import { CvImportPanel } from '@/app/registro/CvImportPanel';
-import '@/app/registro/registro.css';
 
 type CvImportPhase = 'offer' | 'uploading' | 'review' | 'done' | 'skipped';
 
+let registroStylesPromise: Promise<unknown> | null = null;
+
+function ensureRegistroStyles() {
+  if (!registroStylesPromise) {
+    registroStylesPromise = import('./RegistroStylesLoader');
+  }
+  return registroStylesPromise;
+}
+
 export function PortalDocumentosClient() {
-  const [profile, setProfile] = useState<CommercialProfile | null>(null);
-  const [candidateId, setCandidateId] = useState<string | null>(null);
-  const [cv, setCv] = useState<PortalCvSummary | null>(null);
-  const [loading, setLoading] = useState(true);
+  const cached = portalCacheGet<PortalPerfilResponse>(PORTAL_CACHE_KEYS.perfil);
+  const [profile, setProfile] = useState<CommercialProfile | null>(
+    () => (cached?.profile as CommercialProfile) ?? null,
+  );
+  const [candidateId, setCandidateId] = useState<string | null>(() => cached?.candidateId ?? null);
+  const [cv, setCv] = useState<PortalCvSummary | null>(() => cached?.cv ?? null);
+  const [loading, setLoading] = useState(() => !cached);
   const [error, setError] = useState('');
   const [cvPhase, setCvPhase] = useState<CvImportPhase>('offer');
   const [applyMessage, setApplyMessage] = useState('');
   const [saving, setSaving] = useState(false);
   const [downloading, setDownloading] = useState(false);
 
-  const load = useCallback(() => {
-    setLoading(true);
+  const load = useCallback((showSpinner = false) => {
+    if (showSpinner) setLoading(true);
     portalApi
       .perfil()
       .then((data) => {
@@ -37,7 +49,8 @@ export function PortalDocumentosClient() {
   }, []);
 
   useEffect(() => {
-    load();
+    ensureRegistroStyles();
+    load(false);
   }, [load]);
 
   const uploadCv = async (file: File): Promise<CvExtractionResult> => {
@@ -76,7 +89,7 @@ export function PortalDocumentosClient() {
     }
   };
 
-  if (loading) {
+  if (loading && !profile) {
     return (
       <div className="flex items-center justify-center py-20 text-[var(--kova-muted)]">
         <Loader2 className="w-5 h-5 animate-spin mr-2" />
@@ -94,7 +107,7 @@ export function PortalDocumentosClient() {
   }
 
   return (
-    <div className="kv-registro space-y-8 max-w-3xl">
+    <div className="portal-documentos mx-auto max-w-4xl space-y-8">
       <div>
         <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-[var(--kova-muted)] mb-2">
           Documentos

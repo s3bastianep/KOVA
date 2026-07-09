@@ -8,10 +8,17 @@ export type OnboardingStep =
   | 'cv_upload'
   | 'cv_analyzing'
   | 'cv_summary'
+  | 'review_hub'
   | 'cv_review'
+  | 'preferencias'
+  | 'evidence'
+  | 'competencies'
+  | 'complete'
+  | 'done'
+  /** @deprecated use preferencias */
   | 'bridge'
-  | 'questions'
-  | 'done';
+  /** @deprecated use preferencias */
+  | 'questions';
 
 export type RegistroMetadata = {
   registrationType?: string;
@@ -19,6 +26,8 @@ export type RegistroMetadata = {
   accountCreatedAt?: string;
   profileStatus?: RegistroProfileStatus;
   onboardingStep?: OnboardingStep;
+  onboardingSubStep?: number;
+  onboardingReviewed?: string[];
   registroStep?: number;
   resumeToken?: string;
   commercialProfile?: CommercialProfile;

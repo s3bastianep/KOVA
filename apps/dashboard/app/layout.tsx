@@ -5,14 +5,14 @@ import { Providers } from './providers';
 
 const inter = Inter({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '600'],
   variable: '--font-inter',
   display: 'swap',
 });
 
 const sora = Sora({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['600', '700'],
   variable: '--font-sora',
   display: 'swap',
 });

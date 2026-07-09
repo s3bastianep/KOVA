@@ -107,6 +107,8 @@ export async function persistPortalOnboarding(
   patch: {
     profile?: Partial<CommercialProfile>;
     onboardingStep?: OnboardingStep;
+    onboardingSubStep?: number;
+    onboardingReviewed?: string[];
     profileStatus?: 'account_only' | 'in_progress' | 'complete';
   },
 ) {
@@ -131,6 +133,8 @@ export async function persistPortalOnboarding(
   const metadata = mergeRegistroMetadata(prevMeta, {
     commercialProfile: mergedProfile,
     onboardingStep: patch.onboardingStep ?? prevMeta.onboardingStep,
+    onboardingSubStep: patch.onboardingSubStep ?? prevMeta.onboardingSubStep,
+    onboardingReviewed: patch.onboardingReviewed ?? prevMeta.onboardingReviewed,
     profileStatus: patch.profileStatus ?? prevMeta.profileStatus,
   });
 
@@ -204,19 +208,19 @@ export function getProfileGaps(profile: CommercialProfile, hasCv: boolean): Prof
   }
 
   if (!profile.nivelRol?.trim()) {
-    gaps.push({ id: 'nivelRol', label: 'Nivel de rol comercial', href: '/portal/comercial' });
+    gaps.push({ id: 'nivelRol', label: 'Cargos e industrias de interés', href: '/portal/preferencias' });
   }
   if (!profile.objetivoProfesional?.trim()) {
-    gaps.push({ id: 'objetivo', label: 'Objetivo profesional', href: '/portal/comercial' });
+    gaps.push({ id: 'objetivo', label: 'Tipo de trabajo que buscas', href: '/portal/preferencias' });
   }
   if (!profile.tipoVenta?.trim()) {
-    gaps.push({ id: 'tipoVenta', label: 'Tipo de venta', href: '/portal/comercial' });
+    gaps.push({ id: 'tipoVenta', label: 'Cómo vendes', href: '/portal/preferencias' });
   }
   if (!(profile.industrias?.length ?? 0)) {
-    gaps.push({ id: 'industrias', label: 'Industrias de experiencia', href: '/portal/comercial' });
+    gaps.push({ id: 'industrias', label: 'Industrias de experiencia', href: '/portal/preferencias' });
   }
   if (!profile.expectativaSalarial?.trim()) {
-    gaps.push({ id: 'salario', label: 'Expectativa salarial', href: '/portal/comercial' });
+    gaps.push({ id: 'salario', label: 'Aspiración salarial', href: '/portal/preferencias' });
   }
 
   if (!(profile.formacion ?? []).some(isEducationComplete)) {

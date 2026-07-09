@@ -1008,8 +1008,28 @@ type MockPortalCandidate = {
   passwordHash?: string | null;
   metadata: {
     profileStatus: 'account_only' | 'in_progress' | 'complete';
-    onboardingStep: 'welcome' | 'cv_upload' | 'cv_analyzing' | 'cv_summary' | 'cv_review' | 'bridge' | 'questions' | 'done';
+    onboardingStep:
+      | 'welcome'
+      | 'cv_upload'
+      | 'cv_analyzing'
+      | 'cv_summary'
+      | 'review_hub'
+      | 'cv_review'
+      | 'preferencias'
+      | 'evidence'
+      | 'competencies'
+      | 'complete'
+      | 'done'
+      | 'bridge'
+      | 'questions';
+    onboardingSubStep?: number;
+    onboardingReviewed?: string[];
     commercialProfile: CommercialProfile;
+    jarTest?: {
+      completedAt: string;
+      totalPoints: number;
+      result: unknown;
+    };
   };
 };
 
@@ -1120,6 +1140,15 @@ export function ensureMockPortalCandidate(input: {
       consentimientoDatos: true,
     },
   });
+}
+
+export function patchMockPortalMetadata(userId: string, patch: Partial<MockPortalCandidate['metadata']>) {
+  const existing = getMockPortalCandidate(userId);
+  if (!existing) return null;
+  existing.metadata = { ...existing.metadata, ...patch };
+  mockPortalCandidates.set(userId, existing);
+  saveMockPortalStore(mockPortalCandidates);
+  return existing;
 }
 
 export function updateMockPortalProfile(

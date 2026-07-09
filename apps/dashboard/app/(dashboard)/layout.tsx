@@ -14,12 +14,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [router]);
 
   return (
-    <div className="min-h-screen flex kova-shell-bg">
+    <div className="flex h-screen overflow-hidden kova-shell-bg">
       <Sidebar />
-      <div className="flex-1 flex flex-col min-w-0 kova-main-panel">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col kova-main-panel">
         <Topbar />
-        <main className="flex-1 overflow-auto">
-          <div className="p-5 lg:p-8 max-w-[1440px] mx-auto w-full kova-animate-in">{children}</div>
+        <main className="portal-main-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain">
+          <div className="mx-auto w-full max-w-[1440px] p-5 lg:p-8">{children}</div>
         </main>
       </div>
     </div>

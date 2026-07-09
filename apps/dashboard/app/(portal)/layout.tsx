@@ -1,16 +1,28 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { PortalSidebar } from '@/components/portal/PortalSidebar';
 import { PortalTopbar } from '@/components/portal/PortalTopbar';
 import { getStoredUser, portalApi } from '@/lib/api';
+import { PORTAL_CACHE_KEYS, portalCacheGet } from '@/lib/portal-cache';
+
+const ONBOARDING_CACHE_KEY = 'kova_portal_onboarding_complete';
 
 export default function PortalLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [onboardingComplete, setOnboardingComplete] = useState<boolean | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const cached = sessionStorage.getItem(ONBOARDING_CACHE_KEY);
+    return cached === null ? null : cached === 'true';
+  });
+  const authChecked = useRef(false);
 
   useEffect(() => {
+    if (authChecked.current) return;
+    authChecked.current = true;
+
     const token = localStorage.getItem('kova_access_token');
     const user = getStoredUser();
     if (!token) {
@@ -22,25 +34,62 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
       return;
     }
 
+    // Precarga diferida: no compite con la página que el usuario abre primero.
+    const prefetchLater = () => {
+      if (!portalCacheGet(PORTAL_CACHE_KEYS.vacantes(0))) {
+        void portalApi.vacantes().catch(() => {});
+      }
+      if (!portalCacheGet(PORTAL_CACHE_KEYS.aplicaciones)) {
+        void portalApi.aplicaciones().catch(() => {});
+      }
+    };
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      (window as Window & { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback(
+        () => prefetchLater(),
+        { timeout: 4000 },
+      );
+    } else {
+      setTimeout(prefetchLater, 2000);
+    }
+  }, [router]);
+
+  useEffect(() => {
+    if (onboardingComplete !== null) return;
+
+    const cached = portalCacheGet<{ onboardingComplete?: boolean }>(PORTAL_CACHE_KEYS.perfil);
+    if (cached) {
+      const complete = Boolean(cached.onboardingComplete);
+      sessionStorage.setItem(ONBOARDING_CACHE_KEY, String(complete));
+      setOnboardingComplete(complete);
+      return;
+    }
+
     portalApi
       .perfil()
       .then((data) => {
-        if (!data.onboardingComplete && pathname !== '/portal') {
-          router.replace('/portal');
-        }
+        const complete = Boolean(data.onboardingComplete);
+        sessionStorage.setItem(ONBOARDING_CACHE_KEY, String(complete));
+        setOnboardingComplete(complete);
       })
       .catch(() => {
-        /* ignore — page handles errors */
+        sessionStorage.setItem(ONBOARDING_CACHE_KEY, 'true');
+        setOnboardingComplete(true);
       });
-  }, [router, pathname]);
+  }, [onboardingComplete]);
+
+  useEffect(() => {
+    if (onboardingComplete === false && pathname !== '/portal') {
+      router.replace('/portal');
+    }
+  }, [onboardingComplete, pathname, router]);
 
   return (
-    <div className="min-h-screen flex kova-shell-bg">
+    <div className="kova-portal flex h-screen overflow-hidden kova-shell-bg">
       <PortalSidebar />
-      <div className="flex-1 flex flex-col min-w-0 kova-main-panel">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col kova-main-panel">
         <PortalTopbar />
-        <main className="flex-1 overflow-auto">
-          <div className="p-5 lg:p-8 max-w-[1200px] mx-auto w-full kova-animate-in">{children}</div>
+        <main className="portal-main-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain">
+          <div className="mx-auto w-full max-w-[1200px] p-5 lg:p-8">{children}</div>
         </main>
       </div>
     </div>

@@ -8,11 +8,15 @@ import {
   TRAVEL_OPTIONS,
   type CommercialProfile,
 } from '@/lib/candidate-commercial-profile';
-import { portalApi, getStoredUser } from '@/lib/api';
+import { portalApi, getStoredUser, type PortalPerfilResponse } from '@/lib/api';
+import { PORTAL_CACHE_KEYS, portalCacheGet } from '@/lib/portal-cache';
 
 export function PortalPerfilForm() {
-  const [profile, setProfile] = useState<CommercialProfile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const cached = portalCacheGet<PortalPerfilResponse>(PORTAL_CACHE_KEYS.perfil);
+  const [profile, setProfile] = useState<CommercialProfile | null>(
+    () => (cached?.profile as CommercialProfile) ?? null,
+  );
+  const [loading, setLoading] = useState(() => !cached);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
@@ -57,7 +61,7 @@ export function PortalPerfilForm() {
     }
   };
 
-  if (loading) {
+  if (loading && !profile) {
     return (
       <div className="flex items-center justify-center py-20 text-[var(--kova-muted)]">
         <Loader2 className="w-5 h-5 animate-spin mr-2" />

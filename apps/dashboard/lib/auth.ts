@@ -52,12 +52,12 @@ export async function getUserFromRequest(req: NextRequest): Promise<AuthUser | n
       candidateId?: string | null;
     };
 
-    if (isMockMode()) {
+    if (isMockMode() || payload.role === 'CANDIDATE') {
       return {
         id: payload.sub,
         email: payload.email,
-        firstName: payload.firstName ?? MOCK_USER.firstName,
-        lastName: payload.lastName ?? MOCK_USER.lastName,
+        firstName: payload.firstName ?? (payload.role === 'CANDIDATE' ? 'Candidato' : MOCK_USER.firstName),
+        lastName: payload.lastName ?? '',
         role: payload.role,
         tenantId: payload.tenantId,
         companyId: payload.companyId ?? null,
@@ -85,18 +85,8 @@ export async function getUserFromRequest(req: NextRequest): Promise<AuthUser | n
         candidateId: payload.candidateId ?? null,
       };
     } catch (dbError) {
-      console.error('[auth] DB lookup failed, falling back to JWT payload:', dbError);
-      if (payload.role !== 'CANDIDATE') return null;
-      return {
-        id: payload.sub,
-        email: payload.email,
-        firstName: payload.firstName ?? '',
-        lastName: payload.lastName ?? '',
-        role: 'CANDIDATE',
-        tenantId: payload.tenantId,
-        companyId: payload.companyId ?? null,
-        candidateId: payload.candidateId ?? null,
-      };
+      console.error('[auth] DB lookup failed:', dbError);
+      return null;
     }
   } catch {
     return null;

@@ -9,11 +9,11 @@ import {
   Loader2,
   Plus,
   Save,
-  Sparkles,
   Trash2,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { portalApi } from '@/lib/api';
+import { portalApi, type PortalPerfilResponse } from '@/lib/api';
+import { PORTAL_CACHE_KEYS, portalCacheGet } from '@/lib/portal-cache';
 import {
   EDUCATION_LEVEL_OPTIONS,
   LANGUAGE_LEVEL_OPTIONS,
@@ -25,8 +25,16 @@ import {
   type LanguageEntry,
 } from '@/lib/candidate-commercial-profile';
 
+const btnPrimary =
+  'inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--kova-lime)] px-4 py-2.5 text-sm font-semibold text-[var(--kv-ink)] transition hover:brightness-[0.97] active:brightness-95 disabled:opacity-60';
+
+const btnSecondary =
+  'inline-flex items-center gap-2 rounded-lg border border-[var(--kova-border-strong)] bg-white px-3.5 py-2 text-sm font-medium text-[var(--kova-navy)] transition hover:bg-[var(--kova-surface-2)]';
+
 const inputClass =
-  'w-full rounded-xl border border-[var(--kova-border)] bg-white px-3.5 py-2.5 text-sm outline-none transition-shadow focus:border-[var(--kova-blue)] focus:ring-2 focus:ring-[var(--kova-ring)]';
+  'w-full rounded-lg border border-[var(--kova-border-strong)] bg-white px-3.5 py-2.5 text-sm text-[var(--kova-navy)] outline-none transition placeholder:text-[var(--kova-navy-muted)]/60 focus:border-[var(--kova-navy)]/20 focus:ring-1 focus:ring-[var(--kova-navy)]/8';
+
+const labelClass = 'text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--kova-navy-muted)]';
 
 const LANGUAGE_LEVEL_HINTS: Record<string, string> = {
   A1: 'Principiante — frases básicas',
@@ -55,6 +63,15 @@ function educationSummary(entry: EducationEntry): string {
   return 'Nuevo estudio — completa los datos';
 }
 
+function MiniStat({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-xl border border-[var(--kova-border)] bg-white px-4 py-3 min-w-[88px]">
+      <p className="kova-portal-eyebrow">{label}</p>
+      <p className="kova-portal-stat mt-1 text-2xl">{value}</p>
+    </div>
+  );
+}
+
 function FormSection({
   title,
   description,
@@ -69,20 +86,20 @@ function FormSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="overflow-hidden rounded-3xl border border-[var(--kova-border)] bg-white shadow-[var(--kova-shadow-xs)]">
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--kova-border)] bg-[var(--kova-surface-2)]/40 px-5 py-4 sm:px-6">
-        <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--kova-blue-soft)] text-[var(--kova-blue)]">
-            <Icon className="h-5 w-5" strokeWidth={1.75} />
-          </div>
+    <section className="rounded-xl border border-[var(--kova-border)] bg-white">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--kova-border)] px-5 py-4 lg:px-6">
+        <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--kova-border)] bg-[var(--kova-surface-2)] text-[var(--kova-navy-muted)]">
+            <Icon className="h-4 w-4" strokeWidth={1.75} />
+          </span>
           <div>
-            <h2 className="font-heading text-lg font-semibold">{title}</h2>
-            <p className="mt-0.5 text-sm text-[var(--kova-muted)]">{description}</p>
+            <h2 className="kova-portal-title kova-portal-title-md font-heading">{title}</h2>
+            <p className="mt-0.5 text-sm text-[var(--kova-navy-muted)]">{description}</p>
           </div>
         </div>
         {action}
       </div>
-      <div className="space-y-4 p-5 sm:p-6">{children}</div>
+      <div className="space-y-3 p-5 lg:p-6">{children}</div>
     </section>
   );
 }
@@ -102,14 +119,14 @@ function FieldInput({
 }) {
   return (
     <label className="block space-y-1.5">
-      <span className="text-xs font-medium uppercase tracking-wide text-[var(--kova-muted)]">{label}</span>
+      <span className={labelClass}>{label}</span>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className={inputClass}
       />
-      {hint ? <span className="text-xs text-[var(--kova-muted)]">{hint}</span> : null}
+      {hint ? <span className="text-xs text-[var(--kova-navy-muted)]">{hint}</span> : null}
     </label>
   );
 }
@@ -127,7 +144,7 @@ function FieldSelect({
 }) {
   return (
     <label className="block space-y-1.5">
-      <span className="text-xs font-medium uppercase tracking-wide text-[var(--kova-muted)]">{label}</span>
+      <span className={labelClass}>{label}</span>
       <select value={value} onChange={(e) => onChange(e.target.value)} className={inputClass}>
         <option value="">Selecciona...</option>
         {options.map((opt) => (
@@ -151,45 +168,31 @@ function EducationCard({
   onChange: (patch: Partial<EducationEntry>) => void;
   onRemove: () => void;
 }) {
-  const complete = Boolean(entry.nivel && entry.titulo?.trim() && entry.institucion?.trim());
-
   return (
-    <article className="relative overflow-hidden rounded-2xl border border-[var(--kova-border)] bg-white">
-      <div
-        className={`absolute inset-y-0 left-0 w-1 ${complete ? 'bg-[var(--kova-lime)]' : 'bg-[var(--kova-blue)]'}`}
-        aria-hidden
-      />
-
-      <div className="border-b border-[var(--kova-border)] bg-[var(--kova-surface-2)]/30 px-4 py-3 pl-5 sm:px-5">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex items-start gap-3 min-w-0">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--kova-violet-soft)] text-[var(--kova-violet)]">
-              <GraduationCap className="h-4 w-4" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-[10px] font-mono uppercase tracking-widest text-[var(--kova-muted)]">
-                {String(index + 1).padStart(2, '0')} · Estudio
-              </p>
-              <p className="truncate font-heading text-sm font-semibold">{educationSummary(entry)}</p>
-              {entry.nivel && entry.anioGraduacion ? (
-                <p className="text-xs text-[var(--kova-muted)]">
-                  {entry.nivel} · {entry.anioGraduacion}
-                </p>
-              ) : null}
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={onRemove}
-            className="inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-            Eliminar
-          </button>
+    <article className="rounded-lg border border-[var(--kova-border)] bg-[var(--kova-surface-2)]/25">
+      <div className="flex items-start justify-between gap-3 border-b border-[var(--kova-border)] px-4 py-3">
+        <div className="min-w-0">
+          <p className="kova-portal-eyebrow">Estudio {String(index + 1).padStart(2, '0')}</p>
+          <p className="mt-0.5 truncate font-heading text-sm font-bold text-[var(--kova-navy)]">
+            {educationSummary(entry)}
+          </p>
+          {entry.nivel && entry.anioGraduacion ? (
+            <p className="mt-0.5 text-xs text-[var(--kova-navy-muted)]">
+              {entry.nivel} · {entry.anioGraduacion}
+            </p>
+          ) : null}
         </div>
+        <button
+          type="button"
+          onClick={onRemove}
+          className="inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-[var(--kova-navy-muted)] transition hover:text-[var(--kova-coral)]"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+          Eliminar
+        </button>
       </div>
 
-      <div className="space-y-4 p-4 pl-5 sm:p-5">
+      <div className="space-y-4 p-4">
         <div className="grid gap-4 sm:grid-cols-2">
           <FieldSelect
             label="Nivel académico"
@@ -234,35 +237,26 @@ function LanguageCard({
   onRemove: () => void;
 }) {
   return (
-    <article className="relative overflow-hidden rounded-2xl border border-[var(--kova-border)] bg-white">
-      <div
-        className={`absolute inset-y-0 left-0 w-1 ${entry.nivel ? 'bg-[var(--kova-lime)]' : 'bg-[var(--kova-blue)]'}`}
-        aria-hidden
-      />
-
-      <div className="flex items-start justify-between gap-3 border-b border-[var(--kova-border)] bg-[var(--kova-surface-2)]/30 px-4 py-3 pl-5 sm:px-5">
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700">
-            <Languages className="h-4 w-4" />
-          </div>
-          <div>
-            <p className="text-[10px] font-mono uppercase tracking-widest text-[var(--kova-muted)]">
-              {String(index + 1).padStart(2, '0')} · Idioma
-            </p>
-            <p className="font-heading text-sm font-semibold">{entry.idioma || 'Selecciona un idioma'}</p>
-          </div>
+    <article className="rounded-lg border border-[var(--kova-border)] bg-[var(--kova-surface-2)]/25">
+      <div className="flex items-start justify-between gap-3 border-b border-[var(--kova-border)] px-4 py-3">
+        <div className="min-w-0">
+          <p className="kova-portal-eyebrow">Idioma {String(index + 1).padStart(2, '0')}</p>
+          <p className="mt-0.5 font-heading text-sm font-bold text-[var(--kova-navy)]">
+            {entry.idioma || 'Selecciona un idioma'}
+            {entry.nivel ? ` · ${entry.nivel}` : ''}
+          </p>
         </div>
         <button
           type="button"
           onClick={onRemove}
-          className="inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
+          className="inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-[var(--kova-navy-muted)] transition hover:text-[var(--kova-coral)]"
         >
           <Trash2 className="h-3.5 w-3.5" />
           Quitar
         </button>
       </div>
 
-      <div className="space-y-4 p-4 pl-5 sm:p-5">
+      <div className="space-y-4 p-4">
         <FieldSelect
           label="Idioma"
           value={entry.idioma}
@@ -270,11 +264,9 @@ function LanguageCard({
           onChange={(value) => onChange({ idioma: value })}
         />
 
-        <div className="space-y-2">
-          <span className="text-xs font-medium uppercase tracking-wide text-[var(--kova-muted)]">
-            Nivel (Marco común europeo)
-          </span>
-          <div className="flex flex-wrap gap-2">
+        <div className="space-y-2.5">
+          <span className={labelClass}>Nivel (marco común europeo)</span>
+          <div className="flex flex-wrap gap-1.5">
             {LANGUAGE_LEVEL_OPTIONS.map((level) => {
               const active = entry.nivel === level;
               return (
@@ -282,10 +274,10 @@ function LanguageCard({
                   key={level}
                   type="button"
                   onClick={() => onChange({ nivel: level })}
-                  className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-all ${
+                  className={`rounded-lg border px-3 py-1.5 text-sm font-semibold transition ${
                     active
-                      ? 'border-[var(--kova-lime-dark)] bg-[var(--kova-green-soft)] text-[var(--kova-green)] shadow-[var(--kova-shadow-xs)]'
-                      : 'border-[var(--kova-border)] bg-white text-[var(--kova-navy-muted)] hover:border-[var(--kova-border-strong)]'
+                      ? 'border-transparent bg-[var(--kova-lime)] text-[var(--kv-ink)]'
+                      : 'border-[var(--kova-border-strong)] bg-white text-[var(--kova-navy-muted)] hover:border-[var(--kova-navy)]/15 hover:text-[var(--kova-navy)]'
                   }`}
                 >
                   {level}
@@ -294,12 +286,12 @@ function LanguageCard({
             })}
           </div>
           {entry.nivel ? (
-            <p className="rounded-xl border border-[var(--kova-border)] bg-[var(--kova-surface-2)]/60 px-3 py-2 text-xs text-[var(--kova-navy-muted)]">
-              <strong className="font-semibold">{entry.nivel}:</strong>{' '}
+            <p className="rounded-lg border border-[var(--kova-border)] bg-white px-3.5 py-2.5 text-sm text-[var(--kova-navy-muted)]">
+              <span className="font-semibold text-[var(--kova-navy)]">{entry.nivel}:</span>{' '}
               {LANGUAGE_LEVEL_HINTS[entry.nivel] ?? 'Nivel seleccionado'}
             </p>
           ) : (
-            <p className="text-xs italic text-[var(--kova-muted)]">
+            <p className="text-xs text-[var(--kova-navy-muted)]">
               Elige el nivel que mejor describe tu dominio actual del idioma.
             </p>
           )}
@@ -310,9 +302,11 @@ function LanguageCard({
 }
 
 export function PortalFormacionForm() {
-  const [profile, setProfile] = useState<CommercialProfile | null>(null);
-  const [baseline, setBaseline] = useState<CommercialProfile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const cached = portalCacheGet<PortalPerfilResponse>(PORTAL_CACHE_KEYS.perfil);
+  const initialProfile = (cached?.profile as CommercialProfile) ?? null;
+  const [profile, setProfile] = useState<CommercialProfile | null>(initialProfile);
+  const [baseline, setBaseline] = useState<CommercialProfile | null>(initialProfile);
+  const [loading, setLoading] = useState(() => !cached);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
@@ -398,9 +392,9 @@ export function PortalFormacionForm() {
     }
   };
 
-  if (loading) {
+  if (loading && !profile) {
     return (
-      <div className="flex items-center justify-center py-20 text-[var(--kova-muted)]">
+      <div className="flex items-center justify-center py-20 text-[var(--kova-navy-muted)]">
         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
         Cargando formación...
       </div>
@@ -409,7 +403,7 @@ export function PortalFormacionForm() {
 
   if (!profile) {
     return (
-      <div className="kova-card rounded-2xl border p-8 text-center text-[var(--kova-muted)]">
+      <div className="rounded-xl border border-[var(--kova-border)] bg-white p-8 text-center text-[var(--kova-navy-muted)]">
         {error || 'No pudimos cargar tu perfil'}
       </div>
     );
@@ -419,91 +413,50 @@ export function PortalFormacionForm() {
   const idiomas = profile.idiomas ?? [];
 
   return (
-    <form onSubmit={submit} className="mx-auto max-w-3xl space-y-8 pb-24">
-      <section className="kova-card relative overflow-hidden rounded-3xl border p-6 lg:p-8">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.08]"
-          style={{
-            background:
-              'radial-gradient(circle at top right, var(--kova-lime), transparent 55%), radial-gradient(circle at bottom left, var(--kova-indigo), transparent 50%)',
-          }}
-          aria-hidden
-        />
-        <div className="relative space-y-6">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-            <div className="max-w-xl">
-              <p className="mb-2 text-[11px] font-mono uppercase tracking-[0.14em] text-[var(--kova-muted)]">
-                Credenciales
-              </p>
-              <h1 className="font-heading text-2xl font-bold lg:text-3xl">Formación e idiomas</h1>
-              <p className="mt-2 text-[var(--kova-muted)]">
-                Dos bloques simples: tus estudios formales y los idiomas que dominas. Esto mejora tu
-                compatibilidad con vacantes internacionales y roles bilingües.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2.5">
-              <div className="rounded-xl border border-[var(--kova-border)] bg-white/80 px-3.5 py-2 backdrop-blur-sm">
-                <p className="text-[10px] font-mono uppercase tracking-wide text-[var(--kova-muted)]">Estudios</p>
-                <p className="font-heading text-xl font-bold">{formacion.length}</p>
-              </div>
-              <div className="rounded-xl border border-[var(--kova-border)] bg-white/80 px-3.5 py-2 backdrop-blur-sm">
-                <p className="text-[10px] font-mono uppercase tracking-wide text-[var(--kova-muted)]">Idiomas</p>
-                <p className="font-heading text-xl font-bold">{idiomas.length}</p>
-              </div>
-            </div>
+    <form onSubmit={submit} className="mx-auto max-w-3xl space-y-6 pb-24">
+      <section className="rounded-xl border border-[var(--kova-border)] bg-white p-6 lg:p-8">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-xl">
+            <p className="kova-portal-eyebrow">Credenciales</p>
+            <h1 className="kova-portal-title kova-portal-title-lg mt-2 font-heading">Formación e idiomas</h1>
+            <p className="kova-portal-body mt-3">
+              Registra tus estudios formales y los idiomas que dominas. Esto mejora tu compatibilidad con
+              vacantes internacionales y roles bilingües.
+            </p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl border border-[var(--kova-border)] bg-white/70 px-4 py-3">
-              <div className="flex items-center gap-2 text-sm font-semibold">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--kova-blue-soft)] text-xs text-[var(--kova-blue)]">
-                  1
-                </span>
-                Educación
-              </div>
-              <p className="mt-1 text-xs text-[var(--kova-muted)]">Título, institución y nivel de cada estudio.</p>
-            </div>
-            <div className="rounded-xl border border-[var(--kova-border)] bg-white/70 px-4 py-3">
-              <div className="flex items-center gap-2 text-sm font-semibold">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-xs text-emerald-800">
-                  2
-                </span>
-                Idiomas
-              </div>
-              <p className="mt-1 text-xs text-[var(--kova-muted)]">
-                Idioma + nivel (A1–C2 o Nativo) con descripción clara.
-              </p>
-            </div>
+          <div className="flex gap-3">
+            <MiniStat label="Estudios" value={formacion.length} />
+            <MiniStat label="Idiomas" value={idiomas.length} />
           </div>
+        </div>
 
-          <div className="rounded-2xl border border-[var(--kova-border)] bg-white/70 p-4 backdrop-blur-sm">
-            <div className="flex items-center justify-between text-sm">
-              <span className="font-medium">Sección completada</span>
-              <span className="font-mono font-semibold text-[var(--kova-blue)]">{completeness}%</span>
-            </div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-[var(--kova-line)]">
-              <div
-                className="h-full rounded-full transition-all duration-500"
-                style={{
-                  width: `${completeness}%`,
-                  background: 'linear-gradient(90deg, var(--kova-blue), var(--kova-lime-dark))',
-                }}
-              />
-            </div>
+        <div className="mt-6 border-t border-[var(--kova-border)] pt-5">
+          <div className="flex items-center justify-between text-sm">
+            <span className="font-medium text-[var(--kova-navy)]">Sección completada</span>
+            <span className="font-heading text-sm font-bold text-[var(--kova-navy)]">{completeness}%</span>
+          </div>
+          <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-[var(--kova-border)]">
+            <div
+              className="h-full rounded-full bg-[var(--kova-navy)] transition-all duration-500"
+              style={{ width: `${completeness}%` }}
+            />
           </div>
         </div>
       </section>
 
       {error ? (
-        <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <div
+          role="alert"
+          className="rounded-xl border border-[var(--kova-coral)]/30 bg-[var(--kova-coral)]/5 px-4 py-3 text-sm text-[var(--kova-coral)]"
+        >
           {error}
         </div>
       ) : null}
 
       {saved && !dirty ? (
-        <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-          <CheckCircle2 className="h-4 w-4 shrink-0" />
+        <div className="flex items-center gap-2 rounded-xl border border-[var(--kova-border)] bg-[var(--kova-surface-2)]/50 px-4 py-3 text-sm text-[var(--kova-navy)]">
+          <CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--kova-navy)]" />
           Formación guardada correctamente.
         </div>
       ) : null}
@@ -513,29 +466,20 @@ export function PortalFormacionForm() {
         description="Agrega cada título por separado — pregrado, posgrado, técnico, etc."
         icon={BookOpen}
         action={
-          <button
-            type="button"
-            onClick={addEducacion}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--kova-border-strong)] bg-white px-3 py-2 text-sm font-semibold shadow-[var(--kova-shadow-xs)] hover:shadow-[var(--kova-shadow-sm)]"
-          >
+          <button type="button" onClick={addEducacion} className={btnSecondary}>
             <Plus className="h-4 w-4" />
             Agregar estudio
           </button>
         }
       >
         {formacion.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-[var(--kova-border-strong)] bg-[var(--kova-surface-2)]/50 px-6 py-10 text-center">
-            <GraduationCap className="mx-auto mb-3 h-10 w-10 text-[var(--kova-muted)]" strokeWidth={1.25} />
-            <p className="font-heading text-sm font-semibold">Aún no tienes estudios registrados</p>
-            <p className="mx-auto mt-1 max-w-sm text-sm text-[var(--kova-muted)]">
+          <div className="rounded-lg border border-dashed border-[var(--kova-border)] px-6 py-10 text-center">
+            <GraduationCap className="mx-auto mb-3 h-8 w-8 text-[var(--kova-navy-muted)]" strokeWidth={1.5} />
+            <p className="font-heading text-sm font-bold text-[var(--kova-navy)]">Aún no tienes estudios registrados</p>
+            <p className="mx-auto mt-1 max-w-sm text-sm text-[var(--kova-navy-muted)]">
               Si importaste tu HV, revisa que los datos estén correctos o agrégalos manualmente.
             </p>
-            <button
-              type="button"
-              onClick={addEducacion}
-              className="mt-4 inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold"
-              style={{ background: 'var(--kova-lime)', color: 'var(--kv-ink)' }}
-            >
+            <button type="button" onClick={addEducacion} className={`mt-4 ${btnPrimary}`}>
               <Plus className="h-4 w-4" />
               Agregar primer estudio
             </button>
@@ -558,29 +502,20 @@ export function PortalFormacionForm() {
         description="Indica en qué idiomas puedes trabajar y tu nivel real hoy."
         icon={Languages}
         action={
-          <button
-            type="button"
-            onClick={addIdioma}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--kova-border-strong)] bg-white px-3 py-2 text-sm font-semibold shadow-[var(--kova-shadow-xs)] hover:shadow-[var(--kova-shadow-sm)]"
-          >
+          <button type="button" onClick={addIdioma} className={btnSecondary}>
             <Plus className="h-4 w-4" />
             Agregar idioma
           </button>
         }
       >
         {idiomas.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-[var(--kova-border-strong)] bg-[var(--kova-surface-2)]/50 px-6 py-10 text-center">
-            <Languages className="mx-auto mb-3 h-10 w-10 text-[var(--kova-muted)]" strokeWidth={1.25} />
-            <p className="font-heading text-sm font-semibold">Sin idiomas registrados</p>
-            <p className="mx-auto mt-1 max-w-sm text-sm text-[var(--kova-muted)]">
+          <div className="rounded-lg border border-dashed border-[var(--kova-border)] px-6 py-10 text-center">
+            <Languages className="mx-auto mb-3 h-8 w-8 text-[var(--kova-navy-muted)]" strokeWidth={1.5} />
+            <p className="font-heading text-sm font-bold text-[var(--kova-navy)]">Sin idiomas registrados</p>
+            <p className="mx-auto mt-1 max-w-sm text-sm text-[var(--kova-navy-muted)]">
               El inglés u otros idiomas pueden abrirte vacantes con mejor match.
             </p>
-            <button
-              type="button"
-              onClick={addIdioma}
-              className="mt-4 inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold"
-              style={{ background: 'var(--kova-lime)', color: 'var(--kv-ink)' }}
-            >
+            <button type="button" onClick={addIdioma} className={`mt-4 ${btnPrimary}`}>
               <Plus className="h-4 w-4" />
               Agregar primer idioma
             </button>
@@ -598,21 +533,15 @@ export function PortalFormacionForm() {
         )}
       </FormSection>
 
-      <div className="flex items-start gap-3 rounded-2xl border border-dashed border-[var(--kova-border-strong)] bg-[var(--kova-surface-2)]/50 px-5 py-4">
-        <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-[var(--kova-indigo)]" />
-        <p className="text-sm text-[var(--kova-muted)]">
-          <strong className="font-semibold text-[var(--kova-navy)]">Tip:</strong> B2 o superior en inglés suele
-          ser requisito en vacantes comerciales internacionales. Sé honesto con tu nivel.
+      <div className="rounded-xl border border-[var(--kova-border)] bg-[var(--kova-surface-2)]/40 px-5 py-4">
+        <p className="text-sm text-[var(--kova-navy-muted)]">
+          <span className="font-semibold text-[var(--kova-navy)]">Tip:</span> B2 o superior en inglés suele ser
+          requisito en vacantes comerciales internacionales. Sé honesto con tu nivel.
         </p>
       </div>
 
       {!dirty ? (
-        <button
-          type="submit"
-          disabled={saving}
-          className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold disabled:opacity-60"
-          style={{ background: 'var(--kova-lime)', color: 'var(--kv-ink)' }}
-        >
+        <button type="submit" disabled={saving} className={btnPrimary}>
           {saving ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -628,25 +557,20 @@ export function PortalFormacionForm() {
       ) : null}
 
       {dirty ? (
-        <div className="fixed bottom-6 left-1/2 z-20 flex -translate-x-1/2 items-center gap-3 rounded-2xl border border-[var(--kova-border-strong)] bg-white/95 px-4 py-3 shadow-[var(--kova-shadow-lg)] backdrop-blur-md">
-          <p className="hidden text-sm text-[var(--kova-muted)] sm:block">Cambios sin guardar</p>
+        <div className="fixed inset-x-0 bottom-6 z-20 flex justify-center px-4">
+          <div className="flex items-center gap-3 rounded-xl border border-[var(--kova-border)] bg-white px-4 py-3 shadow-[var(--kova-shadow-lg)]">
+          <p className="hidden text-sm text-[var(--kova-navy-muted)] sm:block">Cambios sin guardar</p>
           <button
             type="button"
             onClick={() => {
               setProfile(baseline);
               setSaved(false);
             }}
-            className="rounded-xl border px-3 py-2 text-sm font-medium"
+            className="rounded-lg border border-[var(--kova-border-strong)] px-3 py-2 text-sm font-medium text-[var(--kova-navy)] hover:bg-[var(--kova-surface-2)]"
           >
             Descartar
           </button>
-          <button
-            type="button"
-            disabled={saving}
-            onClick={() => void submit()}
-            className="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold disabled:opacity-60"
-            style={{ background: 'var(--kova-lime)', color: 'var(--kv-ink)' }}
-          >
+          <button type="button" disabled={saving} onClick={() => void submit()} className={btnPrimary}>
             {saving ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -659,6 +583,7 @@ export function PortalFormacionForm() {
               </>
             )}
           </button>
+          </div>
         </div>
       ) : null}
     </form>

@@ -44,9 +44,9 @@
 
 html {
   font-size: 16px;
-  text-rendering: geometricPrecision;
-  -webkit-font-smoothing: subpixel-antialiased;
-  -moz-osx-font-smoothing: auto;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -56,31 +56,128 @@ body {
     radial-gradient(900px 480px at 0% -5%, rgba(51, 65, 196, 0.07), transparent 55%),
     radial-gradient(700px 420px at 100% 0%, rgba(216, 242, 76, 0.06), transparent 50%),
     radial-gradient(600px 360px at 50% 100%, rgba(18, 20, 15, 0.03), transparent 55%);
-  background-attachment: fixed;
+  background-attachment: scroll;
   color: var(--kova-navy);
   letter-spacing: -0.008em;
 }
 
 .font-heading {
   font-family: var(--font-sora), var(--font-inter), 'Sora', 'Inter', sans-serif;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
+}
+
+/* ─── Portal typography (aligned with landing) ─── */
+.kova-portal h1.font-heading,
+.kova-portal h2.font-heading,
+.kova-portal h3.font-heading,
+.kova-portal h4.font-heading {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.kova-portal-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--kova-navy-muted);
+}
+
+.kova-portal-title {
+  font-family: var(--font-sora), 'Sora', 'Inter', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--kova-navy);
+}
+
+.kova-portal-title-lg {
+  font-size: clamp(1.625rem, 3vw, 2rem);
+  letter-spacing: -0.032em;
+  line-height: 1.12;
+}
+
+.kova-portal-title-md {
+  font-size: 1.125rem;
+  letter-spacing: -0.028em;
+  line-height: 1.2;
+}
+
+.kova-portal-stat {
+  font-family: var(--font-sora), 'Sora', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--kova-navy);
+}
+
+.kova-portal-body {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--kova-navy-muted);
+}
+
+.kova-salary-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--kova-border);
+  outline: none;
+}
+
+.kova-salary-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--kova-lime);
+  border: 2px solid var(--kv-ink);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(18, 20, 15, 0.12);
+}
+
+.kova-salary-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--kova-lime);
+  border: 2px solid var(--kv-ink);
+  cursor: pointer;
 }
 
 /* ─── Shell / layout ─── */
 .kova-shell-bg {
   position: relative;
-  isolation: isolate;
 }
 
 .kova-shell-bg::before {
   content: '';
   pointer-events: none;
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 0;
   background:
     radial-gradient(520px 280px at 12% 18%, rgba(51, 65, 196, 0.045), transparent 70%),
     radial-gradient(480px 260px at 88% 12%, rgba(216, 242, 76, 0.05), transparent 68%);
+}
+
+/* Portal: fondo sólido y sin capas fixed — evita texto borroso en Windows/Chrome */
+.kova-portal.kova-shell-bg::before {
+  display: none;
+}
+
+.kova-portal .kova-main-panel,
+.kova-portal .portal-main-scroll {
+  background-color: var(--kova-surface-2);
+}
+
+.kova-portal .kova-topbar {
+  background-color: #fff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .kova-main-panel {
@@ -367,7 +464,7 @@ body {
 
 /* ─── Sidebar nav ─── */
 .kova-nav-item {
-  @apply relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200;
+  @apply relative flex items-center gap-3 rounded-xl py-2.5 pl-3 pr-3 text-sm font-medium transition-colors duration-150;
   color: var(--kova-navy-muted);
 }
 
@@ -392,6 +489,14 @@ body {
   height: 18px;
   border-radius: 0 4px 4px 0;
   background: linear-gradient(180deg, var(--kova-blue), var(--kova-blue-mid));
+}
+
+.kova-sidebar .kova-nav-item-portal.kova-nav-item-active::before {
+  background: var(--kova-lime);
+}
+
+.portal-main-scroll {
+  scrollbar-gutter: stable;
 }
 
 /* ─── Foco accesible ─── */
@@ -441,6 +546,17 @@ a:focus-visible {
 
 .kova-animate-in {
   animation: kova-fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.portal-page-content {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kova-animate-in,
+  .portal-page-content {
+    animation: none;
+  }
 }
 
 @keyframes kova-shimmer {
@@ -553,4 +669,42 @@ a:focus-visible {
   #sec-analisis > div:first-child {
     border-radius: 10px !important;
   }
+}
+
+/* Risk jar game */
+@keyframes risk-jar-shake {
+  0%, 100% { transform: rotate(var(--jar-tilt, 0deg)) translateX(0); }
+  25% { transform: rotate(var(--jar-tilt, 0deg)) translateX(-2px); }
+  75% { transform: rotate(var(--jar-tilt, 0deg)) translateX(2px); }
+}
+
+.risk-jar-shake {
+  animation: risk-jar-shake 0.35s ease-in-out infinite;
+}
+
+@keyframes risk-jar-wave {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+
+.risk-jar-wave {
+  animation: risk-jar-wave 1.8s ease-in-out infinite;
+}
+
+@keyframes risk-jar-bubble {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(-6px); opacity: 0.9; }
+}
+
+.risk-jar-bubble {
+  animation: risk-jar-bubble 2.2s ease-in-out infinite;
+}
+
+@keyframes risk-jar-drop {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(48px) scale(0.4); opacity: 0; }
+}
+
+.risk-jar-drop {
+  animation: risk-jar-drop 0.7s ease-out forwards;
 }

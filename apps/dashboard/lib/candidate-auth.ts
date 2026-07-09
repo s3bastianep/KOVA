@@ -4,30 +4,8 @@ import { prisma } from './prisma';
 import { AuthUser, getUserFromRequest, unauthorized } from './auth';
 import { getMockPortalCandidate, ensureMockPortalCandidate, isMockMode } from './mock';
 
-async function resolveCanonicalUser(user: AuthUser): Promise<AuthUser> {
-  try {
-    const dbUser = await prisma.user.findUnique({
-      where: { id: user.id },
-      select: {
-        id: true,
-        email: true,
-        firstName: true,
-        lastName: true,
-        role: true,
-        tenantId: true,
-        companyId: true,
-      },
-    });
-    if (!dbUser) return user;
-    return {
-      ...dbUser,
-      candidateId: user.candidateId ?? null,
-    };
-  } catch (error) {
-    console.error('[candidate-auth] resolve canonical user failed:', error);
-    return user;
-  }
-}
+const candidateByUserCache = new Map<string, { candidate: Candidate | null; at: number }>();
+const CANDIDATE_CACHE_TTL_MS = 60_000;
 
 async function createCandidateForUser(user: AuthUser): Promise<Candidate | null> {
   try {
@@ -65,60 +43,55 @@ async function tryLinkCandidateUser(candidate: Candidate, userId: string) {
   }
 }
 
-export async function getCandidateForUser(user: AuthUser): Promise<Candidate | null> {
-  const canonical = await resolveCanonicalUser(user);
-
-  if (canonical.candidateId) {
-    try {
-      const byId = await prisma.candidate.findFirst({
-        where: { id: canonical.candidateId, tenantId: canonical.tenantId },
-      });
-      if (byId) return tryLinkCandidateUser(byId, user.id);
-    } catch (error) {
-      console.error('[candidate-auth] lookup by candidateId failed:', error);
-    }
-
-    try {
-      const byIdAnyTenant = await prisma.candidate.findUnique({
-        where: { id: canonical.candidateId },
-      });
-      if (byIdAnyTenant) return tryLinkCandidateUser(byIdAnyTenant, canonical.id);
-    } catch (error) {
-      console.error('[candidate-auth] lookup by candidateId (any tenant) failed:', error);
-    }
-  }
-
+async function resolveCandidateForUser(user: AuthUser): Promise<Candidate | null> {
   try {
-    const linked = await prisma.candidate.findFirst({ where: { userId: canonical.id } });
+    const linked = await prisma.candidate.findFirst({ where: { userId: user.id } });
     if (linked) return linked;
   } catch (error) {
     console.error('[candidate-auth] lookup by userId failed:', error);
   }
 
-  const email = canonical.email.trim().toLowerCase();
-  if (!email) return createCandidateForUser(canonical);
+  if (user.candidateId) {
+    try {
+      const byId = await prisma.candidate.findFirst({
+        where: { id: user.candidateId, tenantId: user.tenantId },
+      });
+      if (byId) return tryLinkCandidateUser(byId, user.id);
+    } catch (error) {
+      console.error('[candidate-auth] lookup by candidateId failed:', error);
+    }
+  }
+
+  const email = user.email?.trim().toLowerCase();
+  if (!email) return createCandidateForUser(user);
 
   try {
     const byEmail = await prisma.candidate.findFirst({
       where: {
-        tenantId: canonical.tenantId,
+        tenantId: user.tenantId,
         email,
       },
       orderBy: { createdAt: 'desc' },
     });
-    if (byEmail) return tryLinkCandidateUser(byEmail, canonical.id);
+    if (byEmail) return tryLinkCandidateUser(byEmail, user.id);
 
-    const byEmailAnyTenant = await prisma.candidate.findFirst({
-      where: { email },
-      orderBy: { createdAt: 'desc' },
-    });
-    if (byEmailAnyTenant) return tryLinkCandidateUser(byEmailAnyTenant, canonical.id);
-
-    return createCandidateForUser(canonical);
+    return createCandidateForUser(user);
   } catch (error) {
     console.error('[candidate-auth] lookup by email failed:', error);
-    return createCandidateForUser(canonical);
+    return createCandidateForUser(user);
   }
+}
+
+export async function getCandidateForUser(user: AuthUser): Promise<Candidate | null> {
+  const cacheKey = user.id;
+  const hit = candidateByUserCache.get(cacheKey);
+  if (hit && Date.now() - hit.at < CANDIDATE_CACHE_TTL_MS) {
+    return hit.candidate;
+  }
+
+  const candidate = await resolveCandidateForUser(user);
+  candidateByUserCache.set(cacheKey, { candidate, at: Date.now() });
+  return candidate;
 }
 
 export async function requireCandidateUser(

@@ -1,5 +1,5 @@
-import { PortalComercialForm } from '@/components/portal/PortalComercialForm';
+import { redirect } from 'next/navigation';
 
-export default function PortalComercialPage() {
-  return <PortalComercialForm />;
+export default function PortalComercialRedirectPage() {
+  redirect('/portal/preferencias');
 }

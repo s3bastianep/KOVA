@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
@@ -15,7 +15,8 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { portalApi, type PortalApplication } from '@/lib/api';
-import { PIPELINE_STAGES, stageIndex, stageStepLabel, stageStyle } from '@/lib/stages';
+import { PORTAL_CACHE_KEYS, portalCacheGet } from '@/lib/portal-cache';
+import { candidatePipelineProgress, stageStyle } from '@/lib/stages';
 
 type ViewFilter = 'activas' | 'cerradas' | 'todas';
 
@@ -54,41 +55,39 @@ function PipelineProgress({ stage, rejected }: { stage: string; rejected: boolea
     );
   }
 
-  const idx = stageIndex(stage);
-  const total = PIPELINE_STAGES.length;
-  const progress = idx >= 0 ? Math.round(((idx + 1) / total) * 100) : 8;
-  const stepLabel = stageStepLabel(stage);
+  const progress = candidatePipelineProgress(stage);
 
   return (
     <div className="space-y-2.5">
       <div className="flex items-center justify-between gap-2 text-xs">
-        <span className="font-medium text-[var(--kova-navy-muted)]">{stepLabel ?? 'En proceso'}</span>
-        <span className="font-mono text-[var(--kova-muted)]">{progress}%</span>
+        <span className="font-medium text-[var(--kova-navy-muted)]">
+          {progress.label} · {progress.message}
+        </span>
+        <span className="font-mono text-[var(--kova-muted)]">{progress.percent}%</span>
       </div>
       <div className="h-2 overflow-hidden rounded-full bg-[var(--kova-line)]">
         <div
-          className="h-full rounded-full transition-all duration-500"
+          className="h-full rounded-full transition-[width] duration-200 ease-out"
           style={{
-            width: `${progress}%`,
+            width: `${progress.percent}%`,
             background: 'linear-gradient(90deg, var(--kova-blue), var(--kova-lime-dark))',
           }}
         />
       </div>
       <div className="hidden gap-1 sm:flex">
-        {PIPELINE_STAGES.map((s, i) => {
-          const done = idx >= i;
-          const current = idx === i;
+        {Array.from({ length: progress.totalPhases }).map((_, i) => {
+          const done = progress.phaseIndex >= i;
+          const current = progress.phaseIndex === i;
           return (
             <span
-              key={s}
-              className={`h-1.5 flex-1 rounded-full transition-colors ${
+              key={i}
+              className={`h-1.5 flex-1 rounded-full transition-colors duration-150 ${
                 current
                   ? 'bg-[var(--kova-lime)]'
                   : done
                     ? 'bg-[var(--kova-blue)]/40'
                     : 'bg-[var(--kova-line)]'
               }`}
-              title={s}
             />
           );
         })}
@@ -97,12 +96,12 @@ function PipelineProgress({ stage, rejected }: { stage: string; rejected: boolea
   );
 }
 
-function ApplicationCard({ app }: { app: PortalApplication }) {
+const ApplicationCard = memo(function ApplicationCard({ app }: { app: PortalApplication }) {
   const style = stageStyle(app.stage);
   const match = matchTone(app.compatibility);
 
   return (
-    <article className="group relative overflow-hidden rounded-2xl border border-[var(--kova-border)] bg-white shadow-[var(--kova-shadow-xs)] transition-all duration-200 hover:border-[var(--kova-border-strong)] hover:shadow-[var(--kova-shadow-md)]">
+    <article className="group relative overflow-hidden rounded-2xl border border-[var(--kova-border)] bg-white shadow-[var(--kova-shadow-xs)] transition-[border-color,box-shadow] duration-150 hover:border-[var(--kova-border-strong)] hover:shadow-[var(--kova-shadow-md)]">
       <div
         className="absolute inset-y-0 left-0 w-1"
         style={{ background: app.rejected ? '#DC2626' : style.color }}
@@ -183,7 +182,8 @@ function ApplicationCard({ app }: { app: PortalApplication }) {
             </div>
             <Link
               href={`/portal/vacantes/${app.vacancyId}`}
-              className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition hover:scale-[1.02]"
+              prefetch
+              className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-transform duration-150 hover:scale-[1.02]"
               style={{ background: 'var(--kova-lime)', color: 'var(--kv-ink)' }}
             >
               Ver vacante
@@ -194,7 +194,7 @@ function ApplicationCard({ app }: { app: PortalApplication }) {
       </div>
     </article>
   );
-}
+});
 
 function FilterTab({
   active,
@@ -211,7 +211,7 @@ function FilterTab({
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${
+      className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors duration-150 ${
         active
           ? 'bg-white text-[var(--kova-navy)] shadow-[var(--kova-shadow-xs)] ring-1 ring-[var(--kova-border)]'
           : 'text-[var(--kova-muted)] hover:text-[var(--kova-navy)]'
@@ -230,8 +230,9 @@ function FilterTab({
 }
 
 export function PortalAplicacionesClient() {
-  const [aplicaciones, setAplicaciones] = useState<PortalApplication[]>([]);
-  const [loading, setLoading] = useState(true);
+  const cached = portalCacheGet<{ aplicaciones: PortalApplication[] }>(PORTAL_CACHE_KEYS.aplicaciones);
+  const [aplicaciones, setAplicaciones] = useState<PortalApplication[]>(() => cached?.aplicaciones ?? []);
+  const [loading, setLoading] = useState(() => !cached);
   const [error, setError] = useState('');
   const [view, setView] = useState<ViewFilter>('activas');
 
@@ -264,7 +265,7 @@ export function PortalAplicacionesClient() {
     return !app.rejected;
   });
 
-  if (loading) {
+  if (loading && aplicaciones.length === 0) {
     return (
       <div className="flex items-center justify-center py-20 text-[var(--kova-muted)]">
         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -286,11 +287,9 @@ export function PortalAplicacionesClient() {
         />
         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="mb-2 text-[11px] font-mono uppercase tracking-[0.14em] text-[var(--kova-muted)]">
-              Seguimiento
-            </p>
-            <h1 className="font-heading text-2xl font-bold lg:text-3xl">Mis aplicaciones</h1>
-            <p className="mt-2 max-w-xl text-[var(--kova-muted)]">
+            <p className="kova-portal-eyebrow">Seguimiento</p>
+            <h1 className="kova-portal-title kova-portal-title-lg mt-2 font-heading">Postulaciones</h1>
+            <p className="kova-portal-body mt-2 max-w-xl">
               Sigue el avance de tus postulaciones, etapa por etapa, y revisa tu compatibilidad con cada
               vacante.
             </p>
@@ -298,11 +297,11 @@ export function PortalAplicacionesClient() {
 
           {aplicaciones.length > 0 ? (
             <div className="flex flex-wrap gap-2.5">
-              <div className="rounded-xl border border-[var(--kova-border)] bg-white/80 px-3.5 py-2 backdrop-blur-sm">
+              <div className="rounded-xl border border-[var(--kova-border)] bg-white px-3.5 py-2">
                 <p className="text-[10px] font-mono uppercase tracking-wide text-[var(--kova-muted)]">Activas</p>
                 <p className="font-heading text-xl font-bold text-[var(--kova-blue)]">{counts.activas}</p>
               </div>
-              <div className="rounded-xl border border-[var(--kova-border)] bg-white/80 px-3.5 py-2 backdrop-blur-sm">
+              <div className="rounded-xl border border-[var(--kova-border)] bg-white px-3.5 py-2">
                 <p className="text-[10px] font-mono uppercase tracking-wide text-[var(--kova-muted)]">
                   Match prom.
                 </p>
@@ -358,7 +357,8 @@ export function PortalAplicacionesClient() {
           {aplicaciones.length === 0 ? (
             <Link
               href="/portal/vacantes"
-              className="mt-6 inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition hover:scale-[1.02]"
+              prefetch
+              className="mt-6 inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-transform duration-150 hover:scale-[1.02]"
               style={{ background: 'var(--kova-lime)', color: 'var(--kv-ink)' }}
             >
               <Sparkles className="h-4 w-4" />
@@ -376,11 +376,12 @@ export function PortalAplicacionesClient() {
             <div className="flex items-start gap-3">
               <TrendingUp className="mt-0.5 h-4 w-4 shrink-0 text-[var(--kova-indigo)]" />
               <p className="text-sm text-[var(--kova-muted)]">
-                Mejora tu match completando experiencia, formación y perfil comercial.
+                Mejora tu match completando experiencia, formación y preferencias laborales.
               </p>
             </div>
             <Link
               href="/portal/vacantes"
+              prefetch
               className="shrink-0 text-sm font-semibold text-[var(--kova-indigo)] hover:underline"
             >
               Ver vacantes

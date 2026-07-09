@@ -7,10 +7,15 @@ export type OnboardingStep =
   | 'cv_upload'
   | 'cv_analyzing'
   | 'cv_summary'
+  | 'review_hub'
   | 'cv_review'
+  | 'preferencias'
+  | 'evidence'
+  | 'competencies'
+  | 'complete'
+  | 'done'
   | 'bridge'
-  | 'questions'
-  | 'done';
+  | 'questions';
 
 export type OnboardingCounts = {
   experiencias: number;
@@ -23,6 +28,8 @@ export type OnboardingCounts = {
 type OnboardingMeta = {
   profileStatus?: string;
   onboardingStep?: OnboardingStep;
+  onboardingSubStep?: number;
+  onboardingReviewed?: string[];
   cvExtraction?: unknown;
 };
 
@@ -30,9 +37,15 @@ export function isOnboardingComplete(meta: OnboardingMeta) {
   return meta.profileStatus === 'complete' || meta.onboardingStep === 'done';
 }
 
+function normalizeStep(step?: OnboardingStep): OnboardingStep {
+  if (!step) return 'welcome';
+  if (step === 'bridge' || step === 'questions') return 'preferencias';
+  return step;
+}
+
 export function resolveOnboardingStep(meta: OnboardingMeta, hasCv: boolean): OnboardingStep {
   if (isOnboardingComplete(meta)) return 'done';
-  const saved = meta.onboardingStep;
+  const saved = normalizeStep(meta.onboardingStep);
   if (saved && saved !== 'welcome') return saved;
   if (hasCv && meta.cvExtraction) return 'cv_summary';
   return 'welcome';
@@ -80,23 +93,26 @@ export function onboardingProgressPercent(step: OnboardingStep) {
     'cv_upload',
     'cv_analyzing',
     'cv_summary',
+    'review_hub',
     'cv_review',
-    'bridge',
-    'questions',
+    'preferencias',
+    'evidence',
+    'competencies',
+    'complete',
     'done',
   ];
-  const idx = order.indexOf(step);
+  const normalized = normalizeStep(step);
+  const idx = order.indexOf(normalized);
   if (idx < 0) return 0;
   return Math.round((idx / (order.length - 1)) * 100);
 }
 
 export const CV_ANALYSIS_STEPS = [
-  'Leyendo documento',
-  'Detectando datos personales',
-  'Detectando experiencia',
-  'Detectando estudios',
-  'Detectando idiomas',
-  'Detectando certificaciones',
+  'Extrayendo experiencia',
+  'Leyendo formación',
+  'Detectando habilidades',
+  'Extrayendo idiomas',
+  'Detectando empresas',
   'Organizando información',
 ] as const;
 

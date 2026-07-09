@@ -9,6 +9,7 @@ import {
 } from '@/lib/portal-profile';
 import { isMockMode, updateMockPortalProfile } from '@/lib/mock';
 import { handlePortalRoute } from '@/lib/portal-api';
+import { invalidatePortalCandidateCaches } from '@/lib/portal-server-cache';
 import { isOnboardingComplete, readOnboardingMeta, resolveOnboardingStep } from '@/lib/portal-onboarding';
 
 export const dynamic = 'force-dynamic';
@@ -26,6 +27,8 @@ export async function GET(req: NextRequest) {
           profile,
           cv,
           onboardingStep: resolveOnboardingStep(meta, Boolean(cv)),
+          onboardingSubStep: meta.onboardingSubStep ?? 0,
+          onboardingReviewed: meta.onboardingReviewed ?? [],
           onboardingComplete: isOnboardingComplete(meta),
           profileStatus: meta.profileStatus ?? 'account_only',
         });
@@ -39,6 +42,8 @@ export async function GET(req: NextRequest) {
         profile: profileFromCandidate(candidate),
         cv,
         onboardingStep: resolveOnboardingStep(meta, Boolean(cv)),
+        onboardingSubStep: meta.onboardingSubStep ?? 0,
+        onboardingReviewed: meta.onboardingReviewed ?? [],
         onboardingComplete: isOnboardingComplete(meta),
         profileStatus: meta.profileStatus ?? 'account_only',
       });
@@ -54,7 +59,14 @@ export async function PATCH(req: NextRequest) {
       const body = await req.json().catch(() => ({}));
       const patch = (body.profile ?? {}) as Partial<CommercialProfile>;
       const onboardingStep = body.onboardingStep as string | undefined;
+      const onboardingSubStep =
+        typeof body.onboardingSubStep === 'number' ? body.onboardingSubStep : undefined;
+      const onboardingReviewed = Array.isArray(body.onboardingReviewed)
+        ? (body.onboardingReviewed as string[])
+        : undefined;
       const completeOnboarding = Boolean(body.completeOnboarding);
+
+      const invalidateCaches = () => invalidatePortalCandidateCaches(candidate.id);
 
       if (isMockMode()) {
         const current = profileFromCandidate(candidate);
@@ -65,6 +77,7 @@ export async function PATCH(req: NextRequest) {
             : (onboardingStep as import('@/lib/registro-session').OnboardingStep | undefined),
           profileStatus: completeOnboarding ? 'complete' : onboardingStep ? 'in_progress' : undefined,
         });
+        invalidateCaches();
         return Response.json({
           ok: true,
           profile: merged,
@@ -80,6 +93,7 @@ export async function PATCH(req: NextRequest) {
           onboardingStep: 'done',
           profileStatus: 'complete',
         });
+        invalidateCaches();
         return Response.json({
           ok: true,
           profile,
@@ -93,8 +107,11 @@ export async function PATCH(req: NextRequest) {
         const profile = await persistPortalOnboarding(user.tenantId, candidate.id, {
           profile: Object.keys(patch).length > 0 ? patch : undefined,
           onboardingStep: onboardingStep as import('@/lib/registro-session').OnboardingStep,
+          onboardingSubStep,
+          onboardingReviewed,
           profileStatus: 'in_progress',
         });
+        invalidateCaches();
         return Response.json({
           ok: true,
           profile,
@@ -115,6 +132,7 @@ export async function PATCH(req: NextRequest) {
       }
 
       const profile = await persistPortalProfile(user.tenantId, candidate.id, merged);
+      invalidateCaches();
 
       return Response.json({
         ok: true,

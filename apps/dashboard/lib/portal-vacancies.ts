@@ -4,7 +4,7 @@ import {
   commercialProfileFromMetadata,
   mergeCompatibilityScores,
 } from './candidate-commercial-profile';
-import { compatibilityFromVacancyAndAnswers, profileFromCandidate } from './compatibility';
+import { compatibilityFromVacancyAndAnswers, profileFromCandidate, type RequirementRule } from './compatibility';
 
 type CandidateForMatch = {
   metadata?: unknown;
@@ -26,7 +26,8 @@ export function computeApplyCompatibility(
 ) {
   const base = profileFromCandidate(candidate);
   const merged = { ...base, ...extraAnswers };
-  const standard = compatibilityFromVacancyAndAnswers(vacancyMetadata, merged);
+  const derivedRules = derivedRequirementRules(merged);
+  const standard = compatibilityFromVacancyAndAnswers(vacancyMetadata, merged, derivedRules);
   const commercialProfile = commercialProfileFromMetadata(candidate.metadata);
   const commercialCriteria = commercialCriteriaFromVacancyMetadata(vacancyMetadata);
 
@@ -36,6 +37,25 @@ export function computeApplyCompatibility(
   }
 
   return standard;
+}
+
+const DERIVED_APPLY_RULES: Record<string, { label: string; weight: number }> = {
+  has_vehicle: { label: 'Vehículo propio', weight: 8 },
+  intangible_sales: { label: 'Venta de intangibles', weight: 8 },
+};
+
+function derivedRequirementRules(
+  answers: Record<string, string | number | string[]>,
+): RequirementRule[] {
+  return Object.entries(DERIVED_APPLY_RULES)
+    .filter(([key]) => key in answers)
+    .map(([key, config]) => ({
+      key,
+      label: config.label,
+      weight: config.weight,
+      type: 'equals' as const,
+      expected: 'Sí',
+    }));
 }
 
 export const PORTAL_OPEN_VACANCY_STATUSES = [

@@ -5,7 +5,18 @@ import { useState } from 'react';
 import { ToastProvider } from '@/components/ui/Toast';
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [client] = useState(() => new QueryClient());
+  const [client] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 60_000,
+            gcTime: 5 * 60_000,
+            refetchOnWindowFocus: false,
+          },
+        },
+      }),
+  );
   return (
     <QueryClientProvider client={client}>
       <ToastProvider>{children}</ToastProvider>

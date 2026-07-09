@@ -102,12 +102,11 @@ async function main() {
       openedAt: new Date(),
       metadata: {
         standardQuestions: [
-          { id: 'experience_years', weight: 20, expected: '3' },
-          { id: 'skills', weight: 30, expected: 'Prospección,Cierre de ventas,Negociación,Presentación comercial' },
-          { id: 'industry', weight: 15, expected: 'Tecnología' },
-          { id: 'sales_type', weight: 10, expected: 'B2B' },
-          { id: 'crm', weight: 10, expected: 'Salesforce' },
-          { id: 'education', weight: 5, expected: 'Profesional' },
+          { id: 'experience_years', weight: 25, expected: '5' },
+          { id: 'industry', weight: 20, expected: 'Software,Tecnología' },
+          { id: 'sales_type', weight: 15, expected: 'B2B,Consultiva' },
+          { id: 'skills', weight: 20, expected: 'Prospección,Cierre de ventas,Negociación,Venta consultiva' },
+          { id: 'crm', weight: 10, expected: 'Salesforce,HubSpot' },
           { id: 'english_level', weight: 5, expected: 'B2' },
           { id: 'availability', weight: 5, expected: 'Inmediata' },
         ],

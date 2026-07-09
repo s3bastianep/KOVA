@@ -1,13 +1,13 @@
 /* KOVA — Registro candidato (landing wave) */
 
-html:has(.kv-registro) {
+html:has(.kv-registro-fullpage) {
   font-size: 16px;
   text-rendering: geometricPrecision;
   zoom: 0.95;
 }
 
 @supports not (zoom: 1) {
-  html:has(.kv-registro) {
+  html:has(.kv-registro-fullpage) {
     font-size: 15px;
   }
 }
@@ -2144,4 +2144,18 @@ html:has(.kv-registro) {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Portal documentos — variables para CV import sin zoom global */
+.portal-documentos {
+  --kv-ink: #12140f;
+  --kv-indigo: #3341c4;
+  --kv-lime: #d8f24c;
+  --kv-slate: #6b6f64;
+  --kv-line: #d7d9ce;
+  --kv-nav-muted: #a7aba0;
+  --kv-required: #c41e3a;
+  --kv-gap-section: 1.35rem;
+  --kv-shadow-field: 0 1px 2px rgba(18, 20, 15, 0.03);
+  --kv-radius-field: 0.8125rem;
 }

@@ -1,0 +1,873 @@
+/* ─── Arena ─── */
+
+.jar-arena {
+  min-height: min(620px, calc(100vh - 100px));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #2a3270 0%, #1e2558 55%, #171d45 100%);
+  box-shadow: 0 16px 48px rgba(12, 16, 40, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.jar-arena::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.07), transparent 55%);
+  pointer-events: none;
+}
+
+.jar-arena-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.jar-arena--intro {
+  background: linear-gradient(165deg, #fffef5 0%, #fff8d6 45%, #ffeec0 100%);
+  box-shadow:
+    0 20px 50px rgba(18, 20, 15, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.jar-arena--intro::after {
+  background: radial-gradient(circle at 80% 10%, rgba(216, 242, 76, 0.35), transparent 45%);
+}
+
+.jar-intro-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #4a5fd9;
+  background: rgba(74, 95, 217, 0.1);
+  border: 2px solid rgba(74, 95, 217, 0.2);
+}
+
+.jar-intro-title {
+  font-family: var(--font-heading, inherit);
+  font-size: 2.25rem;
+  font-weight: 900;
+  color: #12140f;
+  margin: 8px 0 0;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+.jar-intro-goal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 10px 0 0;
+  font-size: 15px;
+  color: #3d4a5c;
+  text-align: center;
+}
+
+.jar-intro-goal strong {
+  color: #12140f;
+}
+
+.jar-intro-jar-wrap {
+  width: 100%;
+  padding: 12px 0 4px;
+  display: flex;
+  justify-content: center;
+}
+
+.jar-intro-jar-wrap .jar-scene-stage {
+  height: 220px;
+}
+
+.jar-intro-jar-wrap .jar2d-glass {
+  border-color: rgba(18, 20, 15, 0.2);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.jar-intro-rules {
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.jar-intro-rules li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 2px solid rgba(18, 20, 15, 0.06);
+  font-size: 14px;
+  line-height: 1.45;
+  color: #3d4a5c;
+}
+
+.jar-intro-rules strong {
+  color: #12140f;
+}
+
+.jar-intro-rule-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.jar-intro-rule-icon--fill {
+  background: #e8ff9a;
+  color: #5a7a10;
+}
+
+.jar-intro-rule-icon--save {
+  background: #e0e8ff;
+  color: #3341c4;
+}
+
+.jar-intro-rule-icon--warn {
+  background: #ffe8ec;
+  color: #c43d5a;
+}
+
+.jar-intro-practice-note {
+  font-size: 13px;
+  color: #64748b;
+  text-align: center;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(74, 95, 217, 0.08);
+  border: 1px dashed rgba(74, 95, 217, 0.25);
+  width: 100%;
+}
+
+.jar-btn-play--intro {
+  background: linear-gradient(180deg, #5a6ef0, #3341c4);
+  border: 3px solid #7b8af5;
+  color: #fff;
+  box-shadow: 0 6px 0 #252f8a, 0 14px 28px rgba(51, 65, 196, 0.35);
+}
+
+.jar-scene-practice-badge {
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #ffe566;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 229, 102, 0.45);
+}
+
+.jar-scene-points-pill.is-practice {
+  border-color: rgba(255, 229, 102, 0.35);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.jar-scene-points-pill.is-practice .jar-scene-points-unit {
+  color: rgba(255, 229, 102, 0.9);
+  font-size: 13px;
+}
+
+.jar-arena-practice-done {
+  text-align: center;
+  padding: 12px 8px 20px;
+}
+
+.jar-arena-practice-done .jar-arena-rules strong {
+  color: #e8ff6b;
+}
+
+.jar-arena-rules {
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.55);
+  text-align: center;
+  margin: 0;
+}
+
+.jar-arena-title {
+  font-family: var(--font-heading, inherit);
+  font-size: 2rem;
+  font-weight: 900;
+  color: #fff;
+  margin: 0;
+  text-align: center;
+}
+
+.jar-arena-tagline {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(216, 242, 76, 0.9);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin: -8px 0 0;
+}
+
+.jar-scene {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.jar-scene-hud {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.jar-scene-level-chip {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.jar-scene-level-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.jar-scene-level-num {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+}
+
+.jar-scene-level-of {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.jar-scene-wallet {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  font-size: 1rem;
+  font-weight: 900;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.jar-scene-star {
+  color: #ffe566;
+  font-size: 14px;
+}
+
+.jar-scene-stage {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 8px;
+}
+
+.jar-scene-points-pill {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 2px solid rgba(216, 242, 76, 0.35);
+}
+
+.jar-scene-points-value {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #e8ff6b;
+  font-variant-numeric: tabular-nums;
+}
+
+.jar-scene-points-unit {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.jar-scene-pop {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #1a2200;
+  background: #e8ff6b;
+  border: 3px solid #fff;
+  animation: jar-pop 0.48s ease-out forwards;
+  z-index: 10;
+  pointer-events: none;
+}
+
+@keyframes jar-pop {
+  0% { opacity: 0; transform: translateX(-50%) translateY(8px) scale(0.7); }
+  20% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.1); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-40px) scale(0.85); }
+}
+
+/* ─── 2D Jar ─── */
+
+.jar2d {
+  position: relative;
+  width: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: 50% 90%;
+  z-index: 2;
+}
+
+.jar2d.is-idle {
+  animation: jar-idle 2.8s ease-in-out infinite;
+}
+
+@keyframes jar-idle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.jar2d.is-wobble {
+  animation: jar-wobble 0.22s ease;
+}
+
+@keyframes jar-wobble {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-4deg); }
+  75% { transform: rotate(4deg); }
+}
+
+.jar2d.is-spilled {
+  animation: jar-spill 0.42s ease-in forwards;
+}
+
+@keyframes jar-spill {
+  to { transform: rotate(75deg) translateY(12px); }
+}
+
+.jar2d-lid {
+  width: 72px;
+  height: 16px;
+  border-radius: 8px 8px 4px 4px;
+  background: #c49a6c;
+  border: 3px solid #8b6340;
+  margin-bottom: -2px;
+  z-index: 3;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.jar2d-neck {
+  width: 88px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 3px solid rgba(255, 255, 255, 0.45);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  z-index: 2;
+}
+
+.jar2d-glass {
+  position: relative;
+  width: 130px;
+  height: 190px;
+  border-radius: 16px 16px 36px 36px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 4px solid rgba(255, 255, 255, 0.5);
+  overflow: hidden;
+  box-shadow: inset 0 -8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.jar2d-liquid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, #e0ff70 0%, #b8e020 55%, #8fb818 100%);
+  border-radius: 0 0 30px 30px;
+  transition: height 0.16s cubic-bezier(0.34, 1.15, 0.64, 1);
+  min-height: 8px;
+}
+
+.jar2d-liquid-top {
+  position: absolute;
+  top: -5px;
+  left: 8%;
+  right: 8%;
+  height: 10px;
+  border-radius: 50%;
+  background: #eeff88;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  animation: jar-wave 2s ease-in-out infinite;
+}
+
+@keyframes jar-wave {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(1.06); }
+}
+
+.jar2d-bubble {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  left: calc(20% + var(--b-i) * 18%);
+  bottom: calc(25% + var(--b-i) * 8%);
+  animation: jar-bubble 2.2s ease-in infinite;
+  animation-delay: calc(var(--b-i) * 0.3s);
+}
+
+@keyframes jar-bubble {
+  0% { opacity: 0.6; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-24px); }
+}
+
+.jar2d-glass-shine {
+  position: absolute;
+  top: 12%;
+  left: 10%;
+  width: 18px;
+  height: 55%;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+  pointer-events: none;
+}
+
+.jar2d-outline {
+  display: none;
+}
+
+.jar2d-splash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.jar2d-splash-dot {
+  position: absolute;
+  top: 45%;
+  left: calc(20% + var(--s-i) * 6%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d4f55a;
+  border: 2px solid #fff;
+  animation: jar-splash-dot 0.45s ease-out forwards;
+  animation-delay: calc(var(--s-i) * 0.02s);
+}
+
+@keyframes jar-splash-dot {
+  to {
+    opacity: 0;
+    transform: translateY(40px) translateX(calc((var(--s-i) - 5) * 8px));
+  }
+}
+
+.jar2d-puddle {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: rgba(184, 224, 53, 0.5);
+  transition: all 0.4s ease;
+  opacity: 0;
+}
+
+.jar2d-puddle.is-visible {
+  width: 160px;
+  height: 28px;
+  opacity: 1;
+}
+
+/* ─── Controls ─── */
+
+.jar-playing-scene-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.jar-playing-scene-wrap .jar-scene {
+  animation: jar-scene-in 0.22s ease-out both;
+}
+
+@keyframes jar-scene-in {
+  from {
+    opacity: 0.6;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.jar-round-toast {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 12;
+  animation: jar-toast-in 0.48s ease-out both;
+}
+
+.jar-round-toast--secured {
+  color: #1a2200;
+  background: #e8ff6b;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.jar-round-toast--spilled {
+  color: #fff;
+  background: rgba(220, 38, 38, 0.92);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+@keyframes jar-toast-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px) scale(0.92);
+  }
+  18% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+.jar-controls {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  transition: opacity 0.15s ease;
+}
+
+.jar-controls.is-locked {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.jar-btn-fill,
+.jar-btn-save,
+.jar-btn-play {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.jar-btn-fill {
+  padding: 18px 12px;
+  border-radius: 16px;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #1a2200;
+  background: #d8f85c;
+  border: 3px solid #f0ff9a;
+  box-shadow: 0 5px 0 #7a9a14, 0 10px 24px rgba(0, 0, 0, 0.25);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.jar-btn-fill:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 #7a9a14, 0 14px 28px rgba(0, 0, 0, 0.28);
+}
+
+.jar-btn-fill:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #7a9a14;
+}
+
+.jar-btn-fill:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.jar-btn-save {
+  padding: 18px 12px;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border: 3px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.25);
+  transition: transform 0.1s ease, background 0.15s ease;
+}
+
+.jar-btn-save:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateY(-2px);
+}
+
+.jar-btn-save:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.jar-btn-save:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.jar-btn-play {
+  width: 100%;
+  max-width: 260px;
+  padding: 16px 24px;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #fff;
+  background: #4a5fd9;
+  border: 3px solid #6b7ef0;
+  box-shadow: 0 5px 0 #2e3a9e, 0 12px 28px rgba(0, 0, 0, 0.3);
+}
+
+.jar-btn-play:hover {
+  transform: translateY(-2px);
+}
+
+.jar-btn-play:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #2e3a9e;
+}
+
+.jar-progress-bar {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.jar-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: #d8f85c;
+  transition: width 0.2s ease;
+}
+
+/* ─── Done / already done ─── */
+
+.jar-arena--flat {
+  min-height: auto;
+  padding: 1.75rem 1.25rem;
+  border-radius: 1rem;
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+}
+
+.jar-arena--flat::after {
+  display: none;
+}
+
+.jar-flat-chip {
+  display: inline-block;
+  margin-bottom: 0.25rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.jar-arena-done,
+.jar-arena-already,
+.jar-arena-feedback,
+.jar-arena-practice-done {
+  padding: 0.5rem 0.25rem 0.25rem;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.jar-done-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  background: rgba(216, 242, 76, 0.15);
+  border: 3px solid rgba(216, 242, 76, 0.45);
+}
+
+.jar-done-icon--flat {
+  width: 3rem;
+  height: 3rem;
+  margin: 0.75rem auto 0.5rem;
+  border-radius: 0.625rem;
+  font-size: 1.25rem;
+  background: var(--kv-lime, #d8f24c);
+  border: none;
+  color: #0a0a0a;
+}
+
+.jar-arena--flat .jar-feedback-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.jar-feedback-title {
+  font-family: var(--font-heading, inherit);
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #fff;
+  margin: 0 0 8px;
+}
+
+.jar-arena--flat .jar-feedback-copy {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.42);
+  margin: 0;
+}
+
+.jar-arena--flat .jar-feedback-copy strong {
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 600;
+}
+
+.jar-feedback-copy {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+.jar-feedback-total {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #e8ff6b;
+  margin: 12px 0 20px;
+}
+
+.jar-arena--flat .jar-done-score {
+  font-size: 2.75rem;
+  font-weight: 700;
+  color: var(--kv-lime, #d8f24c);
+  margin: 0.35rem 0 0;
+  line-height: 1;
+}
+
+.jar-done-score {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #fff;
+  margin: 8px 0 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.jar-arena--flat .jar-arena-rules {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.jar-arena--flat .jar-arena-loading {
+  color: rgba(255, 255, 255, 0.45);
+  padding: 2rem;
+}
+
+.jar-btn-play--flat {
+  margin-top: 1.25rem;
+  width: 100%;
+  justify-content: center;
+  background: var(--kv-lime, #d8f24c);
+  color: #0a0a0a;
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: none;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.jar-arena-loading {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  padding: 40px;
+}
+
+.comercial-competency-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(18, 20, 15, 0.06);
+  overflow: hidden;
+}
+
+.comercial-competency-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}

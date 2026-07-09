@@ -182,6 +182,7 @@ export function profileFromCandidate(candidate: {
 export function compatibilityFromVacancyAndAnswers(
   vacancyMetadata: unknown,
   answers: Record<string, string | number | string[]>,
+  extraRules: RequirementRule[] = [],
 ) {
   const normalized = Object.fromEntries(
     Object.entries(answers).map(([key, value]) => [
@@ -189,6 +190,6 @@ export function compatibilityFromVacancyAndAnswers(
       Array.isArray(value) ? value.join(',') : value,
     ]),
   ) as Record<string, string | number>;
-  const requirements = requirementsFromMetadata(vacancyMetadata);
+  const requirements = [...requirementsFromMetadata(vacancyMetadata), ...extraRules];
   return calculateCompatibility(requirements, normalized);
 }

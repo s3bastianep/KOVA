@@ -4,6 +4,8 @@ import { profileFromCandidate } from '@/lib/compatibility';
 import { runCandidateAddedAutomation } from '@/lib/automations';
 import { prisma } from '@/lib/prisma';
 import { isMockMode } from '@/lib/mock';
+import { invalidatePortalCandidateCaches } from '@/lib/portal-server-cache';
+import { mockVacancyMetadataForId } from '@/lib/portal-apply-questions';
 import {
   computeApplyCompatibility,
   PORTAL_OPEN_VACANCY_STATUSES,
@@ -20,11 +22,16 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       const extraAnswers = (body.answers ?? {}) as Record<string, string | number | string[]>;
 
   if (isMockMode()) {
+    const metadata = mockVacancyMetadataForId(vacancyId);
+    const profileAnswers = profileFromCandidate(candidate);
+    const mergedAnswers = { ...profileAnswers, ...extraAnswers };
+    const { total: compatibility } = computeApplyCompatibility(candidate, metadata, mergedAnswers);
+
     return Response.json({
       ok: true,
-      compatibility: 86,
-      message: 'Postulación registrada correctamente (modo demo).',
-      applicationId: 'mock-application',
+      compatibility,
+      message: `¡Listo! Tu postulación fue registrada con ${compatibility}% de compatibilidad.`,
+      applicationId: `mock-application-${vacancyId}`,
       stage: 'APPLIED',
     });
   }
@@ -135,6 +142,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
     return candidateVacancy;
   });
+
+  invalidatePortalCandidateCaches(candidate.id);
 
   return Response.json({
     ok: true,

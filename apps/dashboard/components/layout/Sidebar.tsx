@@ -19,7 +19,7 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="kova-sidebar hidden lg:flex w-[268px] shrink-0 flex-col border-r relative z-20">
+    <aside className="kova-sidebar relative z-20 hidden h-full w-[268px] min-w-[268px] max-w-[268px] shrink-0 flex-col overflow-hidden border-r lg:flex">
       <div className="flex items-center gap-3 px-5 pt-6 pb-5">
         <div className="kova-sidebar-logo-mark" aria-hidden>
           K
@@ -43,7 +43,8 @@ export function Sidebar() {
               <Link
                 key={href}
                 href={href}
-                className={cn('kova-nav-item', active && 'kova-nav-item-active pl-4')}
+                prefetch
+                className={cn('kova-nav-item', active && 'kova-nav-item-active')}
               >
                 <Icon className="w-[18px] h-[18px] shrink-0" />
                 <span className="truncate">{label}</span>

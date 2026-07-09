@@ -56,6 +56,40 @@ export function stageStepLabel(stage?: string | null) {
   return `Paso ${idx + 1} de ${PIPELINE_STAGES.length}`;
 }
 
+/** Fases simplificadas para el candidato (no expone las 9 etapas internas del ATS). */
+export const CANDIDATE_PIPELINE_PHASES = [
+  { label: 'Postulación', message: 'Recibimos tu aplicación', stages: ['APPLIED', 'SCREENING'] as const },
+  { label: 'Contacto', message: 'Te contactaremos si avanzas', stages: ['CALL'] as const },
+  { label: 'Evaluación', message: 'Pruebas o entrevistas', stages: ['INTERVIEW', 'ASSESSMENT', 'ROLE_PLAY'] as const },
+  { label: 'Decisión', message: 'Oferta o cierre del proceso', stages: ['CLIENT_REVIEW', 'OFFER', 'HIRED'] as const },
+] as const;
+
+export function candidatePipelinePhase(stage?: string | null) {
+  if (!stage) return null;
+  return CANDIDATE_PIPELINE_PHASES.find((p) => (p.stages as readonly string[]).includes(stage)) ?? null;
+}
+
+export function candidatePipelineProgress(stage?: string | null) {
+  if (!stage) {
+    return { phaseIndex: 0, totalPhases: CANDIDATE_PIPELINE_PHASES.length, label: 'En proceso', message: 'Tu postulación está activa', percent: 12 };
+  }
+  const phaseIndex = CANDIDATE_PIPELINE_PHASES.findIndex((p) =>
+    (p.stages as readonly string[]).includes(stage),
+  );
+  if (phaseIndex < 0) {
+    return { phaseIndex: 0, totalPhases: CANDIDATE_PIPELINE_PHASES.length, label: 'En proceso', message: 'Tu postulación está activa', percent: 12 };
+  }
+  const phase = CANDIDATE_PIPELINE_PHASES[phaseIndex]!;
+  const percent = Math.round(((phaseIndex + 1) / CANDIDATE_PIPELINE_PHASES.length) * 100);
+  return {
+    phaseIndex,
+    totalPhases: CANDIDATE_PIPELINE_PHASES.length,
+    label: phase.label,
+    message: phase.message,
+    percent,
+  };
+}
+
 export function stageStyle(stage?: string | null) {
   return STAGE_COLORS[stage ?? ''] ?? { bg: '#F1F5F9', color: '#64748B' };
 }

@@ -1,3 +1,9 @@
+import {
+  PORTAL_CACHE_KEYS,
+  portalCacheInvalidate,
+  portalFetchCached,
+} from './portal-cache';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '/api';
 
 export interface AuthUser {
@@ -97,6 +103,8 @@ export type PortalPerfilResponse = {
   profile: Record<string, unknown>;
   cv: PortalCvSummary | null;
   onboardingStep?: string;
+  onboardingSubStep?: number;
+  onboardingReviewed?: string[];
   onboardingComplete?: boolean;
   profileStatus?: string;
 };
@@ -123,7 +131,9 @@ async function uploadPortalCv(file: File) {
     throw new Error((err as { message?: string }).message ?? `Error al subir (${res.status})`);
   }
 
-  return res.json();
+  const data = await res.json();
+  portalCacheInvalidate('portal:');
+  return data;
 }
 
 export type PortalVacancyListItem = {
@@ -146,16 +156,7 @@ export type PortalVacancyDetail = {
   compatibility: number;
   alreadyApplied: boolean;
   application: { id: string; stage: string; score: number | null } | null;
-  questions: Array<{
-    id: string;
-    label: string;
-    category: string;
-    inputType: 'select' | 'multiselect';
-    options: string[];
-    helpText?: string;
-    maxSelections?: number;
-    suggestedValue?: string;
-  }>;
+  questions: import('@/lib/portal-apply-questions').ApplyMatchQuestion[];
 };
 
 export type PortalApplication = {
@@ -174,19 +175,29 @@ export type PortalApplication = {
 };
 
 export const portalApi = {
-  dashboard: () => apiFetch<PortalDashboard>('/portal/dashboard'),
-  perfil: () => apiFetch<PortalPerfilResponse>('/portal/perfil'),
-  updatePerfil: (profile: Record<string, unknown>) =>
-    apiFetch<{ ok: boolean; profile: Record<string, unknown>; message: string }>('/portal/perfil', {
-      method: 'PATCH',
-      body: JSON.stringify({ profile }),
-    }),
-  updateOnboarding: (body: {
+  dashboard: () =>
+    portalFetchCached(PORTAL_CACHE_KEYS.dashboard, () => apiFetch<PortalDashboard>('/portal/dashboard')),
+  perfil: () =>
+    portalFetchCached(PORTAL_CACHE_KEYS.perfil, () => apiFetch<PortalPerfilResponse>('/portal/perfil')),
+  updatePerfil: async (profile: Record<string, unknown>) => {
+    const res = await apiFetch<{ ok: boolean; profile: Record<string, unknown>; message: string }>(
+      '/portal/perfil',
+      {
+        method: 'PATCH',
+        body: JSON.stringify({ profile }),
+      },
+    );
+    portalCacheInvalidate('portal:');
+    return res;
+  },
+  updateOnboarding: async (body: {
     profile?: Record<string, unknown>;
     onboardingStep?: string;
+    onboardingSubStep?: number;
+    onboardingReviewed?: string[];
     completeOnboarding?: boolean;
-  }) =>
-    apiFetch<{
+  }) => {
+    const res = await apiFetch<{
       ok: boolean;
       profile: Record<string, unknown>;
       message: string;
@@ -195,14 +206,22 @@ export const portalApi = {
     }>('/portal/perfil', {
       method: 'PATCH',
       body: JSON.stringify(body),
-    }),
+    });
+    portalCacheInvalidate('portal:');
+    return res;
+  },
   vacantes: (minMatch = 0) =>
-    apiFetch<{ vacantes: PortalVacancyListItem[]; total: number }>(
-      `/portal/vacantes${minMatch > 0 ? `?minMatch=${minMatch}` : ''}`,
+    portalFetchCached(PORTAL_CACHE_KEYS.vacantes(minMatch), () =>
+      apiFetch<{ vacantes: PortalVacancyListItem[]; total: number }>(
+        `/portal/vacantes${minMatch > 0 ? `?minMatch=${minMatch}` : ''}`,
+      ),
     ),
-  vacante: (id: string) => apiFetch<PortalVacancyDetail>(`/portal/vacantes/${id}`),
-  aplicar: (id: string, answers?: Record<string, string | string[]>) =>
-    apiFetch<{
+  vacante: (id: string) =>
+    portalFetchCached(PORTAL_CACHE_KEYS.vacante(id), () =>
+      apiFetch<PortalVacancyDetail>(`/portal/vacantes/${id}`),
+    ),
+  aplicar: async (id: string, answers?: Record<string, string | string[]>) => {
+    const res = await apiFetch<{
       ok: boolean;
       compatibility: number;
       message: string;
@@ -212,10 +231,34 @@ export const portalApi = {
     }>(`/portal/vacantes/${id}/aplicar`, {
       method: 'POST',
       body: JSON.stringify({ answers: answers ?? {} }),
-    }),
+    });
+    portalCacheInvalidate('portal:');
+    return res;
+  },
   aplicaciones: () =>
-    apiFetch<{ aplicaciones: PortalApplication[]; total: number }>('/portal/aplicaciones'),
+    portalFetchCached(PORTAL_CACHE_KEYS.aplicaciones, () =>
+      apiFetch<{ aplicaciones: PortalApplication[]; total: number }>('/portal/aplicaciones'),
+    ),
   uploadCv: uploadPortalCv,
+  pruebaStatus: () =>
+    portalFetchCached(PORTAL_CACHE_KEYS.prueba, () =>
+      apiFetch<{
+        completed: boolean;
+        completedAt?: string;
+        totalPoints?: number;
+      }>('/portal/prueba'),
+    ),
+  submitPrueba: async (result: unknown) => {
+    const res = await apiFetch<{ ok: boolean; completed: boolean; completedAt: string; totalPoints: number }>(
+      '/portal/prueba',
+      {
+        method: 'POST',
+        body: JSON.stringify({ result }),
+      },
+    );
+    portalCacheInvalidate(PORTAL_CACHE_KEYS.prueba);
+    return res;
+  },
   downloadCv: async () => {
     const token = getToken();
     const res = await fetch(`${API_URL}/portal/cv`, {
@@ -361,6 +404,10 @@ export function clearSession() {
   localStorage.removeItem('kova_access_token');
   localStorage.removeItem('kova_refresh_token');
   localStorage.removeItem('kova_user');
+  if (typeof window !== 'undefined') {
+    sessionStorage.removeItem('kova_portal_onboarding_complete');
+    portalCacheInvalidate();
+  }
 }
 
 export function getStoredUser(): AuthUser | null {
