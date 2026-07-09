@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRight, Building2, Loader2, Sparkles, Target } from 'lucide-react';
+import { ArrowRight, Building2, CheckCircle2, Loader2, Target } from 'lucide-react';
 import {
   estimatedCompatibility,
   estimatedVacancies,
@@ -34,20 +34,21 @@ export function PortalOnboardingComplete({
     <PortalOnboardingChrome journeyIndex={4} minutesLeft={0}>
       <div className="ob-complete">
         <PortalOnboardingStepHero
-          eyebrow="¡Perfil listo!"
-          title="Tu perfil ya está listo."
-          subtitle="Hemos encontrado oportunidades que encajan con tu trayectoria."
+          eyebrow="Perfil activo"
+          title="Perfil completado"
+          subtitle="Tu trayectoria está posicionada para oportunidades comerciales de alto nivel."
           percent={percent}
         />
 
-        <div className="ob-complete__hero-icon" aria-hidden>
-          <Sparkles className="h-7 w-7" />
+        <div className="ob-complete__status" aria-hidden>
+          <CheckCircle2 className="h-5 w-5" />
+          <span>Listo para matching</span>
         </div>
 
         <div className="ob-stat-grid ob-complete__grid">
           <div className="ob-stat-chip ob-stat-chip--purple">
             <span className="ob-stat-chip__icon">
-              <Sparkles className="h-4 w-4" />
+              <Target className="h-4 w-4" />
             </span>
             <strong>{level}%</strong>
             <span>Nivel del perfil</span>
@@ -57,21 +58,21 @@ export function PortalOnboardingComplete({
               <Target className="h-4 w-4" />
             </span>
             <strong>{compatibility}%</strong>
-            <span>Compatibilidad inicial</span>
+            <span>Compatibilidad</span>
           </div>
           <div className="ob-stat-chip ob-stat-chip--yellow">
             <span className="ob-stat-chip__icon">
               <Target className="h-4 w-4" />
             </span>
             <strong>{vacancies}</strong>
-            <span>Vacantes compatibles</span>
+            <span>Vacantes alineadas</span>
           </div>
           <div className="ob-stat-chip ob-stat-chip--teal">
             <span className="ob-stat-chip__icon">
               <Building2 className="h-4 w-4" />
             </span>
             <strong>{companies}</strong>
-            <span>Empresas interesadas</span>
+            <span>Empresas activas</span>
           </div>
         </div>
 
@@ -84,11 +85,11 @@ export function PortalOnboardingComplete({
           {busy ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              Entrando...
+              Accediendo...
             </>
           ) : (
             <>
-              Entrar al portal
+              Acceder al portal
               <ArrowRight className="w-4 h-4" />
             </>
           )}

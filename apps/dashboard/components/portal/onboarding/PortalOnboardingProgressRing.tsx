@@ -40,7 +40,7 @@ export function PortalOnboardingProgressRing({ percent, size = 88 }: Props) {
       <div className="ob-ring__label">
         <strong>{percent}%</strong>
         <span>Completado</span>
-        <em>{journeyEncouragement(percent)}</em>
+        {journeyEncouragement(percent) ? <em>{journeyEncouragement(percent)}</em> : null}
       </div>
     </div>
   );

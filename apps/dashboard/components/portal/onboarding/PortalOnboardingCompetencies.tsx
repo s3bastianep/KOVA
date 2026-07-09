@@ -46,7 +46,7 @@ export function PortalOnboardingCompetencies({
         firstName={firstName}
         eyebrow={`Habilidades · ${competencyIndex + 1} de ${defs.length}`}
         title={`¿Qué tan fuerte es tu ${current.label.toLowerCase()}?`}
-        subtitle="Una pregunta a la vez, sin formularios. Elige lo que mejor te representa hoy."
+        subtitle="Una evaluación por competencia. Selecciona el nivel que refleja tu experiencia actual."
         percent={percent}
       />
 

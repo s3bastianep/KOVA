@@ -54,11 +54,9 @@ export function PortalOnboardingReviewHub({
   return (
     <div className="ob-review-hub">
       <PortalOnboardingStepHero
-        firstName={firstName}
-        showGreeting
-        eyebrow="Tu experiencia"
-        title="Revisa tu trayectoria"
-        subtitle="Confirma cada sección de tu perfil. Puedes editar lo que necesites antes de continuar."
+        eyebrow="Revisión de trayectoria"
+        title="Valida tu perfil profesional"
+        subtitle="Confirma cada sección. Puedes editar cualquier dato antes de continuar."
         percent={percent}
       />
 

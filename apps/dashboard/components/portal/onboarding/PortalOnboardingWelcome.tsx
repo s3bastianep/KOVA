@@ -1,8 +1,9 @@
 'use client';
 
-import { ArrowRight, Briefcase, CheckCircle2, Circle, Sparkles, Target, TrendingUp } from 'lucide-react';
+import { ArrowRight, Briefcase, CheckCircle2, Sparkles, Target, TrendingUp } from 'lucide-react';
 import {
   PROFILE_BUILD_MILESTONES,
+  formatFirstName,
   type ProfileMilestoneId,
 } from '@/lib/portal-onboarding-unified';
 import { PortalOnboardingChrome } from './PortalOnboardingChrome';
@@ -28,43 +29,39 @@ export function PortalOnboardingWelcome({ firstName, minutesLeft, onStart, onSav
     <PortalOnboardingChrome journeyIndex={0} minutesLeft={minutesLeft} onSaveExit={onSaveExit}>
       <div className="ob-welcome">
         <div className="ob-welcome__hero">
-          <p className="ob-welcome__greeting">
-            Hola {firstName} <span aria-hidden>👋</span>
-          </p>
+          <p className="ob-welcome__eyebrow">Perfil ejecutivo</p>
           <div className="ob-welcome__headline">
             <div>
-              <h1>Hoy construiremos tu perfil profesional.</h1>
-              <p>Nos tomará menos de 5 minutos.</p>
+              <h1>Bienvenido, {formatFirstName(firstName)}</h1>
+              <p>Construye un perfil de alto impacto para oportunidades comerciales selectivas.</p>
             </div>
             <PortalOnboardingProgressRing percent={0} />
           </div>
           <p className="ob-welcome__benefit">
-            Mientras mejor sea tu perfil, mejores oportunidades podremos mostrarte.
+            Los perfiles completos reciben prioridad en procesos con empresas líderes.
           </p>
           <button
             type="button"
             className="portal-onboarding-btn portal-onboarding-btn--primary ob-welcome__cta"
             onClick={onStart}
           >
-            Comenzar
+            Iniciar perfil
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
 
-        <ul className="ob-welcome__milestones" aria-label="Lo que construiremos">
-          {PROFILE_BUILD_MILESTONES.map((item) => {
+        <ol className="ob-welcome__milestones" aria-label="Estructura del perfil">
+          {PROFILE_BUILD_MILESTONES.map((item, index) => {
             const Icon = MILESTONE_ICONS[item.id];
             return (
               <li key={item.id} className="ob-welcome__milestone">
-                <span className="ob-welcome__milestone-icon" aria-hidden>
-                  <Circle className="h-4 w-4" />
-                  <Icon className="h-3.5 w-3.5 ob-welcome__milestone-glyph" />
-                </span>
+                <span className="ob-welcome__milestone-index">{index + 1}</span>
+                <Icon className="h-3.5 w-3.5 ob-welcome__milestone-icon" aria-hidden />
                 <span>{item.label}</span>
               </li>
             );
           })}
-        </ul>
+        </ol>
       </div>
     </PortalOnboardingChrome>
   );

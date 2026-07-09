@@ -47,11 +47,11 @@ export function phaseQuestion(phase: ExperienceConversationPhase, empresa?: stri
     case 'empresa':
       return '¿Dónde trabajaste más recientemente?';
     case 'cargo':
-      return empresa ? `Perfecto. ¿En qué cargo en ${empresa}?` : '¿En qué cargo trabajaste?';
+      return empresa ? `¿Cuál fue tu cargo en ${empresa}?` : '¿En qué cargo trabajaste?';
     case 'duracion':
       return '¿Cuánto tiempo estuviste allí?';
     case 'actividades':
-      return 'Excelente. ¿Qué hacías allí?';
+      return '¿Cuáles eran tus responsabilidades principales?';
     case 'resumen':
       return 'Experiencia agregada';
   }
@@ -60,13 +60,13 @@ export function phaseQuestion(phase: ExperienceConversationPhase, empresa?: stri
 export function phaseMicroFeedback(phase: ExperienceConversationPhase): string | null {
   switch (phase) {
     case 'empresa':
-      return 'Registrado.';
+      return 'Empresa registrada.';
     case 'cargo':
-      return 'Perfecto.';
+      return 'Cargo documentado.';
     case 'duracion':
-      return 'Excelente.';
+      return 'Periodo registrado.';
     case 'actividades':
-      return 'Tu perfil está creciendo.';
+      return 'Responsabilidades agregadas.';
     default:
       return null;
   }

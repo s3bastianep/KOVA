@@ -1,5 +1,6 @@
 'use client';
 
+import { formatFirstName } from '@/lib/portal-onboarding-unified';
 import { PortalOnboardingProgressRing } from './PortalOnboardingProgressRing';
 
 type Props = {
@@ -22,9 +23,7 @@ export function PortalOnboardingStepHero({
   return (
     <div className="ob-step-hero">
       {showGreeting && firstName ? (
-        <p className="ob-step-hero__greeting">
-          ¡Hola, {firstName}! <span aria-hidden>👋</span>
-        </p>
+        <p className="ob-step-hero__eyebrow">{formatFirstName(firstName)}</p>
       ) : null}
       {eyebrow ? <p className="ob-step-hero__eyebrow">{eyebrow}</p> : null}
       <div className="ob-step-hero__row">

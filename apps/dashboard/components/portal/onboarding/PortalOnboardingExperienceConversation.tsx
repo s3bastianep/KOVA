@@ -136,18 +136,18 @@ export function PortalOnboardingExperienceConversation({ profile, onChange }: Pr
   const handleEmpresa = (empresa: string) => {
     if (!empresa.trim()) return;
     patchEntry({ empresa: empresa.trim() });
-    advancePhase('Registrado.');
+    advancePhase('Empresa registrada.');
   };
 
   const handleCargo = (cargo: string) => {
     if (!cargo.trim()) return;
     patchEntry({ cargo: cargo.trim() });
-    advancePhase('Perfecto.');
+    advancePhase('Cargo documentado.');
   };
 
   const handleTenure = (tenure: string) => {
     patchEntry(tenureToDates(tenure));
-    advancePhase('Excelente.');
+    advancePhase('Periodo registrado.');
   };
 
   const toggleActivity = (activity: string) => {

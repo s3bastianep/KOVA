@@ -12,7 +12,7 @@ export const ONBOARDING_JOURNEY_STEPS = [
   { id: 'experiencia', label: 'Tu experiencia' },
   { id: 'comercial', label: 'Perfil comercial' },
   { id: 'habilidades', label: 'Habilidades' },
-  { id: 'listo', label: '¡Perfil listo!' },
+  { id: 'listo', label: 'Perfil activo' },
 ] as const;
 
 export type OnboardingJourneyId = (typeof ONBOARDING_JOURNEY_STEPS)[number]['id'];
@@ -27,10 +27,17 @@ export function onboardingJourneyIndex(step: OnboardingStep): number {
   return 0;
 }
 
-export function journeyEncouragement(percent: number): string {
-  if (percent >= 75) return '¡Ya casi terminas!';
-  if (percent >= 40) return '¡Vas muy bien!';
-  return 'Buen comienzo';
+export function formatFirstName(name: string): string {
+  const trimmed = name.trim();
+  if (!trimmed) return 'Profesional';
+  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
+}
+
+export function journeyEncouragement(percent: number): string | null {
+  if (percent >= 75) return 'Casi completo';
+  if (percent >= 40) return 'Avance sólido';
+  if (percent >= 10) return 'En curso';
+  return null;
 }
 
 export const ONBOARDING_MACRO_LABELS = [
@@ -319,20 +326,20 @@ export function transitionAfterStep(
       };
     case 'review_hub':
       return {
-        headline: 'Excelente',
-        detail: 'Ahora entendamos cómo vendes.',
+        headline: 'Trayectoria confirmada',
+        detail: 'Continuemos con tu perfil comercial.',
         deltaVacancies: 3,
       };
     case 'preferencias':
       return {
-        headline: 'Perfecto',
-        detail: 'Eso mejora mucho el matching.',
+        headline: 'Preferencias registradas',
+        detail: 'Esto optimiza la compatibilidad con vacantes.',
         deltaVacancies: 8,
       };
     case 'evidence':
       return {
-        headline: 'Logros registrados',
-        detail: 'Tu perfil está tomando forma.',
+        headline: 'Logros documentados',
+        detail: 'Tu perfil gana credibilidad ante empresas.',
         deltaVacancies: 4,
       };
   }
@@ -342,26 +349,26 @@ export function transitionAfterStep(
 export function microFeedbackForPrefStep(stepId: string, selected: string[]): string | null {
   if (!selected.length) return null;
   const map: Record<string, string> = {
-    'areas-interes': 'Excelente. Ya conocemos el rol que buscas.',
-    industrias: 'Perfecto. Eso mejora mucho el matching.',
-    'tipo-venta': 'Muy bien. Tu estilo comercial queda más claro.',
-    salario: 'Entendido. Ajustamos las oportunidades a tu rango.',
-    viajar: 'Registrado. Lo tendremos en cuenta.',
-    reubicacion: 'Anotado. Buscamos donde encajes mejor.',
-    disponibilidad: 'Ya casi terminamos.',
-    idiomas: 'Idiomas guardados. Buen diferenciador.',
-    'sabes-vender': 'Tu expertise comercial queda más definida.',
-    enfoque: 'Tu enfoque Hunter/Farmer queda claro.',
+    'areas-interes': 'Rol comercial identificado.',
+    industrias: 'Industrias objetivo registradas.',
+    'tipo-venta': 'Estilo comercial documentado.',
+    salario: 'Expectativa salarial registrada.',
+    viajar: 'Disponibilidad de viaje anotada.',
+    reubicacion: 'Preferencia de ubicación registrada.',
+    disponibilidad: 'Disponibilidad confirmada.',
+    idiomas: 'Idiomas agregados al perfil.',
+    'sabes-vender': 'Expertise comercial documentada.',
+    enfoque: 'Enfoque Hunter/Farmer registrado.',
     'tamano-equipo': 'Experiencia de liderazgo registrada.',
-    'herramientas-crm': 'Herramientas agregadas a tu perfil.',
+    'herramientas-crm': 'Stack comercial documentado.',
   };
-  return map[stepId] ?? 'Tu perfil está creciendo.';
+  return map[stepId] ?? 'Información registrada.';
 }
 
 export function motivationalMessage(percent: number): string | null {
-  if (percent >= 85) return 'Tu perfil está casi listo. Ya podemos recomendarte empresas.';
-  if (percent >= 55) return 'Tu nivel de compatibilidad sigue subiendo.';
-  if (percent >= 25) return 'Tu perfil está creciendo. Cada respuesta suma.';
+  if (percent >= 85) return 'Perfil casi completo. Listo para matching con empresas.';
+  if (percent >= 55) return 'Compatibilidad con vacantes en aumento.';
+  if (percent >= 25) return 'Cada sección fortalece tu posicionamiento.';
   return null;
 }
 

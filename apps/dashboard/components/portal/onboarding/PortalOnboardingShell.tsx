@@ -114,7 +114,7 @@ export function PortalOnboardingFooter({
           {!busy ? <ArrowRight className="h-4 w-4" aria-hidden /> : null}
         </button>
       </div>
-      <p className="portal-onboarding-footer__later">Puedes terminar después. Retomamos donde quedaste.</p>
+      <p className="portal-onboarding-footer__later">Progreso guardado automáticamente. Puedes retomar en cualquier momento.</p>
       {onSaveExit ? (
         <button type="button" className="portal-onboarding-footer__save-exit" onClick={onSaveExit}>
           Guardar y salir

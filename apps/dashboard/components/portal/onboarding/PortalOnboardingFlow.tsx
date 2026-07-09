@@ -555,9 +555,9 @@ export function PortalOnboardingFlow({
         preview={previewPanel}
       >
         <PortalOnboardingStepHero
-          eyebrow="Tu información"
-          title="Empecemos con tu experiencia"
-          subtitle="Sube tu hoja de vida y extraeremos tu trayectoria automáticamente."
+          eyebrow="Documentación"
+          title="Documenta tu trayectoria"
+          subtitle="Sube tu CV. Extraeremos y estructuraremos tu experiencia profesional."
           percent={percent}
         />
 
@@ -604,9 +604,9 @@ export function PortalOnboardingFlow({
     return renderWithOverlay(
       <PortalOnboardingShell percent={percent} minutesLeft={minutesLeft} journeyIndex={journeyIndex} preview={previewPanel}>
         <PortalOnboardingStepHero
-          eyebrow="Tu información"
-          title="Construyendo tu experiencia..."
-          subtitle="Acabamos de identificar datos en tu hoja de vida"
+          eyebrow="Procesamiento"
+          title="Analizando trayectoria"
+          subtitle="Estructurando la información de tu hoja de vida."
           percent={percent}
         />
         <section className="ob-panel ob-question-panel">
@@ -734,16 +734,16 @@ export function PortalOnboardingFlow({
         }
       >
         <PortalOnboardingStepHero
-          eyebrow="Tu experiencia"
+          eyebrow="Edición de perfil"
           title={
             reviewEditSection === 'experiencia'
-              ? 'Tu trayectoria'
+              ? 'Detalle de trayectoria'
               : `Ajustar ${editSectionMeta?.label.toLowerCase() ?? 'información'}`
           }
           subtitle={
             reviewEditSection === 'experiencia'
-              ? 'Cuéntanos paso a paso. Sin formularios largos.'
-              : 'Tu perfil se actualiza en tiempo real.'
+              ? 'Documenta tu experiencia comercial con precisión.'
+              : 'Los cambios se reflejan en tiempo real en tu perfil.'
           }
           percent={percent}
         />

@@ -81,16 +81,13 @@ export function PortalOnboardingCvSummary({
 
   return (
     <div className="ob-cv-summary">
-      <p className="ob-cv-summary__greeting">
-        ¡Hola, {firstName}! <span aria-hidden>👋</span>
-      </p>
-
       <div className="ob-cv-summary__hero">
         <div className="ob-cv-summary__hero-text">
-          <h1>Tu experiencia ya está organizada</h1>
+          <p className="ob-cv-summary__eyebrow">Análisis completado</p>
+          <h1>Trayectoria consolidada</h1>
           <p>
-            Revisamos tu hoja de vida y encontramos esta información. Revísala antes de seguir
-            construyendo tu perfil.
+            Revisa la información extraída de tu CV. Confirma los datos antes de continuar con tu
+            perfil comercial.
           </p>
         </div>
         <PortalOnboardingProgressRing percent={percent} />
