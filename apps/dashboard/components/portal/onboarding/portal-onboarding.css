@@ -1602,7 +1602,7 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 html.portal-onboarding-immersive .portal-main-scroll {
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 html.portal-onboarding-immersive .portal-main-scroll > div {
@@ -1615,29 +1615,45 @@ html.portal-onboarding-immersive .kova-main-panel {
   width: 100%;
 }
 
-/* Fullscreen flow — no dark card, light stage */
+html.portal-onboarding-immersive .kova-main-panel,
+html.portal-onboarding-immersive .portal-main-scroll,
+html.portal-onboarding-immersive .kova-shell-bg {
+  background: #000000;
+}
+
+/* Fullscreen flow — black canvas, centered column */
 
 .portal-onboarding--fullscreen {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   min-height: 100vh;
-  max-width: none;
   width: 100%;
   margin: 0;
-  padding: clamp(1.25rem, 3vw, 2.5rem) clamp(1.25rem, 4vw, 3.5rem) clamp(1rem, 2vw, 1.5rem);
-  background: var(--kova-shell-bg, #f5f3ef);
+  padding: clamp(1.25rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.5rem);
+  background: #000000;
+  color: #ffffff;
+}
+
+.portal-onboarding-canvas {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 26rem;
+  min-height: calc(100vh - 3rem);
+  margin: 0 auto;
+}
+
+.portal-onboarding--wide .portal-onboarding-canvas {
+  max-width: 34rem;
 }
 
 .portal-onboarding-topbar--fullscreen {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1.5rem;
-  flex-shrink: 0;
-  max-width: 72rem;
+  flex-direction: column;
+  gap: 0.75rem;
   width: 100%;
-  margin: 0 auto 1.25rem;
-  padding: 0;
+  margin-bottom: 1.75rem;
 }
 
 .portal-onboarding-topbar--fullscreen .portal-onboarding-topbar__main {
@@ -1648,26 +1664,48 @@ html.portal-onboarding-immersive .kova-main-panel {
 .portal-onboarding-topbar--fullscreen .portal-onboarding-topbar__meta {
   display: flex;
   align-items: baseline;
+  justify-content: space-between;
   gap: 0.75rem;
+}
+
+.portal-onboarding-topbar__brand {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .portal-onboarding-topbar__percent {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: var(--kv-ink);
+  color: #ffffff;
   font-variant-numeric: tabular-nums;
 }
 
 .portal-onboarding-topbar__right {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  flex-shrink: 0;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.portal-onboarding-topbar__time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.portal-onboarding-topbar__exit {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.portal-onboarding-topbar__exit:hover {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .portal-onboarding-progress--fullscreen {
-  height: 4px;
-  background: rgba(15, 23, 42, 0.08);
+  height: 3px;
+  background: rgba(255, 255, 255, 0.12);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -1678,189 +1716,166 @@ html.portal-onboarding-immersive .kova-main-panel {
 }
 
 .portal-onboarding-motivation--fullscreen {
-  max-width: 72rem;
-  width: 100%;
-  margin: 0 auto 1rem;
+  margin: 0 0 1.25rem;
   padding: 0;
   background: transparent;
   border: none;
-  text-align: left;
-  font-size: 0.875rem;
-  color: var(--kova-navy-muted);
+  text-align: center;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.45);
 }
 
-.portal-onboarding-layout--fullscreen {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: clamp(1.5rem, 4vw, 3rem);
-  max-width: 72rem;
+.portal-onboarding-preview-slot {
   width: 100%;
-  margin: 0 auto;
-  min-height: 0;
-}
-
-.portal-onboarding-layout--fullscreen .portal-onboarding-layout__main {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  margin-bottom: 1.5rem;
 }
 
 .portal-onboarding-stage {
   width: 100%;
-  max-width: 40rem;
 }
 
-.portal-onboarding--wide .portal-onboarding-stage {
-  max-width: 48rem;
+.portal-onboarding--fullscreen .portal-onboarding-pref {
+  text-align: left;
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-question-title {
   font-family: var(--font-sora), 'Sora', sans-serif;
-  font-size: clamp(1.625rem, 3.5vw, 2.375rem);
+  font-size: clamp(1.5rem, 4.5vw, 2rem);
   font-weight: 700;
-  line-height: 1.15;
+  line-height: 1.2;
   letter-spacing: -0.03em;
-  color: var(--kv-ink);
+  color: #ffffff;
+  margin-bottom: 0.35rem;
 }
 
-.portal-onboarding--fullscreen .portal-onboarding-question-subtitle {
-  font-size: 0.9375rem;
-  color: var(--kova-navy-muted);
-}
-
-.portal-onboarding--fullscreen .portal-onboarding-question-meta {
-  color: var(--kova-navy-muted);
-  margin-bottom: 0.75rem;
+.portal-onboarding--fullscreen .portal-onboarding-question-subtitle,
+.portal-onboarding--fullscreen .portal-onboarding-question-meta,
+.portal-onboarding--fullscreen .portal-onboarding-exp-conv__step {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-chip {
-  border: 1.5px solid rgba(15, 23, 42, 0.1);
-  background: #ffffff;
-  color: var(--kv-ink);
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
   min-height: 3rem;
   font-size: 0.875rem;
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-chip:hover {
-  border-color: rgba(15, 23, 42, 0.2);
-  background: #fafafa;
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.07);
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-chip--on {
   border-color: var(--kova-lime);
-  background: rgba(204, 234, 98, 0.22);
-  color: var(--kv-ink);
-  box-shadow: 0 0 0 1px rgba(204, 234, 98, 0.35);
+  background: rgba(198, 255, 0, 0.12);
+  color: #ffffff;
+}
+
+.portal-onboarding--fullscreen .portal-onboarding-chip--on svg {
+  color: var(--kova-lime);
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-micro-feedback {
-  background: rgba(204, 234, 98, 0.18);
-  border: 1px solid rgba(204, 234, 98, 0.35);
-  color: var(--kv-ink);
+  background: rgba(198, 255, 0, 0.1);
+  border: 1px solid rgba(198, 255, 0, 0.22);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-shell__header h1,
-.portal-onboarding--fullscreen .portal-onboarding-cv-summary__hero h1 {
+.portal-onboarding--fullscreen .portal-onboarding-cv-summary__hero h1,
+.portal-onboarding--fullscreen .portal-onboarding-analyze h2,
+.portal-onboarding--fullscreen .portal-onboarding-exp-conv__done h2 {
   font-family: var(--font-sora), 'Sora', sans-serif;
-  font-size: clamp(1.625rem, 3.5vw, 2.25rem);
+  font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 700;
-  color: var(--kv-ink);
+  color: #ffffff;
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-lead,
 .portal-onboarding--fullscreen .portal-onboarding-muted,
-.portal-onboarding--fullscreen .portal-onboarding-optional {
-  color: var(--kova-navy-muted);
+.portal-onboarding--fullscreen .portal-onboarding-optional,
+.portal-onboarding--fullscreen .portal-onboarding-analyze p,
+.portal-onboarding--fullscreen .portal-onboarding-steps li,
+.portal-onboarding--fullscreen .portal-onboarding-cv-summary__hero p,
+.portal-onboarding--fullscreen .portal-onboarding-cv-summary__section h2,
+.portal-onboarding--fullscreen .portal-onboarding-cv-summary__field dt,
+.portal-onboarding--fullscreen .portal-onboarding-cv-summary__stat-label,
+.portal-onboarding--fullscreen .portal-onboarding-exp-conv__done p,
+.portal-onboarding--fullscreen .portal-onboarding-exp-conv__hint,
+.portal-onboarding--fullscreen .portal-onboarding-section-title,
+.portal-onboarding--fullscreen .portal-onboarding-work-field__label,
+.portal-onboarding--fullscreen .portal-onboarding-salary__labels {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.portal-onboarding--fullscreen .portal-onboarding-steps li.is-done,
+.portal-onboarding--fullscreen .portal-onboarding-cv-summary__field dd,
+.portal-onboarding--fullscreen .portal-onboarding-cv-summary__stat-count,
+.portal-onboarding--fullscreen .portal-onboarding-salary__value {
+  color: #ffffff;
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-field,
 .portal-onboarding--fullscreen .portal-onboarding-stage input:not([type='file']),
 .portal-onboarding--fullscreen .portal-onboarding-stage textarea,
 .portal-onboarding--fullscreen .portal-onboarding-stage select {
-  background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  color: var(--kv-ink);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-upload-zone {
-  background: #ffffff;
-  border: 1px dashed rgba(15, 23, 42, 0.15);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-upload-title,
-.portal-onboarding--fullscreen .portal-onboarding-upload-or {
-  color: var(--kv-ink);
-}
-
+.portal-onboarding--fullscreen .portal-onboarding-upload-or,
 .portal-onboarding--fullscreen .portal-onboarding-upload-hint,
 .portal-onboarding--fullscreen .portal-onboarding-upload-future {
-  color: var(--kova-navy-muted);
+  color: rgba(255, 255, 255, 0.55);
 }
 
-.portal-onboarding--fullscreen .portal-onboarding-review-card {
-  background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+.portal-onboarding--fullscreen .portal-onboarding-review-card,
+.portal-onboarding--fullscreen .portal-onboarding-cv-summary__section,
+.portal-onboarding--fullscreen .portal-onboarding-work-card,
+.portal-onboarding--fullscreen .portal-onboarding-exp-conv__list button {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.portal-onboarding--fullscreen .portal-onboarding-review-card h3 {
-  color: var(--kv-ink);
+.portal-onboarding--fullscreen .portal-onboarding-review-card h3,
+.portal-onboarding--fullscreen .portal-onboarding-exp-conv__list button {
+  color: #ffffff;
 }
 
-.portal-onboarding--fullscreen .portal-onboarding-review-card p {
-  color: var(--kova-navy-muted);
-}
-
-.portal-onboarding--fullscreen .portal-onboarding-review-card__edit {
-  color: var(--kv-ink);
-}
-
+.portal-onboarding--fullscreen .portal-onboarding-review-card p,
 .portal-onboarding--fullscreen .portal-onboarding-review-card__confirm {
-  color: var(--kova-navy-muted);
+  color: rgba(255, 255, 255, 0.55);
 }
 
-.portal-onboarding--fullscreen .portal-onboarding-salary__value {
-  color: var(--kv-ink);
-}
-
-.portal-onboarding--fullscreen .portal-onboarding-salary__labels {
-  color: var(--kova-navy-muted);
+.portal-onboarding--fullscreen .portal-onboarding-review-card__edit,
+.portal-onboarding--fullscreen .portal-onboarding-link {
+  color: var(--kova-lime);
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-idiomas-review li {
-  color: var(--kv-ink);
-  border-color: rgba(15, 23, 42, 0.08);
-  background: #fff;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-idiomas-review ul {
-  border-color: rgba(15, 23, 42, 0.08);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
-.portal-onboarding--fullscreen .portal-onboarding-exp-conv__done h2 {
-  color: var(--kv-ink);
-}
-
-.portal-onboarding--fullscreen .portal-onboarding-exp-conv__done p {
-  color: var(--kova-navy-muted);
-}
-
-.portal-onboarding--fullscreen .portal-onboarding-exp-conv__hint {
-  color: var(--kova-navy-muted);
-}
-
-.portal-onboarding--fullscreen .portal-onboarding-exp-conv__list button {
-  background: #fff;
-  border-color: rgba(15, 23, 42, 0.1);
-  color: var(--kv-ink);
+.portal-onboarding--fullscreen .portal-onboarding-cv-summary__stat {
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-footer {
-  max-width: 40rem;
   width: 100%;
   margin-top: 2rem;
   padding: 0;
@@ -1868,99 +1883,56 @@ html.portal-onboarding-immersive .kova-main-panel {
 
 .portal-onboarding--fullscreen .portal-onboarding-btn--back {
   background: transparent;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  color: var(--kova-navy-muted);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.65);
 }
 
-.portal-onboarding--fullscreen .portal-onboarding-analyze h2 {
-  color: var(--kv-ink);
-  font-size: clamp(1.5rem, 3vw, 2rem);
+.portal-onboarding--fullscreen .portal-onboarding-btn--primary {
+  background: var(--kova-lime);
+  color: #000000;
+  font-weight: 700;
 }
 
-.portal-onboarding--fullscreen .portal-onboarding-analyze p,
-.portal-onboarding--fullscreen .portal-onboarding-steps li {
-  color: var(--kova-navy-muted);
+.portal-onboarding--fullscreen .portal-onboarding-btn--primary:hover:not(:disabled) {
+  filter: brightness(1.05);
 }
 
-.portal-onboarding--fullscreen .portal-onboarding-steps li.is-done {
-  color: var(--kv-ink);
+.portal-onboarding--fullscreen .portal-onboarding-btn--primary:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
-.portal-onboarding--fullscreen .portal-onboarding-cv-summary__hero p,
-.portal-onboarding--fullscreen .portal-onboarding-cv-summary__section h2,
-.portal-onboarding--fullscreen .portal-onboarding-cv-summary__field dt,
-.portal-onboarding--fullscreen .portal-onboarding-cv-summary__stat-label {
-  color: var(--kova-navy-muted);
+.portal-onboarding--fullscreen .portal-onboarding-footer__later,
+.portal-onboarding--fullscreen .portal-onboarding-footer__hint,
+.portal-onboarding--fullscreen .portal-onboarding-save-state--centered {
+  color: rgba(255, 255, 255, 0.35);
 }
 
-.portal-onboarding--fullscreen .portal-onboarding-cv-summary__field dd,
-.portal-onboarding--fullscreen .portal-onboarding-cv-summary__stat-count {
-  color: var(--kv-ink);
-}
-
-.portal-onboarding--fullscreen .portal-onboarding-cv-summary__section {
-  background: #fff;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: var(--kova-radius);
-  padding: 1.25rem;
-}
-
-.portal-onboarding--fullscreen .portal-onboarding-cv-summary__stat {
-  background: rgba(15, 23, 42, 0.03);
-}
-
-.portal-onboarding--fullscreen .portal-onboarding-section-title {
-  color: var(--kova-navy-muted);
-}
-
-.portal-onboarding--fullscreen .portal-onboarding-work-card {
-  background: #fff;
-  border-color: rgba(15, 23, 42, 0.08);
-}
-
-.portal-onboarding--fullscreen .portal-onboarding-work-field__label {
-  color: var(--kova-navy-muted);
-}
-
-.portal-onboarding--fullscreen .portal-onboarding-link {
-  color: var(--kv-ink);
-}
-
-.portal-onboarding--with-preview .portal-onboarding-layout__aside {
-  display: none;
-}
-
-@media (min-width: 960px) {
+@media (min-width: 640px) {
   .portal-onboarding-topbar--fullscreen {
-    display: flex;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: flex-end;
     justify-content: space-between;
-    gap: 1.5rem;
   }
 
-  .portal-onboarding--with-preview .portal-onboarding-layout__aside {
-    display: block;
-    width: 16rem;
-    flex-shrink: 0;
-    align-self: center;
-  }
-}
-
-@media (max-width: 959px) {
-  .portal-onboarding-topbar--fullscreen {
-    flex-direction: column;
-    gap: 0.75rem;
+  .portal-onboarding-topbar--fullscreen .portal-onboarding-topbar__main {
+    flex: 1;
   }
 
   .portal-onboarding-topbar__right {
-    width: 100%;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
   }
+}
 
-  .portal-onboarding-layout--fullscreen {
-    align-items: flex-start;
-    overflow-y: auto;
-  }
+.portal-onboarding--immersive {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: #000000;
+  color: #ffffff;
 }
 
 .portal-onboarding-welcome {
@@ -1970,48 +1942,68 @@ html.portal-onboarding-immersive .kova-main-panel {
   min-height: 100vh;
   padding: clamp(1.5rem, 4vw, 3rem);
   gap: 3rem;
-  max-width: 72rem;
+  max-width: 26rem;
   margin: 0 auto;
-}
-
-@media (min-width: 900px) {
-  .portal-onboarding-welcome {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 4rem;
-    padding: 3rem 1rem 4rem;
-  }
-}
-
-.portal-onboarding-welcome__content {
-  flex: 1;
-  max-width: 34rem;
 }
 
 .portal-onboarding-welcome__greeting {
   margin: 0 0 0.75rem;
   font-size: 1.125rem;
   font-weight: 500;
-  color: var(--kova-navy-muted);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .portal-onboarding-welcome__title {
   margin: 0 0 0.5rem;
   font-family: var(--font-sora), 'Sora', sans-serif;
-  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 700;
   line-height: 1.08;
   letter-spacing: -0.03em;
-  color: var(--kv-ink);
+  color: #ffffff;
 }
 
 .portal-onboarding-welcome__subtitle {
   margin: 0 0 1.75rem;
   font-size: 1.0625rem;
-  color: var(--kova-navy-muted);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.portal-onboarding-welcome__milestone-icon {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.portal-onboarding-welcome__milestone-glyph {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.portal-onboarding-complete {
+  min-height: 100vh;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  max-width: 26rem;
+  margin: 0 auto;
+  background: #000000;
+}
+
+.portal-onboarding-complete__hero h1 {
+  color: #ffffff;
+}
+
+.portal-onboarding-complete__hero p {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.portal-onboarding-complete__stat {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.portal-onboarding-complete__stat-label {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.portal-onboarding-complete__stat strong {
+  color: #ffffff;
 }
 
 .portal-onboarding-welcome__progress {
@@ -2024,7 +2016,7 @@ html.portal-onboarding-immersive .kova-main-panel {
 .portal-onboarding-progress--welcome {
   flex: 1;
   height: 6px;
-  background: rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .portal-onboarding-progress--welcome > span {
@@ -2034,7 +2026,7 @@ html.portal-onboarding-immersive .kova-main-panel {
 .portal-onboarding-welcome__percent {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: var(--kova-navy-muted);
+  color: rgba(255, 255, 255, 0.5);
   font-variant-numeric: tabular-nums;
 }
 
@@ -2042,7 +2034,7 @@ html.portal-onboarding-immersive .kova-main-panel {
   margin: 0 0 2rem;
   font-size: 0.9375rem;
   line-height: 1.6;
-  color: var(--kova-navy-muted);
+  color: rgba(255, 255, 255, 0.5);
   max-width: 28rem;
 }
 
@@ -2072,7 +2064,7 @@ html.portal-onboarding-immersive .kova-main-panel {
   gap: 0.875rem;
   font-size: 0.9375rem;
   font-weight: 500;
-  color: var(--kova-navy-muted);
+  color: rgba(255, 255, 255, 0.5);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
   animation: portal-onboarding-fade-in 0.5s ease both;
 }
@@ -2144,43 +2136,79 @@ html.portal-onboarding-immersive .kova-main-panel {
 /* Profile preview card */
 
 .portal-onboarding-preview__card {
-  background: var(--kv-paper-2);
-  border: 1px solid var(--kova-border);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--kova-radius-lg);
-  padding: 1.25rem;
-  box-shadow: var(--kova-shadow-xs);
+  padding: 1rem 1.125rem;
   animation: portal-onboarding-fade-in 0.4s ease;
 }
 
 .portal-onboarding-preview__avatar {
-  width: 3rem;
-  height: 3rem;
+  width: 2.25rem;
+  height: 2.25rem;
   border-radius: 999px;
-  background: var(--kv-ink);
+  background: rgba(198, 255, 0, 0.15);
   color: var(--kova-lime);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 700;
   font-family: var(--font-sora), 'Sora', sans-serif;
-  margin-bottom: 0.875rem;
+  margin-bottom: 0.625rem;
 }
 
 .portal-onboarding-preview__name {
-  margin: 0 0 0.25rem;
+  margin: 0 0 0.15rem;
   font-family: var(--font-sora), 'Sora', sans-serif;
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: 700;
-  color: var(--kv-ink);
+  color: #ffffff;
   line-height: 1.2;
 }
 
 .portal-onboarding-preview__role {
-  margin: 0 0 0.75rem;
-  font-size: 0.8125rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.portal-onboarding-preview__tag {
+  font-size: 0.625rem;
   font-weight: 600;
-  color: var(--kova-navy-muted);
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.portal-onboarding-preview__years {
+  margin: 0 0 0.625rem;
+  font-size: 0.6875rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.portal-onboarding-preview__meter-head {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.portal-onboarding-preview__meter-head strong {
+  color: #ffffff;
+}
+
+.portal-onboarding-progress--preview {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.portal-onboarding-preview__stats dt {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.portal-onboarding-preview__stats dd {
+  color: #ffffff;
+  font-size: 1.0625rem;
 }
 
 .portal-onboarding-preview__tags {
@@ -2278,10 +2306,22 @@ html.portal-onboarding-immersive .kova-main-panel {
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  background: rgba(248, 250, 252, 0.88);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   animation: portal-onboarding-fade-in 0.25s ease;
+}
+
+.portal-onboarding-transition__card h2 {
+  color: #ffffff;
+}
+
+.portal-onboarding-transition__card p {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.portal-onboarding-transition__delta strong {
+  color: #ffffff;
 }
 
 .portal-onboarding-transition__card {
@@ -2308,13 +2348,13 @@ html.portal-onboarding-immersive .kova-main-panel {
   font-family: var(--font-sora), 'Sora', sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--kv-ink);
+  color: #ffffff;
 }
 
 .portal-onboarding-transition__card p {
   margin: 0;
   font-size: 0.9375rem;
-  color: var(--kova-navy-muted);
+  color: rgba(255, 255, 255, 0.55);
   line-height: 1.5;
 }
 
@@ -2324,7 +2364,7 @@ html.portal-onboarding-immersive .kova-main-panel {
 }
 
 .portal-onboarding-transition__delta strong {
-  color: var(--kv-ink);
+  color: #ffffff;
   font-weight: 700;
 }
 
