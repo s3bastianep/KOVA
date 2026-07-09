@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { randomBytes } from 'crypto';
+import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { signToken } from '@/lib/auth';
 import { getPublicTenantId } from '@/lib/public-tenant';
@@ -176,6 +177,31 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     console.error('[auth/candidate/register]', err);
+
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      if (err.code === 'P2002') {
+        return Response.json(
+          { message: 'Este correo ya está registrado. Inicia sesión para continuar.' },
+          { status: 409 },
+        );
+      }
+    }
+
+    if (err instanceof Prisma.PrismaClientInitializationError) {
+      return Response.json(
+        { message: 'El servicio no está conectado a la base de datos. Contacta soporte o intenta más tarde.' },
+        { status: 503 },
+      );
+    }
+
+    const detail = err instanceof Error ? err.message : '';
+    if (/connect|ECONNREFUSED|timeout|database/i.test(detail)) {
+      return Response.json(
+        { message: 'No pudimos conectar con la base de datos. Intenta de nuevo en unos minutos.' },
+        { status: 503 },
+      );
+    }
+
     return Response.json(
       { message: 'No pudimos crear tu cuenta. Intenta de nuevo en unos minutos.' },
       { status: 503 },
