@@ -656,7 +656,7 @@ export function PortalOnboardingFlow({
         minutesLeft={minutesLeft}
         journeyIndex={journeyIndex}
         onSaveExit={() => void handleSaveExit()}
-        wide
+        centered
         hidePreview
         hideHeaderProgress
         footer={

@@ -18,6 +18,7 @@ type Props = {
   preview?: ReactNode;
   hidePreview?: boolean;
   hideHeaderProgress?: boolean;
+  centered?: boolean;
 };
 
 export function PortalOnboardingShell({
@@ -33,9 +34,12 @@ export function PortalOnboardingShell({
   preview,
   hidePreview,
   hideHeaderProgress,
+  centered,
 }: Props) {
   return (
-    <div className={`portal-onboarding portal-onboarding--fullscreen portal-onboarding--v2${wide ? ' portal-onboarding--wide' : ''}`}>
+    <div
+      className={`portal-onboarding portal-onboarding--fullscreen portal-onboarding--v2${wide ? ' portal-onboarding--wide' : ''}${centered ? ' portal-onboarding--centered' : ''}`}
+    >
       <div className="portal-onboarding-viewport">
         <header className="ob-chrome">
           <div className="ob-chrome__top">

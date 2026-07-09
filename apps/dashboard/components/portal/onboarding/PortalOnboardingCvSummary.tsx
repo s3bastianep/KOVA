@@ -127,18 +127,12 @@ export function PortalOnboardingCvSummary({
             continuar.
           </p>
         </div>
-        <aside className="ob-cv-summary__ring-card">
-          <PortalOnboardingProgressRing percent={percent} size={108} />
-          <p className="ob-cv-summary__encourage">
-            <strong>¡Vas muy bien!</strong> Tu perfil ya tiene lo esencial para empezar a conectar
-            con oportunidades.
-          </p>
-        </aside>
       </div>
 
       {hasContent ? (
-        <>
-          <div className="ob-profile-card">
+        <div className="ob-cv-summary__grid">
+          <div className="ob-cv-summary__main">
+            <div className="ob-profile-card">
             <div className="ob-profile-card__left">
               <span className="ob-profile-card__avatar" aria-hidden>
                 {initials(displayName)}
@@ -162,11 +156,9 @@ export function PortalOnboardingCvSummary({
                 </div>
               </div>
             </div>
-          </div>
+            </div>
 
-          <div className="ob-cv-summary__grid">
-            <div className="ob-cv-summary__main">
-              {contactRows.length > 0 ? (
+            {contactRows.length > 0 ? (
                 <section className="ob-panel">
                   <div className="ob-panel__head">
                     <div className="ob-panel__title">
@@ -231,10 +223,18 @@ export function PortalOnboardingCvSummary({
                   </ol>
                 </section>
               ) : null}
+          </div>
+
+          <aside className="ob-cv-summary__aside">
+            <div className="ob-cv-summary__ring-card">
+              <PortalOnboardingProgressRing percent={percent} size={96} />
+              <p className="ob-cv-summary__encourage">
+                <strong>¡Vas muy bien!</strong> Tu perfil ya tiene lo esencial para empezar a
+                conectar con oportunidades.
+              </p>
             </div>
 
-            <aside className="ob-cv-summary__aside">
-              <section className="ob-panel ob-panel--sidebar">
+            <section className="ob-panel ob-panel--sidebar">
                 <h2 className="ob-panel__sidebar-title">Información detectada</h2>
                 <ul className="ob-detected-list">
                   {detectedItems.map((item) => (
@@ -269,9 +269,8 @@ export function PortalOnboardingCvSummary({
                 <CircleHelp className="h-3.5 w-3.5" aria-hidden />
                 La compatibilidad se calcula con vacantes abiertas en la plataforma.
               </p>
-            </aside>
-          </div>
-        </>
+          </aside>
+        </div>
       ) : (
         <p className="ob-cv-summary__empty">
           No detectamos secciones claras. Podrás completarlas manualmente en el siguiente paso.
