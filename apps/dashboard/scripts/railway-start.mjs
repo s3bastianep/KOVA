@@ -5,6 +5,10 @@ import { fileURLToPath } from 'node:url';
 const dashboardDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const port = process.env.PORT || '3001';
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 function runCommand(command, args, timeoutMs = 120_000) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, {
@@ -42,13 +46,25 @@ async function prepareSchema() {
     return;
   }
 
-  console.log('[kova] Sincronizando esquema de base de datos...');
-  try {
-    await runCommand('npx', ['prisma', 'db', 'push', '--skip-generate'], 90_000);
-    console.log('[kova] Esquema listo.');
-  } catch (error) {
-    console.error('[kova] db push falló:', error?.message ?? error);
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    try {
+      console.log(`[kova] Sincronizando esquema (intento ${attempt}/3)...`);
+      await runCommand(
+        'npx',
+        ['prisma', 'db', 'push', '--skip-generate', '--accept-data-loss'],
+        90_000,
+      );
+      await runCommand('node', ['scripts/verify-schema.mjs'], 20_000);
+      process.env.KOVA_SCHEMA_READY = 'true';
+      console.log('[kova] Esquema listo.');
+      return;
+    } catch (error) {
+      console.error(`[kova] Preparación de esquema falló (${attempt}/3):`, error?.message ?? error);
+      if (attempt < 3) await sleep(5000);
+    }
   }
+
+  throw new Error('No se pudo preparar el esquema de la base de datos.');
 }
 
 function runSeedInBackground() {

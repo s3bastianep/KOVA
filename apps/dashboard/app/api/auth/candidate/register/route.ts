@@ -7,6 +7,7 @@ import { signToken } from '@/lib/auth';
 import { getPublicTenantId } from '@/lib/public-tenant';
 import { isMockMode, upsertMockPortalCandidate, getMockPortalCandidateByEmail } from '@/lib/mock';
 import { splitFullName } from '@/lib/candidate-commercial-profile';
+import { waitForSchema } from '@/lib/schema-ready';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
 
 export const dynamic = 'force-dynamic';
@@ -95,6 +96,14 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const schemaOk = await waitForSchema();
+    if (!schemaOk) {
+      return Response.json(
+        { message: 'El sistema se está preparando. Espera un minuto e intenta de nuevo.' },
+        { status: 503 },
+      );
+    }
+
     const tenantId = await getPublicTenantId();
 
     const existingUser = await prisma.user.findFirst({
