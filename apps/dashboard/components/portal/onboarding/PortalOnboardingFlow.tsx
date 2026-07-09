@@ -1,13 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
-  ArrowRight,
   Briefcase,
   Check,
-  CheckCircle2,
-  Circle,
-  Clock3,
   FileText,
   GraduationCap,
   Languages,
@@ -31,15 +27,14 @@ import {
   type OnboardingStep,
 } from '@/lib/portal-onboarding';
 import {
-  ONBOARDING_MACRO_LABELS,
   REVIEW_SECTIONS,
   canContinueFromReviewHub,
   estimatedMinutesLeft,
-  macroStepIndex,
   motivationalMessage,
   normalizeOnboardingStep,
-  profileCompletenessScore,
+  transitionAfterStep,
   type ReviewSectionId,
+  type StepTransition,
   unifiedProgressPercent,
 } from '@/lib/portal-onboarding-unified';
 import {
@@ -76,6 +71,10 @@ import {
   PortalOnboardingPreferencias,
 } from './PortalOnboardingPreferencias';
 import { PortalOnboardingFooter, PortalOnboardingShell } from './PortalOnboardingShell';
+import { PortalOnboardingWelcome } from './PortalOnboardingWelcome';
+import { PortalOnboardingProfilePreview } from './PortalOnboardingProfilePreview';
+import { PortalOnboardingTransition } from './PortalOnboardingTransition';
+import { PortalOnboardingComplete } from './PortalOnboardingComplete';
 import './portal-onboarding.css';
 
 type Props = {
@@ -137,6 +136,7 @@ export function PortalOnboardingFlow({
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [overlayTransition, setOverlayTransition] = useState<StepTransition | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -162,12 +162,41 @@ export function PortalOnboardingFlow({
   );
   const minutesLeft = estimatedMinutesLeft(step, profile, prefStepIndex, competencyIndex);
   const motivation = motivationalMessage(percent);
-  const macroIndex = macroStepIndex(step);
+  const mergedProfile = buildMergedProfile();
+
+  const previewPanel =
+    step !== 'welcome' && step !== 'complete' ? (
+      <PortalOnboardingProfilePreview
+        profile={mergedProfile}
+        percent={percent}
+        prefAnswers={prefAnswers}
+        firstName={firstName}
+      />
+    ) : null;
+
+  const renderWithOverlay = (node: ReactNode) => (
+    <>
+      {node}
+      {overlayTransition ? (
+        <PortalOnboardingTransition
+          key={`${overlayTransition.headline}-${overlayTransition.detail}`}
+          transition={overlayTransition}
+          onDone={() => setOverlayTransition(null)}
+        />
+      ) : null}
+    </>
+  );
 
   useEffect(() => {
     document.documentElement.classList.add('portal-onboarding-active');
     return () => document.documentElement.classList.remove('portal-onboarding-active');
   }, []);
+
+  useEffect(() => {
+    const immersive = step === 'welcome' || step === 'complete';
+    document.documentElement.classList.toggle('portal-onboarding-immersive', immersive);
+    return () => document.documentElement.classList.remove('portal-onboarding-immersive');
+  }, [step]);
 
   const persist = useCallback(
     async (patch: {
@@ -269,10 +298,17 @@ export function PortalOnboardingFlow({
 
       const aligned = enrichCvExtraction(result, profile);
       const nextProfile = applyFullCvExtraction(profile, aligned);
+      const nextCounts = countsFromExtraction(aligned);
       setProfile(nextProfile);
       setPrefAnswers(answersFromProfile(nextProfile));
-      setCounts(countsFromExtraction(aligned));
+      setCounts(nextCounts);
       await saveStep('cv_summary', nextProfile);
+      const dataCount =
+        nextCounts.experiencias +
+        nextCounts.estudios +
+        nextCounts.idiomas +
+        nextCounts.certificaciones;
+      setOverlayTransition(transitionAfterStep('cv_analyzing', nextProfile, dataCount) ?? null);
     },
     [profile, saveStep],
   );
@@ -419,6 +455,7 @@ export function PortalOnboardingFlow({
         setEvidenceDraft(draftEvidenceFromProfile(merged));
         setEvidencePhase('titulo');
         setCompetencyIndex(0);
+        setOverlayTransition(transitionAfterStep('preferencias', merged));
         await saveStep('evidence', merged, 0);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'No pudimos guardar');
@@ -533,70 +570,24 @@ export function PortalOnboardingFlow({
     }
   };
 
-  const completeness = profileCompletenessScore(buildMergedProfile(), prefAnswers);
-
   if (step === 'welcome') {
-    const checklist = [
-      { id: 'account', label: 'Cuenta creada', eta: '< 1 min', done: true },
-      { id: 'cv', label: 'Subir hoja de vida', eta: '2 min', done: false },
-      { id: 'review', label: 'Revisar información', eta: '2 min', done: false },
-      { id: 'prefs', label: 'Preguntas rápidas', eta: '3 min', done: false },
-      { id: 'done', label: 'Perfil listo', eta: 'Listo', done: false },
-    ];
-
-    return (
-      <div className="portal-onboarding portal-onboarding--welcome">
-        <div className="portal-onboarding-shell portal-onboarding-shell--hero">
-          <header className="portal-onboarding-shell__header">
-            <span className="portal-onboarding-eyebrow">Bienvenido a KOVA</span>
-            <h1>Hola, {firstName}</h1>
-            <p className="portal-onboarding-lead">
-              En menos de cinco minutos construiremos tu perfil profesional. Subes tu hoja de vida, extraemos la
-              información y solo revisas unas preguntas rápidas.
-            </p>
-            <p className="portal-onboarding-time">
-              <Clock3 className="w-3.5 h-3.5" aria-hidden />
-              Tiempo aproximado: 5 minutos
-            </p>
-          </header>
-
-          <ul className="portal-onboarding-checklist">
-            {checklist.map((item) => (
-              <li key={item.id} className={item.done ? 'is-done' : undefined}>
-                <span className="portal-onboarding-checklist__icon" aria-hidden>
-                  {item.done ? <CheckCircle2 className="w-4 h-4" /> : <Circle className="w-4 h-4" />}
-                </span>
-                <span className="portal-onboarding-checklist__label">{item.label}</span>
-                <span className="portal-onboarding-checklist__eta">{item.eta}</span>
-              </li>
-            ))}
-          </ul>
-
-          <button
-            type="button"
-            className="portal-onboarding-btn portal-onboarding-btn--primary"
-            onClick={() => void saveStep('cv_upload')}
-          >
-            Comenzar
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
+    return renderWithOverlay(
+      <PortalOnboardingWelcome firstName={firstName} onStart={() => void saveStep('cv_upload')} />,
     );
   }
 
   if (step === 'cv_upload') {
-    return (
+    return renderWithOverlay(
       <PortalOnboardingShell
-        macroIndex={1}
         percent={percent}
         minutesLeft={minutesLeft}
         motivation={motivation}
         onSaveExit={() => void handleSaveExit()}
+        preview={previewPanel}
       >
         <header className="portal-onboarding-shell__header portal-onboarding-shell__header--compact">
-          <h1>Sube tu hoja de vida</h1>
-          <p className="portal-onboarding-lead">Arrastra PDF o Word. KOVA extrae tu experiencia automáticamente.</p>
+          <h1>Empecemos con tu experiencia</h1>
+          <p className="portal-onboarding-lead">Sube tu hoja de vida y extraeremos tu trayectoria automáticamente.</p>
         </header>
 
         <div
@@ -634,16 +625,16 @@ export function PortalOnboardingFlow({
             <Loader2 className="w-4 h-4 animate-spin" /> Preparando análisis...
           </p>
         ) : null}
-      </PortalOnboardingShell>
+      </PortalOnboardingShell>,
     );
   }
 
   if (step === 'cv_analyzing') {
-    return (
-      <PortalOnboardingShell macroIndex={2} percent={percent} minutesLeft={minutesLeft}>
+    return renderWithOverlay(
+      <PortalOnboardingShell percent={percent} minutesLeft={minutesLeft} preview={previewPanel}>
         <div className="portal-onboarding-analyze">
-          <h2>Analizando hoja de vida...</h2>
-          <p>Extrayendo tu perfil profesional</p>
+          <h2>Construyendo tu experiencia...</h2>
+          <p>Acabamos de identificar datos en tu hoja de vida</p>
           <div className="portal-onboarding-progress mt-4" aria-hidden>
             <span style={{ width: `${analysisProgress}%` }} />
           </div>
@@ -656,22 +647,22 @@ export function PortalOnboardingFlow({
             ))}
           </ul>
         </div>
-      </PortalOnboardingShell>
+      </PortalOnboardingShell>,
     );
   }
 
   if (step === 'cv_summary') {
-    return (
+    return renderWithOverlay(
       <PortalOnboardingShell
-        macroIndex={3}
         percent={percent}
         minutesLeft={minutesLeft}
         motivation={motivation}
         onSaveExit={() => void handleSaveExit()}
+        preview={previewPanel}
         footer={
           <PortalOnboardingFooter
             onContinue={() => void saveStep('review_hub')}
-            continueLabel="Revisar información"
+            continueLabel="Revisar tu trayectoria"
             busy={busy}
           />
         }
@@ -682,8 +673,8 @@ export function PortalOnboardingFlow({
               <Sparkles className="h-5 w-5" />
             </span>
             <div>
-              <h1>Esto encontramos en tu CV</h1>
-              <p>Tu hoja de vida ya está organizada. Revisa antes de continuar.</p>
+              <h1>Tu experiencia ya está organizada</h1>
+              <p>Revisa lo que encontramos antes de seguir construyendo tu perfil.</p>
             </div>
           </div>
 
@@ -730,27 +721,28 @@ export function PortalOnboardingFlow({
             </p>
           ) : null}
         </div>
-      </PortalOnboardingShell>
+      </PortalOnboardingShell>,
     );
   }
 
   if (step === 'review_hub') {
     const canContinue = canContinueFromReviewHub(reviewed, profile);
-    return (
+    return renderWithOverlay(
       <PortalOnboardingShell
-        macroIndex={3}
         percent={percent}
         minutesLeft={minutesLeft}
         motivation={motivation}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
         wide
+        preview={previewPanel}
         footer={
           <PortalOnboardingFooter
             onBack={() => void saveStep('cv_summary')}
             onContinue={async () => {
               setBusy(true);
               try {
+                setOverlayTransition(transitionAfterStep('review_hub', profile));
                 await saveStep('preferencias', applyPreferenciasAnswers(prefAnswers, profile), 0);
               } finally {
                 setBusy(false);
@@ -759,7 +751,7 @@ export function PortalOnboardingFlow({
             continueDisabled={!canContinue}
             continueLabel="Continuar"
             busy={busy}
-            hint={!canContinue ? 'Marca como revisadas las secciones obligatorias (personal y experiencia).' : undefined}
+            hint={!canContinue ? 'Confirma personal y experiencia para seguir construyendo tu perfil.' : undefined}
           />
         }
       >
@@ -773,20 +765,20 @@ export function PortalOnboardingFlow({
           onMarkReviewed={markReviewed}
         />
         {error ? <p className="portal-onboarding-error">{error}</p> : null}
-      </PortalOnboardingShell>
+      </PortalOnboardingShell>,
     );
   }
 
   if (step === 'cv_review') {
     const editSectionMeta = REVIEW_SECTIONS.find((item) => item.id === reviewEditSection);
-    return (
+    return renderWithOverlay(
       <PortalOnboardingShell
-        macroIndex={3}
         percent={percent}
         minutesLeft={minutesLeft}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
         wide
+        preview={previewPanel}
         footer={
           <PortalOnboardingFooter
             onBack={() => void saveStep('review_hub')}
@@ -800,25 +792,29 @@ export function PortalOnboardingFlow({
         }
       >
         <header className="portal-onboarding-shell__header portal-onboarding-shell__header--compact text-left">
-          <h1 className="text-left">Editar {editSectionMeta?.label.toLowerCase() ?? 'información'}</h1>
-          <p className="portal-onboarding-lead text-left mx-0">Corrige lo que haga falta. Se guarda solo.</p>
+          <h1 className="text-left">
+            {reviewEditSection === 'experiencia' ? 'Tu trayectoria' : `Ajustar ${editSectionMeta?.label.toLowerCase() ?? 'información'}`}
+          </h1>
+          <p className="portal-onboarding-lead text-left mx-0">
+            {reviewEditSection === 'experiencia'
+              ? 'Cuéntanos paso a paso. Sin formularios largos.'
+              : 'Tu perfil se actualiza en tiempo real.'}
+          </p>
         </header>
         <PortalOnboardingReviewCards profile={profile} section={reviewEditSection} onChange={setProfile} />
-      </PortalOnboardingShell>
+      </PortalOnboardingShell>,
     );
   }
 
   if (step === 'preferencias') {
-    const blockMacro =
-      currentPrefStep?.block === 'vendes' ? 5 : currentPrefStep?.block === 'cierras' ? 6 : 4;
-    return (
+    return renderWithOverlay(
       <PortalOnboardingShell
-        macroIndex={blockMacro}
         percent={percent}
         minutesLeft={minutesLeft}
         motivation={motivation}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
+        preview={previewPanel}
         footer={
           <PortalOnboardingFooter
             onBack={() => void goPrefBack()}
@@ -843,21 +839,20 @@ export function PortalOnboardingFlow({
           onSkip={() => void goPrefNext()}
         />
         {error ? <p className="portal-onboarding-error">{error}</p> : null}
-      </PortalOnboardingShell>
+      </PortalOnboardingShell>,
     );
   }
 
   if (step === 'evidence') {
-    const evidenceMacro = 7;
     const isLastPhase = evidencePhase === 'tags';
-    return (
+    return renderWithOverlay(
       <PortalOnboardingShell
-        macroIndex={evidenceMacro}
         percent={percent}
         minutesLeft={minutesLeft}
         motivation={motivation}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
+        preview={previewPanel}
         footer={
           <PortalOnboardingFooter
             onBack={() => void goEvidenceBack()}
@@ -882,21 +877,21 @@ export function PortalOnboardingFlow({
           </p>
         ) : null}
         {error ? <p className="portal-onboarding-error">{error}</p> : null}
-      </PortalOnboardingShell>
+      </PortalOnboardingShell>,
     );
   }
 
   if (step === 'competencies') {
     const defs = competencyDefsForProfile(profile);
     const isLastCompetency = competencyIndex >= defs.length - 1;
-    return (
+    return renderWithOverlay(
       <PortalOnboardingShell
-        macroIndex={8}
         percent={percent}
         minutesLeft={minutesLeft}
         motivation={motivation}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
+        preview={previewPanel}
         footer={
           <PortalOnboardingFooter
             onBack={() => void goCompetencyBack()}
@@ -914,57 +909,19 @@ export function PortalOnboardingFlow({
           onRate={(key, entry) => setCompetencyRatings((prev) => ({ ...prev, [key]: entry }))}
         />
         {error ? <p className="portal-onboarding-error">{error}</p> : null}
-      </PortalOnboardingShell>
+      </PortalOnboardingShell>,
     );
   }
 
   if (step === 'complete') {
-    return (
-      <div className="portal-onboarding portal-onboarding--welcome">
-        <div className="portal-onboarding-shell portal-onboarding-shell--complete">
-          <div className="portal-onboarding-complete-icon" aria-hidden>
-            <Sparkles className="w-8 h-8" />
-          </div>
-          <span className="portal-onboarding-eyebrow">¡Perfil listo!</span>
-          <h1>Tu perfil ya está optimizado</h1>
-          <p className="portal-onboarding-lead">
-            KOVA ya puede encontrar vacantes compatibles contigo. Todo quedó guardado.
-          </p>
-
-          <div className="portal-onboarding-complete-score">
-            <span className="portal-onboarding-complete-score__value">{completeness}%</span>
-            <span className="portal-onboarding-complete-score__label">Perfil completo</span>
-          </div>
-
-          <ul className="portal-onboarding-complete-checklist">
-            {['Experiencia', 'Formación', 'Idiomas', 'Preferencias', 'Logros', 'Competencias'].map((item) => (
-              <li key={item}>
-                <Check className="w-4 h-4 text-[var(--kova-lime)]" />
-                {item}
-              </li>
-            ))}
-          </ul>
-
-          <button
-            type="button"
-            className="portal-onboarding-btn portal-onboarding-btn--primary"
-            disabled={busy}
-            onClick={() => void finishOnboarding()}
-          >
-            {busy ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Entrando...
-              </>
-            ) : (
-              <>
-                Entrar al portal
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
-          </button>
-        </div>
-      </div>
+    return renderWithOverlay(
+      <PortalOnboardingComplete
+        profile={mergedProfile}
+        percent={percent}
+        prefAnswers={prefAnswers}
+        busy={busy}
+        onEnter={() => void finishOnboarding()}
+      />,
     );
   }
 

@@ -2,10 +2,8 @@
 
 import type { ReactNode } from 'react';
 import { Clock3 } from 'lucide-react';
-import { ONBOARDING_MACRO_LABELS } from '@/lib/portal-onboarding-unified';
 
 type Props = {
-  macroIndex: number;
   percent: number;
   minutesLeft: number;
   motivation?: string | null;
@@ -14,10 +12,10 @@ type Props = {
   children: ReactNode;
   footer?: ReactNode;
   wide?: boolean;
+  preview?: ReactNode;
 };
 
 export function PortalOnboardingShell({
-  macroIndex,
   percent,
   minutesLeft,
   motivation,
@@ -26,23 +24,22 @@ export function PortalOnboardingShell({
   children,
   footer,
   wide,
+  preview,
 }: Props) {
-  const stepLabel = ONBOARDING_MACRO_LABELS[macroIndex] ?? 'Onboarding';
-  const macroTotal = ONBOARDING_MACRO_LABELS.length;
-
   return (
-    <div className={`portal-onboarding portal-onboarding--flow${wide ? ' portal-onboarding--wide' : ''}`}>
+    <div className={`portal-onboarding portal-onboarding--flow${wide ? ' portal-onboarding--wide' : ''}${preview ? ' portal-onboarding--with-preview' : ''}`}>
       <div className="portal-onboarding-topbar">
         <div className="portal-onboarding-topbar__main">
           <div className="portal-onboarding-topbar__meta">
-            <span>
-              Paso {macroIndex + 1} de {macroTotal}
+            <span className="portal-onboarding-topbar__brand">Perfil</span>
+            <span className="portal-onboarding-topbar__time">
+              <Clock3 className="h-3.5 w-3.5" aria-hidden />
+              {minutesLeft <= 0 ? 'Listo' : `Te faltan ${minutesLeft} min`}
             </span>
-            <span className="portal-onboarding-topbar__label">{stepLabel}</span>
           </div>
           <div className="portal-onboarding-topbar__progress">
             <div
-              className="portal-onboarding-progress"
+              className="portal-onboarding-progress portal-onboarding-progress--topbar"
               role="progressbar"
               aria-valuenow={percent}
               aria-valuemin={0}
@@ -52,10 +49,6 @@ export function PortalOnboardingShell({
             </div>
             <div className="portal-onboarding-topbar__stats">
               <strong>{percent}%</strong>
-              <span className="portal-onboarding-topbar__time">
-                <Clock3 className="h-3.5 w-3.5" aria-hidden />
-                {minutesLeft <= 0 ? 'Listo' : `${minutesLeft} min restantes`}
-              </span>
             </div>
           </div>
         </div>
@@ -68,17 +61,20 @@ export function PortalOnboardingShell({
 
       {motivation ? <p className="portal-onboarding-motivation">{motivation}</p> : null}
 
-      <div className="portal-onboarding-shell portal-onboarding-shell--flow">{children}</div>
-
-      {saveStatus && saveStatus !== 'idle' ? (
-        <p className="portal-onboarding-save-state portal-onboarding-save-state--centered">
-          {saveStatus === 'saving' ? 'Guardando...' : null}
-          {saveStatus === 'saved' ? '✓ Guardado automáticamente' : null}
-          {saveStatus === 'error' ? 'No pudimos guardar. Reintentaremos al continuar.' : null}
-        </p>
-      ) : null}
-
-      {footer}
+      <div className="portal-onboarding-layout">
+        <div className="portal-onboarding-layout__main">
+          <div className="portal-onboarding-shell portal-onboarding-shell--flow portal-onboarding-card-enter">{children}</div>
+          {saveStatus && saveStatus !== 'idle' ? (
+            <p className="portal-onboarding-save-state portal-onboarding-save-state--centered">
+              {saveStatus === 'saving' ? 'Guardando...' : null}
+              {saveStatus === 'saved' ? '✓ Guardado automáticamente' : null}
+              {saveStatus === 'error' ? 'No pudimos guardar. Reintentaremos al continuar.' : null}
+            </p>
+          ) : null}
+          {footer}
+        </div>
+        {preview ? <div className="portal-onboarding-layout__aside">{preview}</div> : null}
+      </div>
     </div>
   );
 }

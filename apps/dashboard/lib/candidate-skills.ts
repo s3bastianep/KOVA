@@ -39,3 +39,17 @@ export function candidateMatchesSkills(candidateSkills: string[] | undefined, re
 }
 
 export { COMMERCIAL_SKILLS as SKILL_CATALOG };
+
+export const SKILL_TOOL_SUGGESTIONS = [
+  'Salesforce',
+  'HubSpot',
+  'Pipedrive',
+  'Zoho CRM',
+  'Microsoft Dynamics',
+  'Excel',
+  'Google Sheets',
+  'Power BI',
+  'LinkedIn Sales Navigator',
+];
+
+export const SKILL_SUGGESTIONS = [...COMMERCIAL_SKILLS, ...SKILL_TOOL_SUGGESTIONS];

@@ -17,6 +17,8 @@ import {
   newLanguageEntry,
   newWorkHistoryEntry,
 } from '@/lib/commercial-profile-builder';
+import { PortalSkillPicker } from './PortalSkillPicker';
+import { PortalOnboardingExperienceConversation } from './PortalOnboardingExperienceConversation';
 
 type Props = {
   profile: CommercialProfile;
@@ -434,30 +436,18 @@ function CertificationsSection({ profile, onChange }: Props) {
 }
 
 function SkillsSection({ profile, onChange }: Props) {
-  const skillsText = (profile.herramientas ?? []).join(', ');
+  const skills = profile.herramientas ?? [];
 
   return (
     <div className="space-y-3">
       <p className="portal-onboarding-section-title">Habilidades y herramientas</p>
       <p className="portal-onboarding-muted">
-        CRM, prospección, negociación, Excel, Salesforce... Sepáralas con comas.
+        Agrega una por una. Al escribir verás sugerencias como prospección, Salesforce o negociación.
       </p>
-      <label className="portal-onboarding-work-field">
-        <span className="portal-onboarding-work-field__label">Habilidades</span>
-        <textarea
-          className="portal-onboarding-field portal-onboarding-field--textarea"
-          value={skillsText}
-          placeholder="Ej. Salesforce, prospección B2B, negociación, Excel avanzado"
-          rows={5}
-          onChange={(e) => {
-            const herramientas = e.target.value
-              .split(',')
-              .map((item) => item.trim())
-              .filter(Boolean);
-            onChange({ ...profile, herramientas });
-          }}
-        />
-      </label>
+      <PortalSkillPicker
+        skills={skills}
+        onChange={(herramientas) => onChange({ ...profile, herramientas })}
+      />
     </div>
   );
 }
@@ -467,7 +457,7 @@ export function PortalOnboardingReviewCards({ profile, section, onChange }: Prop
     case 'personal':
       return <PersonalSection profile={profile} section={section} onChange={onChange} />;
     case 'experiencia':
-      return <ExperienceSection profile={profile} section={section} onChange={onChange} />;
+      return <PortalOnboardingExperienceConversation profile={profile} onChange={onChange} />;
     case 'educacion':
       return <EducationSection profile={profile} section={section} onChange={onChange} />;
     case 'idiomas':

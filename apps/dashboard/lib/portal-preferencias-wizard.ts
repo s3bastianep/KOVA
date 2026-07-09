@@ -54,10 +54,11 @@ function mergeTools(profile: CommercialProfile, selected: string[]): string[] {
 }
 
 function inferNivelRol(cargos: string[], equipo: string): string | undefined {
-  if (cargos.some((c) => /director|gerente general/i.test(c))) return 'Director';
-  if (cargos.some((c) => /gerente|jefe/i.test(c))) return 'Jefe o Gerente';
+  if (cargos.some((c) => /director/i.test(c))) return 'Director';
+  if (cargos.some((c) => /gerente/i.test(c))) return 'Jefe o Gerente';
   if (cargos.some((c) => /coordinador/i.test(c))) return 'Coordinador';
   if (equipo && equipo !== '0' && equipo !== 'No') return 'Jefe o Gerente';
+  if (cargos.some((c) => /key account|kam/i.test(c))) return 'Ejecutivo comercial';
   if (cargos.length > 0) return 'Ejecutivo comercial';
   return undefined;
 }
@@ -84,22 +85,34 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
     subtitle: 'Puedes escoger varios.',
     multi: true,
     options: [
-      'Comercial',
       'Ventas',
-      'Dirección comercial',
-      'Desarrollo de negocios',
-      'Key Account',
-      'Customer Success',
-      'Trade marketing',
-      'Marketing',
-      'Compras',
-      'Logística',
-      'Operaciones',
-      'Finanzas',
-      'Recursos humanos',
+      'Asesor comercial',
+      'Key account manager',
+      'Auxiliar servicio al cliente',
+      'Director comercial',
+      'Gerente comercial',
+      'Hunter',
+      'Farmer',
     ],
-    apply: (selected) => ({ objetivoProfesional: join(selected) }),
-    read: (p) => split(p.objetivoProfesional),
+    apply: (selected, profile) => {
+      const equipo = profile.tamanoEquipo ?? '';
+      const patch: Partial<CommercialProfile> = {
+        objetivoProfesional: join(selected),
+        rol: selected[0] ?? profile.rol,
+        rolOtro: selected.length > 1 ? join(selected.slice(1)) : profile.rolOtro,
+        nivelRol: inferNivelRol(selected, equipo) ?? profile.nivelRol,
+      };
+      if (selected.some((s) => /^hunter$/i.test(s))) patch.enfoque = 'Hunter';
+      else if (selected.some((s) => /^farmer$/i.test(s))) patch.enfoque = 'Farmer';
+      return patch;
+    },
+    read: (p) => {
+      const fromObjective = split(p.objetivoProfesional);
+      if (fromObjective.length > 0) return fromObjective;
+      const fromRole = split(p.rol);
+      if (p.rolOtro) fromRole.push(...split(p.rolOtro));
+      return fromRole;
+    },
   },
   {
     id: 'cargos-interes',
@@ -107,6 +120,7 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
     title: '¿Qué cargos te interesan?',
     subtitle: 'Selecciona todos los que te gustaría.',
     multi: true,
+    skipIf: () => true,
     options: [
       'Ejecutivo comercial',
       'Asesor comercial',
@@ -546,7 +560,7 @@ export function overallProgress(answers: Record<string, string[]>, profile: Comm
 }
 
 export function isPreferenciasComplete(answers: Record<string, string[]>, profile: CommercialProfile): boolean {
-  const requiredIds = ['cargos-interes', 'industrias', 'tipo-venta', 'salario', 'viajar', 'reubicacion', 'disponibilidad'];
+  const requiredIds = ['areas-interes', 'industrias', 'tipo-venta', 'salario', 'viajar', 'reubicacion', 'disponibilidad'];
   const steps = getActiveSteps(profile).filter((s) => requiredIds.includes(s.id));
   return steps.every((s) => (answers[s.id]?.length ?? 0) > 0);
 }

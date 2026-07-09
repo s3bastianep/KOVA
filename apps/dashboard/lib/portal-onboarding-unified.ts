@@ -146,10 +146,196 @@ export function estimatedMinutesLeft(
   return 2;
 }
 
+export const PROFILE_BUILD_MILESTONES = [
+  { id: 'experiencia', label: 'Tu experiencia' },
+  { id: 'trayectoria', label: 'Tu trayectoria' },
+  { id: 'estilo', label: 'Tu estilo comercial' },
+  { id: 'fortalezas', label: 'Tus fortalezas' },
+  { id: 'listo', label: 'Tu perfil listo' },
+] as const;
+
+export type ProfileMilestoneId = (typeof PROFILE_BUILD_MILESTONES)[number]['id'];
+
+export function milestoneStatus(
+  id: ProfileMilestoneId,
+  step: OnboardingStep,
+  percent: number,
+): 'locked' | 'active' | 'done' {
+  const order: ProfileMilestoneId[] = ['experiencia', 'trayectoria', 'estilo', 'fortalezas', 'listo'];
+  const thresholds: Record<ProfileMilestoneId, number> = {
+    experiencia: 20,
+    trayectoria: 38,
+    estilo: 62,
+    fortalezas: 85,
+    listo: 100,
+  };
+
+  if (percent >= thresholds[id] || (step === 'complete' && id === 'listo')) return 'done';
+
+  const stepToMilestone: Partial<Record<OnboardingStep, ProfileMilestoneId>> = {
+    welcome: 'experiencia',
+    cv_upload: 'experiencia',
+    cv_analyzing: 'experiencia',
+    cv_summary: 'experiencia',
+    review_hub: 'trayectoria',
+    cv_review: 'trayectoria',
+    preferencias: 'estilo',
+    evidence: 'fortalezas',
+    competencies: 'fortalezas',
+    complete: 'listo',
+  };
+
+  const current = stepToMilestone[normalizeOnboardingStep(step)] ?? 'experiencia';
+  if (id === current) return 'active';
+
+  const currentIdx = order.indexOf(current);
+  const idIdx = order.indexOf(id);
+  if (idIdx < currentIdx) return 'done';
+  return 'locked';
+}
+
+export function estimatedCompatibility(
+  profile: CommercialProfile,
+  percent: number,
+  prefAnswers: Record<string, string[]>,
+): number {
+  const base = Math.min(45, Math.round(percent * 0.55));
+  let bonus = 0;
+  if ((profile.historialLaboral?.length ?? 0) > 0) bonus += 12;
+  if ((profile.herramientas?.length ?? 0) > 0) bonus += 6;
+  if (profile.rol?.trim()) bonus += 8;
+  if (profile.enfoque?.trim()) bonus += 5;
+  if (isPreferenciasComplete(prefAnswers, profile)) bonus += 14;
+  if ((profile.logros ?? []).some((l) => l.titulo?.trim())) bonus += 6;
+  return Math.min(96, base + bonus);
+}
+
+export function estimatedVacancies(
+  profile: CommercialProfile,
+  percent: number,
+  prefAnswers: Record<string, string[]>,
+): number {
+  const compat = estimatedCompatibility(profile, percent, prefAnswers);
+  const base = Math.max(4, Math.round((compat / 100) * 28));
+  const industryBonus = (prefAnswers['industrias']?.length ?? 0) * 2;
+  const roleBonus = (prefAnswers['areas-interes']?.length ?? profile.rol ? 1 : 0) * 3;
+  return Math.min(42, base + industryBonus + roleBonus);
+}
+
+export function profileLevel(
+  profile: CommercialProfile,
+  percent: number,
+  prefAnswers: Record<string, string[]>,
+): number {
+  return Math.min(98, Math.round((percent * 0.4 + estimatedCompatibility(profile, percent, prefAnswers) * 0.6)));
+}
+
+export function profileHeadlineRole(profile: CommercialProfile): string {
+  const latest = profile.historialLaboral?.[0];
+  if (profile.rol?.trim()) return profile.rol.trim();
+  if (latest?.cargo?.trim()) return latest.cargo.trim();
+  return 'Perfil comercial';
+}
+
+export function profileExperienceYears(profile: CommercialProfile): string | null {
+  const items = profile.historialLaboral ?? [];
+  if (!items.length) return null;
+  let totalMonths = 0;
+  for (const item of items) {
+    const start = item.fechaInicio ? new Date(item.fechaInicio).getTime() : NaN;
+    const end = item.fechaFin ? new Date(item.fechaFin).getTime() : Date.now();
+    if (!Number.isNaN(start) && !Number.isNaN(end) && end > start) {
+      totalMonths += Math.round((end - start) / (1000 * 60 * 60 * 24 * 30));
+    }
+  }
+  if (totalMonths < 6) return null;
+  const years = Math.max(1, Math.round(totalMonths / 12));
+  return `${years} año${years === 1 ? '' : 's'}`;
+}
+
+export function profilePreviewTags(
+  profile: CommercialProfile,
+  prefAnswers: Record<string, string[]>,
+): string[] {
+  const tags: string[] = [];
+  const push = (v?: string | null) => {
+    const t = v?.trim();
+    if (t && !tags.includes(t)) tags.push(t);
+  };
+  push(profile.enfoque);
+  push(profile.tipoVenta);
+  const industries = prefAnswers['industrias'] ?? [];
+  for (const ind of industries.slice(0, 2)) push(ind);
+  if (!industries.length && profile.industriaPrincipal?.trim()) push(profile.industriaPrincipal);
+  if (!industries.length && (profile.industrias?.length ?? 0) > 0) push(profile.industrias![0]);
+  const tools = profile.herramientas ?? [];
+  for (const tool of tools.slice(0, 2)) push(tool);
+  return tags.slice(0, 5);
+}
+
+export type StepTransition = {
+  headline: string;
+  detail?: string;
+  deltaVacancies?: number;
+};
+
+export function transitionAfterStep(
+  from: OnboardingStep,
+  profile: CommercialProfile,
+  dataCount?: number,
+): StepTransition | null {
+  switch (from) {
+    case 'cv_analyzing':
+      return {
+        headline: 'Experiencia agregada',
+        detail: dataCount ? `+${dataCount} datos encontrados` : 'Tu trayectoria ya está organizada',
+        deltaVacancies: 5,
+      };
+    case 'review_hub':
+      return {
+        headline: 'Excelente',
+        detail: 'Ahora entendamos cómo vendes.',
+        deltaVacancies: 3,
+      };
+    case 'preferencias':
+      return {
+        headline: 'Perfecto',
+        detail: 'Eso mejora mucho el matching.',
+        deltaVacancies: 8,
+      };
+    case 'evidence':
+      return {
+        headline: 'Logros registrados',
+        detail: 'Tu perfil está tomando forma.',
+        deltaVacancies: 4,
+      };
+  }
+  return null;
+}
+
+export function microFeedbackForPrefStep(stepId: string, selected: string[]): string | null {
+  if (!selected.length) return null;
+  const map: Record<string, string> = {
+    'areas-interes': 'Excelente. Ya conocemos el rol que buscas.',
+    industrias: 'Perfecto. Eso mejora mucho el matching.',
+    'tipo-venta': 'Muy bien. Tu estilo comercial queda más claro.',
+    salario: 'Entendido. Ajustamos las oportunidades a tu rango.',
+    viajar: 'Registrado. Lo tendremos en cuenta.',
+    reubicacion: 'Anotado. Buscamos donde encajes mejor.',
+    disponibilidad: 'Ya casi terminamos.',
+    idiomas: 'Idiomas guardados. Buen diferenciador.',
+    'sabes-vender': 'Tu expertise comercial queda más definida.',
+    enfoque: 'Tu enfoque Hunter/Farmer queda claro.',
+    'tamano-equipo': 'Experiencia de liderazgo registrada.',
+    'herramientas-crm': 'Herramientas agregadas a tu perfil.',
+  };
+  return map[stepId] ?? 'Tu perfil está creciendo.';
+}
+
 export function motivationalMessage(percent: number): string | null {
-  if (percent >= 85) return '¡Ya casi terminas! Tu perfil está casi listo para matching.';
-  if (percent >= 55) return 'Excelente. Esta información mejora tus oportunidades.';
-  if (percent >= 25) return 'Vamos bien. KOVA construye tu perfil mientras respondes.';
+  if (percent >= 85) return 'Tu perfil está casi listo. Ya podemos recomendarte empresas.';
+  if (percent >= 55) return 'Tu nivel de compatibilidad sigue subiendo.';
+  if (percent >= 25) return 'Tu perfil está creciendo. Cada respuesta suma.';
   return null;
 }
 

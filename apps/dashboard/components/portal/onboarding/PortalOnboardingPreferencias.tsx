@@ -10,6 +10,7 @@ import {
   type PreferenciasWizardStep,
 } from '@/lib/portal-preferencias-wizard';
 import { LANGUAGE_LEVEL_OPTIONS } from '@/lib/commercial-profile-builder';
+import { microFeedbackForPrefStep } from '@/lib/portal-onboarding-unified';
 
 type Props = {
   profile: CommercialProfile;
@@ -47,16 +48,21 @@ export function PortalOnboardingPreferencias({
 
   const selected = answers[currentStep.id] ?? [];
   const blockLabel = PREFERENCIAS_BLOCK_LABELS[currentStep.block];
-  const stepsInBlock = activeSteps.filter((s) => s.block === currentStep.block);
-  const idxInBlock = stepsInBlock.findIndex((s) => s.id === currentStep.id);
+  const microFeedback =
+    currentStep.kind === 'slider'
+      ? salaryIdx >= 0
+        ? microFeedbackForPrefStep(currentStep.id, [SALARY_SLIDER_LABELS[salaryIdx]])
+        : null
+      : currentStep.kind === 'idiomas-levels'
+        ? (answers['idiomas'] ?? []).every((idioma) => languageLevels[idioma]?.trim())
+          ? microFeedbackForPrefStep(currentStep.id, answers['idiomas'] ?? [])
+          : null
+        : microFeedbackForPrefStep(currentStep.id, selected);
 
   return (
-    <div className="portal-onboarding-pref">
+    <div className="portal-onboarding-pref" key={currentStep.id}>
       <div className="portal-onboarding-question-meta">
         <span>{blockLabel}</span>
-        <span>
-          {idxInBlock + 1} / {stepsInBlock.length}
-        </span>
       </div>
 
       <h2 className="portal-onboarding-question-title">{currentStep.title}</h2>
@@ -160,6 +166,8 @@ export function PortalOnboardingPreferencias({
           })}
         </div>
       )}
+
+      {microFeedback ? <p className="portal-onboarding-micro-feedback">{microFeedback}</p> : null}
 
       {currentStep.optional ? (
         <p className="portal-onboarding-optional">
