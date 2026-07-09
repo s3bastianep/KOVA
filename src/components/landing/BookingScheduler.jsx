@@ -276,20 +276,22 @@ export default function BookingScheduler({ alternateContact = null }) {
         </div>
       ) : (
         <form onSubmit={handleConfirm} className="kv-booking-body kv-booking-form">
-          <button
-            type="button"
-            onClick={() => setStep('schedule')}
-            className="kv-booking-back"
-            aria-label="Volver a cambiar fecha y horario"
-          >
-            <ArrowLeft aria-hidden />
-            Cambiar horario
-          </button>
+          <div className="kv-booking-form-head">
+            <button
+              type="button"
+              onClick={() => setStep('schedule')}
+              className="kv-booking-back"
+              aria-label="Volver a cambiar fecha y horario"
+            >
+              <ArrowLeft aria-hidden />
+              Cambiar horario
+            </button>
 
-          <div className="kv-booking-selected-slot font-mono capitalize">
-            {selectedDate && format(selectedDate, 'EEE d MMM', { locale: es })}
-            <span>·</span>
-            {selectedTime}
+            <div className="kv-booking-selected-slot font-mono capitalize">
+              {selectedDate && format(selectedDate, 'EEE d MMM', { locale: es })}
+              <span>·</span>
+              {selectedTime}
+            </div>
           </div>
 
           <div className="kv-booking-fields">

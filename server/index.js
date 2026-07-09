@@ -97,7 +97,7 @@ app.post('/api/bookings', async (req, res) => {
 });
 
 const DASHBOARD_PROXY_ROUTE =
-  /^\/(?:registro|login|postular|dashboard|procesos|candidatos|api\/(?:registro|auth|procesos|vacantes|health)(?:\/|$)|_next\/)/;
+  /^\/(?:registro|login|postular|dashboard|procesos|candidatos|api\/(?:registro|auth|portal|procesos|vacantes|health|dashboard)(?:\/|$)|_next\/)/;
 
 function mountDashboardDevProxy() {
   const dashboardPort = Number(process.env.DASHBOARD_PORT) || 3001;
@@ -106,13 +106,29 @@ function mountDashboardDevProxy() {
   app.use((req, res, next) => {
     if (!DASHBOARD_PROXY_ROUTE.test(req.path)) return next();
 
+    const headers = { ...req.headers, host: `${dashboardHost}:${dashboardPort}` };
+    const hasParsedJsonBody =
+      req.body &&
+      typeof req.body === 'object' &&
+      req.method !== 'GET' &&
+      req.method !== 'HEAD' &&
+      !Buffer.isBuffer(req.body);
+
+    let bodyBuffer = null;
+    if (hasParsedJsonBody) {
+      bodyBuffer = Buffer.from(JSON.stringify(req.body), 'utf8');
+      headers['content-type'] = headers['content-type'] ?? 'application/json';
+      headers['content-length'] = String(bodyBuffer.length);
+      delete headers['transfer-encoding'];
+    }
+
     const proxyReq = http.request(
       {
         hostname: dashboardHost,
         port: dashboardPort,
         path: req.url,
         method: req.method,
-        headers: { ...req.headers, host: `${dashboardHost}:${dashboardPort}` },
+        headers,
       },
       (proxyRes) => {
         res.writeHead(proxyRes.statusCode ?? 502, proxyRes.headers);
@@ -129,7 +145,11 @@ function mountDashboardDevProxy() {
       }
     });
 
-    req.pipe(proxyReq);
+    if (bodyBuffer) {
+      proxyReq.end(bodyBuffer);
+    } else {
+      req.pipe(proxyReq);
+    }
   });
 }
 

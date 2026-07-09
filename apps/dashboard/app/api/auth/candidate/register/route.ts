@@ -4,7 +4,7 @@ import { randomBytes } from 'crypto';
 import { prisma } from '@/lib/prisma';
 import { signToken } from '@/lib/auth';
 import { getPublicTenantId } from '@/lib/public-tenant';
-import { isMockMode, upsertMockPortalCandidate } from '@/lib/mock';
+import { isMockMode, upsertMockPortalCandidate, getMockPortalCandidateByEmail } from '@/lib/mock';
 import { splitFullName } from '@/lib/candidate-commercial-profile';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
 
@@ -51,6 +51,13 @@ export async function POST(req: NextRequest) {
   }
 
   if (isMockMode()) {
+    if (getMockPortalCandidateByEmail(email)) {
+      return Response.json(
+        { message: 'Este correo ya está registrado. Inicia sesión para continuar.' },
+        { status: 409 },
+      );
+    }
+
     const authUser = {
       id: `mock-candidate-${Date.now()}`,
       email,
@@ -69,6 +76,7 @@ export async function POST(req: NextRequest) {
       email,
       telefono: telefono || undefined,
       ciudad: ciudad || undefined,
+      password,
       commercialProfile: {
         nombre,
         email,

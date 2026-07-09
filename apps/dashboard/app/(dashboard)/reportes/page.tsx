@@ -1,9 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   Clock, TrendingUp, TrendingDown, BarChart3, Users, Radar,
-  Calendar, Download, ChevronDown, Info,
+  Calendar, Download, ChevronDown, Info, FileSpreadsheet, Loader2,
 } from 'lucide-react';
 import { dashboardApi } from '@/lib/api';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -33,6 +34,26 @@ function initials(name: string) {
 export default function ReportesPage() {
   const { data, isLoading } = useQuery({ queryKey: ['reports'], queryFn: dashboardApi.reports });
   const r = data as Reports | undefined;
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState('');
+
+  async function handleExportExcel() {
+    setExporting(true);
+    setExportError('');
+    try {
+      const blob = await dashboardApi.exportExcel();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `kova-export-${new Date().toISOString().slice(0, 10)}.xlsx`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setExportError(err instanceof Error ? err.message : 'No se pudo exportar a Excel');
+    } finally {
+      setExporting(false);
+    }
+  }
 
   if (isLoading) {
     return (
@@ -62,15 +83,27 @@ export default function ReportesPage() {
           accent="#F3E8FF"
           tone="#7C3AED"
         />
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            type="button"
-            onClick={() => typeof window !== 'undefined' && window.print()}
-            className="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-white shadow-sm hover:-translate-y-0.5 transition-all"
-            style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}
-          >
-            <Download className="w-3.5 h-3.5" /> Exportar PDF
-          </button>
+        <div className="flex flex-col items-end gap-2 shrink-0">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleExportExcel}
+              disabled={exporting}
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold border border-slate-200 bg-white text-slate-700 shadow-sm hover:-translate-y-0.5 transition-all disabled:opacity-60"
+            >
+              {exporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileSpreadsheet className="w-3.5 h-3.5" />}
+              {exporting ? 'Generando Excel...' : 'Exportar Excel'}
+            </button>
+            <button
+              type="button"
+              onClick={() => typeof window !== 'undefined' && window.print()}
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-white shadow-sm hover:-translate-y-0.5 transition-all"
+              style={{ background: 'linear-gradient(135deg, var(--kova-blue), var(--kova-blue-mid))' }}
+            >
+              <Download className="w-3.5 h-3.5" /> Exportar PDF
+            </button>
+          </div>
+          {exportError ? <p className="text-xs text-red-500">{exportError}</p> : null}
         </div>
       </div>
 

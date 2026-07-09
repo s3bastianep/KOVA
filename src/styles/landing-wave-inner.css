@@ -235,3 +235,17 @@
 @media (max-width: 860px) {
   .kova-landing-wave .kv-founder-num { font-size: 4rem; }
 }
+
+/* Eyebrow legible en fondos claros (paper / paper-2) */
+.kova-landing-wave .kv-section--paper .kv-eyebrow,
+.kova-landing-wave .kv-section--paper-2 .kv-eyebrow,
+.kova-landing-wave .kv-eyebrow--ink {
+  color: var(--kv-indigo);
+  font-weight: 600;
+}
+
+.kova-landing-wave .kv-section--paper .kv-eyebrow::before,
+.kova-landing-wave .kv-section--paper-2 .kv-eyebrow::before,
+.kova-landing-wave .kv-eyebrow--ink::before {
+  background: var(--kv-indigo);
+}

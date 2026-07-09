@@ -332,6 +332,23 @@ export const dashboardApi = {
     }),
   documents: () => apiFetch<unknown[]>('/documentos'),
   reports: () => apiFetch<Record<string, unknown>>('/reportes'),
+  exportExcel: async () => {
+    const token = getToken();
+    const res = await fetch(`${API_URL}/export/excel`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (res.status === 401 && typeof window !== 'undefined') {
+      localStorage.removeItem('kova_access_token');
+      localStorage.removeItem('kova_refresh_token');
+      window.location.href = loginPathForStoredUser();
+      throw new Error('Unauthorized');
+    }
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error((err as { message?: string }).message ?? 'No se pudo exportar a Excel');
+    }
+    return res.blob();
+  },
 };
 
 export function saveSession(data: LoginResponse) {

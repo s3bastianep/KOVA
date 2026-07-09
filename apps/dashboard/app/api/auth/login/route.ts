@@ -4,7 +4,7 @@ import { randomBytes } from 'crypto';
 import { prisma } from '../../../../lib/prisma';
 import { signToken } from '../../../../lib/auth';
 import { getCandidateForUser } from '../../../../lib/candidate-auth';
-import { isMockMode, MOCK_USER } from '../../../../lib/mock';
+import { isMockMode, MOCK_USER, getMockPortalCandidateByEmail, verifyMockPortalPassword } from '../../../../lib/mock';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,8 +20,38 @@ export async function POST(req: NextRequest) {
   }
 
   if (isMockMode()) {
-    if (String(email).toLowerCase() !== MOCK_USER.email || password !== DEMO_PASSWORD) {
-      return Response.json({ message: 'Correo o contraseña incorrectos' }, { status: 401 });
+    const normalizedEmail = String(email).toLowerCase();
+    const portalCandidate = getMockPortalCandidateByEmail(normalizedEmail);
+    if (portalCandidate) {
+      const valid = await verifyMockPortalPassword(portalCandidate, String(password));
+      if (!valid) {
+        return Response.json({ message: 'Correo o contraseña incorrectos' }, { status: 401 });
+      }
+      const authUser = {
+        id: portalCandidate.userId,
+        email: portalCandidate.email ?? normalizedEmail,
+        firstName: portalCandidate.firstName,
+        lastName: portalCandidate.lastName,
+        role: 'CANDIDATE' as const,
+        tenantId: portalCandidate.tenantId,
+        companyId: null,
+        candidateId: portalCandidate.id,
+      };
+      return Response.json({
+        user: authUser,
+        accessToken: signToken(authUser),
+        refreshToken: randomBytes(32).toString('hex'),
+      });
+    }
+
+    if (normalizedEmail !== MOCK_USER.email || password !== DEMO_PASSWORD) {
+      return Response.json(
+        {
+          message:
+            'Correo o contraseña incorrectos. En modo demo solo funciona consultor@kova.co. Si eres candidato, regístrate en /registro.',
+        },
+        { status: 401 },
+      );
     }
     const authUser = {
       id: MOCK_USER.id,

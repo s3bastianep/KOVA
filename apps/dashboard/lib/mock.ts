@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import bcrypt from 'bcryptjs';
 import { computeProcessPipelineMetrics } from './process-metrics';
 import { mapCandidateProcessHistory } from './candidate-process-history';
 import type { CommercialProfile } from './candidate-commercial-profile';
@@ -988,8 +989,10 @@ export function getMockVacanciesForList() {
 }
 
 export function isMockMode() {
-  if (process.env.USE_MOCK === 'true') return true;
   const url = process.env.DATABASE_URL?.trim();
+  // En Railway/producción con Postgres, siempre usar la base de datos real.
+  if (process.env.NODE_ENV === 'production' && url) return false;
+  if (process.env.USE_MOCK === 'true') return true;
   return !url;
 }
 
@@ -1002,6 +1005,7 @@ type MockPortalCandidate = {
   email: string | null;
   phone: string | null;
   city: string | null;
+  passwordHash?: string | null;
   metadata: {
     profileStatus: 'account_only' | 'in_progress' | 'complete';
     onboardingStep: 'welcome' | 'cv_upload' | 'cv_analyzing' | 'cv_summary' | 'cv_review' | 'bridge' | 'questions' | 'done';
@@ -1037,6 +1041,7 @@ export function upsertMockPortalCandidate(input: {
   email: string;
   telefono?: string;
   ciudad?: string;
+  password?: string;
   commercialProfile: CommercialProfile;
 }) {
   const existing = mockPortalCandidates.get(input.userId);
@@ -1049,6 +1054,9 @@ export function upsertMockPortalCandidate(input: {
     email: input.email,
     phone: input.telefono ?? null,
     city: input.ciudad ?? null,
+    passwordHash: input.password
+      ? bcrypt.hashSync(input.password, 12)
+      : (existing?.passwordHash ?? null),
     metadata: {
       profileStatus: existing?.metadata.profileStatus ?? 'account_only',
       onboardingStep: existing?.metadata.onboardingStep ?? 'welcome',
@@ -1058,6 +1066,17 @@ export function upsertMockPortalCandidate(input: {
   mockPortalCandidates.set(input.userId, candidate);
   saveMockPortalStore(mockPortalCandidates);
   return candidate;
+}
+
+export async function verifyMockPortalPassword(candidate: MockPortalCandidate, password: string) {
+  if (candidate.passwordHash) {
+    return bcrypt.compare(password, candidate.passwordHash);
+  }
+  if (password.length < 8) return false;
+  candidate.passwordHash = await bcrypt.hash(password, 12);
+  mockPortalCandidates.set(candidate.userId, candidate);
+  saveMockPortalStore(mockPortalCandidates);
+  return true;
 }
 
 export function getMockPortalCandidate(userId: string) {

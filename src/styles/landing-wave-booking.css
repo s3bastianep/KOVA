@@ -210,6 +210,15 @@
   border-radius: 0.5rem;
 }
 
+.kova-landing-wave .kv-booking-form-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
 .kova-landing-wave .kv-booking-card--dark .kv-booking-back {
   display: inline-flex;
   align-items: center;
@@ -217,8 +226,9 @@
   font-size: 0.8125rem;
   font-weight: 500;
   color: var(--kv-lime);
-  margin-bottom: 1rem;
+  margin-bottom: 0;
   transition: opacity 0.2s ease;
+  flex-shrink: 0;
 }
 
 .kova-landing-wave .kv-booking-back:hover {
@@ -242,7 +252,9 @@
   border: 1px solid rgba(216, 242, 76, 0.35);
   border-radius: 100px;
   color: #fff;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0;
+  margin-left: auto;
+  max-width: 100%;
 }
 
 .kova-landing-wave .kv-booking-card--dark .kv-booking-selected-slot span {

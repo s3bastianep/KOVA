@@ -64,8 +64,8 @@ export const CN_SERVICES_INTRO =
 
 export const CN_SERVICES_STATS = [
   { value: '2 a 3 sem', label: 'terna validada por vacante' },
-  { value: '24 h', label: 'informe por candidato' },
-  { value: '100%', label: 'evaluados con el mismo criterio' },
+  { value: 'Onboarding', label: 'mejorado para arrancar más rápido' },
+  { value: 'Evaluación', label: 'especializada según cargo e industria' },
 ];
 
 export const CN_SERVICES = [
@@ -112,7 +112,7 @@ export const CN_SERVICES = [
       'Informe ejecutivo por competencia',
       'Evidencia documentada para cada decisión',
     ],
-    highlight: 'Reporte por candidato en 24 horas.',
+    highlight: 'Kova Score y ranking para decidir con datos.',
     image: '/images/guia-evaluacion-comercial.png',
     imageAlt: 'Profesional comercial en proceso de evaluación',
     tone: 'ink',
