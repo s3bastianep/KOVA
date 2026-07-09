@@ -17,6 +17,7 @@ type Props = {
   wide?: boolean;
   preview?: ReactNode;
   hidePreview?: boolean;
+  hideHeaderProgress?: boolean;
 };
 
 export function PortalOnboardingShell({
@@ -31,6 +32,7 @@ export function PortalOnboardingShell({
   wide,
   preview,
   hidePreview,
+  hideHeaderProgress,
 }: Props) {
   return (
     <div className={`portal-onboarding portal-onboarding--fullscreen portal-onboarding--v2${wide ? ' portal-onboarding--wide' : ''}`}>
@@ -54,7 +56,9 @@ export function PortalOnboardingShell({
             </div>
           </div>
           <PortalOnboardingStepper activeIndex={journeyIndex} />
-          <PortalOnboardingProgressIndicator percent={percent} compact />
+          {!hideHeaderProgress ? (
+            <PortalOnboardingProgressIndicator percent={percent} compact />
+          ) : null}
         </header>
 
         <main className="portal-onboarding-main">
@@ -81,11 +85,13 @@ export function PortalOnboardingFooter({
   onContinue,
   onSaveExit,
   continueLabel = 'Continuar',
-  backLabel = 'Anterior',
+  backLabel = 'Atrás',
   continueDisabled,
   busy,
   hint,
   primaryOnly,
+  saveStatus,
+  layout = 'default',
 }: {
   onBack?: () => void;
   onContinue: () => void;
@@ -96,7 +102,39 @@ export function PortalOnboardingFooter({
   busy?: boolean;
   hint?: string;
   primaryOnly?: boolean;
+  saveStatus?: 'idle' | 'saving' | 'saved' | 'error';
+  layout?: 'default' | 'bar';
 }) {
+  if (layout === 'bar') {
+    return (
+      <footer className="portal-onboarding-footer portal-onboarding-footer--bar">
+        {onBack ? (
+          <button type="button" className="portal-onboarding-btn portal-onboarding-btn--back" onClick={onBack}>
+            <ArrowRight className="h-4 w-4 rotate-180" aria-hidden />
+            {backLabel}
+          </button>
+        ) : (
+          <span />
+        )}
+        <p className="portal-onboarding-footer__save" aria-live="polite">
+          {saveStatus === 'saving' ? 'Guardando…' : null}
+          {saveStatus === 'saved' ? '✓ Guardado automáticamente' : null}
+          {saveStatus === 'error' ? 'Error al guardar' : null}
+          {!saveStatus || saveStatus === 'idle' ? 'Progreso guardado' : null}
+        </p>
+        <button
+          type="button"
+          className="portal-onboarding-btn portal-onboarding-btn--primary portal-onboarding-btn--continue"
+          disabled={continueDisabled || busy}
+          onClick={onContinue}
+        >
+          {busy ? 'Guardando...' : continueLabel}
+          {!busy ? <ArrowRight className="h-4 w-4" aria-hidden /> : null}
+        </button>
+      </footer>
+    );
+  }
+
   return (
     <footer className={`portal-onboarding-footer${primaryOnly ? ' portal-onboarding-footer--primary-only' : ''}`}>
       {hint ? <p className="portal-onboarding-footer__hint">{hint}</p> : null}

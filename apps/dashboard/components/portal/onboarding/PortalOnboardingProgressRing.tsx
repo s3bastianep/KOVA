@@ -1,7 +1,5 @@
 'use client';
 
-import { journeyEncouragement } from '@/lib/portal-onboarding-unified';
-
 type Props = {
   percent: number;
   size?: number;
@@ -42,7 +40,6 @@ export function PortalOnboardingProgressRing({ percent, size = 88 }: Props) {
       <div className="ob-ring__label">
         <strong>{percent}%</strong>
         <span>Completado</span>
-        {journeyEncouragement(percent) ? <em>{journeyEncouragement(percent)}</em> : null}
       </div>
     </div>
   );

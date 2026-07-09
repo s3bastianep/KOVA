@@ -146,6 +146,7 @@ export function PortalOnboardingFlow({
   const [busy, setBusy] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [overlayTransition, setOverlayTransition] = useState<StepTransition | null>(null);
+  const [cvImportedAt, setCvImportedAt] = useState<string | null>(() => new Date().toISOString());
   const [vacancyStatsKey, setVacancyStatsKey] = useState(() =>
     STEPS_WITH_VACANCY_STATS.has(normalizedInitial) ? 1 : 0,
   );
@@ -320,6 +321,7 @@ export function PortalOnboardingFlow({
       setProfile(nextProfile);
       setPrefAnswers(answersFromProfile(nextProfile));
       setCounts(nextCounts);
+      setCvImportedAt(new Date().toISOString());
       await saveStep('cv_summary', nextProfile);
       const dataCount =
         nextCounts.experiencias +
@@ -656,13 +658,15 @@ export function PortalOnboardingFlow({
         onSaveExit={() => void handleSaveExit()}
         wide
         hidePreview
+        hideHeaderProgress
         footer={
           <PortalOnboardingFooter
+            layout="bar"
+            onBack={() => void saveStep('cv_upload')}
             onContinue={() => void saveStep('review_hub')}
-            onSaveExit={() => void handleSaveExit()}
-            continueLabel="Continuar revisión"
+            continueLabel="Continuar"
             busy={busy}
-            primaryOnly
+            saveStatus={saveStatus}
           />
         }
       >
@@ -670,13 +674,16 @@ export function PortalOnboardingFlow({
           firstName={firstName}
           profile={profile}
           counts={displayCounts}
+          percent={percent}
+          journeyIndex={journeyIndex}
           vacancyStats={vacancyStats}
           vacancyStatsLoading={vacancyStatsLoading}
+          cvImportedAt={cvImportedAt}
           onEditContact={() => {
             setReviewEditSection('personal');
             void saveStep('cv_review');
           }}
-          onEditProfile={() => void saveStep('review_hub')}
+          onReviewExperience={() => void saveStep('review_hub')}
         />
       </PortalOnboardingShell>,
     );

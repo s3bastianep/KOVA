@@ -12,7 +12,7 @@ export const ONBOARDING_JOURNEY_STEPS = [
   { id: 'experiencia', label: 'Tu experiencia' },
   { id: 'comercial', label: 'Perfil comercial' },
   { id: 'habilidades', label: 'Habilidades' },
-  { id: 'listo', label: 'Perfil activo' },
+  { id: 'listo', label: '¡Perfil listo!' },
 ] as const;
 
 export type OnboardingJourneyId = (typeof ONBOARDING_JOURNEY_STEPS)[number]['id'];

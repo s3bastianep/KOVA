@@ -1,6 +1,6 @@
 'use client';
 
-import { ONBOARDING_JOURNEY_STEPS, type OnboardingJourneyId } from '@/lib/portal-onboarding-unified';
+import { ONBOARDING_JOURNEY_STEPS } from '@/lib/portal-onboarding-unified';
 
 type Props = {
   activeIndex: number;
@@ -18,17 +18,14 @@ export function PortalOnboardingStepper({ activeIndex }: Props) {
               key={step.id}
               className={`ob-stepper__item${isActive ? ' is-active' : ''}${isDone ? ' is-done' : ''}`}
             >
-              <span className="ob-stepper__dot" aria-hidden />
+              <span className="ob-stepper__marker" aria-hidden>
+                {isDone ? '✓' : index + 1}
+              </span>
               <span className="ob-stepper__label">{step.label}</span>
-              {isActive ? <span className="ob-stepper__status">En progreso</span> : null}
             </li>
           );
         })}
       </ol>
     </nav>
   );
-}
-
-export function journeyIdForIndex(index: number): OnboardingJourneyId {
-  return ONBOARDING_JOURNEY_STEPS[index]?.id ?? 'info';
 }
