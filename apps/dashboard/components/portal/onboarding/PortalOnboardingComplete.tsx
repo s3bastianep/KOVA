@@ -1,35 +1,26 @@
 'use client';
 
-import { ArrowRight, Building2, CheckCircle2, Loader2, Target } from 'lucide-react';
-import {
-  estimatedCompatibility,
-  estimatedVacancies,
-  profileLevel,
-} from '@/lib/portal-onboarding-unified';
-import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
+import { ArrowRight, CheckCircle2, Loader2, Target } from 'lucide-react';
+import type { PortalVacancyMatchStats } from '@/lib/portal-vacancies';
 import { PortalOnboardingChrome } from './PortalOnboardingChrome';
 import { PortalOnboardingStepHero } from './PortalOnboardingStepHero';
+import { PortalOnboardingVacancyMetrics } from './PortalOnboardingVacancyMetrics';
 
 type Props = {
-  profile: CommercialProfile;
   percent: number;
-  prefAnswers: Record<string, string[]>;
+  vacancyStats: PortalVacancyMatchStats | null;
+  vacancyStatsLoading?: boolean;
   busy?: boolean;
   onEnter: () => void;
 };
 
 export function PortalOnboardingComplete({
-  profile,
   percent,
-  prefAnswers,
+  vacancyStats,
+  vacancyStatsLoading,
   busy,
   onEnter,
 }: Props) {
-  const level = profileLevel(profile, percent, prefAnswers);
-  const compatibility = estimatedCompatibility(profile, percent, prefAnswers);
-  const vacancies = estimatedVacancies(profile, percent, prefAnswers);
-  const companies = Math.max(6, Math.round(vacancies * 0.55));
-
   return (
     <PortalOnboardingChrome journeyIndex={4} minutesLeft={0} percent={percent}>
       <div className="ob-complete">
@@ -44,35 +35,21 @@ export function PortalOnboardingComplete({
           <span>Listo para matching</span>
         </div>
 
-        <div className="ob-stat-grid ob-complete__grid">
-          <div className="ob-stat-chip ob-stat-chip--purple">
-            <span className="ob-stat-chip__icon">
+        <div className="ob-complete__stats">
+          <div className="ob-complete__stat">
+            <span className="ob-complete__stat-icon" aria-hidden>
               <Target className="h-4 w-4" />
             </span>
-            <strong>{level}%</strong>
-            <span>Nivel del perfil</span>
+            <div>
+              <strong>{percent}%</strong>
+              <span>Perfil completado</span>
+            </div>
           </div>
-          <div className="ob-stat-chip ob-stat-chip--green">
-            <span className="ob-stat-chip__icon">
-              <Target className="h-4 w-4" />
-            </span>
-            <strong>{compatibility}%</strong>
-            <span>Compatibilidad</span>
-          </div>
-          <div className="ob-stat-chip ob-stat-chip--yellow">
-            <span className="ob-stat-chip__icon">
-              <Target className="h-4 w-4" />
-            </span>
-            <strong>{vacancies}</strong>
-            <span>Vacantes alineadas</span>
-          </div>
-          <div className="ob-stat-chip ob-stat-chip--teal">
-            <span className="ob-stat-chip__icon">
-              <Building2 className="h-4 w-4" />
-            </span>
-            <strong>{companies}</strong>
-            <span>Empresas activas</span>
-          </div>
+          <PortalOnboardingVacancyMetrics
+            stats={vacancyStats}
+            loading={vacancyStatsLoading}
+            className="ob-complete__vacancy-metrics"
+          />
         </div>
 
         <button

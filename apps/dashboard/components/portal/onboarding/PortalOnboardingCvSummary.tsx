@@ -3,20 +3,17 @@
 import { ChevronRight, Pencil } from 'lucide-react';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
 import type { OnboardingCounts } from '@/lib/portal-onboarding';
-import {
-  estimatedCompatibility,
-  estimatedVacancies,
-  formatPersonName,
-  profileHeadlineRole,
-} from '@/lib/portal-onboarding-unified';
+import { formatPersonName, profileHeadlineRole } from '@/lib/portal-onboarding-unified';
+import type { PortalVacancyMatchStats } from '@/lib/portal-vacancies';
 import { PortalOnboardingStepHero } from './PortalOnboardingStepHero';
+import { PortalOnboardingVacancyMetrics } from './PortalOnboardingVacancyMetrics';
 
 type Props = {
   firstName: string;
   profile: CommercialProfile;
   counts: OnboardingCounts;
-  percent: number;
-  prefAnswers: Record<string, string[]>;
+  vacancyStats: PortalVacancyMatchStats | null;
+  vacancyStatsLoading?: boolean;
   onEditContact?: () => void;
   onEditProfile?: () => void;
 };
@@ -32,15 +29,13 @@ export function PortalOnboardingCvSummary({
   firstName,
   profile,
   counts,
-  percent,
-  prefAnswers,
+  vacancyStats,
+  vacancyStatsLoading,
   onEditContact,
   onEditProfile,
 }: Props) {
   const displayName = formatPersonName(profile.nombre?.trim() || firstName);
   const role = profileHeadlineRole(profile);
-  const compatibility = estimatedCompatibility(profile, percent, prefAnswers);
-  const vacancies = estimatedVacancies(profile, percent, prefAnswers);
   const onEdit = onEditProfile ?? onEditContact;
 
   const contactRows = [
@@ -50,8 +45,8 @@ export function PortalOnboardingCvSummary({
   ].filter((row) => row.value);
 
   const inventory = [
-    { label: 'Experiencia', count: counts.experiencias },
-    { label: 'Formación', count: counts.estudios },
+    { label: 'Experiencia laboral', count: counts.experiencias },
+    { label: 'Formación académica', count: counts.estudios },
     { label: 'Idiomas', count: counts.idiomas },
     { label: 'Certificaciones', count: counts.certificaciones },
   ].filter((item) => item.count > 0);
@@ -86,22 +81,11 @@ export function PortalOnboardingCvSummary({
             ) : null}
           </div>
 
-          <div className="ob-cv-canvas__metrics">
-            <div>
-              <strong>{compatibility}%</strong>
-              <span>Compatibilidad</span>
-            </div>
-            <div>
-              <strong>{vacancies}</strong>
-              <span>Vacantes alineadas</span>
-            </div>
-            {inventory.map((item) => (
-              <div key={item.label}>
-                <strong>{item.count}</strong>
-                <span>{item.label}</span>
-              </div>
-            ))}
-          </div>
+          <PortalOnboardingVacancyMetrics
+            stats={vacancyStats}
+            loading={vacancyStatsLoading}
+            className="ob-cv-canvas__metrics"
+          />
 
           {contactRows.length > 0 ? (
             <dl className="ob-cv-canvas__fields">
@@ -112,6 +96,17 @@ export function PortalOnboardingCvSummary({
                 </div>
               ))}
             </dl>
+          ) : null}
+
+          {inventory.length > 0 ? (
+            <ul className="ob-cv-canvas__inventory">
+              {inventory.map((item) => (
+                <li key={item.label}>
+                  <span className="ob-cv-canvas__inventory-count">{item.count}</span>
+                  <span>{item.label}</span>
+                </li>
+              ))}
+            </ul>
           ) : null}
 
           {onEdit ? (

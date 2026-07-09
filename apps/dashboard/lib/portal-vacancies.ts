@@ -66,3 +66,46 @@ export const PORTAL_OPEN_VACANCY_STATUSES = [
 ] as const;
 
 export const PORTAL_RECOMMENDED_MIN_MATCH = 50;
+
+export type PortalVacancyMatchStats = {
+  totalOpen: number;
+  recommendedCount: number;
+  averageCompatibility: number;
+  bestCompatibility: number;
+};
+
+export function countRecommendedVacantes(
+  vacantes: { compatibility: number; alreadyApplied: boolean }[],
+  minMatch = PORTAL_RECOMMENDED_MIN_MATCH,
+): number {
+  return vacantes.filter((v) => !v.alreadyApplied && v.compatibility >= minMatch).length;
+}
+
+/** Agrega métricas reales a partir de la lista de vacantes del portal (mismo origen que /portal/vacantes). */
+export function aggregateVacancyMatchStats(
+  vacantes: { compatibility: number; alreadyApplied: boolean }[],
+): PortalVacancyMatchStats | null {
+  if (!vacantes.length) return null;
+
+  const open = vacantes.filter((v) => !v.alreadyApplied);
+  if (!open.length) {
+    return {
+      totalOpen: 0,
+      recommendedCount: 0,
+      averageCompatibility: 0,
+      bestCompatibility: 0,
+    };
+  }
+
+  const averageCompatibility = Math.round(
+    open.reduce((sum, v) => sum + v.compatibility, 0) / open.length,
+  );
+  const bestCompatibility = Math.max(...open.map((v) => v.compatibility));
+
+  return {
+    totalOpen: open.length,
+    recommendedCount: countRecommendedVacantes(vacantes),
+    averageCompatibility,
+    bestCompatibility,
+  };
+}

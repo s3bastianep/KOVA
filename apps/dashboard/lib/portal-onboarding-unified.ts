@@ -237,41 +237,6 @@ export function milestoneStatus(
   return 'locked';
 }
 
-export function estimatedCompatibility(
-  profile: CommercialProfile,
-  percent: number,
-  prefAnswers: Record<string, string[]>,
-): number {
-  const base = Math.min(45, Math.round(percent * 0.55));
-  let bonus = 0;
-  if ((profile.historialLaboral?.length ?? 0) > 0) bonus += 12;
-  if ((profile.herramientas?.length ?? 0) > 0) bonus += 6;
-  if (profile.rol?.trim()) bonus += 8;
-  if (profile.enfoque?.trim()) bonus += 5;
-  if (isPreferenciasComplete(prefAnswers, profile)) bonus += 14;
-  if ((profile.logros ?? []).some((l) => l.titulo?.trim())) bonus += 6;
-  return Math.min(96, base + bonus);
-}
-
-export function estimatedVacancies(
-  profile: CommercialProfile,
-  percent: number,
-  prefAnswers: Record<string, string[]>,
-): number {
-  const compat = estimatedCompatibility(profile, percent, prefAnswers);
-  const base = Math.max(4, Math.round((compat / 100) * 28));
-  const industryBonus = (prefAnswers['industrias']?.length ?? 0) * 2;
-  const roleBonus = (prefAnswers['areas-interes']?.length ?? profile.rol ? 1 : 0) * 3;
-  return Math.min(42, base + industryBonus + roleBonus);
-}
-
-export function profileLevel(
-  profile: CommercialProfile,
-  percent: number,
-  prefAnswers: Record<string, string[]>,
-): number {
-  return Math.min(98, Math.round((percent * 0.4 + estimatedCompatibility(profile, percent, prefAnswers) * 0.6)));
-}
 
 export function profileHeadlineRole(profile: CommercialProfile): string {
   const latest = profile.historialLaboral?.[0];
@@ -319,7 +284,6 @@ export function profilePreviewTags(
 export type StepTransition = {
   headline: string;
   detail?: string;
-  deltaVacancies?: number;
 };
 
 export function transitionAfterStep(
@@ -332,25 +296,21 @@ export function transitionAfterStep(
       return {
         headline: 'Experiencia agregada',
         detail: dataCount ? `+${dataCount} datos encontrados` : 'Tu trayectoria ya está organizada',
-        deltaVacancies: 5,
       };
     case 'review_hub':
       return {
         headline: 'Trayectoria confirmada',
         detail: 'Continuemos con tu perfil comercial.',
-        deltaVacancies: 3,
       };
     case 'preferencias':
       return {
         headline: 'Preferencias registradas',
         detail: 'Esto optimiza la compatibilidad con vacantes.',
-        deltaVacancies: 8,
       };
     case 'evidence':
       return {
         headline: 'Logros documentados',
         detail: 'Tu perfil gana credibilidad ante empresas.',
-        deltaVacancies: 4,
       };
   }
   return null;

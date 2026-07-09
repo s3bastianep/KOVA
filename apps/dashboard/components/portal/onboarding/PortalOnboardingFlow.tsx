@@ -73,7 +73,18 @@ import { PortalOnboardingTransition } from './PortalOnboardingTransition';
 import { PortalOnboardingComplete } from './PortalOnboardingComplete';
 import { PortalOnboardingCvSummary } from './PortalOnboardingCvSummary';
 import { PortalOnboardingStepHero } from './PortalOnboardingStepHero';
+import { usePortalVacancyMatchStats } from './usePortalVacancyMatchStats';
 import './portal-onboarding.css';
+
+const STEPS_WITH_VACANCY_STATS = new Set<OnboardingStep>([
+  'cv_summary',
+  'review_hub',
+  'cv_review',
+  'preferencias',
+  'evidence',
+  'competencies',
+  'complete',
+]);
 
 type Props = {
   initialProfile: CommercialProfile;
@@ -135,6 +146,9 @@ export function PortalOnboardingFlow({
   const [busy, setBusy] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [overlayTransition, setOverlayTransition] = useState<StepTransition | null>(null);
+  const [vacancyStatsKey, setVacancyStatsKey] = useState(() =>
+    STEPS_WITH_VACANCY_STATS.has(normalizedInitial) ? 1 : 0,
+  );
   const inputRef = useRef<HTMLInputElement>(null);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -162,13 +176,17 @@ export function PortalOnboardingFlow({
   const motivation = motivationalMessage(percent);
   const mergedProfile = buildMergedProfile();
   const journeyIndex = onboardingJourneyIndex(step);
+  const vacancyStatsEnabled = STEPS_WITH_VACANCY_STATS.has(step) && vacancyStatsKey > 0;
+  const { stats: vacancyStats, loading: vacancyStatsLoading } = usePortalVacancyMatchStats(
+    vacancyStatsEnabled ? vacancyStatsKey : null,
+  );
 
   const previewPanel =
     step !== 'welcome' && step !== 'complete' ? (
       <PortalOnboardingProfilePreview
         profile={mergedProfile}
-        percent={percent}
-        prefAnswers={prefAnswers}
+        vacancyStats={vacancyStats}
+        vacancyStatsLoading={vacancyStatsLoading}
         firstName={firstName}
       />
     ) : null;
@@ -245,6 +263,9 @@ export function PortalOnboardingFlow({
       setSaveStatus('saving');
       try {
         await persist({ nextStep: next, profilePatch, subStep });
+        if (STEPS_WITH_VACANCY_STATS.has(next) || profilePatch) {
+          setVacancyStatsKey((key) => key + 1);
+        }
         setSaveStatus('saved');
       } catch (err) {
         setSaveStatus('error');
@@ -649,8 +670,8 @@ export function PortalOnboardingFlow({
           firstName={firstName}
           profile={profile}
           counts={displayCounts}
-          percent={percent}
-          prefAnswers={prefAnswers}
+          vacancyStats={vacancyStats}
+          vacancyStatsLoading={vacancyStatsLoading}
           onEditContact={() => {
             setReviewEditSection('personal');
             void saveStep('cv_review');
@@ -870,9 +891,9 @@ export function PortalOnboardingFlow({
   if (step === 'complete') {
     return renderWithOverlay(
       <PortalOnboardingComplete
-        profile={mergedProfile}
         percent={percent}
-        prefAnswers={prefAnswers}
+        vacancyStats={vacancyStats}
+        vacancyStatsLoading={vacancyStatsLoading}
         busy={busy}
         onEnter={() => void finishOnboarding()}
       />,

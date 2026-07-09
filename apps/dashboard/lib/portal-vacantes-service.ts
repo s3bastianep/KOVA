@@ -9,8 +9,8 @@ import {
 } from './portal-server-cache';
 import {
   computeCandidateVacancyCompatibility,
+  countRecommendedVacantes,
   PORTAL_OPEN_VACANCY_STATUSES,
-  PORTAL_RECOMMENDED_MIN_MATCH,
 } from './portal-vacancies';
 
 export type PortalVacancyListItem = {
@@ -112,9 +112,4 @@ export function filterVacantesByMinMatch(
   return vacantes.filter((v) => v.compatibility >= minMatch);
 }
 
-export function countRecommendedVacantes(
-  vacantes: PortalVacancyListItem[],
-  minMatch = PORTAL_RECOMMENDED_MIN_MATCH,
-): number {
-  return vacantes.filter((v) => !v.alreadyApplied && v.compatibility >= minMatch).length;
-}
+export { countRecommendedVacantes };

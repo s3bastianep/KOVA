@@ -24,12 +24,6 @@ export function PortalOnboardingTransition({ transition, onDone, durationMs = 20
         </span>
         <h2>{transition.headline}</h2>
         {transition.detail ? <p>{transition.detail}</p> : null}
-        {transition.deltaVacancies ? (
-          <p className="portal-onboarding-transition__delta">
-            Encontramos <strong>{transition.deltaVacancies}</strong> vacantes compatibles.{' '}
-            <span>(+{transition.deltaVacancies})</span>
-          </p>
-        ) : null}
       </div>
     </div>
   );

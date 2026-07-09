@@ -1,17 +1,14 @@
 'use client';
 
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
-import {
-  estimatedCompatibility,
-  estimatedVacancies,
-  formatPersonName,
-  profileHeadlineRole,
-} from '@/lib/portal-onboarding-unified';
+import { formatPersonName, profileHeadlineRole } from '@/lib/portal-onboarding-unified';
+import type { PortalVacancyMatchStats } from '@/lib/portal-vacancies';
+import { PortalOnboardingVacancyMetrics } from './PortalOnboardingVacancyMetrics';
 
 type Props = {
   profile: CommercialProfile;
-  percent: number;
-  prefAnswers: Record<string, string[]>;
+  vacancyStats: PortalVacancyMatchStats | null;
+  vacancyStatsLoading?: boolean;
   firstName?: string;
 };
 
@@ -22,11 +19,14 @@ function initials(name?: string | null): string {
   return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
 }
 
-export function PortalOnboardingProfilePreview({ profile, percent, prefAnswers, firstName }: Props) {
+export function PortalOnboardingProfilePreview({
+  profile,
+  vacancyStats,
+  vacancyStatsLoading,
+  firstName,
+}: Props) {
   const displayName = formatPersonName(profile.nombre?.trim() || firstName || 'Tu perfil');
   const role = profileHeadlineRole(profile);
-  const compatibility = estimatedCompatibility(profile, percent, prefAnswers);
-  const vacancies = estimatedVacancies(profile, percent, prefAnswers);
 
   return (
     <div className="portal-onboarding-preview-strip" aria-label="Vista previa de tu perfil">
@@ -39,17 +39,11 @@ export function PortalOnboardingProfilePreview({ profile, percent, prefAnswers, 
           <span className="portal-onboarding-preview-strip__role">{role}</span>
         </div>
       </div>
-      <div className="portal-onboarding-preview-strip__stats">
-        <div className="portal-onboarding-preview-strip__stat">
-          <strong>{compatibility}%</strong>
-          <span>Compatibilidad</span>
-        </div>
-        <div className="portal-onboarding-preview-strip__divider" aria-hidden />
-        <div className="portal-onboarding-preview-strip__stat">
-          <strong>{vacancies}</strong>
-          <span>Vacantes</span>
-        </div>
-      </div>
+      <PortalOnboardingVacancyMetrics
+        stats={vacancyStats}
+        loading={vacancyStatsLoading}
+        className="portal-onboarding-preview-strip__metrics"
+      />
     </div>
   );
 }
