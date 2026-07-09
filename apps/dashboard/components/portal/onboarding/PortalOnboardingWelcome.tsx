@@ -5,6 +5,8 @@ import {
   PROFILE_BUILD_MILESTONES,
   type ProfileMilestoneId,
 } from '@/lib/portal-onboarding-unified';
+import { PortalOnboardingChrome } from './PortalOnboardingChrome';
+import { PortalOnboardingProgressRing } from './PortalOnboardingProgressRing';
 
 const MILESTONE_ICONS: Record<ProfileMilestoneId, typeof Briefcase> = {
   experiencia: Briefcase,
@@ -16,45 +18,47 @@ const MILESTONE_ICONS: Record<ProfileMilestoneId, typeof Briefcase> = {
 
 type Props = {
   firstName: string;
+  minutesLeft: number;
   onStart: () => void;
+  onSaveExit?: () => void;
 };
 
-export function PortalOnboardingWelcome({ firstName, onStart }: Props) {
+export function PortalOnboardingWelcome({ firstName, minutesLeft, onStart, onSaveExit }: Props) {
   return (
-    <div className="portal-onboarding portal-onboarding--immersive">
-      <div className="portal-onboarding-welcome">
-        <div className="portal-onboarding-welcome__content">
-          <p className="portal-onboarding-welcome__greeting">
+    <PortalOnboardingChrome journeyIndex={0} minutesLeft={minutesLeft} onSaveExit={onSaveExit}>
+      <div className="ob-welcome">
+        <div className="ob-welcome__hero">
+          <p className="ob-welcome__greeting">
             Hola {firstName} <span aria-hidden>👋</span>
           </p>
-          <h1 className="portal-onboarding-welcome__title">Hoy construiremos tu perfil profesional.</h1>
-          <p className="portal-onboarding-welcome__subtitle">Nos tomará menos de 5 minutos.</p>
-
-          <div className="portal-onboarding-welcome__progress">
-            <div className="portal-onboarding-progress portal-onboarding-progress--welcome" aria-hidden>
-              <span style={{ width: '0%' }} />
+          <div className="ob-welcome__headline">
+            <div>
+              <h1>Hoy construiremos tu perfil profesional.</h1>
+              <p>Nos tomará menos de 5 minutos.</p>
             </div>
-            <span className="portal-onboarding-welcome__percent">0%</span>
+            <PortalOnboardingProgressRing percent={0} />
           </div>
-
-          <p className="portal-onboarding-welcome__benefit">
+          <p className="ob-welcome__benefit">
             Mientras mejor sea tu perfil, mejores oportunidades podremos mostrarte.
           </p>
-
-          <button type="button" className="portal-onboarding-btn portal-onboarding-btn--primary portal-onboarding-welcome__cta" onClick={onStart}>
+          <button
+            type="button"
+            className="portal-onboarding-btn portal-onboarding-btn--primary ob-welcome__cta"
+            onClick={onStart}
+          >
             Comenzar
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
 
-        <ul className="portal-onboarding-welcome__milestones" aria-label="Lo que construiremos">
+        <ul className="ob-welcome__milestones" aria-label="Lo que construiremos">
           {PROFILE_BUILD_MILESTONES.map((item) => {
             const Icon = MILESTONE_ICONS[item.id];
             return (
-              <li key={item.id} className="portal-onboarding-welcome__milestone">
-                <span className="portal-onboarding-welcome__milestone-icon" aria-hidden>
+              <li key={item.id} className="ob-welcome__milestone">
+                <span className="ob-welcome__milestone-icon" aria-hidden>
                   <Circle className="h-4 w-4" />
-                  <Icon className="h-3.5 w-3.5 portal-onboarding-welcome__milestone-glyph" />
+                  <Icon className="h-3.5 w-3.5 ob-welcome__milestone-glyph" />
                 </span>
                 <span>{item.label}</span>
               </li>
@@ -62,6 +66,6 @@ export function PortalOnboardingWelcome({ firstName, onStart }: Props) {
           })}
         </ul>
       </div>
-    </div>
+    </PortalOnboardingChrome>
   );
 }

@@ -3359,3 +3359,274 @@ html.portal-onboarding-immersive .kova-shell-bg {
   justify-content: center;
   gap: 0.5rem;
 }
+
+/* Step hero (shared) */
+
+.ob-step-hero {
+  margin-bottom: 1.25rem;
+}
+
+.ob-step-hero__greeting {
+  margin: 0 0 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.ob-step-hero__eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--kova-lime);
+}
+
+.ob-step-hero__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ob-step-hero__text h1 {
+  margin: 0 0 0.375rem;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #ffffff;
+}
+
+.ob-step-hero__text p {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 28rem;
+}
+
+.ob-question-panel {
+  margin-bottom: 0;
+}
+
+.ob-panel__icon--yellow {
+  background: rgba(234, 179, 8, 0.15);
+  color: #facc15;
+}
+
+.ob-panel__icon--teal {
+  background: rgba(20, 184, 166, 0.15);
+  color: #2dd4bf;
+}
+
+.ob-panel__icon--green {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+/* Review hub v2 */
+
+.ob-review-hub__progress-label {
+  margin: 0 0 0.875rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.ob-review-hub__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.ob-review-card.is-reviewed {
+  border-color: rgba(198, 255, 0, 0.15);
+  background: rgba(198, 255, 0, 0.03);
+}
+
+.ob-review-card__badge {
+  display: inline-block;
+  margin-top: 0.125rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.ob-review-card__badge--optional {
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.ob-review-card__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.ob-review-card__status.is-done {
+  color: var(--kova-lime);
+}
+
+.ob-review-card__status.is-pending {
+  color: #facc15;
+}
+
+.ob-review-card__summary {
+  margin: 0 0 0.875rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.ob-review-card__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.ob-review-card__confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: none;
+  background: transparent;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--kova-lime);
+  cursor: pointer;
+  padding: 0;
+}
+
+.ob-review-card__confirm:hover {
+  color: #d4ff4d;
+}
+
+/* Upload panel */
+
+.ob-upload-panel {
+  margin-top: 0;
+  padding: 1.5rem 1rem;
+  text-align: center;
+}
+
+/* Evidence steps */
+
+.ob-evidence__steps {
+  margin-bottom: 0.875rem;
+}
+
+/* Welcome v2 */
+
+.ob-welcome {
+  padding-top: 0.5rem;
+}
+
+.ob-welcome__hero {
+  margin-bottom: 1.5rem;
+}
+
+.ob-welcome__greeting {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.ob-welcome__headline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.875rem;
+}
+
+.ob-welcome__headline h1 {
+  margin: 0 0 0.375rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+.ob-welcome__headline p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.ob-welcome__benefit {
+  margin: 0 0 1.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.ob-welcome__cta {
+  width: 100%;
+}
+
+.ob-welcome__milestones {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ob-welcome__milestone {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.625rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.ob-welcome__milestone-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.ob-welcome__milestone-glyph {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* Complete v2 */
+
+.ob-complete {
+  padding-top: 0.25rem;
+}
+
+.ob-complete__hero-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  margin: -0.5rem auto 1rem;
+  border-radius: 9999px;
+  background: rgba(198, 255, 0, 0.1);
+  color: var(--kova-lime);
+}
+
+.ob-complete__grid {
+  margin-bottom: 1.25rem;
+}
+
+.ob-complete__cta {
+  width: 100%;
+}

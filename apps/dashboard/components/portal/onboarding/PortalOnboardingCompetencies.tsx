@@ -7,15 +7,25 @@ import {
   competencyDefsForProfile,
   levelIdFromScore,
 } from '@/lib/portal-onboarding-evidence';
+import { PortalOnboardingStepHero } from './PortalOnboardingStepHero';
 
 type Props = {
+  firstName: string;
+  percent: number;
   profile: CommercialProfile;
   competencyIndex: number;
   ratings: Record<string, CompetencyEntry>;
   onRate: (key: string, entry: CompetencyEntry) => void;
 };
 
-export function PortalOnboardingCompetencies({ profile, competencyIndex, ratings, onRate }: Props) {
+export function PortalOnboardingCompetencies({
+  firstName,
+  percent,
+  profile,
+  competencyIndex,
+  ratings,
+  onRate,
+}: Props) {
   const defs = competencyDefsForProfile(profile);
   const current = defs[competencyIndex];
   const logros = profile.logros ?? [];
@@ -31,19 +41,16 @@ export function PortalOnboardingCompetencies({ profile, competencyIndex, ratings
     : undefined;
 
   return (
-    <div className="portal-onboarding-competencies">
-      <div className="portal-onboarding-question-meta">
-        <span>Tu experiencia comercial</span>
-        <span>
-          {competencyIndex + 1} / {defs.length}
-        </span>
-      </div>
+    <div className="ob-competencies">
+      <PortalOnboardingStepHero
+        firstName={firstName}
+        eyebrow={`Habilidades · ${competencyIndex + 1} de ${defs.length}`}
+        title={`¿Qué tan fuerte es tu ${current.label.toLowerCase()}?`}
+        subtitle="Una pregunta a la vez, sin formularios. Elige lo que mejor te representa hoy."
+        percent={percent}
+      />
 
-      <h2 className="portal-onboarding-question-title">¿Qué tan fuerte es tu {current.label.toLowerCase()}?</h2>
-      <p className="portal-onboarding-question-subtitle">
-        Una pregunta a la vez, sin formularios. Elige lo que mejor te representa hoy.
-      </p>
-
+      <section className="ob-panel ob-question-panel">
       <div className="portal-onboarding-chips portal-onboarding-chips--levels">
         {COMPETENCY_LEVEL_OPTIONS.map((level) => {
           const on = selectedLevel === level.id;
@@ -101,6 +108,7 @@ export function PortalOnboardingCompetencies({ profile, competencyIndex, ratings
           ) : null}
         </div>
       ) : null}
+      </section>
     </div>
   );
 }

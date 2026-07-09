@@ -11,16 +11,49 @@ import {
   isEvidenceDraftComplete,
   type EvidencePhase,
 } from '@/lib/portal-onboarding-evidence';
+import { PortalOnboardingStepHero } from './PortalOnboardingStepHero';
+
+const PHASE_COPY: Record<
+  EvidencePhase,
+  { title: string; subtitle: string }
+> = {
+  titulo: {
+    title: '¿Cuál fue un logro que destacas?',
+    subtitle: 'Elige una opción o escribe la tuya.',
+  },
+  contexto: {
+    title: '¿En qué contexto ocurrió?',
+    subtitle: 'Empresa, equipo o situación. Una frase basta.',
+  },
+  cifra: {
+    title: '¿Con qué cifra o resultado?',
+    subtitle: 'Un número concreto fortalece tu perfil.',
+  },
+  tags: {
+    title: '¿Qué demuestra este logro?',
+    subtitle: 'Selecciona las competencias que refleja.',
+  },
+};
 
 type Props = {
+  firstName: string;
+  percent: number;
   draft: EvidenceCard;
   phase: EvidencePhase;
   onChange: (card: EvidenceCard) => void;
   onPhaseChange: (phase: EvidencePhase) => void;
 };
 
-export function PortalOnboardingEvidence({ draft, phase, onChange, onPhaseChange }: Props) {
+export function PortalOnboardingEvidence({
+  firstName,
+  percent,
+  draft,
+  phase,
+  onChange,
+  onPhaseChange,
+}: Props) {
   const phaseIdx = evidencePhaseIndex(phase);
+  const copy = PHASE_COPY[phase];
 
   const toggleTag = (tag: string) => {
     const has = draft.competencias.includes(tag);
@@ -31,17 +64,24 @@ export function PortalOnboardingEvidence({ draft, phase, onChange, onPhaseChange
   };
 
   return (
-    <div className="portal-onboarding-evidence">
-      <div className="portal-onboarding-evidence__steps" aria-hidden>
+    <div className="ob-evidence">
+      <PortalOnboardingStepHero
+        firstName={firstName}
+        eyebrow={`Perfil comercial · Logro ${phaseIdx + 1} de ${EVIDENCE_PHASES.length}`}
+        title={copy.title}
+        subtitle={copy.subtitle}
+        percent={percent}
+      />
+
+      <div className="portal-onboarding-evidence__steps ob-evidence__steps" aria-hidden>
         {EVIDENCE_PHASES.map((p, i) => (
           <span key={p} className={i <= phaseIdx ? 'is-on' : undefined} />
         ))}
       </div>
 
+      <section className="ob-panel ob-question-panel">
       {phase === 'titulo' ? (
         <>
-          <h2 className="portal-onboarding-question-title">¿Cuál fue un logro que destacas?</h2>
-          <p className="portal-onboarding-question-subtitle">Elige una opción o escribe la tuya.</p>
           <div className="portal-onboarding-chips">
             {ACHIEVEMENT_TITLE_SUGGESTIONS.map((option) => {
               const on = draft.titulo === option;
@@ -72,8 +112,6 @@ export function PortalOnboardingEvidence({ draft, phase, onChange, onPhaseChange
 
       {phase === 'contexto' ? (
         <>
-          <h2 className="portal-onboarding-question-title">¿En qué contexto ocurrió?</h2>
-          <p className="portal-onboarding-question-subtitle">Empresa, equipo o situación. Una frase basta.</p>
           <label className="portal-onboarding-evidence__field">
             <input
               className="portal-onboarding-field"
@@ -87,8 +125,6 @@ export function PortalOnboardingEvidence({ draft, phase, onChange, onPhaseChange
 
       {phase === 'cifra' ? (
         <>
-          <h2 className="portal-onboarding-question-title">¿Con qué cifra o resultado?</h2>
-          <p className="portal-onboarding-question-subtitle">Un número concreto fortalece tu perfil.</p>
           <div className="portal-onboarding-chips">
             {ACHIEVEMENT_CIFRA_SUGGESTIONS.map((option) => {
               const on = draft.cifra === option;
@@ -119,8 +155,6 @@ export function PortalOnboardingEvidence({ draft, phase, onChange, onPhaseChange
 
       {phase === 'tags' ? (
         <>
-          <h2 className="portal-onboarding-question-title">¿Qué demuestra este logro?</h2>
-          <p className="portal-onboarding-question-subtitle">Selecciona las competencias que refleja.</p>
           <div className="portal-onboarding-chips">
             {EVIDENCE_COMPETENCY_TAGS.map((tag) => {
               const on = draft.competencias.includes(tag);
@@ -146,6 +180,7 @@ export function PortalOnboardingEvidence({ draft, phase, onChange, onPhaseChange
           ) : null}
         </>
       ) : null}
+      </section>
     </div>
   );
 }

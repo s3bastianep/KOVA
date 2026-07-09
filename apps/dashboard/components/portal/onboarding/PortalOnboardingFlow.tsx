@@ -72,6 +72,7 @@ import { PortalOnboardingProfilePreview } from './PortalOnboardingProfilePreview
 import { PortalOnboardingTransition } from './PortalOnboardingTransition';
 import { PortalOnboardingComplete } from './PortalOnboardingComplete';
 import { PortalOnboardingCvSummary } from './PortalOnboardingCvSummary';
+import { PortalOnboardingStepHero } from './PortalOnboardingStepHero';
 import './portal-onboarding.css';
 
 type Props = {
@@ -534,7 +535,12 @@ export function PortalOnboardingFlow({
 
   if (step === 'welcome') {
     return renderWithOverlay(
-      <PortalOnboardingWelcome firstName={firstName} onStart={() => void saveStep('cv_upload')} />,
+      <PortalOnboardingWelcome
+        firstName={firstName}
+        minutesLeft={minutesLeft}
+        onStart={() => void saveStep('cv_upload')}
+        onSaveExit={() => void handleSaveExit()}
+      />,
     );
   }
 
@@ -548,13 +554,15 @@ export function PortalOnboardingFlow({
         onSaveExit={() => void handleSaveExit()}
         preview={previewPanel}
       >
-        <header className="portal-onboarding-shell__header portal-onboarding-shell__header--compact">
-          <h1>Empecemos con tu experiencia</h1>
-          <p className="portal-onboarding-lead">Sube tu hoja de vida y extraeremos tu trayectoria automáticamente.</p>
-        </header>
+        <PortalOnboardingStepHero
+          eyebrow="Tu información"
+          title="Empecemos con tu experiencia"
+          subtitle="Sube tu hoja de vida y extraeremos tu trayectoria automáticamente."
+          percent={percent}
+        />
 
         <div
-          className="portal-onboarding-upload-zone portal-onboarding-upload-zone--large"
+          className="ob-panel ob-upload-panel portal-onboarding-upload-zone portal-onboarding-upload-zone--large"
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => {
             e.preventDefault();
@@ -595,9 +603,14 @@ export function PortalOnboardingFlow({
   if (step === 'cv_analyzing') {
     return renderWithOverlay(
       <PortalOnboardingShell percent={percent} minutesLeft={minutesLeft} journeyIndex={journeyIndex} preview={previewPanel}>
+        <PortalOnboardingStepHero
+          eyebrow="Tu información"
+          title="Construyendo tu experiencia..."
+          subtitle="Acabamos de identificar datos en tu hoja de vida"
+          percent={percent}
+        />
+        <section className="ob-panel ob-question-panel">
         <div className="portal-onboarding-analyze">
-          <h2>Construyendo tu experiencia...</h2>
-          <p>Acabamos de identificar datos en tu hoja de vida</p>
           <div className="portal-onboarding-progress mt-4" aria-hidden>
             <span style={{ width: `${analysisProgress}%` }} />
           </div>
@@ -610,6 +623,7 @@ export function PortalOnboardingFlow({
             ))}
           </ul>
         </div>
+        </section>
       </PortalOnboardingShell>,
     );
   }
@@ -681,6 +695,8 @@ export function PortalOnboardingFlow({
         }
       >
         <PortalOnboardingReviewHub
+          firstName={firstName}
+          percent={percent}
           profile={profile}
           reviewed={reviewed}
           onEdit={(section) => {
@@ -717,17 +733,23 @@ export function PortalOnboardingFlow({
           />
         }
       >
-        <header className="portal-onboarding-shell__header portal-onboarding-shell__header--compact text-left">
-          <h1 className="text-left">
-            {reviewEditSection === 'experiencia' ? 'Tu trayectoria' : `Ajustar ${editSectionMeta?.label.toLowerCase() ?? 'información'}`}
-          </h1>
-          <p className="portal-onboarding-lead text-left mx-0">
-            {reviewEditSection === 'experiencia'
+        <PortalOnboardingStepHero
+          eyebrow="Tu experiencia"
+          title={
+            reviewEditSection === 'experiencia'
+              ? 'Tu trayectoria'
+              : `Ajustar ${editSectionMeta?.label.toLowerCase() ?? 'información'}`
+          }
+          subtitle={
+            reviewEditSection === 'experiencia'
               ? 'Cuéntanos paso a paso. Sin formularios largos.'
-              : 'Tu perfil se actualiza en tiempo real.'}
-          </p>
-        </header>
+              : 'Tu perfil se actualiza en tiempo real.'
+          }
+          percent={percent}
+        />
+        <section className="ob-panel ob-question-panel">
         <PortalOnboardingReviewCards profile={profile} section={reviewEditSection} onChange={setProfile} />
+        </section>
       </PortalOnboardingShell>,
     );
   }
@@ -755,6 +777,8 @@ export function PortalOnboardingFlow({
         }
       >
         <PortalOnboardingPreferencias
+          firstName={firstName}
+          percent={percent}
           profile={profile}
           answers={prefAnswers}
           stepIndex={prefStepIndex}
@@ -792,6 +816,8 @@ export function PortalOnboardingFlow({
         }
       >
         <PortalOnboardingEvidence
+          firstName={firstName}
+          percent={percent}
           draft={evidenceDraft}
           phase={evidencePhase}
           onChange={setEvidenceDraft}
@@ -832,6 +858,8 @@ export function PortalOnboardingFlow({
         }
       >
         <PortalOnboardingCompetencies
+          firstName={firstName}
+          percent={percent}
           profile={profile}
           competencyIndex={competencyIndex}
           ratings={competencyRatings}

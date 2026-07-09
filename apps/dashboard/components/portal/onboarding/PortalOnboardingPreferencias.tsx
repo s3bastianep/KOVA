@@ -11,8 +11,11 @@ import {
 } from '@/lib/portal-preferencias-wizard';
 import { LANGUAGE_LEVEL_OPTIONS } from '@/lib/commercial-profile-builder';
 import { microFeedbackForPrefStep } from '@/lib/portal-onboarding-unified';
+import { PortalOnboardingStepHero } from './PortalOnboardingStepHero';
 
 type Props = {
+  firstName: string;
+  percent: number;
   profile: CommercialProfile;
   answers: Record<string, string[]>;
   stepIndex: number;
@@ -25,6 +28,8 @@ type Props = {
 };
 
 export function PortalOnboardingPreferencias({
+  firstName,
+  percent,
   profile,
   answers,
   stepIndex,
@@ -59,19 +64,21 @@ export function PortalOnboardingPreferencias({
           : null
         : microFeedbackForPrefStep(currentStep.id, selected);
 
+  const subtitle =
+    currentStep.subtitle ??
+    (currentStep.multi ? 'Puedes seleccionar varias opciones.' : 'Elige la opción que mejor te representa.');
+
   return (
-    <div className="portal-onboarding-pref" key={currentStep.id}>
-      <div className="portal-onboarding-question-meta">
-        <span>{blockLabel}</span>
-      </div>
+    <div className="ob-pref" key={currentStep.id}>
+      <PortalOnboardingStepHero
+        firstName={firstName}
+        eyebrow={`Perfil comercial · ${blockLabel}`}
+        title={currentStep.title}
+        subtitle={subtitle}
+        percent={percent}
+      />
 
-      <h2 className="portal-onboarding-question-title">{currentStep.title}</h2>
-      {currentStep.subtitle ? (
-        <p className="portal-onboarding-question-subtitle">{currentStep.subtitle}</p>
-      ) : currentStep.multi ? (
-        <p className="portal-onboarding-question-subtitle">Puedes seleccionar varias opciones.</p>
-      ) : null}
-
+      <section className="ob-panel ob-question-panel">
       {currentStep.kind === 'slider' ? (
         <div className="portal-onboarding-salary">
           <p className="portal-onboarding-salary__value">{SALARY_SLIDER_LABELS[salaryIdx]}</p>
@@ -181,6 +188,7 @@ export function PortalOnboardingPreferencias({
           )}
         </p>
       ) : null}
+      </section>
     </div>
   );
 }

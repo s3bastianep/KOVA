@@ -1,6 +1,16 @@
 'use client';
 
-import { Check, ChevronRight, Pencil } from 'lucide-react';
+import {
+  Award,
+  Briefcase,
+  Check,
+  ChevronRight,
+  GraduationCap,
+  Languages,
+  Pencil,
+  Sparkles,
+  User,
+} from 'lucide-react';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
 import {
   REVIEW_SECTIONS,
@@ -8,73 +18,114 @@ import {
   isReviewSectionReady,
   reviewSectionSummary,
 } from '@/lib/portal-onboarding-unified';
+import { PortalOnboardingStepHero } from './PortalOnboardingStepHero';
+
+const SECTION_ICONS: Record<
+  ReviewSectionId,
+  { icon: typeof User; tone: 'purple' | 'blue' | 'yellow' | 'teal' | 'green' }
+> = {
+  personal: { icon: User, tone: 'purple' },
+  experiencia: { icon: Briefcase, tone: 'blue' },
+  educacion: { icon: GraduationCap, tone: 'purple' },
+  idiomas: { icon: Languages, tone: 'yellow' },
+  certificaciones: { icon: Award, tone: 'teal' },
+  skills: { icon: Sparkles, tone: 'green' },
+};
 
 type Props = {
+  firstName: string;
+  percent: number;
   profile: CommercialProfile;
   reviewed: Set<ReviewSectionId>;
   onEdit: (section: ReviewSectionId) => void;
   onMarkReviewed: (section: ReviewSectionId) => void;
 };
 
-export function PortalOnboardingReviewHub({ profile, reviewed, onEdit, onMarkReviewed }: Props) {
-  return (
-    <div className="portal-onboarding-review-hub">
-      <header className="portal-onboarding-shell__header portal-onboarding-shell__header--compact text-left">
-        <h1 className="text-left">Revisa tu perfil</h1>
-        <p className="portal-onboarding-lead text-left mx-0">
-          KOVA extrajo esta información de tu hoja de vida. Confirma cada sección o edítala si hace falta.
-        </p>
-      </header>
+export function PortalOnboardingReviewHub({
+  firstName,
+  percent,
+  profile,
+  reviewed,
+  onEdit,
+  onMarkReviewed,
+}: Props) {
+  const reviewedCount = REVIEW_SECTIONS.filter((s) => reviewed.has(s.id)).length;
 
-      <div className="portal-onboarding-review-grid">
+  return (
+    <div className="ob-review-hub">
+      <PortalOnboardingStepHero
+        firstName={firstName}
+        showGreeting
+        eyebrow="Tu experiencia"
+        title="Revisa tu trayectoria"
+        subtitle="Confirma cada sección de tu perfil. Puedes editar lo que necesites antes de continuar."
+        percent={percent}
+      />
+
+      <p className="ob-review-hub__progress-label">
+        {reviewedCount} de {REVIEW_SECTIONS.length} secciones revisadas
+      </p>
+
+      <div className="ob-review-hub__list">
         {REVIEW_SECTIONS.map((section) => {
           const isReviewed = reviewed.has(section.id);
           const hasData = isReviewSectionReady(section.id, profile);
           const summary = reviewSectionSummary(section.id, profile);
+          const meta = SECTION_ICONS[section.id];
+          const Icon = meta.icon;
 
           return (
-            <article
+            <section
               key={section.id}
-              className={`portal-onboarding-review-card${isReviewed ? ' is-reviewed' : ''}`}
+              className={`ob-panel ob-review-card${isReviewed ? ' is-reviewed' : ''}`}
             >
-              <div className="portal-onboarding-review-card__head">
-                <div>
-                  <h3>{section.label}</h3>
-                  <p>{summary}</p>
+              <header className="ob-panel__head">
+                <div className="ob-panel__title">
+                  <span className={`ob-panel__icon ob-panel__icon--${meta.tone}`} aria-hidden>
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  <div>
+                    <h2>{section.label}</h2>
+                    {section.required ? (
+                      <span className="ob-review-card__badge">Obligatorio</span>
+                    ) : (
+                      <span className="ob-review-card__badge ob-review-card__badge--optional">Opcional</span>
+                    )}
+                  </div>
                 </div>
                 <span
-                  className={`portal-onboarding-review-card__status${
-                    isReviewed ? ' is-done' : hasData ? ' is-pending' : ' is-empty'
-                  }`}
+                  className={`ob-review-card__status${isReviewed ? ' is-done' : hasData ? ' is-pending' : ' is-empty'}`}
                 >
                   {isReviewed ? (
                     <>
-                      <Check className="h-3.5 w-3.5" />
+                      <Check className="h-3 w-3" />
                       Revisado
                     </>
                   ) : (
                     'Pendiente'
                   )}
                 </span>
-              </div>
+              </header>
 
-              <div className="portal-onboarding-review-card__actions">
-                <button type="button" className="portal-onboarding-review-card__edit" onClick={() => onEdit(section.id)}>
-                  <Pencil className="h-3.5 w-3.5" />
+              <p className="ob-review-card__summary">{summary}</p>
+
+              <div className="ob-review-card__actions">
+                <button type="button" className="ob-panel__edit" onClick={() => onEdit(section.id)}>
+                  <Pencil className="h-3.5 w-3.5" aria-hidden />
                   Editar
                 </button>
                 {!isReviewed ? (
                   <button
                     type="button"
-                    className="portal-onboarding-review-card__confirm"
+                    className="ob-review-card__confirm"
                     onClick={() => onMarkReviewed(section.id)}
                   >
                     Marcar revisado
-                    <ChevronRight className="h-3.5 w-3.5" />
+                    <ChevronRight className="h-3.5 w-3.5" aria-hidden />
                   </button>
                 ) : null}
               </div>
-            </article>
+            </section>
           );
         })}
       </div>

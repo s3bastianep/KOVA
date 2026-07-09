@@ -7,6 +7,8 @@ import {
   profileLevel,
 } from '@/lib/portal-onboarding-unified';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
+import { PortalOnboardingChrome } from './PortalOnboardingChrome';
+import { PortalOnboardingStepHero } from './PortalOnboardingStepHero';
 
 type Props = {
   profile: CommercialProfile;
@@ -29,44 +31,53 @@ export function PortalOnboardingComplete({
   const companies = Math.max(6, Math.round(vacancies * 0.55));
 
   return (
-    <div className="portal-onboarding portal-onboarding--immersive">
-      <div className="portal-onboarding-complete">
-        <div className="portal-onboarding-complete__hero">
-          <span className="portal-onboarding-complete__icon" aria-hidden>
-            <Sparkles className="h-7 w-7" />
-          </span>
-          <h1>Tu perfil ya está listo.</h1>
-          <p>Hemos encontrado oportunidades que encajan con tu trayectoria.</p>
+    <PortalOnboardingChrome journeyIndex={4} minutesLeft={0}>
+      <div className="ob-complete">
+        <PortalOnboardingStepHero
+          eyebrow="¡Perfil listo!"
+          title="Tu perfil ya está listo."
+          subtitle="Hemos encontrado oportunidades que encajan con tu trayectoria."
+          percent={percent}
+        />
+
+        <div className="ob-complete__hero-icon" aria-hidden>
+          <Sparkles className="h-7 w-7" />
         </div>
 
-        <div className="portal-onboarding-complete__grid">
-          <div className="portal-onboarding-complete__stat">
-            <span className="portal-onboarding-complete__stat-label">Nivel del perfil</span>
+        <div className="ob-stat-grid ob-complete__grid">
+          <div className="ob-stat-chip ob-stat-chip--purple">
+            <span className="ob-stat-chip__icon">
+              <Sparkles className="h-4 w-4" />
+            </span>
             <strong>{level}%</strong>
+            <span>Nivel del perfil</span>
           </div>
-          <div className="portal-onboarding-complete__stat">
-            <span className="portal-onboarding-complete__stat-label">Compatibilidad inicial</span>
+          <div className="ob-stat-chip ob-stat-chip--green">
+            <span className="ob-stat-chip__icon">
+              <Target className="h-4 w-4" />
+            </span>
             <strong>{compatibility}%</strong>
+            <span>Compatibilidad inicial</span>
           </div>
-          <div className="portal-onboarding-complete__stat">
-            <span className="portal-onboarding-complete__stat-label">
-              <Target className="h-3.5 w-3.5" aria-hidden />
-              Vacantes compatibles
+          <div className="ob-stat-chip ob-stat-chip--yellow">
+            <span className="ob-stat-chip__icon">
+              <Target className="h-4 w-4" />
             </span>
             <strong>{vacancies}</strong>
+            <span>Vacantes compatibles</span>
           </div>
-          <div className="portal-onboarding-complete__stat">
-            <span className="portal-onboarding-complete__stat-label">
-              <Building2 className="h-3.5 w-3.5" aria-hidden />
-              Empresas interesadas
+          <div className="ob-stat-chip ob-stat-chip--teal">
+            <span className="ob-stat-chip__icon">
+              <Building2 className="h-4 w-4" />
             </span>
             <strong>{companies}</strong>
+            <span>Empresas interesadas</span>
           </div>
         </div>
 
         <button
           type="button"
-          className="portal-onboarding-btn portal-onboarding-btn--primary portal-onboarding-complete__cta"
+          className="portal-onboarding-btn portal-onboarding-btn--primary ob-complete__cta"
           disabled={busy}
           onClick={onEnter}
         >
@@ -83,6 +94,6 @@ export function PortalOnboardingComplete({
           )}
         </button>
       </div>
-    </div>
+    </PortalOnboardingChrome>
   );
 }
