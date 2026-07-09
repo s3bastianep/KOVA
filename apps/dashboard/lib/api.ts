@@ -28,32 +28,52 @@ function getToken() {
   return localStorage.getItem('kova_access_token');
 }
 
-export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
+export async function apiFetch<T>(
+  path: string,
+  options: RequestInit & { timeoutMs?: number } = {},
+): Promise<T> {
+  const { timeoutMs = 0, ...fetchOptions } = options;
+  const controller = timeoutMs > 0 ? new AbortController() : null;
+  const timer =
+    controller && timeoutMs > 0
+      ? setTimeout(() => controller.abort(), timeoutMs)
+      : null;
+
   const token = getToken();
-  const res = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...options.headers,
-    },
-  });
+  try {
+    const res = await fetch(`${API_URL}${path}`, {
+      ...fetchOptions,
+      signal: controller?.signal,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...fetchOptions.headers,
+      },
+    });
 
-  const isAuthRequest = path.startsWith('/auth/login');
+    const isAuthRequest = path.startsWith('/auth/login') || path.startsWith('/auth/candidate/register');
 
-  if (res.status === 401 && typeof window !== 'undefined' && !isAuthRequest) {
-    localStorage.removeItem('kova_access_token');
-    localStorage.removeItem('kova_refresh_token');
-    window.location.href = loginPathForStoredUser();
-    throw new Error('Unauthorized');
+    if (res.status === 401 && typeof window !== 'undefined' && !isAuthRequest) {
+      localStorage.removeItem('kova_access_token');
+      localStorage.removeItem('kova_refresh_token');
+      window.location.href = loginPathForStoredUser();
+      throw new Error('Unauthorized');
+    }
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error((err as { message?: string }).message ?? `Error en la solicitud (${res.status})`);
+    }
+
+    return res.json();
+  } catch (err) {
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      throw new Error('La solicitud tardó demasiado. Intenta de nuevo.');
+    }
+    throw err;
+  } finally {
+    if (timer) clearTimeout(timer);
   }
-
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error((err as { message?: string }).message ?? `Error en la solicitud (${res.status})`);
-  }
-
-  return res.json();
 }
 
 export const authApi = {
@@ -73,6 +93,7 @@ export const authApi = {
     apiFetch<LoginResponse>('/auth/candidate/register', {
       method: 'POST',
       body: JSON.stringify(body),
+      timeoutMs: 25_000,
     }),
   me: () => apiFetch<AuthUser>('/auth/me'),
   logout: (refreshToken?: string) =>

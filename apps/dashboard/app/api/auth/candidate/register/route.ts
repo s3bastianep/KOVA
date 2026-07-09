@@ -10,6 +10,7 @@ import { splitFullName } from '@/lib/candidate-commercial-profile';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 30;
 
 type RegisterBody = {
   nombre?: string;
@@ -94,112 +95,30 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const created = await createCandidateAccount({
-      email,
-      firstName,
-      lastName,
-      telefono,
-      ciudad,
-      password,
-      nombre,
+    const tenantId = await getPublicTenantId();
+
+    const existingUser = await prisma.user.findFirst({
+      where: { tenantId, email },
+      select: { id: true },
     });
-
-    const authUser = {
-      id: created.user.id,
-      email: created.user.email,
-      firstName: created.user.firstName,
-      lastName: created.user.lastName,
-      role: created.user.role,
-      tenantId: created.user.tenantId,
-      companyId: created.user.companyId,
-      candidateId: created.candidate.id,
-    };
-
-    return Response.json({
-      user: authUser,
-      accessToken: signToken(authUser),
-      refreshToken: randomBytes(32).toString('hex'),
-    });
-  } catch (err) {
-    console.error('[auth/candidate/register]', err);
-
-    if (err instanceof Error && err.message === 'EMAIL_EXISTS') {
+    if (existingUser) {
       return Response.json(
         { message: 'Este correo ya está registrado. Inicia sesión para continuar.' },
         { status: 409 },
       );
     }
 
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      if (err.code === 'P2002') {
-        return Response.json(
-          { message: 'Este correo ya está registrado. Inicia sesión para continuar.' },
-          { status: 409 },
-        );
-      }
-      if (err.code === 'P2021' || err.code === 'P2022') {
-        return Response.json(
-          { message: 'El sistema se está preparando. Espera un minuto e intenta de nuevo.' },
-          { status: 503 },
-        );
-      }
-    }
+    const passwordHash = await bcrypt.hash(password, 12);
+    const commercialProfile: CommercialProfile = {
+      nombre,
+      email,
+      telefono,
+      ...(ciudad ? { ciudad } : {}),
+      consentimientoDatos: true,
+    };
 
-    return Response.json(
-      { message: 'No pudimos crear tu cuenta. Intenta de nuevo en unos minutos.' },
-      { status: 503 },
-    );
-  }
-}
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function isSchemaMissingError(err: unknown) {
-  if (err instanceof Prisma.PrismaClientKnownRequestError) {
-    return err.code === 'P2021' || err.code === 'P2022';
-  }
-  const message = err instanceof Error ? err.message : String(err);
-  return /does not exist|relation .* does not exist/i.test(message);
-}
-
-async function createCandidateAccount(input: {
-  email: string;
-  firstName: string;
-  lastName: string;
-  telefono: string;
-  ciudad: string;
-  password: string;
-  nombre: string;
-}) {
-  const { email, firstName, lastName, telefono, ciudad, password, nombre } = input;
-  let lastError: unknown;
-
-  for (let attempt = 0; attempt < 5; attempt += 1) {
-    try {
-      const tenantId = await getPublicTenantId();
-
-      const existingUser = await prisma.user.findFirst({
-        where: { tenantId, email },
-        select: { id: true },
-      });
-      if (existingUser) {
-        const conflict = new Error('EMAIL_EXISTS');
-        (conflict as Error & { statusCode: number }).statusCode = 409;
-        throw conflict;
-      }
-
-      const passwordHash = await bcrypt.hash(password, 12);
-      const commercialProfile: CommercialProfile = {
-        nombre,
-        email,
-        telefono,
-        ...(ciudad ? { ciudad } : {}),
-        consentimientoDatos: true,
-      };
-
-      return await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(
+      async (tx) => {
         const candidate = await tx.candidate.create({
           data: {
             tenantId,
@@ -240,14 +159,53 @@ async function createCandidateAccount(input: {
         });
 
         return { user, candidate };
-      });
-    } catch (err) {
-      lastError = err;
-      if (err instanceof Error && err.message === 'EMAIL_EXISTS') throw err;
-      if (!isSchemaMissingError(err) || attempt === 4) throw err;
-      await sleep(2000 * (attempt + 1));
-    }
-  }
+      },
+      { maxWait: 5_000, timeout: 15_000 },
+    );
 
-  throw lastError;
+    const authUser = {
+      id: result.user.id,
+      email: result.user.email,
+      firstName: result.user.firstName,
+      lastName: result.user.lastName,
+      role: result.user.role,
+      tenantId: result.user.tenantId,
+      companyId: result.user.companyId,
+      candidateId: result.candidate.id,
+    };
+
+    return Response.json({
+      user: authUser,
+      accessToken: signToken(authUser),
+      refreshToken: randomBytes(32).toString('hex'),
+    });
+  } catch (err) {
+    console.error('[auth/candidate/register]', err);
+
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      if (err.code === 'P2002') {
+        return Response.json(
+          { message: 'Este correo ya está registrado. Inicia sesión para continuar.' },
+          { status: 409 },
+        );
+      }
+      if (err.code === 'P2021' || err.code === 'P2022') {
+        return Response.json(
+          { message: 'El sistema se está preparando. Espera un minuto e intenta de nuevo.' },
+          { status: 503 },
+        );
+      }
+      if (err.code === 'P1001' || err.code === 'P1002' || err.code === 'P2024') {
+        return Response.json(
+          { message: 'La base de datos está ocupada. Intenta de nuevo en unos segundos.' },
+          { status: 503 },
+        );
+      }
+    }
+
+    return Response.json(
+      { message: 'No pudimos crear tu cuenta. Intenta de nuevo en unos minutos.' },
+      { status: 503 },
+    );
+  }
 }
