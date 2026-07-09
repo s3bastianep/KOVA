@@ -2,15 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
-  Briefcase,
   Check,
   FileText,
-  GraduationCap,
-  Languages,
   Loader2,
-  Sparkles,
   Upload,
-  User,
 } from 'lucide-react';
 import type { CvExtractionResult } from '@/lib/cv-extract';
 import type { CommercialProfile, CompetencyEntry } from '@/lib/candidate-commercial-profile';
@@ -30,6 +25,7 @@ import {
   REVIEW_SECTIONS,
   canContinueFromReviewHub,
   estimatedMinutesLeft,
+  onboardingJourneyIndex,
   motivationalMessage,
   normalizeOnboardingStep,
   transitionAfterStep,
@@ -75,6 +71,7 @@ import { PortalOnboardingWelcome } from './PortalOnboardingWelcome';
 import { PortalOnboardingProfilePreview } from './PortalOnboardingProfilePreview';
 import { PortalOnboardingTransition } from './PortalOnboardingTransition';
 import { PortalOnboardingComplete } from './PortalOnboardingComplete';
+import { PortalOnboardingCvSummary } from './PortalOnboardingCvSummary';
 import './portal-onboarding.css';
 
 type Props = {
@@ -163,6 +160,7 @@ export function PortalOnboardingFlow({
   const minutesLeft = estimatedMinutesLeft(step, profile, prefStepIndex, competencyIndex);
   const motivation = motivationalMessage(percent);
   const mergedProfile = buildMergedProfile();
+  const journeyIndex = onboardingJourneyIndex(step);
 
   const previewPanel =
     step !== 'welcome' && step !== 'complete' ? (
@@ -390,40 +388,6 @@ export function PortalOnboardingFlow({
   const displayCounts = counts ?? countsFromProfile(profile);
   const analysisProgress = Math.round((analysisDone / CV_ANALYSIS_STEPS.length) * 100);
 
-  const cvSummary = useMemo(() => {
-    const fields = [
-      { label: 'Nombre', value: profile.nombre?.trim() },
-      { label: 'Correo', value: profile.email?.trim() },
-      { label: 'Teléfono', value: profile.telefono?.trim() },
-      { label: 'Ciudad', value: profile.ciudad?.trim() },
-    ].filter((item) => Boolean(item.value));
-
-    const stats = [
-      {
-        label: 'Experiencias',
-        count: displayCounts.experiencias,
-        icon: Briefcase,
-      },
-      {
-        label: 'Estudios',
-        count: displayCounts.estudios,
-        icon: GraduationCap,
-      },
-      {
-        label: 'Idiomas',
-        count: displayCounts.idiomas,
-        icon: Languages,
-      },
-      {
-        label: 'Certificaciones',
-        count: displayCounts.certificaciones,
-        icon: FileText,
-      },
-    ].filter((item) => item.count > 0);
-
-    return { fields, stats };
-  }, [displayCounts, profile]);
-
   const markReviewed = (section: ReviewSectionId) => {
     setReviewed((prev) => new Set([...prev, section]));
   };
@@ -579,6 +543,7 @@ export function PortalOnboardingFlow({
       <PortalOnboardingShell
         percent={percent}
         minutesLeft={minutesLeft}
+        journeyIndex={journeyIndex}
         motivation={previewPanel ? null : motivation}
         onSaveExit={() => void handleSaveExit()}
         preview={previewPanel}
@@ -629,7 +594,7 @@ export function PortalOnboardingFlow({
 
   if (step === 'cv_analyzing') {
     return renderWithOverlay(
-      <PortalOnboardingShell percent={percent} minutesLeft={minutesLeft} preview={previewPanel}>
+      <PortalOnboardingShell percent={percent} minutesLeft={minutesLeft} journeyIndex={journeyIndex} preview={previewPanel}>
         <div className="portal-onboarding-analyze">
           <h2>Construyendo tu experiencia...</h2>
           <p>Acabamos de identificar datos en tu hoja de vida</p>
@@ -654,71 +619,32 @@ export function PortalOnboardingFlow({
       <PortalOnboardingShell
         percent={percent}
         minutesLeft={minutesLeft}
-        motivation={previewPanel ? null : motivation}
+        journeyIndex={journeyIndex}
         onSaveExit={() => void handleSaveExit()}
-        preview={previewPanel}
+        wide
+        hidePreview
         footer={
           <PortalOnboardingFooter
             onContinue={() => void saveStep('review_hub')}
+            onSaveExit={() => void handleSaveExit()}
             continueLabel="Revisar tu trayectoria"
             busy={busy}
+            primaryOnly
           />
         }
       >
-        <div className="portal-onboarding-cv-summary">
-          <div className="portal-onboarding-cv-summary__hero">
-            <span className="portal-onboarding-cv-summary__icon" aria-hidden>
-              <Sparkles className="h-5 w-5" />
-            </span>
-            <div>
-              <h1>Tu experiencia ya está organizada</h1>
-              <p>Revisa lo que encontramos antes de seguir construyendo tu perfil.</p>
-            </div>
-          </div>
-
-          {cvSummary.fields.length > 0 ? (
-            <section className="portal-onboarding-cv-summary__section">
-              <h2>
-                <User className="h-4 w-4" aria-hidden />
-                Datos de contacto
-              </h2>
-              <dl className="portal-onboarding-cv-summary__fields">
-                {cvSummary.fields.map((field) => (
-                  <div key={field.label} className="portal-onboarding-cv-summary__field">
-                    <dt>{field.label}</dt>
-                    <dd>{field.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </section>
-          ) : null}
-
-          {cvSummary.stats.length > 0 ? (
-            <section className="portal-onboarding-cv-summary__section">
-              <h2>Tu perfil profesional</h2>
-              <div className="portal-onboarding-cv-summary__stats">
-                {cvSummary.stats.map((stat) => {
-                  const Icon = stat.icon;
-                  return (
-                    <div key={stat.label} className="portal-onboarding-cv-summary__stat">
-                      <span className="portal-onboarding-cv-summary__stat-icon" aria-hidden>
-                        <Icon className="h-4 w-4" />
-                      </span>
-                      <span className="portal-onboarding-cv-summary__stat-count">{stat.count}</span>
-                      <span className="portal-onboarding-cv-summary__stat-label">{stat.label}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          ) : null}
-
-          {cvSummary.fields.length === 0 && cvSummary.stats.length === 0 ? (
-            <p className="portal-onboarding-lead portal-onboarding-cv-summary__empty">
-              No detectamos secciones claras. Podrás completar manualmente en el siguiente paso.
-            </p>
-          ) : null}
-        </div>
+        <PortalOnboardingCvSummary
+          firstName={firstName}
+          profile={profile}
+          counts={displayCounts}
+          percent={percent}
+          prefAnswers={prefAnswers}
+          onEditContact={() => {
+            setReviewEditSection('personal');
+            void saveStep('cv_review');
+          }}
+          onEditProfile={() => void saveStep('review_hub')}
+        />
       </PortalOnboardingShell>,
     );
   }
@@ -729,6 +655,7 @@ export function PortalOnboardingFlow({
       <PortalOnboardingShell
         percent={percent}
         minutesLeft={minutesLeft}
+        journeyIndex={journeyIndex}
         motivation={previewPanel ? null : motivation}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
@@ -773,6 +700,7 @@ export function PortalOnboardingFlow({
       <PortalOnboardingShell
         percent={percent}
         minutesLeft={minutesLeft}
+        journeyIndex={journeyIndex}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
         wide
@@ -809,6 +737,7 @@ export function PortalOnboardingFlow({
       <PortalOnboardingShell
         percent={percent}
         minutesLeft={minutesLeft}
+        journeyIndex={journeyIndex}
         motivation={previewPanel ? null : motivation}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
@@ -847,6 +776,7 @@ export function PortalOnboardingFlow({
       <PortalOnboardingShell
         percent={percent}
         minutesLeft={minutesLeft}
+        journeyIndex={journeyIndex}
         motivation={previewPanel ? null : motivation}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
@@ -886,6 +816,7 @@ export function PortalOnboardingFlow({
       <PortalOnboardingShell
         percent={percent}
         minutesLeft={minutesLeft}
+        journeyIndex={journeyIndex}
         motivation={previewPanel ? null : motivation}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}

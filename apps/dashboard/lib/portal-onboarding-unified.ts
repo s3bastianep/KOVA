@@ -7,6 +7,32 @@ import {
 } from './portal-preferencias-wizard';
 import type { OnboardingStep } from './portal-onboarding';
 
+export const ONBOARDING_JOURNEY_STEPS = [
+  { id: 'info', label: 'Tu información' },
+  { id: 'experiencia', label: 'Tu experiencia' },
+  { id: 'comercial', label: 'Perfil comercial' },
+  { id: 'habilidades', label: 'Habilidades' },
+  { id: 'listo', label: '¡Perfil listo!' },
+] as const;
+
+export type OnboardingJourneyId = (typeof ONBOARDING_JOURNEY_STEPS)[number]['id'];
+
+export function onboardingJourneyIndex(step: OnboardingStep): number {
+  const s = normalizeOnboardingStep(step);
+  if (s === 'welcome' || s === 'cv_upload' || s === 'cv_analyzing' || s === 'cv_summary') return 0;
+  if (s === 'review_hub' || s === 'cv_review') return 1;
+  if (s === 'preferencias' || s === 'evidence') return 2;
+  if (s === 'competencies') return 3;
+  if (s === 'complete') return 4;
+  return 0;
+}
+
+export function journeyEncouragement(percent: number): string {
+  if (percent >= 75) return '¡Ya casi terminas!';
+  if (percent >= 40) return '¡Vas muy bien!';
+  return 'Buen comienzo';
+}
+
 export const ONBOARDING_MACRO_LABELS = [
   'Bienvenida',
   'Hoja de vida',
