@@ -6,7 +6,7 @@
     "dev": "next dev -p 3001",
     "build": "npm run build:all",
     "build:all": "node scripts/build-landing.mjs && prisma generate && next build",
-    "start": "next start -H 0.0.0.0 -p ${PORT:-3001}",
+    "start": "node scripts/railway-start.mjs",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
