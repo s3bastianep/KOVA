@@ -189,14 +189,12 @@ export function PortalOnboardingFlow({
 
   useEffect(() => {
     document.documentElement.classList.add('portal-onboarding-active');
-    return () => document.documentElement.classList.remove('portal-onboarding-active');
+    document.documentElement.classList.add('portal-onboarding-immersive');
+    return () => {
+      document.documentElement.classList.remove('portal-onboarding-active');
+      document.documentElement.classList.remove('portal-onboarding-immersive');
+    };
   }, []);
-
-  useEffect(() => {
-    const immersive = step === 'welcome' || step === 'complete';
-    document.documentElement.classList.toggle('portal-onboarding-immersive', immersive);
-    return () => document.documentElement.classList.remove('portal-onboarding-immersive');
-  }, [step]);
 
   const persist = useCallback(
     async (patch: {
