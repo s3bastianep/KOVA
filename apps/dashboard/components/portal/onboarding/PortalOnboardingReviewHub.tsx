@@ -57,7 +57,6 @@ export function PortalOnboardingReviewHub({
         eyebrow="Revisión de trayectoria"
         title="Valida tu perfil profesional"
         subtitle="Confirma cada sección. Puedes editar cualquier dato antes de continuar."
-        percent={percent}
       />
 
       <p className="ob-review-hub__progress-label">

@@ -7,7 +7,6 @@ import {
   type ProfileMilestoneId,
 } from '@/lib/portal-onboarding-unified';
 import { PortalOnboardingChrome } from './PortalOnboardingChrome';
-import { PortalOnboardingProgressRing } from './PortalOnboardingProgressRing';
 
 const MILESTONE_ICONS: Record<ProfileMilestoneId, typeof Briefcase> = {
   experiencia: Briefcase,
@@ -26,29 +25,26 @@ type Props = {
 
 export function PortalOnboardingWelcome({ firstName, minutesLeft, onStart, onSaveExit }: Props) {
   return (
-    <PortalOnboardingChrome journeyIndex={0} minutesLeft={minutesLeft} onSaveExit={onSaveExit}>
+    <PortalOnboardingChrome journeyIndex={0} minutesLeft={minutesLeft} percent={0} onSaveExit={onSaveExit}>
       <div className="ob-welcome">
-        <div className="ob-welcome__hero">
-          <p className="ob-welcome__eyebrow">Perfil ejecutivo</p>
-          <div className="ob-welcome__headline">
-            <div>
-              <h1>Bienvenido, {formatFirstName(firstName)}</h1>
-              <p>Construye un perfil de alto impacto para oportunidades comerciales selectivas.</p>
-            </div>
-            <PortalOnboardingProgressRing percent={0} />
-          </div>
-          <p className="ob-welcome__benefit">
-            Los perfiles completos reciben prioridad en procesos con empresas líderes.
-          </p>
-          <button
-            type="button"
-            className="portal-onboarding-btn portal-onboarding-btn--primary ob-welcome__cta"
-            onClick={onStart}
-          >
-            Iniciar perfil
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
+        <header className="ob-step-hero">
+          <p className="ob-step-hero__eyebrow">Perfil ejecutivo</p>
+          <h1>Bienvenido, {formatFirstName(firstName)}</h1>
+          <p>Construye un perfil de alto impacto para oportunidades comerciales selectivas.</p>
+        </header>
+
+        <p className="ob-welcome__benefit">
+          Los perfiles completos reciben prioridad en procesos con empresas líderes.
+        </p>
+
+        <button
+          type="button"
+          className="portal-onboarding-btn portal-onboarding-btn--primary ob-welcome__cta"
+          onClick={onStart}
+        >
+          Iniciar perfil
+          <ArrowRight className="w-4 h-4" />
+        </button>
 
         <ol className="ob-welcome__milestones" aria-label="Estructura del perfil">
           {PROFILE_BUILD_MILESTONES.map((item, index) => {

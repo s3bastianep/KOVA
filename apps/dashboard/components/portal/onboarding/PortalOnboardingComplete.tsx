@@ -31,13 +31,12 @@ export function PortalOnboardingComplete({
   const companies = Math.max(6, Math.round(vacancies * 0.55));
 
   return (
-    <PortalOnboardingChrome journeyIndex={4} minutesLeft={0}>
+    <PortalOnboardingChrome journeyIndex={4} minutesLeft={0} percent={percent}>
       <div className="ob-complete">
         <PortalOnboardingStepHero
           eyebrow="Perfil activo"
           title="Perfil completado"
           subtitle="Tu trayectoria está posicionada para oportunidades comerciales de alto nivel."
-          percent={percent}
         />
 
         <div className="ob-complete__status" aria-hidden>

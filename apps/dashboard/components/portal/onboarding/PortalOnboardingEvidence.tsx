@@ -70,7 +70,6 @@ export function PortalOnboardingEvidence({
         eyebrow={`Perfil comercial · Logro ${phaseIdx + 1} de ${EVIDENCE_PHASES.length}`}
         title={copy.title}
         subtitle={copy.subtitle}
-        percent={percent}
       />
 
       <div className="portal-onboarding-evidence__steps ob-evidence__steps" aria-hidden>

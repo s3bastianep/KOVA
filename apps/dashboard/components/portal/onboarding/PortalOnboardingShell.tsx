@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 import { ArrowRight, Clock3 } from 'lucide-react';
 import { PortalOnboardingStepper } from './PortalOnboardingStepper';
+import { PortalOnboardingProgressIndicator } from './PortalOnboardingProgressIndicator';
 
 type Props = {
   percent: number;
@@ -53,12 +54,13 @@ export function PortalOnboardingShell({
             </div>
           </div>
           <PortalOnboardingStepper activeIndex={journeyIndex} />
+          <PortalOnboardingProgressIndicator percent={percent} compact />
         </header>
 
         <main className="portal-onboarding-main">
           {!hidePreview && preview}
           {motivation ? <p className="portal-onboarding-motivation">{motivation}</p> : null}
-          <div className="portal-onboarding-stage portal-onboarding-card-enter">{children}</div>
+          <div className="portal-onboarding-stage">{children}</div>
           {saveStatus && saveStatus !== 'idle' ? (
             <p className="portal-onboarding-save-state" aria-live="polite">
               {saveStatus === 'saving' ? 'Guardando...' : null}

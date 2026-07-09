@@ -3,10 +3,12 @@
 import type { ReactNode } from 'react';
 import { Clock3 } from 'lucide-react';
 import { PortalOnboardingStepper } from './PortalOnboardingStepper';
+import { PortalOnboardingProgressIndicator } from './PortalOnboardingProgressIndicator';
 
 type Props = {
   journeyIndex: number;
   minutesLeft: number;
+  percent?: number;
   onSaveExit?: () => void;
   children: ReactNode;
   wide?: boolean;
@@ -15,6 +17,7 @@ type Props = {
 export function PortalOnboardingChrome({
   journeyIndex,
   minutesLeft,
+  percent = 0,
   onSaveExit,
   children,
   wide,
@@ -41,6 +44,7 @@ export function PortalOnboardingChrome({
             </div>
           </div>
           <PortalOnboardingStepper activeIndex={journeyIndex} />
+          <PortalOnboardingProgressIndicator percent={percent} compact />
         </header>
         {children}
       </div>

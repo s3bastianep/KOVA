@@ -558,7 +558,6 @@ export function PortalOnboardingFlow({
           eyebrow="Documentación"
           title="Documenta tu trayectoria"
           subtitle="Sube tu CV. Extraeremos y estructuraremos tu experiencia profesional."
-          percent={percent}
         />
 
         <div
@@ -607,7 +606,6 @@ export function PortalOnboardingFlow({
           eyebrow="Procesamiento"
           title="Analizando trayectoria"
           subtitle="Estructurando la información de tu hoja de vida."
-          percent={percent}
         />
         <section className="ob-panel ob-question-panel">
         <div className="portal-onboarding-analyze">
@@ -745,7 +743,6 @@ export function PortalOnboardingFlow({
               ? 'Documenta tu experiencia comercial con precisión.'
               : 'Los cambios se reflejan en tiempo real en tu perfil.'
           }
-          percent={percent}
         />
         <section className="ob-panel ob-question-panel">
         <PortalOnboardingReviewCards profile={profile} section={reviewEditSection} onChange={setProfile} />

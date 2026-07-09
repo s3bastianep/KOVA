@@ -75,7 +75,6 @@ export function PortalOnboardingPreferencias({
         eyebrow={`Perfil comercial · ${blockLabel}`}
         title={currentStep.title}
         subtitle={subtitle}
-        percent={percent}
       />
 
       <section className="ob-panel ob-question-panel">

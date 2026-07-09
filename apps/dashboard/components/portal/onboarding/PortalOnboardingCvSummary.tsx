@@ -50,8 +50,8 @@ export function PortalOnboardingCvSummary({
   ].filter((row) => row.value);
 
   const inventory = [
-    { label: 'Experiencia laboral', count: counts.experiencias },
-    { label: 'Formación académica', count: counts.estudios },
+    { label: 'Experiencia', count: counts.experiencias },
+    { label: 'Formación', count: counts.estudios },
     { label: 'Idiomas', count: counts.idiomas },
     { label: 'Certificaciones', count: counts.certificaciones },
   ].filter((item) => item.count > 0);
@@ -64,15 +64,13 @@ export function PortalOnboardingCvSummary({
         eyebrow="Análisis completado"
         title="Trayectoria consolidada"
         subtitle="Valida la información extraída de tu CV antes de continuar."
-        percent={percent}
-        hideRing
       />
 
       {hasContent ? (
-        <section className="ob-cv-dossier">
-          <header className="ob-cv-dossier__head">
-            <div className="ob-cv-dossier__identity">
-              <span className="ob-cv-dossier__avatar" aria-hidden>
+        <section className="ob-cv-canvas">
+          <div className="ob-cv-canvas__lead">
+            <div className="ob-cv-canvas__identity">
+              <span className="ob-cv-canvas__avatar" aria-hidden>
                 {initials(displayName)}
               </span>
               <div>
@@ -81,53 +79,43 @@ export function PortalOnboardingCvSummary({
               </div>
             </div>
             {onEdit ? (
-              <button type="button" className="ob-cv-dossier__edit" onClick={onEdit}>
-                <Pencil className="h-3.5 w-3.5" aria-hidden />
-                Editar
+              <button type="button" className="ob-cv-canvas__edit" onClick={onEdit}>
+                <Pencil className="h-4 w-4" aria-hidden />
+                Editar perfil
               </button>
             ) : null}
-          </header>
+          </div>
 
-          <div className="ob-cv-dossier__signals">
-            <span>
-              <strong>{compatibility}%</strong> compatibilidad
-            </span>
-            <span className="ob-cv-dossier__signals-divider" aria-hidden />
-            <span>
-              <strong>{vacancies}</strong> vacantes alineadas
-            </span>
+          <div className="ob-cv-canvas__metrics">
+            <div>
+              <strong>{compatibility}%</strong>
+              <span>Compatibilidad</span>
+            </div>
+            <div>
+              <strong>{vacancies}</strong>
+              <span>Vacantes alineadas</span>
+            </div>
+            {inventory.map((item) => (
+              <div key={item.label}>
+                <strong>{item.count}</strong>
+                <span>{item.label}</span>
+              </div>
+            ))}
           </div>
 
           {contactRows.length > 0 ? (
-            <>
-              <div className="ob-cv-dossier__divider" aria-hidden />
-              <dl className="ob-cv-dossier__fields">
-                {contactRows.map((row) => (
-                  <div key={row.label}>
-                    <dt>{row.label}</dt>
-                    <dd>{row.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </>
-          ) : null}
-
-          {inventory.length > 0 ? (
-            <>
-              <div className="ob-cv-dossier__divider" aria-hidden />
-              <ul className="ob-cv-dossier__inventory">
-                {inventory.map((item) => (
-                  <li key={item.label}>
-                    <span className="ob-cv-dossier__inventory-count">{item.count}</span>
-                    <span>{item.label}</span>
-                  </li>
-                ))}
-              </ul>
-            </>
+            <dl className="ob-cv-canvas__fields">
+              {contactRows.map((row) => (
+                <div key={row.label}>
+                  <dt>{row.label}</dt>
+                  <dd>{row.value}</dd>
+                </div>
+              ))}
+            </dl>
           ) : null}
 
           {onEdit ? (
-            <button type="button" className="ob-cv-dossier__review" onClick={onEdit}>
+            <button type="button" className="ob-cv-canvas__link" onClick={onEdit}>
               Revisar secciones en detalle
               <ChevronRight className="h-4 w-4" aria-hidden />
             </button>
