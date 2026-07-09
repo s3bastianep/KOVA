@@ -3,14 +3,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowRight,
+  Briefcase,
   Check,
   CheckCircle2,
   Circle,
   Clock3,
   FileText,
+  GraduationCap,
+  Languages,
   Loader2,
   Sparkles,
   Upload,
+  User,
 } from 'lucide-react';
 import type { CvExtractionResult } from '@/lib/cv-extract';
 import type { CommercialProfile, CompetencyEntry } from '@/lib/candidate-commercial-profile';
@@ -28,6 +32,7 @@ import {
 } from '@/lib/portal-onboarding';
 import {
   ONBOARDING_MACRO_LABELS,
+  REVIEW_SECTIONS,
   canContinueFromReviewHub,
   estimatedMinutesLeft,
   macroStepIndex,
@@ -116,6 +121,7 @@ export function PortalOnboardingFlow({
     return levels;
   });
   const [evidenceDraft, setEvidenceDraft] = useState(() => draftEvidenceFromProfile(initialProfile));
+  const [reviewEditSection, setReviewEditSection] = useState<ReviewSectionId>('experiencia');
   const [evidencePhase, setEvidencePhase] = useState<EvidencePhase>(
     () => (normalizedInitial === 'evidence' ? EVIDENCE_PHASES[initialSubStep] ?? 'titulo' : 'titulo'),
   );
@@ -350,21 +356,39 @@ export function PortalOnboardingFlow({
   const displayCounts = counts ?? countsFromProfile(profile);
   const analysisProgress = Math.round((analysisDone / CV_ANALYSIS_STEPS.length) * 100);
 
-  const summaryLines = useMemo(
-    () =>
-      [
-        profile.nombre && `Nombre`,
-        profile.email && `Correo`,
-        profile.telefono && `Teléfono`,
-        profile.ciudad && `Ciudad`,
-        displayCounts.experiencias > 0 && `${displayCounts.experiencias} experiencias`,
-        displayCounts.estudios > 0 && `${displayCounts.estudios} estudios`,
-        displayCounts.idiomas > 0 && `${displayCounts.idiomas} idiomas`,
-        displayCounts.certificaciones > 0 && `${displayCounts.certificaciones} certificaciones`,
-        (profile.herramientas?.length ?? 0) > 0 && `${profile.herramientas?.length ?? 0} habilidades`,
-      ].filter(Boolean) as string[],
-    [displayCounts, profile],
-  );
+  const cvSummary = useMemo(() => {
+    const fields = [
+      { label: 'Nombre', value: profile.nombre?.trim() },
+      { label: 'Correo', value: profile.email?.trim() },
+      { label: 'Teléfono', value: profile.telefono?.trim() },
+      { label: 'Ciudad', value: profile.ciudad?.trim() },
+    ].filter((item) => Boolean(item.value));
+
+    const stats = [
+      {
+        label: 'Experiencias',
+        count: displayCounts.experiencias,
+        icon: Briefcase,
+      },
+      {
+        label: 'Estudios',
+        count: displayCounts.estudios,
+        icon: GraduationCap,
+      },
+      {
+        label: 'Idiomas',
+        count: displayCounts.idiomas,
+        icon: Languages,
+      },
+      {
+        label: 'Certificaciones',
+        count: displayCounts.certificaciones,
+        icon: FileText,
+      },
+    ].filter((item) => item.count > 0);
+
+    return { fields, stats };
+  }, [displayCounts, profile]);
 
   const markReviewed = (section: ReviewSectionId) => {
     setReviewed((prev) => new Set([...prev, section]));
@@ -601,7 +625,7 @@ export function PortalOnboardingFlow({
             Selecciona un archivo
           </label>
           <p className="portal-onboarding-upload-hint">PDF · Word · DOCX · máximo 5 MB</p>
-          <p className="portal-onboarding-upload-future">Dropbox y Google Drive — próximamente</p>
+          <p className="portal-onboarding-upload-future">Dropbox y Google Drive (próximamente)</p>
         </div>
 
         {error ? <p className="portal-onboarding-error">{error}</p> : null}
@@ -652,20 +676,60 @@ export function PortalOnboardingFlow({
           />
         }
       >
-        <header className="portal-onboarding-shell__header portal-onboarding-shell__header--compact">
-          <h1>Encontramos:</h1>
-          <p className="portal-onboarding-lead">Tu hoja de vida ya está organizada. Revisa antes de continuar.</p>
-        </header>
-        {summaryLines.length > 0 ? (
-          summaryLines.map((line) => (
-            <div key={line} className="portal-onboarding-summary-item">
-              <Check className="w-4 h-4 text-[var(--kova-lime)] shrink-0" />
-              <span>{line}</span>
+        <div className="portal-onboarding-cv-summary">
+          <div className="portal-onboarding-cv-summary__hero">
+            <span className="portal-onboarding-cv-summary__icon" aria-hidden>
+              <Sparkles className="h-5 w-5" />
+            </span>
+            <div>
+              <h1>Esto encontramos en tu CV</h1>
+              <p>Tu hoja de vida ya está organizada. Revisa antes de continuar.</p>
             </div>
-          ))
-        ) : (
-          <p className="portal-onboarding-lead">No detectamos secciones claras. Podrás completar manualmente.</p>
-        )}
+          </div>
+
+          {cvSummary.fields.length > 0 ? (
+            <section className="portal-onboarding-cv-summary__section">
+              <h2>
+                <User className="h-4 w-4" aria-hidden />
+                Datos de contacto
+              </h2>
+              <dl className="portal-onboarding-cv-summary__fields">
+                {cvSummary.fields.map((field) => (
+                  <div key={field.label} className="portal-onboarding-cv-summary__field">
+                    <dt>{field.label}</dt>
+                    <dd>{field.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          ) : null}
+
+          {cvSummary.stats.length > 0 ? (
+            <section className="portal-onboarding-cv-summary__section">
+              <h2>Tu perfil profesional</h2>
+              <div className="portal-onboarding-cv-summary__stats">
+                {cvSummary.stats.map((stat) => {
+                  const Icon = stat.icon;
+                  return (
+                    <div key={stat.label} className="portal-onboarding-cv-summary__stat">
+                      <span className="portal-onboarding-cv-summary__stat-icon" aria-hidden>
+                        <Icon className="h-4 w-4" />
+                      </span>
+                      <span className="portal-onboarding-cv-summary__stat-count">{stat.count}</span>
+                      <span className="portal-onboarding-cv-summary__stat-label">{stat.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          ) : null}
+
+          {cvSummary.fields.length === 0 && cvSummary.stats.length === 0 ? (
+            <p className="portal-onboarding-lead portal-onboarding-cv-summary__empty">
+              No detectamos secciones claras. Podrás completar manualmente en el siguiente paso.
+            </p>
+          ) : null}
+        </div>
       </PortalOnboardingShell>
     );
   }
@@ -703,7 +767,7 @@ export function PortalOnboardingFlow({
           profile={profile}
           reviewed={reviewed}
           onEdit={(section) => {
-            markReviewed(section);
+            setReviewEditSection(section);
             void saveStep('cv_review', undefined, prefStepIndex);
           }}
           onMarkReviewed={markReviewed}
@@ -714,6 +778,7 @@ export function PortalOnboardingFlow({
   }
 
   if (step === 'cv_review') {
+    const editSectionMeta = REVIEW_SECTIONS.find((item) => item.id === reviewEditSection);
     return (
       <PortalOnboardingShell
         macroIndex={3}
@@ -726,19 +791,19 @@ export function PortalOnboardingFlow({
           <PortalOnboardingFooter
             onBack={() => void saveStep('review_hub')}
             onContinue={async () => {
-              setReviewed((prev) => new Set([...prev, 'personal', 'experiencia', 'educacion', 'idiomas']));
+              setReviewed((prev) => new Set([...prev, reviewEditSection]));
               await saveStep('review_hub', profile);
             }}
-            continueLabel="Listo — volver al resumen"
+            continueLabel="Volver al resumen"
             busy={busy}
           />
         }
       >
         <header className="portal-onboarding-shell__header portal-onboarding-shell__header--compact text-left">
-          <h1 className="text-left">Editar información</h1>
+          <h1 className="text-left">Editar {editSectionMeta?.label.toLowerCase() ?? 'información'}</h1>
           <p className="portal-onboarding-lead text-left mx-0">Corrige lo que haga falta. Se guarda solo.</p>
         </header>
-        <PortalOnboardingReviewCards profile={profile} onChange={setProfile} />
+        <PortalOnboardingReviewCards profile={profile} section={reviewEditSection} onChange={setProfile} />
       </PortalOnboardingShell>
     );
   }

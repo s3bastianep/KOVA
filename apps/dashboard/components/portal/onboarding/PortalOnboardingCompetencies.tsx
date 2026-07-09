@@ -41,7 +41,7 @@ export function PortalOnboardingCompetencies({ profile, competencyIndex, ratings
 
       <h2 className="portal-onboarding-question-title">¿Qué tan fuerte es tu {current.label.toLowerCase()}?</h2>
       <p className="portal-onboarding-question-subtitle">
-        Una pregunta a la vez — sin formularios. Elige lo que mejor te representa hoy.
+        Una pregunta a la vez, sin formularios. Elige lo que mejor te representa hoy.
       </p>
 
       <div className="portal-onboarding-chips portal-onboarding-chips--levels">

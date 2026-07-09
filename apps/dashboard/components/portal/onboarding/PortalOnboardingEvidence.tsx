@@ -73,7 +73,7 @@ export function PortalOnboardingEvidence({ draft, phase, onChange, onPhaseChange
       {phase === 'contexto' ? (
         <>
           <h2 className="portal-onboarding-question-title">¿En qué contexto ocurrió?</h2>
-          <p className="portal-onboarding-question-subtitle">Empresa, equipo o situación — una frase basta.</p>
+          <p className="portal-onboarding-question-subtitle">Empresa, equipo o situación. Una frase basta.</p>
           <label className="portal-onboarding-evidence__field">
             <input
               className="portal-onboarding-field"

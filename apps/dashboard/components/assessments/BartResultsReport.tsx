@@ -80,7 +80,7 @@ export function BartResultsReport({ result, onRetry }: BartResultsReportProps) {
       </div>
 
       <div className="p-8 lg:p-10 border-b border-slate-100">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Nivel 4 — Perfil</p>
+        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Nivel 4: Perfil</p>
         <h3 className="text-lg font-bold text-[var(--kova-navy)] mb-5">Competencias</h3>
         <div className="overflow-x-auto rounded-xl border border-slate-100">
           <table className="w-full text-sm">
@@ -147,7 +147,7 @@ export function BartResultsReport({ result, onRetry }: BartResultsReportProps) {
           onClick={() => setShowMetrics((v) => !v)}
           className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-slate-600"
         >
-          Nivel 2 — Métricas
+          Nivel 2: Métricas
           {showMetrics ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
         {showMetrics && (
@@ -160,12 +160,12 @@ export function BartResultsReport({ result, onRetry }: BartResultsReportProps) {
               { label: '5. Persistencia', value: `${metrics.persistence}%`, hint: 'Engagement tras perder' },
               {
                 label: '6. Recuperación',
-                value: metrics.avgRecoverySec != null ? `${metrics.avgRecoverySec}s` : '—',
+                value: metrics.avgRecoverySec != null ? `${metrics.avgRecoverySec}s` : 'N/D',
                 hint: 'Tiempo para retomar',
               },
               {
                 label: '7. Aprendizaje',
-                value: metrics.learningDelta != null ? (metrics.learningDelta < 0 ? `${metrics.learningDelta}` : `+${metrics.learningDelta}`) : '—',
+                value: metrics.learningDelta != null ? (metrics.learningDelta < 0 ? `${metrics.learningDelta}` : `+${metrics.learningDelta}`) : 'N/D',
                 hint: metrics.learningDelta != null && metrics.learningDelta < -2 ? 'Ajustó' : 'Sin ajuste claro',
               },
               { label: '8. Adaptación', value: metrics.adaptationScore, hint: 'Score compuesto' },
@@ -173,7 +173,7 @@ export function BartResultsReport({ result, onRetry }: BartResultsReportProps) {
               { label: '10. Exploración', value: metrics.exploration, hint: 'Estrategias distintas' },
               {
                 label: '11. Recup. emocional',
-                value: metrics.emotionalRecovery === true ? 'Sí' : metrics.emotionalRecovery === false ? 'No' : '—',
+                value: metrics.emotionalRecovery === true ? 'Sí' : metrics.emotionalRecovery === false ? 'No' : 'N/D',
                 hint: 'Más riesgo tras perder',
               },
               { label: '12. Tolerancia incert.', value: `${metrics.uncertaintyTolerance}%`, hint: 'Actúa sin esperar' },
@@ -214,8 +214,8 @@ export function BartResultsReport({ result, onRetry }: BartResultsReportProps) {
                   <td className="px-4 py-2.5 font-bold tabular-nums">{row.pumps}</td>
                   <td className="px-4 py-2.5">{row.exploded ? 'Sí' : 'No'}</td>
                   <td className="px-4 py-2.5">{row.cashedOut ? 'Sí' : 'No'}</td>
-                  <td className="px-4 py-2.5 tabular-nums">{row.earned ? formatMillions(row.earned) : '—'}</td>
-                  <td className="px-4 py-2.5 tabular-nums text-slate-500">{row.avgClickSec ?? '—'}</td>
+                  <td className="px-4 py-2.5 tabular-nums">{row.earned ? formatMillions(row.earned) : 'N/D'}</td>
+                  <td className="px-4 py-2.5 tabular-nums text-slate-500">{row.avgClickSec ?? 'N/D'}</td>
                 </tr>
               ))}
             </tbody>
@@ -229,7 +229,7 @@ export function BartResultsReport({ result, onRetry }: BartResultsReportProps) {
           onClick={() => setShowEvents((v) => !v)}
           className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-slate-600"
         >
-          Nivel 1 — Eventos crudos ({events.length} registros)
+          Nivel 1: Eventos crudos ({events.length} registros)
           {showEvents ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
         {showEvents && (
@@ -252,7 +252,7 @@ export function BartResultsReport({ result, onRetry }: BartResultsReportProps) {
                     <td className="px-3 py-1.5 tabular-nums text-slate-500">{ev.timestamp}</td>
                     <td className="px-3 py-1.5">{ev.round}</td>
                     <td className="px-3 py-1.5">{ev.action === 'negotiate' ? 'Negociar' : 'Cobrar'}</td>
-                    <td className="px-3 py-1.5 tabular-nums">{ev.intervalSec != null ? `${ev.intervalSec}s` : '—'}</td>
+                    <td className="px-3 py-1.5 tabular-nums">{ev.intervalSec != null ? `${ev.intervalSec}s` : 'N/D'}</td>
                     <td className="px-3 py-1.5 tabular-nums">{formatMillions(ev.accumulated)}</td>
                     <td className="px-3 py-1.5 tabular-nums">{ev.internalRiskPct}%</td>
                     <td className="px-3 py-1.5">{ev.survived ? '✓' : '✗'}</td>

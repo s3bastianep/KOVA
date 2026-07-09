@@ -148,7 +148,7 @@ export function estimatedMinutesLeft(
 
 export function motivationalMessage(percent: number): string | null {
   if (percent >= 85) return '¡Ya casi terminas! Tu perfil está casi listo para matching.';
-  if (percent >= 55) return 'Excelente — esta información mejora tus oportunidades.';
+  if (percent >= 55) return 'Excelente. Esta información mejora tus oportunidades.';
   if (percent >= 25) return 'Vamos bien. KOVA construye tu perfil mientras respondes.';
   return null;
 }
@@ -163,24 +163,54 @@ export function reviewSectionSummary(
       return parts.length ? parts.slice(0, 2).join(' · ') : 'Completa tus datos de contacto';
     }
     case 'experiencia': {
-      const n = profile.historialLaboral?.length ?? 0;
-      return n ? `${n} empleo${n === 1 ? '' : 's'} encontrado${n === 1 ? '' : 's'}` : 'Sin experiencia detectada';
+      const items = profile.historialLaboral ?? [];
+      if (!items.length) return 'Sin experiencia detectada';
+      const preview = items
+        .slice(0, 2)
+        .map((item) => {
+          const empresa = item.empresa?.trim();
+          const cargo = item.cargo?.trim();
+          if (empresa && cargo) return `${cargo} en ${empresa}`;
+          return empresa || cargo || '';
+        })
+        .filter(Boolean)
+        .join(' · ');
+      return preview || `${items.length} empleo${items.length === 1 ? '' : 's'} encontrado${items.length === 1 ? '' : 's'}`;
     }
     case 'educacion': {
-      const n = profile.formacion?.length ?? 0;
-      return n ? `${n} estudio${n === 1 ? '' : 's'}` : 'Sin estudios detectados';
+      const items = profile.formacion ?? [];
+      if (!items.length) return 'Sin estudios detectados';
+      const preview = items
+        .slice(0, 2)
+        .map((item) => item.titulo?.trim() || item.institucion?.trim())
+        .filter(Boolean)
+        .join(' · ');
+      return preview || `${items.length} estudio${items.length === 1 ? '' : 's'}`;
     }
     case 'idiomas': {
-      const n = profile.idiomas?.length ?? 0;
-      return n ? `${n} idioma${n === 1 ? '' : 's'}` : 'Sin idiomas detectados';
+      const items = profile.idiomas ?? [];
+      if (!items.length) return 'Sin idiomas detectados';
+      const preview = items
+        .map((item) => (item.nivel?.trim() ? `${item.idioma} (${item.nivel})` : item.idioma))
+        .filter(Boolean)
+        .slice(0, 3)
+        .join(' · ');
+      return preview || `${items.length} idioma${items.length === 1 ? '' : 's'}`;
     }
     case 'certificaciones': {
-      const n = profile.certificaciones?.length ?? 0;
-      return n ? `${n} certificación${n === 1 ? '' : 'es'}` : 'Opcional';
+      const items = profile.certificaciones ?? [];
+      if (!items.length) return 'Sin certificaciones. Puedes agregarlas al editar.';
+      const preview = items
+        .map((item) => item.nombre?.trim())
+        .filter(Boolean)
+        .slice(0, 2)
+        .join(' · ');
+      return preview || `${items.length} certificación${items.length === 1 ? '' : 'es'}`;
     }
     case 'skills': {
-      const n = profile.herramientas?.length ?? 0;
-      return n ? `${n} habilidad${n === 1 ? '' : 'es'}` : 'Opcional';
+      const items = profile.herramientas ?? [];
+      if (!items.length) return 'Sin habilidades listadas. Puedes agregarlas al editar.';
+      return items.slice(0, 4).join(' · ');
     }
     default:
       return '';

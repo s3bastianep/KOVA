@@ -163,7 +163,7 @@ export function PortalOnboardingPreferencias({
 
       {currentStep.optional ? (
         <p className="portal-onboarding-optional">
-          Opcional —{' '}
+          Opcional:{' '}
           {onSkip ? (
             <button type="button" className="portal-onboarding-link" onClick={onSkip}>
               omitir por ahora

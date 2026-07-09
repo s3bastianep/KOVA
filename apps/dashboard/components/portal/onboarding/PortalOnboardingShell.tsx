@@ -120,7 +120,7 @@ export function PortalOnboardingFooter({
           {busy ? 'Guardando...' : continueLabel}
         </button>
       </div>
-      <p className="portal-onboarding-footer__later">Puedes terminar después — retomamos donde quedaste.</p>
+      <p className="portal-onboarding-footer__later">Puedes terminar después. Retomamos donde quedaste.</p>
     </footer>
   );
 }

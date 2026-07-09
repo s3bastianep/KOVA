@@ -129,7 +129,7 @@ export function RiskJarGame({ showRecruiterReport = false }: RiskJarGameProps) {
       const message =
         kind === 'spilled'
           ? isPractice
-            ? 'Se derramó — así pierdes el nivel'
+            ? 'Se derramó. Así pierdes el nivel'
             : 'Se derramó · 0 pts'
           : isPractice
             ? `Guardado · ${formatPoints(earned)} pts`

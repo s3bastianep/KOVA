@@ -7,10 +7,12 @@ import type {
   LanguageEntry,
   WorkHistoryEntry,
 } from '@/lib/candidate-commercial-profile';
+import type { ReviewSectionId } from '@/lib/portal-onboarding-unified';
 import {
   EDUCATION_LEVEL_OPTIONS,
   LANGUAGE_LEVEL_OPTIONS,
   LANGUAGE_OPTIONS,
+  newCertificationEntry,
   newEducationEntry,
   newLanguageEntry,
   newWorkHistoryEntry,
@@ -18,10 +20,11 @@ import {
 
 type Props = {
   profile: CommercialProfile;
+  section: ReviewSectionId;
   onChange: (profile: CommercialProfile) => void;
 };
 
-function ordinalLabel(index: number, kind: 'experiencia' | 'formación' | 'idioma'): string {
+function ordinalLabel(index: number, kind: 'experiencia' | 'formación' | 'idioma' | 'certificación'): string {
   return `${index + 1}ª ${kind}`;
 }
 
@@ -43,11 +46,54 @@ function CardHeader({
   );
 }
 
-export function PortalOnboardingReviewCards({ profile, onChange }: Props) {
+function PersonalSection({ profile, onChange }: Props) {
+  return (
+    <div className="space-y-3">
+      <p className="portal-onboarding-section-title">Información personal</p>
+      <label className="portal-onboarding-work-field">
+        <span className="portal-onboarding-work-field__label">Nombre completo</span>
+        <input
+          className="portal-onboarding-field"
+          value={profile.nombre ?? ''}
+          placeholder="Tu nombre"
+          onChange={(e) => onChange({ ...profile, nombre: e.target.value })}
+        />
+      </label>
+      <label className="portal-onboarding-work-field">
+        <span className="portal-onboarding-work-field__label">Correo</span>
+        <input
+          className="portal-onboarding-field"
+          type="email"
+          value={profile.email ?? ''}
+          placeholder="tu@correo.com"
+          onChange={(e) => onChange({ ...profile, email: e.target.value })}
+        />
+      </label>
+      <label className="portal-onboarding-work-field">
+        <span className="portal-onboarding-work-field__label">Teléfono</span>
+        <input
+          className="portal-onboarding-field"
+          type="tel"
+          value={profile.telefono ?? ''}
+          placeholder="+57 300 000 0000"
+          onChange={(e) => onChange({ ...profile, telefono: e.target.value })}
+        />
+      </label>
+      <label className="portal-onboarding-work-field">
+        <span className="portal-onboarding-work-field__label">Ciudad</span>
+        <input
+          className="portal-onboarding-field"
+          value={profile.ciudad ?? ''}
+          placeholder="Bogotá, Medellín..."
+          onChange={(e) => onChange({ ...profile, ciudad: e.target.value })}
+        />
+      </label>
+    </div>
+  );
+}
+
+function ExperienceSection({ profile, onChange }: Props) {
   const work = profile.historialLaboral ?? [];
-  const edu = profile.formacion ?? [];
-  const langs = profile.idiomas ?? [];
-  const certs = profile.certificaciones ?? [];
 
   const updateWork = (id: string, patch: Partial<WorkHistoryEntry>) => {
     onChange({
@@ -56,34 +102,12 @@ export function PortalOnboardingReviewCards({ profile, onChange }: Props) {
     });
   };
 
-  const updateEdu = (id: string, patch: Partial<EducationEntry>) => {
-    onChange({
-      ...profile,
-      formacion: edu.map((entry) => (entry.id === id ? { ...entry, ...patch } : entry)),
-    });
-  };
-
-  const updateLang = (id: string, patch: Partial<LanguageEntry>) => {
-    onChange({
-      ...profile,
-      idiomas: langs.map((entry) => (entry.id === id ? { ...entry, ...patch } : entry)),
-    });
-  };
-
   const removeWork = (id: string) => {
     onChange({ ...profile, historialLaboral: work.filter((entry) => entry.id !== id) });
   };
 
-  const removeEdu = (id: string) => {
-    onChange({ ...profile, formacion: edu.filter((entry) => entry.id !== id) });
-  };
-
-  const removeLang = (id: string) => {
-    onChange({ ...profile, idiomas: langs.filter((entry) => entry.id !== id) });
-  };
-
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <p className="portal-onboarding-section-title">Experiencia laboral</p>
       {work.length === 0 ? (
         <p className="portal-onboarding-muted">No detectamos experiencia en tu hoja de vida. Agrega tu primera experiencia.</p>
@@ -114,7 +138,6 @@ export function PortalOnboardingReviewCards({ profile, onChange }: Props) {
 
             <div className="portal-onboarding-work-period">
               <span className="portal-onboarding-work-period__title">¿Sigues trabajando aquí?</span>
-
               <div className="portal-onboarding-end-toggle" role="group" aria-label="¿Sigues trabajando aquí?">
                 <button
                   type="button"
@@ -176,6 +199,36 @@ export function PortalOnboardingReviewCards({ profile, onChange }: Props) {
         ))
       )}
 
+      <button
+        type="button"
+        className="portal-onboarding-link mt-2"
+        onClick={() => {
+          const entry = newWorkHistoryEntry();
+          onChange({ ...profile, historialLaboral: [...work, entry] });
+        }}
+      >
+        + Agregar experiencia
+      </button>
+    </div>
+  );
+}
+
+function EducationSection({ profile, onChange }: Props) {
+  const edu = profile.formacion ?? [];
+
+  const updateEdu = (id: string, patch: Partial<EducationEntry>) => {
+    onChange({
+      ...profile,
+      formacion: edu.map((entry) => (entry.id === id ? { ...entry, ...patch } : entry)),
+    });
+  };
+
+  const removeEdu = (id: string) => {
+    onChange({ ...profile, formacion: edu.filter((entry) => entry.id !== id) });
+  };
+
+  return (
+    <div className="space-y-3">
       <p className="portal-onboarding-section-title">Formación académica</p>
       {edu.length === 0 ? (
         <p className="portal-onboarding-muted">No detectamos estudios en tu hoja de vida. Agrega tu primera formación.</p>
@@ -234,21 +287,39 @@ export function PortalOnboardingReviewCards({ profile, onChange }: Props) {
         ))
       )}
 
-      {certs.length > 0 ? (
-        <>
-          <p className="portal-onboarding-section-title">Certificaciones</p>
-          {certs.map((c) => (
-            <article key={c.id} className="portal-onboarding-review-card mb-3">
-              <h3>{c.nombre}</h3>
-              <p>{c.entidad}</p>
-            </article>
-          ))}
-        </>
-      ) : null}
+      <button
+        type="button"
+        className="portal-onboarding-link mt-2"
+        onClick={() => {
+          const entry = newEducationEntry();
+          onChange({ ...profile, formacion: [...edu, entry] });
+        }}
+      >
+        + Agregar estudio
+      </button>
+    </div>
+  );
+}
 
+function LanguagesSection({ profile, onChange }: Props) {
+  const langs = profile.idiomas ?? [];
+
+  const updateLang = (id: string, patch: Partial<LanguageEntry>) => {
+    onChange({
+      ...profile,
+      idiomas: langs.map((entry) => (entry.id === id ? { ...entry, ...patch } : entry)),
+    });
+  };
+
+  const removeLang = (id: string) => {
+    onChange({ ...profile, idiomas: langs.filter((entry) => entry.id !== id) });
+  };
+
+  return (
+    <div className="space-y-3">
       <p className="portal-onboarding-section-title">Idiomas</p>
       {langs.length === 0 ? (
-        <p className="portal-onboarding-muted">Sin idiomas detectados.</p>
+        <p className="portal-onboarding-muted">Sin idiomas detectados. Agrega los que manejas.</p>
       ) : (
         langs.map((entry, index) => (
           <article key={entry.id} className="portal-onboarding-work-card">
@@ -293,26 +364,6 @@ export function PortalOnboardingReviewCards({ profile, onChange }: Props) {
         type="button"
         className="portal-onboarding-link mt-2"
         onClick={() => {
-          const entry = newWorkHistoryEntry();
-          onChange({ ...profile, historialLaboral: [...work, entry] });
-        }}
-      >
-        + Agregar experiencia
-      </button>
-      <button
-        type="button"
-        className="portal-onboarding-link mt-2 ml-4"
-        onClick={() => {
-          const entry = newEducationEntry();
-          onChange({ ...profile, formacion: [...edu, entry] });
-        }}
-      >
-        + Agregar estudio
-      </button>
-      <button
-        type="button"
-        className="portal-onboarding-link mt-2 ml-4"
-        onClick={() => {
           const entry = newLanguageEntry();
           onChange({ ...profile, idiomas: [...langs, entry] });
         }}
@@ -321,4 +372,111 @@ export function PortalOnboardingReviewCards({ profile, onChange }: Props) {
       </button>
     </div>
   );
+}
+
+function CertificationsSection({ profile, onChange }: Props) {
+  const certs = profile.certificaciones ?? [];
+
+  const updateCert = (id: string, patch: Partial<(typeof certs)[number]>) => {
+    onChange({
+      ...profile,
+      certificaciones: certs.map((entry) => (entry.id === id ? { ...entry, ...patch } : entry)),
+    });
+  };
+
+  const removeCert = (id: string) => {
+    onChange({ ...profile, certificaciones: certs.filter((entry) => entry.id !== id) });
+  };
+
+  return (
+    <div className="space-y-3">
+      <p className="portal-onboarding-section-title">Certificaciones</p>
+      {certs.length === 0 ? (
+        <p className="portal-onboarding-muted">Sin certificaciones detectadas. Agrega cursos o certificados relevantes.</p>
+      ) : (
+        certs.map((entry, index) => (
+          <article key={entry.id} className="portal-onboarding-work-card">
+            <CardHeader label={ordinalLabel(index, 'certificación')} onDelete={() => removeCert(entry.id)} />
+            <label className="portal-onboarding-work-field">
+              <span className="portal-onboarding-work-field__label">Nombre</span>
+              <input
+                className="portal-onboarding-field"
+                value={entry.nombre}
+                placeholder="Ej. HubSpot Sales Software"
+                onChange={(e) => updateCert(entry.id, { nombre: e.target.value })}
+              />
+            </label>
+            <label className="portal-onboarding-work-field">
+              <span className="portal-onboarding-work-field__label">Entidad emisora</span>
+              <input
+                className="portal-onboarding-field"
+                value={entry.entidad}
+                placeholder="Ej. HubSpot Academy"
+                onChange={(e) => updateCert(entry.id, { entidad: e.target.value })}
+              />
+            </label>
+          </article>
+        ))
+      )}
+
+      <button
+        type="button"
+        className="portal-onboarding-link mt-2"
+        onClick={() => {
+          const entry = newCertificationEntry();
+          onChange({ ...profile, certificaciones: [...certs, entry] });
+        }}
+      >
+        + Agregar certificación
+      </button>
+    </div>
+  );
+}
+
+function SkillsSection({ profile, onChange }: Props) {
+  const skillsText = (profile.herramientas ?? []).join(', ');
+
+  return (
+    <div className="space-y-3">
+      <p className="portal-onboarding-section-title">Habilidades y herramientas</p>
+      <p className="portal-onboarding-muted">
+        CRM, prospección, negociación, Excel, Salesforce... Sepáralas con comas.
+      </p>
+      <label className="portal-onboarding-work-field">
+        <span className="portal-onboarding-work-field__label">Habilidades</span>
+        <textarea
+          className="portal-onboarding-field portal-onboarding-field--textarea"
+          value={skillsText}
+          placeholder="Ej. Salesforce, prospección B2B, negociación, Excel avanzado"
+          rows={5}
+          onChange={(e) => {
+            const herramientas = e.target.value
+              .split(',')
+              .map((item) => item.trim())
+              .filter(Boolean);
+            onChange({ ...profile, herramientas });
+          }}
+        />
+      </label>
+    </div>
+  );
+}
+
+export function PortalOnboardingReviewCards({ profile, section, onChange }: Props) {
+  switch (section) {
+    case 'personal':
+      return <PersonalSection profile={profile} section={section} onChange={onChange} />;
+    case 'experiencia':
+      return <ExperienceSection profile={profile} section={section} onChange={onChange} />;
+    case 'educacion':
+      return <EducationSection profile={profile} section={section} onChange={onChange} />;
+    case 'idiomas':
+      return <LanguagesSection profile={profile} section={section} onChange={onChange} />;
+    case 'certificaciones':
+      return <CertificationsSection profile={profile} section={section} onChange={onChange} />;
+    case 'skills':
+      return <SkillsSection profile={profile} section={section} onChange={onChange} />;
+    default:
+      return null;
+  }
 }

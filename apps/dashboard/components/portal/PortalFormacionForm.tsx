@@ -37,12 +37,12 @@ const inputClass =
 const labelClass = 'text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--kova-navy-muted)]';
 
 const LANGUAGE_LEVEL_HINTS: Record<string, string> = {
-  A1: 'Principiante — frases básicas',
-  A2: 'Elemental — conversaciones simples',
-  B1: 'Intermedio — temas cotidianos y trabajo',
-  B2: 'Intermedio alto — reuniones y negociación',
-  C1: 'Avanzado — fluido en contexto profesional',
-  C2: 'Dominio pleno — nivel nativo académico',
+  A1: 'Principiante: frases básicas',
+  A2: 'Elemental: conversaciones simples',
+  B1: 'Intermedio: temas cotidianos y trabajo',
+  B2: 'Intermedio alto: reuniones y negociación',
+  C1: 'Avanzado: fluido en contexto profesional',
+  C2: 'Dominio pleno: nivel nativo académico',
   Nativo: 'Lengua materna',
 };
 
@@ -60,7 +60,7 @@ function formacionCompleteness(profile: CommercialProfile): number {
 function educationSummary(entry: EducationEntry): string {
   if (entry.titulo?.trim()) return entry.titulo;
   if (entry.institucion?.trim()) return entry.institucion;
-  return 'Nuevo estudio — completa los datos';
+  return 'Nuevo estudio: completa los datos';
 }
 
 function MiniStat({ label, value }: { label: string; value: number }) {
@@ -463,7 +463,7 @@ export function PortalFormacionForm() {
 
       <FormSection
         title="Educación"
-        description="Agrega cada título por separado — pregrado, posgrado, técnico, etc."
+        description="Agrega cada título por separado: pregrado, posgrado, técnico, etc."
         icon={BookOpen}
         action={
           <button type="button" onClick={addEducacion} className={btnSecondary}>

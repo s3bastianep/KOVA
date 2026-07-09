@@ -266,7 +266,7 @@ export function PortalPreferenciasWizard({ fromOnboarding = false, initialBlock 
           <p className="kova-portal-eyebrow">Tu perfil</p>
           <h1 className="kova-portal-title kova-portal-title-lg mt-2 font-heading">Preferencias laborales</h1>
           <p className="kova-portal-body mt-3">
-            Una pregunta a la vez, sin formularios largos. Todo se guarda solo — entra, responde y sal cuando
+            Una pregunta a la vez, sin formularios largos. Todo se guarda solo: entra, responde y sal cuando
             quieras.
           </p>
 
@@ -517,7 +517,7 @@ export function PortalPreferenciasWizard({ fromOnboarding = false, initialBlock 
         )}
 
         {currentStep.optional ? (
-          <p className="mt-3 text-xs text-[var(--kova-navy-muted)]">Opcional — puedes continuar sin responder.</p>
+          <p className="mt-3 text-xs text-[var(--kova-navy-muted)]">Opcional: puedes continuar sin responder.</p>
         ) : null}
 
         <div className="mt-5 min-h-[1.25rem] text-xs text-[var(--kova-navy-muted)]">

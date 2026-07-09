@@ -129,7 +129,7 @@ function companyAccent(name: string): { bg: string; fg: string } {
 
 function timelineYear(entry: WorkHistoryEntry): string {
   const from = parseMonthYear(entry.fechaInicio);
-  return from ? String(from.getFullYear()) : '—';
+  return from ? String(from.getFullYear()) : 's/f';
 }
 
 function periodShort(entry: WorkHistoryEntry): string {
@@ -654,7 +654,7 @@ export function PortalExperienciaClient() {
       ) : (
         <div className="space-y-3">
           <p className="text-sm text-[var(--kova-navy-muted)]">
-            Línea de tiempo — del <span className="font-medium text-[var(--kova-navy)]">más reciente</span> al
+            Línea de tiempo: del <span className="font-medium text-[var(--kova-navy)]">más reciente</span> al
             más antiguo.
           </p>
 
