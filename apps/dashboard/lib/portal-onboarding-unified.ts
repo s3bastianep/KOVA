@@ -33,6 +33,16 @@ export function formatFirstName(name: string): string {
   return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
 }
 
+export function formatPersonName(name: string): string {
+  const trimmed = name.trim();
+  if (!trimmed) return 'Profesional';
+  return trimmed
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(' ');
+}
+
 export function journeyEncouragement(percent: number): string | null {
   if (percent >= 75) return 'Casi completo';
   if (percent >= 40) return 'Avance sólido';

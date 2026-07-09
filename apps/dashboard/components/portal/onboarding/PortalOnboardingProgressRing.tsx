@@ -23,6 +23,7 @@ export function PortalOnboardingProgressRing({ percent, size = 88 }: Props) {
           r={radius}
           fill="none"
           strokeWidth={stroke}
+          shapeRendering="geometricPrecision"
         />
         <circle
           className="ob-ring__progress"
@@ -34,6 +35,7 @@ export function PortalOnboardingProgressRing({ percent, size = 88 }: Props) {
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           strokeLinecap="round"
+          shapeRendering="geometricPrecision"
           transform={`rotate(-90 ${size / 2} ${size / 2})`}
         />
       </svg>

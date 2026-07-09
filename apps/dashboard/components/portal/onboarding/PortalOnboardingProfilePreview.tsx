@@ -4,6 +4,7 @@ import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
 import {
   estimatedCompatibility,
   estimatedVacancies,
+  formatPersonName,
   profileHeadlineRole,
 } from '@/lib/portal-onboarding-unified';
 
@@ -22,7 +23,7 @@ function initials(name?: string | null): string {
 }
 
 export function PortalOnboardingProfilePreview({ profile, percent, prefAnswers, firstName }: Props) {
-  const displayName = profile.nombre?.trim() || firstName || 'Tu perfil';
+  const displayName = formatPersonName(profile.nombre?.trim() || firstName || 'Tu perfil');
   const role = profileHeadlineRole(profile);
   const compatibility = estimatedCompatibility(profile, percent, prefAnswers);
   const vacancies = estimatedVacancies(profile, percent, prefAnswers);

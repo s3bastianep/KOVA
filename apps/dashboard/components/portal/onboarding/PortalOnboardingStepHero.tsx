@@ -10,6 +10,7 @@ type Props = {
   percent: number;
   eyebrow?: string;
   showGreeting?: boolean;
+  hideRing?: boolean;
 };
 
 export function PortalOnboardingStepHero({
@@ -19,6 +20,7 @@ export function PortalOnboardingStepHero({
   percent,
   eyebrow,
   showGreeting = false,
+  hideRing = false,
 }: Props) {
   return (
     <div className="ob-step-hero">
@@ -26,12 +28,12 @@ export function PortalOnboardingStepHero({
         <p className="ob-step-hero__eyebrow">{formatFirstName(firstName)}</p>
       ) : null}
       {eyebrow ? <p className="ob-step-hero__eyebrow">{eyebrow}</p> : null}
-      <div className="ob-step-hero__row">
+      <div className={`ob-step-hero__row${hideRing ? ' ob-step-hero__row--compact' : ''}`}>
         <div className="ob-step-hero__text">
           <h1>{title}</h1>
           <p>{subtitle}</p>
         </div>
-        <PortalOnboardingProgressRing percent={percent} />
+        {!hideRing ? <PortalOnboardingProgressRing percent={percent} /> : null}
       </div>
     </div>
   );

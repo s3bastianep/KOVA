@@ -641,7 +641,7 @@ export function PortalOnboardingFlow({
           <PortalOnboardingFooter
             onContinue={() => void saveStep('review_hub')}
             onSaveExit={() => void handleSaveExit()}
-            continueLabel="Revisar tu trayectoria"
+            continueLabel="Continuar revisión"
             busy={busy}
             primaryOnly
           />
