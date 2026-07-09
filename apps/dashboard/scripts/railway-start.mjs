@@ -5,36 +5,6 @@ import { fileURLToPath } from 'node:url';
 const dashboardDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const port = process.env.PORT || '3001';
 
-function applyDatabaseUrl() {
-  const privateUrl = process.env.DATABASE_PRIVATE_URL?.trim();
-  const publicUrl = process.env.DATABASE_URL?.trim();
-  const url = privateUrl || publicUrl;
-  if (!url) return;
-
-  if (url.includes('sslmode=')) {
-    process.env.DATABASE_URL = url;
-    return;
-  }
-
-  const onRailway = Boolean(process.env.RAILWAY_ENVIRONMENT || process.env.RAILWAY_PROJECT_ID);
-  const isLocal = /localhost|127\.0\.0\.1/i.test(url);
-  const isPrivateHost = /\.railway\.internal\b/i.test(url);
-
-  if (isLocal || isPrivateHost) {
-    process.env.DATABASE_URL = url;
-    return;
-  }
-
-  if (process.env.NODE_ENV === 'production' || onRailway) {
-    process.env.DATABASE_URL = `${url}${url.includes('?') ? '&' : '?'}sslmode=require`;
-    return;
-  }
-
-  process.env.DATABASE_URL = url;
-}
-
-applyDatabaseUrl();
-
 function runDbDeploy() {
   if (!process.env.DATABASE_URL) {
     console.error('[kova] DATABASE_URL no está definida. Configúrala en Railway → Variables → Postgres.');

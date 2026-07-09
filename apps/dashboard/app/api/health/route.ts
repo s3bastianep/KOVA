@@ -1,20 +1,15 @@
 import { isMockMode } from '../../../lib/mock';
-import { pingDatabase } from '../../../lib/db-ping';
-import { resolveDatabaseUrl } from '../../../lib/database-url';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const hasDb = Boolean(resolveDatabaseUrl());
+  const hasDb = Boolean(process.env.DATABASE_URL?.trim());
   const mock = isMockMode();
-  const dbReady = hasDb && !mock ? await pingDatabase() : false;
-
   return Response.json({
     ok: true,
     service: 'kova-talent-os',
     booking: true,
     database: hasDb,
-    dbReady,
     mockMode: mock,
   });
 }
