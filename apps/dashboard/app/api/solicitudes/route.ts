@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized } from '../../../lib/auth';
+import { getUserFromRequest, unauthorized, isStaffRole } from '../../../lib/auth';
 import {
   createAgendaRequest,
   listAgendaRequests,
@@ -21,6 +21,7 @@ export async function OPTIONS() {
 export async function GET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
 
   const status = req.nextUrl.searchParams.get('status') as AgendaRequestStatus | null;
   const requests = await listAgendaRequests(user.tenantId, status ?? undefined);

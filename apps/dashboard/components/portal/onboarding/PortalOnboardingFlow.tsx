@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { CvExtractionResult } from '@/lib/cv-extract';
 import type { CommercialProfile, CompetencyEntry } from '@/lib/candidate-commercial-profile';
+import { stripIncompleteCertifications } from '@/lib/commercial-profile-builder';
 import { portalApi } from '@/lib/api';
 import { getStoredUser } from '@/lib/api';
 import { syncOnboardingSession } from '@/lib/portal-onboarding-session';
@@ -131,6 +132,9 @@ export function PortalOnboardingFlow({
   });
   const [evidenceDraft, setEvidenceDraft] = useState(() => draftEvidenceFromProfile(initialProfile));
   const [reviewEditSection, setReviewEditSection] = useState<ReviewSectionId>('experiencia');
+  const [reviewEditOrigin, setReviewEditOrigin] = useState<'cv_summary' | 'review_hub' | 'preferencias'>(
+    'review_hub',
+  );
   const [evidencePhase, setEvidencePhase] = useState<EvidencePhase>(
     () => (normalizedInitial === 'evidence' ? EVIDENCE_PHASES[initialSubStep] ?? 'titulo' : 'titulo'),
   );
@@ -163,7 +167,8 @@ export function PortalOnboardingFlow({
     if (canContinueEvidencePhase('tags', evidenceDraft)) {
       merged = mergeEvidenceIntoProfile(merged, evidenceDraft);
     }
-    return applyCompetencyRatings(merged, competencyRatings);
+    merged = applyCompetencyRatings(merged, competencyRatings);
+    return stripIncompleteCertifications(merged);
   }, [competencyRatings, evidenceDraft, languageLevels, prefAnswers, profile]);
 
   const percent = unifiedProgressPercent(
@@ -212,11 +217,12 @@ export function PortalOnboardingFlow({
       complete?: boolean;
     }) => {
       const reviewedIds = patch.reviewedIds ?? [...reviewed];
+      const sanitizedPatch = patch.profilePatch ? stripIncompleteCertifications(patch.profilePatch) : undefined;
       const body = {
         onboardingStep: patch.nextStep ?? step,
         onboardingSubStep: patch.subStep ?? prefStepIndex,
         onboardingReviewed: reviewedIds,
-        ...(patch.profilePatch ? { profile: patch.profilePatch as Record<string, unknown> } : {}),
+        ...(sanitizedPatch ? { profile: sanitizedPatch as Record<string, unknown> } : {}),
         ...(patch.complete ? { completeOnboarding: true } : {}),
       };
 
@@ -232,8 +238,8 @@ export function PortalOnboardingFlow({
 
       await portalApi.updateOnboarding({
         ...body,
-        ...(patch.profilePatch || step === 'preferencias' || step === 'evidence' || step === 'competencies'
-          ? { profile: (patch.profilePatch ?? buildMergedProfile()) as Record<string, unknown> }
+        ...(sanitizedPatch || step === 'preferencias' || step === 'evidence' || step === 'competencies'
+          ? { profile: (sanitizedPatch ?? buildMergedProfile()) as Record<string, unknown> }
           : {}),
       });
       if (patch.nextStep) setStep(patch.nextStep);
@@ -282,9 +288,9 @@ export function PortalOnboardingFlow({
       });
       syncOnboardingSession(false);
       onProgressSaved?.();
+      window.location.assign('/');
     } catch {
       setError('No pudimos guardar tu progreso.');
-    } finally {
       setBusy(false);
     }
   };
@@ -347,7 +353,15 @@ export function PortalOnboardingFlow({
       await runAnalysisAnimation(uploadPromise);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No pudimos leer tu archivo.');
-      setStep('cv_upload');
+      // Reconcile the server's persisted step too, not just local state — runAnalysisAnimation
+      // already saved 'cv_analyzing' server-side before the upload settled. Without this, a
+      // reload after a failed upload resumes on 'cv_analyzing' with nothing to show (it silently
+      // rewrites to an empty cv_summary), skipping the upload step entirely.
+      try {
+        await saveStep('cv_upload');
+      } catch {
+        setStep('cv_upload');
+      }
     } finally {
       setBusy(false);
     }
@@ -356,13 +370,17 @@ export function PortalOnboardingFlow({
   const togglePrefAnswer = (stepId: string, option: string, multi: boolean) => {
     setPrefAnswers((prev) => {
       const current = prev[stepId] ?? [];
-      const next = !multi
-        ? current.includes(option)
-          ? []
-          : [option]
-        : current.includes(option)
-          ? current.filter((o) => o !== option)
-          : [...current, option];
+      const isExclusive = (value: string) => value.trim().toLowerCase().startsWith('ninguno');
+      let next: string[];
+      if (!multi) {
+        next = current.includes(option) ? [] : [option];
+      } else if (current.includes(option)) {
+        next = current.filter((o) => o !== option);
+      } else if (isExclusive(option)) {
+        next = [option];
+      } else {
+        next = [...current.filter((o) => !isExclusive(o)), option];
+      }
       return { ...prev, [stepId]: next };
     });
   };
@@ -424,6 +442,16 @@ export function PortalOnboardingFlow({
   const goPrefNext = async () => {
     if (!currentPrefStep) return;
     if (!canContinuePreferenciasStep(currentPrefStep, prefAnswers, languageLevels)) return;
+
+    if (
+      currentPrefStep.id === 'idiomas-review' &&
+      (prefAnswers['idiomas-review'] ?? []).includes('Quiero revisarlos')
+    ) {
+      setReviewEditSection('idiomas');
+      setReviewEditOrigin('preferencias');
+      await saveStep('cv_review');
+      return;
+    }
 
     if (currentPrefStep.id === 'idiomas') {
       const selected = prefAnswers['idiomas'] ?? [];
@@ -546,6 +574,7 @@ export function PortalOnboardingFlow({
 
   const finishOnboarding = async () => {
     setBusy(true);
+    setError('');
     try {
       const merged = buildMergedProfile();
       setProfile(merged);
@@ -645,9 +674,14 @@ export function PortalOnboardingFlow({
           cvImportedAt={cvImportedAt}
           onEditContact={() => {
             setReviewEditSection('personal');
+            setReviewEditOrigin('cv_summary');
             void saveStep('cv_review');
           }}
-          onReviewExperience={() => void saveStep('review_hub')}
+          onReviewExperience={() => {
+            setReviewEditSection('experiencia');
+            setReviewEditOrigin('cv_summary');
+            void saveStep('cv_review');
+          }}
         />
       </PortalOnboardingShell>,
     );
@@ -689,6 +723,7 @@ export function PortalOnboardingFlow({
           reviewed={reviewed}
           onEdit={(section) => {
             setReviewEditSection(section);
+            setReviewEditOrigin('review_hub');
             void saveStep('cv_review', undefined, prefStepIndex);
           }}
           onMarkReviewed={markReviewed}
@@ -710,12 +745,18 @@ export function PortalOnboardingFlow({
         hidePreview
         footer={
           <PortalOnboardingFooter
-            onBack={() => void saveStep('review_hub')}
+            onBack={() => void saveStep(reviewEditOrigin)}
             onContinue={async () => {
               setReviewed((prev) => new Set([...prev, reviewEditSection]));
-              await saveStep('review_hub', profile);
+              await saveStep(reviewEditOrigin, profile);
             }}
-            continueLabel="Volver al resumen"
+            continueLabel={
+              reviewEditOrigin === 'cv_summary'
+                ? 'Volver al resumen del CV'
+                : reviewEditOrigin === 'preferencias'
+                  ? 'Volver a preferencias'
+                  : 'Volver al resumen'
+            }
             busy={busy}
           />
         }
@@ -809,13 +850,11 @@ export function PortalOnboardingFlow({
           onChange={setEvidenceDraft}
           onPhaseChange={setEvidencePhase}
         />
-        {isLastPhase ? (
-          <p className="portal-onboarding-optional text-center">
-            <button type="button" className="portal-onboarding-link" onClick={() => void skipEvidence()}>
-              Omitir logros por ahora
-            </button>
-          </p>
-        ) : null}
+        <p className="portal-onboarding-optional text-center">
+          <button type="button" className="portal-onboarding-link" onClick={() => void skipEvidence()}>
+            Omitir logros por ahora
+          </button>
+        </p>
         {error ? <p className="portal-onboarding-error">{error}</p> : null}
       </PortalOnboardingShell>,
     );
@@ -864,6 +903,7 @@ export function PortalOnboardingFlow({
         vacancyStatsLoading={vacancyStatsLoading}
         hasSkills={(profile.herramientas?.length ?? 0) > 0}
         busy={busy}
+        error={error}
         onEnter={() => void finishOnboarding()}
       />,
     );

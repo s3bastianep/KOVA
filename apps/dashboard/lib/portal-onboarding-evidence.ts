@@ -116,12 +116,18 @@ export function applyLanguageLevels(
   profile: CommercialProfile,
   levels: Record<string, string>,
 ): CommercialProfile {
-  const selected = Object.keys(levels);
-  if (selected.length === 0) return profile;
-  const idiomas = selected.map((idioma, i) => ({
+  // `levels` (the wizard's local level-picker state) only ever gets entries added when the
+  // language wizard steps run — it's never re-synced when languages are added/removed via the
+  // review-cards editor. Merging it on top of the languages already on `profile` (instead of
+  // rebuilding `idiomas` from `levels` alone) means a language added elsewhere is never dropped.
+  const fromProfile = languageLevelsFromProfile(profile);
+  const merged = { ...fromProfile, ...levels };
+  const names = Object.keys(merged);
+  if (names.length === 0) return profile;
+  const idiomas = names.map((idioma, i) => ({
     id: profile.idiomas?.find((l) => l.idioma === idioma)?.id ?? `lang-${i}`,
     idioma,
-    nivel: levels[idioma] ?? 'B2',
+    nivel: merged[idioma]?.trim() || 'B2',
   }));
   return { ...profile, idiomas };
 }

@@ -3,7 +3,7 @@
 import type { WorkHistoryEntry } from '@/lib/candidate-commercial-profile';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
 import type { OnboardingCounts } from '@/lib/portal-onboarding';
-import { formatPersonName, profileHeadlineRole } from '@/lib/portal-onboarding-unified';
+import { formatPersonName } from '@/lib/portal-onboarding-unified';
 import type { PortalVacancyMatchStats } from '@/lib/portal-vacancies';
 import {
   Briefcase,
@@ -69,7 +69,7 @@ function formatCvImportedAt(iso?: string | null): string {
 function pendingItems(profile: CommercialProfile) {
   const items: string[] = [];
   if (!profile.expectativaSalarial?.trim()) items.push('Expectativa salarial');
-  if (!profile.disponibilidad?.trim()) items.push('Disponibilidad');
+  if (!profile.disponibilidad?.trim()) items.push('Disponibilidad para trabajar');
   if (!profile.disponibilidadViajar?.trim()) items.push('Disponibilidad para viajar');
   if (!profile.rol?.trim() && !(profile.historialLaboral?.[0]?.cargo?.trim())) {
     items.push('Rol comercial');
@@ -90,7 +90,6 @@ export function PortalOnboardingCvSummary({
   onReviewExperience,
 }: Props) {
   const displayName = formatPersonName(profile.nombre?.trim() || firstName);
-  const role = profileHeadlineRole(profile);
   const stepNumber = journeyIndex + 1;
   const experiences = (profile.historialLaboral ?? []).filter(
     (entry) => entry.empresa?.trim() || entry.cargo?.trim(),
@@ -139,7 +138,6 @@ export function PortalOnboardingCvSummary({
               </span>
               <div className="ob-profile-card__who">
                 <p className="ob-profile-card__name">{displayName}</p>
-                <p className="ob-profile-card__role">{role}</p>
               </div>
             </div>
             <div className="ob-profile-card__stats">

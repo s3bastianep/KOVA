@@ -1,7 +1,8 @@
 import { NextRequest } from 'next/server';
 import { PipelineStage, VacancyStatus } from '@prisma/client';
-import { getUserFromRequest, unauthorized, companyWhereForUser } from '../../../lib/auth';
+import { getUserFromRequest, unauthorized, companyWhereForUser, isStaffRole } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
+import { portalServerCacheInvalidate } from '../../../lib/portal-server-cache';
 import { isMockMode } from '../../../lib/mock';
 import type { SelectedStandardQuestion } from '../../../lib/standard-questions';
 import { selectedToRequirements } from '../../../lib/standard-questions';
@@ -30,6 +31,7 @@ function mapStage(label: string, index: number): PipelineStage {
 export async function POST(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
   if (user.role === 'CLIENT') {
     return Response.json({ message: 'No autorizado' }, { status: 403 });
   }
@@ -199,6 +201,11 @@ export async function POST(req: NextRequest) {
 
     return vacancy;
   });
+
+  // A new open vacancy changes what candidates see in the portal's vacancy list/compatibility —
+  // without this, that read cache (lib/portal-server-cache.ts) can serve a stale list for up to
+  // its TTL after a consultant creates/edits a process.
+  portalServerCacheInvalidate('vacantes:');
 
   return Response.json({ ok: true, id: result.id, title: result.title });
 }

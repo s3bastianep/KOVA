@@ -59,7 +59,7 @@ export function PortalOnboardingWelcome({ firstName, minutesLeft, onStart, onSav
         ) : (
           <>
             <header className="ob-welcome__intro">
-              <h1>Bienvenido, {formatFirstName(firstName)}</h1>
+              <h1>Hola, {formatFirstName(firstName)}</h1>
               <p className="ob-welcome__lead">
                 Vamos a construir tu perfil en un par de minutos.
               </p>

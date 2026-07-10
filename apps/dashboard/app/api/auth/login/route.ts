@@ -70,7 +70,16 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const user = await prisma.user.findFirst({ where: { email: String(email).toLowerCase() } });
+    // NOTE: not tenant-scoped — `User` is only unique per (tenantId, email), so if this product
+    // ever onboards a second tenant, the same email in two tenants makes this pick an arbitrary
+    // row. Today only one tenant ('kova') is ever created, so this is safe in practice; fixing it
+    // properly requires deciding how a login request identifies its tenant (subdomain? a tenant
+    // picker?), which is a product call, not something to guess here. `orderBy` at least makes
+    // today's single-tenant case deterministic instead of query-planner-dependent.
+    const user = await prisma.user.findFirst({
+      where: { email: String(email).toLowerCase() },
+      orderBy: { createdAt: 'asc' },
+    });
     if (!user) {
       return Response.json({ message: 'Correo o contraseña incorrectos' }, { status: 401 });
     }
@@ -122,25 +131,10 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     console.error('[auth/login] DB error:', err);
-    if (String(email).toLowerCase() === MOCK_USER.email && password === DEMO_PASSWORD) {
-      const authUser = {
-        id: MOCK_USER.id,
-        email: MOCK_USER.email,
-        firstName: MOCK_USER.firstName,
-        lastName: MOCK_USER.lastName,
-        role: 'CONSULTANT' as const,
-        tenantId: MOCK_USER.tenantId,
-        companyId: MOCK_USER.companyId,
-      };
-      return Response.json({
-        user: authUser,
-        accessToken: signToken(authUser),
-        refreshToken: randomBytes(32).toString('hex'),
-        demoFallback: true,
-      });
-    }
+    // Fail closed: a DB outage must never hand out a valid session, even a "demo" one.
+    // (Previously this fell back to a hardcoded consultor@kova.co/Kova2026! token in production.)
     return Response.json(
-      { message: 'Base de datos no disponible. Verifica DATABASE_URL en Railway o usa consultor@kova.co / Kova2026!' },
+      { message: 'Base de datos no disponible. Intenta de nuevo en unos minutos.' },
       { status: 503 },
     );
   }

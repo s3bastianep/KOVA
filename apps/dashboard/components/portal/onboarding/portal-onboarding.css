@@ -6,6 +6,85 @@
   text-rendering: optimizeLegibility;
 }
 
+/* This whole onboarding flow had zero :focus-visible rules — every chip, button, link, and the
+   salary slider were invisible to keyboard navigation. One rule covers all of them since they're
+   all real <button>/<a>/<input> elements (no click-divs), so a single focus-visible ring applies
+   app-wide without per-component overrides. */
+.portal-onboarding button:focus-visible,
+.portal-onboarding a:focus-visible,
+.portal-onboarding input:focus-visible,
+.portal-onboarding select:focus-visible,
+.portal-onboarding textarea:focus-visible,
+.portal-onboarding [tabindex]:focus-visible {
+  outline: 2px solid var(--kova-lime);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.ob-exit-confirm {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.ob-exit-confirm__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.ob-exit-confirm__card {
+  position: relative;
+  width: 100%;
+  max-width: 24rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid var(--ob-border-strong);
+  background: var(--ob-surface);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+  animation: ob-exit-confirm-in 0.2s ease both;
+}
+
+.ob-exit-confirm__card h2 {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.ob-exit-confirm__card p {
+  margin: 0 0 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.ob-exit-confirm__actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.ob-exit-confirm__actions .portal-onboarding-btn {
+  flex: 1;
+}
+
+@keyframes ob-exit-confirm-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .portal-onboarding--welcome {
   max-width: 32rem;
   padding: 0.5rem 0 2rem;
@@ -3166,7 +3245,7 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .ob-build__ring-wrap .ob-ring__label span {
-  color: var(--kv-lime-dark);
+  color: var(--kova-lime);
   font-size: 0.625rem;
 }
 
@@ -3489,6 +3568,12 @@ html.portal-onboarding-immersive .kova-topbar {
 .ob-ring__progress {
   stroke: var(--kova-lime);
   transition: stroke-dashoffset 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  filter: drop-shadow(0 0 5px rgba(216, 242, 76, 0.55));
+}
+
+.ob-ring__handle {
+  fill: #ffffff;
+  filter: drop-shadow(0 0 4px rgba(216, 242, 76, 0.9));
 }
 
 .ob-ring--complete svg {
@@ -3530,17 +3615,18 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .ob-ring__label strong {
   font-family: var(--font-sora), 'Sora', sans-serif;
-  font-size: 1.125rem;
-  font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 800;
   color: #ffffff;
   line-height: 1;
+  letter-spacing: -0.01em;
 }
 
 .ob-ring__label span {
-  margin-top: 0.15rem;
+  margin-top: 0.2rem;
   font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.62);
 }
@@ -4127,11 +4213,6 @@ html.portal-onboarding-immersive .kova-topbar {
   overflow-wrap: anywhere;
 }
 
-.ob-profile-card__role {
-  margin: 0.1rem 0 0;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.62);
-}
 
 .ob-profile-card__stats {
   display: flex;
@@ -4646,13 +4727,31 @@ html.portal-onboarding-immersive .kova-topbar {
   display: none;
 }
 
+.ob-step-hero__meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.625rem;
+}
+
 .ob-step-hero__eyebrow {
-  margin: 0 0 0.625rem;
+  margin: 0;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--kv-slate);
+}
+
+.ob-step-hero__progress {
+  margin: 0;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--kova-lime);
+  white-space: nowrap;
 }
 
 .ob-step-hero h1 {

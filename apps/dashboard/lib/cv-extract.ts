@@ -10,6 +10,7 @@ import {
   newLanguageEntry,
   newWorkHistoryEntry,
 } from './commercial-profile-builder';
+import { COLOMBIAN_CITIES } from './candidate-commercial-profile';
 import {
   isCurrentDateToken,
   normalizeCvText,
@@ -49,29 +50,6 @@ export type CvExtractionResult = {
   suggestions: CvExtractionSuggestions;
   reviewFields: CvReviewField[];
 };
-
-const COLOMBIAN_CITIES = [
-  'Bogotá',
-  'Medellín',
-  'Cali',
-  'Barranquilla',
-  'Cartagena',
-  'Bucaramanga',
-  'Pereira',
-  'Santa Marta',
-  'Manizales',
-  'Ibagué',
-  'Cúcuta',
-  'Villavicencio',
-  'Pasto',
-  'Montería',
-  'Neiva',
-  'Armenia',
-  'Sincelejo',
-  'Popayán',
-  'Valledupar',
-  'Tunja',
-];
 
 const EXPERIENCE_SECTION =
   /^(experiencia\s*(laboral|profesional)?|trayectoria\s*profesional|historial\s*laboral|work\s*experience|employment\s*history|experiencia|antecedentes\s*laborales|experiencia\s*relevante|experiencia\s*comercial)$/i;
@@ -280,10 +258,18 @@ function extractPhone(text: string): string | undefined {
 }
 
 function extractCity(text: string): string | undefined {
-  const lower = text.toLowerCase();
+  // Normalize the haystack once (accent-insensitive) and match each city with word boundaries \u2014
+  // plain substring containment let short names like "Cali" match inside unrelated words
+  // ("calidad", "calificado"), returning a wrong city for CVs that never mention one.
+  const lowerNormalized = text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
   for (const city of COLOMBIAN_CITIES) {
+    if (city === 'Otra') continue;
     const normalized = city.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-    if (lower.includes(normalized) || lower.includes(city.toLowerCase())) return city;
+    const boundary = new RegExp(`\\b${normalized}\\b`, 'i');
+    if (boundary.test(lowerNormalized)) return city;
   }
 
   const labeled = text.match(
@@ -310,7 +296,8 @@ function extractName(text: string, email?: string): string | undefined {
     if (SECTION_STOP.test(line) && line.length < 40) continue;
 
     const words = line.split(/\s+/).filter(Boolean);
-    if (words.length >= 2 && words.length <= 5 && /^[A-Za-zÁÉÍÓÚáéíóúñÑ'.-]+$/.test(line)) {
+    const NAME_WORD = /^[A-Za-zÁÉÍÓÚáéíóúñÑ'.-]+$/;
+    if (words.length >= 2 && words.length <= 5 && words.every((w) => NAME_WORD.test(w))) {
       return words
         .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
         .join(' ');
@@ -354,10 +341,16 @@ function parseMonthYear(month?: string, year?: string, altYear?: string, altMont
   return `${yearNum}-${String(monthNum).padStart(2, '0')}`;
 }
 
+// Matches the "current job" tail of DATE_RANGE (which has no capture group of its own for it),
+// so we can detect it from the end of the whole match instead of passing the whole range string
+// to isCurrentDateToken (which expects just the token, e.g. "presente", and never matches a
+// full range like "03/2021 - Presente").
+const CURRENT_DATE_TAIL = /(?:actual(?:idad)?|presente?|hoy|current|al\s+presente)\s*$/i;
+
 function parseDateRange(line: string): { start: string; end?: string; current: boolean } | null {
   const full = line.match(DATE_RANGE);
   if (full) {
-    const current = isCurrentDateToken(full[0]);
+    const current = CURRENT_DATE_TAIL.test(full[0]);
     const start = parseMonthYear(full[1], full[2], full[3], full[4]);
     let end: string | undefined;
     if (!current) {
@@ -494,9 +487,46 @@ function mapLanguageName(raw: string): string | undefined {
     portugués: 'Portugués',
     frances: 'Francés',
     francés: 'Francés',
+    french: 'Francés',
     aleman: 'Alemán',
     alemán: 'Alemán',
+    german: 'Alemán',
     italiano: 'Italiano',
+    italian: 'Italiano',
+    mandarin: 'Mandarín',
+    mandarín: 'Mandarín',
+    chino: 'Mandarín',
+    chinese: 'Mandarín',
+    hindi: 'Hindi',
+    bengali: 'Bengalí',
+    bengalí: 'Bengalí',
+    ruso: 'Ruso',
+    russian: 'Ruso',
+    japones: 'Japonés',
+    japonés: 'Japonés',
+    japanese: 'Japonés',
+    coreano: 'Coreano',
+    korean: 'Coreano',
+    vietnamita: 'Vietnamita',
+    vietnamese: 'Vietnamita',
+    turco: 'Turco',
+    turkish: 'Turco',
+    arabe: 'Árabe',
+    árabe: 'Árabe',
+    arabic: 'Árabe',
+    persa: 'Persa',
+    farsi: 'Persa',
+    urdu: 'Urdu',
+    indonesio: 'Indonesio',
+    indonesian: 'Indonesio',
+    tailandes: 'Tailandés',
+    tailandés: 'Tailandés',
+    thai: 'Tailandés',
+    neerlandes: 'Neerlandés',
+    neerlandés: 'Neerlandés',
+    holandes: 'Neerlandés',
+    holandés: 'Neerlandés',
+    dutch: 'Neerlandés',
   };
   for (const [key, value] of Object.entries(map)) {
     if (lower.includes(key)) return value;
@@ -975,7 +1005,8 @@ function extractLanguages(lines: string[]): LanguageEntry[] {
 
   if (entries.length === 0) {
     const fullText = lines.join('\n');
-    for (const lang of ['Inglés', 'Español', 'Portugués'] as const) {
+    for (const lang of LANGUAGE_OPTIONS) {
+      if (lang === 'Otro') continue;
       if (new RegExp(lang, 'i').test(fullText) && !seen.has(lang)) {
         const entry = newLanguageEntry();
         entry.idioma = lang;

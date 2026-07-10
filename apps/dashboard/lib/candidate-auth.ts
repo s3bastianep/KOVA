@@ -82,6 +82,11 @@ async function resolveCandidateForUser(user: AuthUser): Promise<Candidate | null
   }
 }
 
+/** Call after any write to a candidate's row so a GET right after a PATCH doesn't serve a stale cached copy. */
+export function invalidateCandidateAuthCache(userId: string) {
+  candidateByUserCache.delete(userId);
+}
+
 export async function getCandidateForUser(user: AuthUser): Promise<Candidate | null> {
   const cacheKey = user.id;
   const hit = candidateByUserCache.get(cacheKey);

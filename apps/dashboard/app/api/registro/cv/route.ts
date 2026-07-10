@@ -7,6 +7,7 @@ import { isMockMode } from '../../../../lib/mock';
 import { persistCandidateCvFile } from '../../../../lib/persist-candidate-cv';
 import { readRegistroMetadata } from '../../../../lib/registro-session';
 import { prisma } from '../../../../lib/prisma';
+import { isRateLimited } from '../../../../lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -23,6 +24,13 @@ async function validateSession(tenantId: string, candidateId: string, resumeToke
 }
 
 export async function POST(req: NextRequest) {
+  // No auth exists yet at this point in the signup flow (the candidate is uploading a CV
+  // before an account is created), so this endpoint can't require a session. It does run
+  // expensive PDF/Word parsing, so cap abuse with a per-IP rate limit instead.
+  if (isRateLimited(req, 'registro-cv', 10, 60_000)) {
+    return Response.json({ message: 'Demasiados intentos. Espera un minuto e inténtalo de nuevo.' }, { status: 429 });
+  }
+
   const formData = await req.formData().catch(() => null);
   if (!formData) {
     return Response.json({ message: 'Solicitud inválida.' }, { status: 400 });

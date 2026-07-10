@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized } from '../../../../lib/auth';
+import { getUserFromRequest, unauthorized, isStaffRole } from '../../../../lib/auth';
 import { prisma } from '../../../../lib/prisma';
 import { isMockMode, getMockCandidate, MOCK_ASSESSMENTS } from '../../../../lib/mock';
 import { mapCandidateProcessHistory } from '../../../../lib/candidate-process-history';
@@ -26,6 +26,7 @@ function formatPeriod(start?: Date | null, end?: Date | null, isCurrent?: boolea
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
 
   const { id } = await params;
 
@@ -69,7 +70,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       experiences: { orderBy: { startDate: 'desc' } },
       educations: true,
       references: true,
-      documents: true,
+      // Explicit select instead of `true` — Document.content stores the full CV file bytes,
+      // which this response never uses (only id/name/type/url/createdAt are mapped below).
+      documents: {
+        select: { id: true, name: true, type: true, url: true, createdAt: true },
+      },
       notes: {
         orderBy: { createdAt: 'desc' },
         include: { author: { select: { firstName: true, lastName: true } } },

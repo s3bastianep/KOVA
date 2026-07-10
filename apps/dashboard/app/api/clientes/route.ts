@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized, companyWhereForUser } from '../../../lib/auth';
+import { getUserFromRequest, unauthorized, companyWhereForUser, isStaffRole } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode, getMockClients } from '../../../lib/mock';
 
@@ -10,6 +10,7 @@ const ACTIVE_STATUSES = new Set(['SEARCH_ACTIVE', 'EVALUATION', 'FINALISTS', 'OF
 export async function GET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
 
   if (isMockMode()) {
     return Response.json(getMockClients());
@@ -41,6 +42,7 @@ export async function GET(req: NextRequest) {
       },
     },
     orderBy: { updatedAt: 'desc' },
+    take: 200,
   });
 
   const clients = companies.map((co) => {

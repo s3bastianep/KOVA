@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { ActivityType, PipelineStage, TaskPriority } from '@prisma/client';
-import { getUserFromRequest, unauthorized, companyWhereForUser } from '../../../../../../lib/auth';
+import { getUserFromRequest, unauthorized, companyWhereForUser, isStaffRole } from '../../../../../../lib/auth';
 import { prisma } from '../../../../../../lib/prisma';
 import { recordStageAutomation } from '../../../../../../lib/automations';
 import { isMockMode, getMockCandidateStage, setMockCandidateStage } from '../../../../../../lib/mock';
@@ -49,6 +49,7 @@ export async function PATCH(
 ) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
 
   const { id, candidateVacancyId } = await params;
   const body = await req.json().catch(() => ({}));

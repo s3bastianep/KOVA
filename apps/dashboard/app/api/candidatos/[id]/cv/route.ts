@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized } from '../../../../../lib/auth';
+import { getUserFromRequest, unauthorized, isStaffRole } from '../../../../../lib/auth';
 import { prisma } from '../../../../../lib/prisma';
 import { isMockMode } from '../../../../../lib/mock';
 import { readCandidateCvBuffer } from '../../../../../lib/cv-storage';
@@ -10,6 +10,7 @@ export const runtime = 'nodejs';
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
 
   const { id } = await params;
 

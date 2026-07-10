@@ -87,10 +87,24 @@ export const LANGUAGE_LEVEL_OPTIONS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'Nati
 export const LANGUAGE_OPTIONS = [
   'Español',
   'Inglés',
+  'Mandarín',
+  'Hindi',
   'Portugués',
+  'Bengalí',
+  'Ruso',
+  'Japonés',
   'Francés',
   'Alemán',
+  'Coreano',
   'Italiano',
+  'Vietnamita',
+  'Turco',
+  'Árabe',
+  'Persa',
+  'Urdu',
+  'Indonesio',
+  'Tailandés',
+  'Neerlandés',
   'Otro',
 ] as const;
 
@@ -199,6 +213,20 @@ export function isEducationComplete(entry: EducationEntry): boolean {
 
 export function isLanguageComplete(entry: LanguageEntry): boolean {
   return Boolean(entry.idioma.trim() && entry.nivel.trim());
+}
+
+export function isCertificationComplete(entry: CertificationEntry): boolean {
+  return Boolean(entry.nombre.trim() && entry.entidad.trim());
+}
+
+/** Drops certification rows left blank (added via "+ Agregar certificación" but never filled in) before persisting. */
+export function stripIncompleteCertifications<T extends { certificaciones?: CertificationEntry[] }>(
+  profile: T,
+): T {
+  if (!profile.certificaciones?.length) return profile;
+  const complete = profile.certificaciones.filter(isCertificationComplete);
+  if (complete.length === profile.certificaciones.length) return profile;
+  return { ...profile, certificaciones: complete };
 }
 
 export function calculateProfileCompleteness(profile: {

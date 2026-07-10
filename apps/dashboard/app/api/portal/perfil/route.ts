@@ -10,6 +10,7 @@ import {
 import { isMockMode, updateMockPortalProfile } from '@/lib/mock';
 import { handlePortalRoute } from '@/lib/portal-api';
 import { invalidatePortalCandidateCaches } from '@/lib/portal-server-cache';
+import { invalidateCandidateAuthCache } from '@/lib/candidate-auth';
 import { isOnboardingComplete, readOnboardingMeta, resolveOnboardingStep } from '@/lib/portal-onboarding';
 
 export const dynamic = 'force-dynamic';
@@ -66,7 +67,12 @@ export async function PATCH(req: NextRequest) {
         : undefined;
       const completeOnboarding = Boolean(body.completeOnboarding);
 
-      const invalidateCaches = () => invalidatePortalCandidateCaches(candidate.id);
+      const invalidateCaches = () => {
+        invalidatePortalCandidateCaches(candidate.id);
+        // Also drop the 60s candidate-by-user cache (lib/candidate-auth.ts) — otherwise a GET
+        // right after this PATCH can still serve the pre-write profile for up to a minute.
+        invalidateCandidateAuthCache(user.id);
+      };
 
       if (isMockMode()) {
         const current = profileFromCandidate(candidate);

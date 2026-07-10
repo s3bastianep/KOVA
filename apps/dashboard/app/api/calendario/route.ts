@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized } from '../../../lib/auth';
+import { getUserFromRequest, unauthorized, isStaffRole } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode, MOCK_CALENDAR } from '../../../lib/mock';
 
@@ -75,6 +75,7 @@ function mapEvent(e: {
 export async function GET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
 
   if (isMockMode()) {
     const items = [...MOCK_CALENDAR].sort(

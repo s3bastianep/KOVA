@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized, companyWhereForUser } from '../../../lib/auth';
+import { getUserFromRequest, unauthorized, companyWhereForUser, isStaffRole } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode, MOCK_COMPANIES } from '../../../lib/mock';
 
@@ -8,6 +8,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
 
   if (isMockMode()) return Response.json(MOCK_COMPANIES);
 
@@ -20,6 +21,7 @@ export async function GET(req: NextRequest) {
       _count: { select: { vacancies: true, contacts: true } },
     },
     orderBy: { updatedAt: 'desc' },
+    take: 200,
   });
 
   return Response.json(companies);
@@ -28,6 +30,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
   if (user.role === 'CLIENT') {
     return Response.json({ message: 'No autorizado' }, { status: 403 });
   }

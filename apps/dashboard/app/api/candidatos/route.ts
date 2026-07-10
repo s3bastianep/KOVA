@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized } from '../../../lib/auth';
+import { getUserFromRequest, unauthorized, isStaffRole } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode, MOCK_CANDIDATES } from '../../../lib/mock';
 import { normalizeSkillList } from '../../../lib/candidate-skills';
@@ -103,6 +103,7 @@ function deriveScores(compatibility: number, seed: string) {
 export async function GET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
 
   const vacancyId = req.nextUrl.searchParams.get('vacancyId') ?? undefined;
   const excludeVacancyId = req.nextUrl.searchParams.get('excludeVacancyId') ?? undefined;
@@ -151,7 +152,12 @@ export async function GET(req: NextRequest) {
       assessments: { select: { title: true }, take: 20 },
     },
     orderBy: { updatedAt: 'desc' },
-    ...(search || excludeVacancyId ? { take: 25 } : {}),
+    // Always capped, not just when searching: without this, an unfiltered request loads every
+    // candidate in the tenant (with nested vacancy + assessment fan-out) into one response.
+    // 200 is generous enough not to change today's behavior for any real tenant size while
+    // capping the worst case. A real paginated list (cursor + total count) is the proper fix
+    // if a tenant ever needs to browse past this many candidates.
+    take: search || excludeVacancyId ? 25 : 200,
   });
 
   return Response.json(candidates.map((c) => mapCandidate(c)));
@@ -160,6 +166,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
 
   const body = await req.json().catch(() => ({}));
   const {

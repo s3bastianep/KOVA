@@ -7,6 +7,7 @@ import type {
   LanguageEntry,
   WorkHistoryEntry,
 } from '@/lib/candidate-commercial-profile';
+import { COLOMBIAN_CITIES } from '@/lib/candidate-commercial-profile';
 import type { ReviewSectionId } from '@/lib/portal-onboarding-unified';
 import {
   EDUCATION_LEVEL_OPTIONS,
@@ -18,7 +19,6 @@ import {
   newWorkHistoryEntry,
 } from '@/lib/commercial-profile-builder';
 import { PortalSkillPicker } from './PortalSkillPicker';
-import { PortalOnboardingExperienceConversation } from './PortalOnboardingExperienceConversation';
 
 type Props = {
   profile: CommercialProfile;
@@ -49,6 +49,10 @@ function CardHeader({
 }
 
 function PersonalSection({ profile, onChange }: Props) {
+  const ciudad = profile.ciudad?.trim() ?? '';
+  const isKnownCity = COLOMBIAN_CITIES.includes(ciudad) && ciudad !== 'Otra';
+  const citySelectValue = !ciudad ? '' : isKnownCity ? ciudad : 'Otra';
+
   return (
     <div className="space-y-3">
       <p className="portal-onboarding-section-title">Información personal</p>
@@ -83,13 +87,30 @@ function PersonalSection({ profile, onChange }: Props) {
       </label>
       <label className="portal-onboarding-work-field">
         <span className="portal-onboarding-work-field__label">Ciudad</span>
-        <input
-          className="portal-onboarding-field"
-          value={profile.ciudad ?? ''}
-          placeholder="Bogotá, Medellín..."
-          onChange={(e) => onChange({ ...profile, ciudad: e.target.value })}
-        />
+        <select
+          className="portal-onboarding-field portal-onboarding-field--select"
+          value={citySelectValue}
+          onChange={(e) => onChange({ ...profile, ciudad: e.target.value === 'Otra' ? '' : e.target.value })}
+        >
+          <option value="">Selecciona ciudad</option>
+          {COLOMBIAN_CITIES.map((city) => (
+            <option key={city} value={city}>
+              {city}
+            </option>
+          ))}
+        </select>
       </label>
+      {citySelectValue === 'Otra' ? (
+        <label className="portal-onboarding-work-field">
+          <span className="portal-onboarding-work-field__label">¿Cuál ciudad?</span>
+          <input
+            className="portal-onboarding-field"
+            value={isKnownCity ? '' : ciudad}
+            placeholder="Escribe tu ciudad"
+            onChange={(e) => onChange({ ...profile, ciudad: e.target.value })}
+          />
+        </label>
+      ) : null}
     </div>
   );
 }
@@ -323,43 +344,62 @@ function LanguagesSection({ profile, onChange }: Props) {
       {langs.length === 0 ? (
         <p className="portal-onboarding-muted">Sin idiomas detectados. Agrega los que manejas.</p>
       ) : (
-        langs.map((entry, index) => (
-          <article key={entry.id} className="portal-onboarding-work-card">
-            <CardHeader label={ordinalLabel(index, 'idioma')} onDelete={() => removeLang(entry.id)} />
-            <div className="portal-onboarding-work-dates">
-              <label className="portal-onboarding-work-field">
-                <span className="portal-onboarding-work-field__label">Idioma</span>
-                <select
-                  className="portal-onboarding-field portal-onboarding-field--select"
-                  value={entry.idioma}
-                  onChange={(e) => updateLang(entry.id, { idioma: e.target.value })}
-                >
-                  <option value="">Selecciona idioma</option>
-                  {LANGUAGE_OPTIONS.map((lang) => (
-                    <option key={lang} value={lang}>
-                      {lang}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="portal-onboarding-work-field">
-                <span className="portal-onboarding-work-field__label">Nivel</span>
-                <select
-                  className="portal-onboarding-field portal-onboarding-field--select"
-                  value={entry.nivel}
-                  onChange={(e) => updateLang(entry.id, { nivel: e.target.value })}
-                >
-                  <option value="">Selecciona nivel</option>
-                  {LANGUAGE_LEVEL_OPTIONS.map((level) => (
-                    <option key={level} value={level}>
-                      {level}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-          </article>
-        ))
+        langs.map((entry, index) => {
+          const isKnownLanguage = LANGUAGE_OPTIONS.includes(entry.idioma as (typeof LANGUAGE_OPTIONS)[number]);
+          const isOtro = entry.idioma === 'Otro' || (!!entry.idioma && !isKnownLanguage);
+          const languageSelectValue = !entry.idioma ? '' : isOtro ? 'Otro' : entry.idioma;
+
+          return (
+            <article key={entry.id} className="portal-onboarding-work-card">
+              <CardHeader label={ordinalLabel(index, 'idioma')} onDelete={() => removeLang(entry.id)} />
+              <div className="portal-onboarding-work-dates">
+                <label className="portal-onboarding-work-field">
+                  <span className="portal-onboarding-work-field__label">Idioma</span>
+                  <select
+                    className="portal-onboarding-field portal-onboarding-field--select"
+                    value={languageSelectValue}
+                    onChange={(e) =>
+                      updateLang(entry.id, { idioma: e.target.value === 'Otro' ? '' : e.target.value })
+                    }
+                  >
+                    <option value="">Selecciona idioma</option>
+                    {LANGUAGE_OPTIONS.map((lang) => (
+                      <option key={lang} value={lang}>
+                        {lang}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="portal-onboarding-work-field">
+                  <span className="portal-onboarding-work-field__label">Nivel</span>
+                  <select
+                    className="portal-onboarding-field portal-onboarding-field--select"
+                    value={entry.nivel}
+                    onChange={(e) => updateLang(entry.id, { nivel: e.target.value })}
+                  >
+                    <option value="">Selecciona nivel</option>
+                    {LANGUAGE_LEVEL_OPTIONS.map((level) => (
+                      <option key={level} value={level}>
+                        {level}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              {languageSelectValue === 'Otro' ? (
+                <label className="portal-onboarding-work-field">
+                  <span className="portal-onboarding-work-field__label">¿Cuál idioma?</span>
+                  <input
+                    className="portal-onboarding-field"
+                    value={isKnownLanguage ? '' : entry.idioma}
+                    placeholder="Escribe el idioma"
+                    onChange={(e) => updateLang(entry.id, { idioma: e.target.value })}
+                  />
+                </label>
+              ) : null}
+            </article>
+          );
+        })
       )}
 
       <button
@@ -457,7 +497,7 @@ export function PortalOnboardingReviewCards({ profile, section, onChange }: Prop
     case 'personal':
       return <PersonalSection profile={profile} section={section} onChange={onChange} />;
     case 'experiencia':
-      return <PortalOnboardingExperienceConversation profile={profile} onChange={onChange} />;
+      return <ExperienceSection profile={profile} section={section} onChange={onChange} />;
     case 'educacion':
       return <EducationSection profile={profile} section={section} onChange={onChange} />;
     case 'idiomas':
