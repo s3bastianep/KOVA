@@ -22,7 +22,7 @@ export function PortalOnboardingComplete({
   onEnter,
 }: Props) {
   return (
-    <PortalOnboardingChrome journeyIndex={4} minutesLeft={0} percent={percent}>
+    <PortalOnboardingChrome journeyIndex={4} minutesLeft={0} percent={percent} narrow>
       <div className="ob-complete">
         <PortalOnboardingStepHero
           eyebrow="Perfil activo"

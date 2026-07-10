@@ -12,6 +12,9 @@ type Props = {
   onSaveExit?: () => void;
   children: ReactNode;
   wide?: boolean;
+  centered?: boolean;
+  narrow?: boolean;
+  hideHeaderProgress?: boolean;
 };
 
 export function PortalOnboardingChrome({
@@ -21,9 +24,14 @@ export function PortalOnboardingChrome({
   onSaveExit,
   children,
   wide,
+  centered = true,
+  narrow,
+  hideHeaderProgress,
 }: Props) {
   return (
-    <div className={`portal-onboarding portal-onboarding--fullscreen portal-onboarding--v2${wide ? ' portal-onboarding--wide' : ''}`}>
+    <div
+      className={`portal-onboarding portal-onboarding--fullscreen portal-onboarding--v2 portal-onboarding--immersive${wide ? ' portal-onboarding--wide' : ''}${centered ? ' portal-onboarding--centered' : ''}${narrow ? ' portal-onboarding--narrow' : ''}`}
+    >
       <div className="portal-onboarding-viewport">
         <header className="ob-chrome">
           <div className="ob-chrome__top">
@@ -44,9 +52,14 @@ export function PortalOnboardingChrome({
             </div>
           </div>
           <PortalOnboardingStepper activeIndex={journeyIndex} />
-          <PortalOnboardingProgressIndicator percent={percent} compact />
+          {!hideHeaderProgress ? (
+            <PortalOnboardingProgressIndicator percent={percent} compact />
+          ) : null}
         </header>
-        {children}
+
+        <main className="portal-onboarding-main portal-onboarding-main--immersive">
+          <div className="portal-onboarding-stage">{children}</div>
+        </main>
       </div>
     </div>
   );

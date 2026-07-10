@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
-  Check,
   FileText,
   Loader2,
   Upload,
@@ -26,7 +25,6 @@ import {
   canContinueFromReviewHub,
   estimatedMinutesLeft,
   onboardingJourneyIndex,
-  motivationalMessage,
   normalizeOnboardingStep,
   transitionAfterStep,
   type ReviewSectionId,
@@ -68,10 +66,10 @@ import {
 } from './PortalOnboardingPreferencias';
 import { PortalOnboardingFooter, PortalOnboardingShell } from './PortalOnboardingShell';
 import { PortalOnboardingWelcome } from './PortalOnboardingWelcome';
-import { PortalOnboardingProfilePreview } from './PortalOnboardingProfilePreview';
 import { PortalOnboardingTransition } from './PortalOnboardingTransition';
 import { PortalOnboardingComplete } from './PortalOnboardingComplete';
 import { PortalOnboardingCvSummary } from './PortalOnboardingCvSummary';
+import { PortalOnboardingCvAnalyzing } from './PortalOnboardingCvAnalyzing';
 import { PortalOnboardingStepHero } from './PortalOnboardingStepHero';
 import { usePortalVacancyMatchStats } from './usePortalVacancyMatchStats';
 import './portal-onboarding.css';
@@ -174,23 +172,11 @@ export function PortalOnboardingFlow({
     competencyIndex,
   );
   const minutesLeft = estimatedMinutesLeft(step, profile, prefStepIndex, competencyIndex);
-  const motivation = motivationalMessage(percent);
-  const mergedProfile = buildMergedProfile();
   const journeyIndex = onboardingJourneyIndex(step);
   const vacancyStatsEnabled = STEPS_WITH_VACANCY_STATS.has(step) && vacancyStatsKey > 0;
   const { stats: vacancyStats, loading: vacancyStatsLoading } = usePortalVacancyMatchStats(
     vacancyStatsEnabled ? vacancyStatsKey : null,
   );
-
-  const previewPanel =
-    step !== 'welcome' && step !== 'complete' ? (
-      <PortalOnboardingProfilePreview
-        profile={mergedProfile}
-        vacancyStats={vacancyStats}
-        vacancyStatsLoading={vacancyStatsLoading}
-        firstName={firstName}
-      />
-    ) : null;
 
   const renderWithOverlay = (node: ReactNode) => (
     <>
@@ -573,18 +559,19 @@ export function PortalOnboardingFlow({
         percent={percent}
         minutesLeft={minutesLeft}
         journeyIndex={journeyIndex}
-        motivation={previewPanel ? null : motivation}
         onSaveExit={() => void handleSaveExit()}
-        preview={previewPanel}
+        narrow
+        hidePreview
+        hideHeaderProgress
       >
         <PortalOnboardingStepHero
-          eyebrow="Documentación"
-          title="Documenta tu trayectoria"
-          subtitle="Sube tu CV. Extraeremos y estructuraremos tu experiencia profesional."
+          eyebrow="Paso 1 · Documentación"
+          title="Sube tu hoja de vida"
+          subtitle="Extraeremos y estructuraremos tu experiencia profesional automáticamente."
         />
 
         <div
-          className="ob-panel ob-upload-panel portal-onboarding-upload-zone portal-onboarding-upload-zone--large"
+          className="ob-panel ob-upload-panel portal-onboarding-upload-zone portal-onboarding-upload-zone--immersive"
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => {
             e.preventDefault();
@@ -624,27 +611,15 @@ export function PortalOnboardingFlow({
 
   if (step === 'cv_analyzing') {
     return renderWithOverlay(
-      <PortalOnboardingShell percent={percent} minutesLeft={minutesLeft} journeyIndex={journeyIndex} preview={previewPanel}>
-        <PortalOnboardingStepHero
-          eyebrow="Procesamiento"
-          title="Analizando trayectoria"
-          subtitle="Estructurando la información de tu hoja de vida."
-        />
-        <section className="ob-panel ob-question-panel">
-        <div className="portal-onboarding-analyze">
-          <div className="portal-onboarding-progress mt-4" aria-hidden>
-            <span style={{ width: `${analysisProgress}%` }} />
-          </div>
-          <ul className="portal-onboarding-steps">
-            {CV_ANALYSIS_STEPS.map((label, i) => (
-              <li key={label} className={i < analysisDone ? 'is-done' : undefined}>
-                {i < analysisDone ? <Check className="w-4 h-4 text-[var(--kova-lime)]" /> : <Loader2 className="w-4 h-4 animate-spin opacity-40" />}
-                {label}
-              </li>
-            ))}
-          </ul>
-        </div>
-        </section>
+      <PortalOnboardingShell
+        percent={percent}
+        minutesLeft={minutesLeft}
+        journeyIndex={journeyIndex}
+        narrow
+        hidePreview
+        hideHeaderProgress
+      >
+        <PortalOnboardingCvAnalyzing analysisDone={analysisDone} analysisProgress={analysisProgress} />
       </PortalOnboardingShell>,
     );
   }
@@ -696,11 +671,9 @@ export function PortalOnboardingFlow({
         percent={percent}
         minutesLeft={minutesLeft}
         journeyIndex={journeyIndex}
-        motivation={previewPanel ? null : motivation}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
-        wide
-        preview={previewPanel}
+        hidePreview
         footer={
           <PortalOnboardingFooter
             onBack={() => void saveStep('cv_summary')}
@@ -745,8 +718,7 @@ export function PortalOnboardingFlow({
         journeyIndex={journeyIndex}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
-        wide
-        preview={previewPanel}
+        hidePreview
         footer={
           <PortalOnboardingFooter
             onBack={() => void saveStep('review_hub')}
@@ -785,10 +757,10 @@ export function PortalOnboardingFlow({
         percent={percent}
         minutesLeft={minutesLeft}
         journeyIndex={journeyIndex}
-        motivation={previewPanel ? null : motivation}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
-        preview={previewPanel}
+        narrow
+        hidePreview
         footer={
           <PortalOnboardingFooter
             onBack={() => void goPrefBack()}
@@ -826,10 +798,10 @@ export function PortalOnboardingFlow({
         percent={percent}
         minutesLeft={minutesLeft}
         journeyIndex={journeyIndex}
-        motivation={previewPanel ? null : motivation}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
-        preview={previewPanel}
+        narrow
+        hidePreview
         footer={
           <PortalOnboardingFooter
             onBack={() => void goEvidenceBack()}
@@ -868,10 +840,10 @@ export function PortalOnboardingFlow({
         percent={percent}
         minutesLeft={minutesLeft}
         journeyIndex={journeyIndex}
-        motivation={previewPanel ? null : motivation}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
-        preview={previewPanel}
+        narrow
+        hidePreview
         footer={
           <PortalOnboardingFooter
             onBack={() => void goCompetencyBack()}

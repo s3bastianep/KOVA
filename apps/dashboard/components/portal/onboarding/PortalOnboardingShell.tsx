@@ -19,6 +19,7 @@ type Props = {
   hidePreview?: boolean;
   hideHeaderProgress?: boolean;
   centered?: boolean;
+  narrow?: boolean;
 };
 
 export function PortalOnboardingShell({
@@ -34,11 +35,12 @@ export function PortalOnboardingShell({
   preview,
   hidePreview,
   hideHeaderProgress,
-  centered,
+  centered = true,
+  narrow,
 }: Props) {
   return (
     <div
-      className={`portal-onboarding portal-onboarding--fullscreen portal-onboarding--v2${wide ? ' portal-onboarding--wide' : ''}${centered ? ' portal-onboarding--centered' : ''}`}
+      className={`portal-onboarding portal-onboarding--fullscreen portal-onboarding--v2 portal-onboarding--immersive${wide ? ' portal-onboarding--wide' : ''}${centered ? ' portal-onboarding--centered' : ''}${narrow ? ' portal-onboarding--narrow' : ''}`}
     >
       <div className="portal-onboarding-viewport">
         <header className="ob-chrome">
@@ -65,7 +67,7 @@ export function PortalOnboardingShell({
           ) : null}
         </header>
 
-        <main className="portal-onboarding-main">
+        <main className="portal-onboarding-main portal-onboarding-main--immersive">
           {!hidePreview && preview}
           {motivation ? <p className="portal-onboarding-motivation">{motivation}</p> : null}
           <div className="portal-onboarding-stage">{children}</div>

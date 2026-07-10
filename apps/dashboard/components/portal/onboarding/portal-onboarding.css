@@ -2880,6 +2880,231 @@ html.portal-onboarding-immersive .kova-topbar {
   padding-top: 1rem;
 }
 
+/* Narrow immersive column (Spotify / Revolut style) */
+
+.portal-onboarding--narrow .portal-onboarding-viewport {
+  max-width: 520px;
+}
+
+.portal-onboarding--immersive .portal-onboarding-main--immersive {
+  justify-content: flex-start;
+  padding-top: 0.5rem;
+}
+
+.portal-onboarding--immersive.portal-onboarding--narrow .portal-onboarding-btn--primary,
+.portal-onboarding--immersive.portal-onboarding--narrow .ob-welcome__cta,
+.portal-onboarding--immersive.portal-onboarding--narrow .ob-complete__cta {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.625rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.portal-onboarding--immersive.portal-onboarding--narrow .portal-onboarding--fullscreen .portal-onboarding-question-actions {
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.portal-onboarding--immersive.portal-onboarding--narrow .portal-onboarding--fullscreen .portal-onboarding-question-actions .portal-onboarding-btn {
+  width: 100%;
+  min-height: 2.75rem;
+  border-radius: 0.625rem;
+  font-size: 0.875rem;
+}
+
+.portal-onboarding--immersive .ob-step-hero {
+  border-bottom: none;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.portal-onboarding--immersive .ob-step-hero h1 {
+  font-size: clamp(1.375rem, 4vw, 1.5rem);
+}
+
+.portal-onboarding--immersive .ob-panel,
+.portal-onboarding--immersive .ob-question-panel {
+  background: #111111;
+  border: 1px solid #262626;
+  border-radius: 12px;
+  padding: 1rem 1.125rem;
+  margin-top: 0.75rem;
+}
+
+.portal-onboarding-upload-zone--immersive {
+  margin-top: 0.25rem;
+  padding: 2rem 1.25rem;
+  border-radius: 12px;
+  border: 1px dashed #333333 !important;
+  background: #0a0a0a !important;
+  text-align: center;
+}
+
+.portal-onboarding-upload-zone--immersive .portal-onboarding-upload-btn {
+  width: auto;
+  min-height: 2.75rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.625rem;
+  margin: 0 auto;
+}
+
+/* Profile build loader (cv analyzing) */
+
+.ob-build {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem 0 0.5rem;
+}
+
+.ob-build__visual {
+  position: relative;
+  width: 7rem;
+  height: 7rem;
+  margin-bottom: 1.25rem;
+}
+
+.ob-build__pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 2px solid rgba(198, 255, 0, 0.25);
+  animation: ob-build-pulse 1.8s ease-in-out infinite;
+}
+
+.ob-build__percent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+}
+
+.ob-build__status {
+  margin: 0 0 0.375rem;
+  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
+  min-height: 1.5rem;
+  transition: opacity 0.25s ease;
+}
+
+.ob-build__sub {
+  margin: 0 0 1.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #737373;
+  max-width: 20rem;
+}
+
+.ob-build__track {
+  width: 100%;
+  height: 3px;
+  background: #262626;
+  border-radius: 1px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.ob-build__track > span {
+  display: block;
+  height: 100%;
+  background: #c6ff00;
+  border-radius: 1px;
+  transition: width 0.45s ease;
+}
+
+.ob-build__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  text-align: left;
+}
+
+.ob-build__step {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 0.625rem;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  color: #525252;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.ob-build__step.is-active {
+  color: #ffffff;
+  background: rgba(198, 255, 0, 0.06);
+}
+
+.ob-build__step.is-done {
+  color: #a3a3a3;
+}
+
+.ob-build__step-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+  color: #c6ff00;
+}
+
+.ob-build__step.is-done .ob-build__step-icon {
+  color: #c6ff00;
+}
+
+@keyframes ob-build-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
+/* Transition overlay */
+
+.portal-onboarding-transition__loader {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 999px;
+  background: rgba(198, 255, 0, 0.08);
+  color: #c6ff00;
+  margin-bottom: 1rem;
+}
+
+.portal-onboarding-transition__loading {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.portal-onboarding-transition__card.is-revealed .portal-onboarding-transition__check {
+  animation: portal-onboarding-scale-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 .portal-onboarding--v2 .portal-onboarding-main {
   justify-content: flex-start;
   padding-top: 0.75rem;
@@ -2903,6 +3128,22 @@ html.portal-onboarding-immersive .kova-topbar {
   border-radius: 0;
   padding: 0 0 1rem;
   margin-bottom: 1.25rem;
+}
+
+.portal-onboarding--immersive.portal-onboarding--v2 .ob-panel,
+.portal-onboarding--immersive.portal-onboarding--v2 .ob-question-panel {
+  background: #111111;
+  border: 1px solid #262626;
+  border-radius: 12px;
+  padding: 1rem 1.125rem;
+  margin-bottom: 0;
+  border-top: 1px solid #262626;
+}
+
+.portal-onboarding--immersive.portal-onboarding--v2 .ob-step-hero {
+  background: transparent;
+  border: none;
+  padding-bottom: 0.75rem;
 }
 
 /* Progress bar (replaces blurry ring) */
@@ -4361,39 +4602,48 @@ html.portal-onboarding-immersive .kova-topbar {
   margin-bottom: 0.875rem;
 }
 
-/* Welcome v2 */
+/* Welcome immersive */
 
 .ob-welcome {
-  padding-top: 0.5rem;
+  padding-top: 0.25rem;
+  min-height: 18rem;
 }
 
-.ob-welcome__hero {
-  margin-bottom: 1.5rem;
-}
-
-.ob-welcome__eyebrow {
-  margin: 0 0 0.625rem;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.38);
-}
-
-.ob-welcome__greeting {
-  display: none;
-}
-
-.ob-welcome__headline {
+.ob-welcome__boot {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 1rem;
-  margin-bottom: 0.875rem;
+  min-height: 16rem;
+  text-align: center;
 }
 
-.ob-welcome__headline h1 {
-  margin: 0 0 0.375rem;
+.ob-welcome__boot-ring {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 999px;
+  background: rgba(198, 255, 0, 0.08);
+  color: #c6ff00;
+}
+
+.ob-welcome__boot-text {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #a3a3a3;
+  animation: ob-welcome-fade 0.35s ease;
+}
+
+.ob-welcome__intro {
+  margin-bottom: 1rem;
+}
+
+.ob-welcome__intro h1 {
+  margin: 0 0 0.5rem;
   font-family: var(--font-sora), 'Sora', sans-serif;
   font-size: clamp(1.375rem, 4vw, 1.625rem);
   font-weight: 700;
@@ -4402,24 +4652,56 @@ html.portal-onboarding-immersive .kova-topbar {
   color: #ffffff;
 }
 
-.ob-welcome__headline {
-  display: none;
+.ob-welcome__lead {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #a3a3a3;
 }
 
-.ob-welcome__headline p {
-  display: none;
+.ob-welcome__eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #c6ff00;
+}
+
+.ob-welcome__card {
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid #262626;
+  background: #111111;
+  margin-bottom: 0.25rem;
+}
+
+.ob-welcome__card-label {
+  margin: 0 0 0.75rem;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #737373;
 }
 
 .ob-welcome__benefit {
-  margin: 1.25rem 0 1.5rem;
-  font-size: 15px;
-  line-height: 1.55;
-  color: #a3a3a3;
-  max-width: 36rem;
+  margin: 0.875rem 0 0;
+  padding-top: 0.875rem;
+  border-top: 1px solid #262626;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #737373;
+}
+
+.ob-welcome__cta-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.25rem;
 }
 
 .ob-welcome__cta {
-  width: 100%;
+  max-width: 280px;
 }
 
 .ob-welcome__milestones {
@@ -4431,14 +4713,18 @@ html.portal-onboarding-immersive .kova-topbar {
   gap: 0.375rem;
 }
 
+.ob-welcome--ready .ob-welcome__milestone {
+  animation: ob-welcome-slide 0.45s ease both;
+}
+
 .ob-welcome__milestone {
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #262626;
-  background: transparent;
-  font-size: 14px;
+  padding: 0.5rem 0.625rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 13px;
   color: #d4d4d4;
 }
 
@@ -4446,23 +4732,46 @@ html.portal-onboarding-immersive .kova-topbar {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.375rem;
-  height: 1.375rem;
-  border-radius: 0.375rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
-  font-size: 0.625rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  background: rgba(198, 255, 0, 0.12);
+  font-size: 10px;
   font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: rgba(255, 255, 255, 0.45);
+  color: #c6ff00;
   flex-shrink: 0;
 }
 
 .ob-welcome__milestone-icon {
-  color: rgba(255, 255, 255, 0.35);
+  color: #737373;
   flex-shrink: 0;
 }
 
+@keyframes ob-welcome-fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ob-welcome-slide {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ob-welcome__hero,
+.ob-welcome__headline,
+.ob-welcome__greeting,
 .ob-welcome__milestone-icon-wrap,
 .ob-welcome__milestone-glyph {
   display: none;
@@ -4504,4 +4813,7 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .ob-complete__cta {
   width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  display: flex;
 }
