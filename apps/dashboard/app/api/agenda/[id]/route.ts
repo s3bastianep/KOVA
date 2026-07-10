@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized } from '../../../../lib/auth';
+import { getUserFromRequest, unauthorized, isStaffRole } from '../../../../lib/auth';
 import { rescheduleAgendaItem, updateAgendaStatus } from '../../../../lib/agenda-service';
 import type { AgendaStatus } from '../../../../lib/agenda';
 
@@ -8,6 +8,7 @@ export const dynamic = 'force-dynamic';
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
 
   const { id: itemKey } = await params;
   const body = await req.json().catch(() => ({}));

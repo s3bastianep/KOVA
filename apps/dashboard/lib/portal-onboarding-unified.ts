@@ -1,4 +1,11 @@
 import type { CommercialProfile } from './candidate-commercial-profile';
+import {
+  isCertificationComplete,
+  isEducationComplete,
+  isEvidenceCardComplete,
+  isLanguageComplete,
+  isWorkHistoryComplete,
+} from './commercial-profile-builder';
 import { competencyDefsForProfile } from './portal-onboarding-evidence';
 import {
   getActiveSteps,
@@ -387,7 +394,7 @@ export function reviewSectionSummary(
       return preview || `${items.length} idioma${items.length === 1 ? '' : 's'}`;
     }
     case 'certificaciones': {
-      const items = profile.certificaciones ?? [];
+      const items = (profile.certificaciones ?? []).filter(isCertificationComplete);
       if (!items.length) return 'Sin certificaciones. Puedes agregarlas al editar.';
       const preview = items
         .map((item) => item.nombre?.trim())
@@ -417,7 +424,7 @@ export function isReviewSectionReady(id: ReviewSectionId, profile: CommercialPro
     case 'idiomas':
       return (profile.idiomas?.length ?? 0) > 0;
     case 'certificaciones':
-      return (profile.certificaciones?.length ?? 0) > 0;
+      return (profile.certificaciones ?? []).some(isCertificationComplete);
     case 'skills':
       return (profile.herramientas?.length ?? 0) > 0;
     default:
@@ -462,9 +469,9 @@ export function profileCompletenessScore(
 export function nextIncompleteOnboardingStep(profile: CommercialProfile): OnboardingStep {
   const hasContact = Boolean(profile.nombre?.trim() && profile.email?.trim() && profile.telefono?.trim());
   const hasConsent = Boolean(profile.consentimientoDatos);
-  const hasWork = (profile.historialLaboral?.length ?? 0) > 0;
-  const hasEducation = (profile.formacion?.length ?? 0) > 0;
-  const hasLanguages = (profile.idiomas?.length ?? 0) > 0;
+  const hasWork = (profile.historialLaboral ?? []).some(isWorkHistoryComplete);
+  const hasEducation = (profile.formacion ?? []).some(isEducationComplete);
+  const hasLanguages = (profile.idiomas ?? []).some(isLanguageComplete);
 
   if (!hasContact || !hasConsent || !hasWork || !hasEducation || !hasLanguages) {
     return 'review_hub';
@@ -479,7 +486,7 @@ export function nextIncompleteOnboardingStep(profile: CommercialProfile): Onboar
     return 'preferencias';
   }
 
-  const hasEvidence = (profile.logros ?? []).some((l) => l.titulo?.trim() && l.cifra?.trim());
+  const hasEvidence = (profile.logros ?? []).some(isEvidenceCardComplete);
   if (!hasEvidence) {
     return 'evidence';
   }

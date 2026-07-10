@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized, companyWhereForUser } from '../../../../lib/auth';
+import { getUserFromRequest, unauthorized, companyWhereForUser, isStaffRole } from '../../../../lib/auth';
 import { prisma } from '../../../../lib/prisma';
 import { isMockMode, getMockCompany } from '../../../../lib/mock';
 import { computeProcessPipelineMetrics } from '../../../../lib/process-metrics';
@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
 
   const { id } = await params;
 
@@ -59,6 +60,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
   if (user.role === 'CLIENT') {
     return Response.json({ message: 'No autorizado' }, { status: 403 });
   }

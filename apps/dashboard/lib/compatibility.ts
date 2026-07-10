@@ -110,9 +110,10 @@ function evaluateRule(
     }
   }
 
+  const actualYears = Number(actual ?? 0);
   const partial =
-    matchType === 'years_min' && !met && Number(rule.expected) > 0
-      ? Math.min(max, Math.round((Number(actual ?? 0) / Number(rule.expected)) * max))
+    matchType === 'years_min' && !met && Number(rule.expected) > 0 && Number.isFinite(actualYears)
+      ? Math.min(max, Math.round((actualYears / Number(rule.expected)) * max))
       : 0;
 
   return {

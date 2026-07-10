@@ -73,6 +73,7 @@ export function PortalOnboardingPreferencias({
       <PortalOnboardingStepHero
         firstName={firstName}
         eyebrow={`Perfil comercial · ${blockLabel}`}
+        progress={`Pregunta ${stepIndex + 1} de ${activeSteps.length}`}
         title={currentStep.title}
         subtitle={subtitle}
       />
@@ -90,6 +91,7 @@ export function PortalOnboardingPreferencias({
             onChange={(e) => onSalaryChange(Number(e.target.value))}
             className="portal-onboarding-salary__slider"
             aria-label="Aspiración salarial"
+            aria-valuetext={SALARY_SLIDER_LABELS[salaryIdx]}
           />
           <div className="portal-onboarding-salary__labels">
             <span>Menor</span>

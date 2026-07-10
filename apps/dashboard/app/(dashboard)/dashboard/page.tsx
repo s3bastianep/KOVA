@@ -42,7 +42,7 @@ type ActivityLog = {
 
 type AlertItem = { id: string; title: string; status: string; dueDate?: string };
 
-const STAGE_METRICS = ['Procesos', 'Procesos', 'Candidatos', 'Pruebas', 'Entrevistas', 'Finalistas', 'En entrevista', 'Contratados'] as const;
+const STAGE_METRICS = ['Procesos', 'Perfiles', 'Candidatos', 'Pruebas', 'Entrevistas', 'Finalistas', 'En entrevista', 'Contratados'] as const;
 
 const STAGE_ACTIVITIES: Record<string, string[]> = {
   discovery: ['Agenda reunión', 'Explica el negocio', 'Explica sus productos', 'Explica cómo vende', 'Explica su proceso comercial', 'Solicitud de cubrimiento'],

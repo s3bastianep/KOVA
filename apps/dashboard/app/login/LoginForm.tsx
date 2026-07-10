@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, type ReactNode } from 'react';
-import { ArrowLeft, ArrowRight, Loader2, Lock, Mail } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Eye, EyeOff, Loader2, Lock, Mail } from 'lucide-react';
 import { authApi, clearSession, saveSession } from '@/lib/api';
 import './login.css';
 
@@ -44,6 +44,7 @@ export function LoginForm({ mode = 'candidate' }: { mode?: LoginMode }) {
   const copy = COPY[mode];
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(true);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -145,7 +146,7 @@ export function LoginForm({ mode = 'candidate' }: { mode?: LoginMode }) {
               <input
                 id="login-password"
                 name="password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 autoComplete="current-password"
                 placeholder="••••••••"
                 value={password}
@@ -153,6 +154,14 @@ export function LoginForm({ mode = 'candidate' }: { mode?: LoginMode }) {
                 required
                 className="kv-login-input"
               />
+              <button
+                type="button"
+                className="kv-login-toggle-visibility"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
           </div>
 

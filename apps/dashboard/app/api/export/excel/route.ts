@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized } from '../../../../lib/auth';
+import { getUserFromRequest, unauthorized, isStaffRole } from '../../../../lib/auth';
 import { buildExcelExportBuffer } from '../../../../lib/excel-export';
 
 export const dynamic = 'force-dynamic';
@@ -9,6 +9,7 @@ const ADMIN_ROLES = new Set(['SUPER_ADMIN', 'COORDINATOR', 'CONSULTANT']);
 export async function GET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
 
   if (!ADMIN_ROLES.has(user.role)) {
     return Response.json({ message: 'No tienes permiso para exportar datos.' }, { status: 403 });

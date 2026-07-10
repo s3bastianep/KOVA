@@ -1,6 +1,7 @@
 import type { CommercialProfile } from './candidate-commercial-profile';
 import type { CvExtractionResult } from './cv-extract';
 import { applyCvSuggestions, normalizeEducation, normalizeWorkHistory } from './cv-extract';
+import { isCertificationComplete } from './commercial-profile-builder';
 
 export type OnboardingStep =
   | 'welcome'
@@ -55,7 +56,7 @@ export function countsFromProfile(profile: CommercialProfile): OnboardingCounts 
   return {
     experiencias: profile.historialLaboral?.length ?? 0,
     estudios: profile.formacion?.length ?? 0,
-    certificaciones: profile.certificaciones?.length ?? 0,
+    certificaciones: (profile.certificaciones ?? []).filter(isCertificationComplete).length,
     idiomas: profile.idiomas?.length ?? 0,
     cursos: 0,
   };
@@ -72,18 +73,47 @@ export function countsFromExtraction(extraction: CvExtractionResult): Onboarding
   };
 }
 
+function entryKey(a?: string, b?: string): string {
+  return `${a?.trim().toLowerCase() ?? ''}|${b?.trim().toLowerCase() ?? ''}`;
+}
+
 export function applyFullCvExtraction(
   profile: CommercialProfile,
   extraction: CvExtractionResult,
 ): CommercialProfile {
-  const keys = extraction.reviewFields.map((f) => f.key);
-  let next = applyCvSuggestions(profile, extraction.suggestions, keys) as CommercialProfile;
-  if (next.historialLaboral?.length) {
-    next = { ...next, historialLaboral: normalizeWorkHistory(next.historialLaboral) };
+  const s = extraction.suggestions;
+
+  // Only let extracted scalars fill in blanks — never overwrite a field the candidate already
+  // has (whether from a prior CV or from editing the review step). `reviewFields.defaultSelected`
+  // used to decide this, but it reflects what the server knew when the FILE was parsed, not the
+  // client's live (possibly since-edited) profile, so re-uploading a CV could silently clobber
+  // edits. Deciding straight from the live `profile` argument is always correct.
+  const keys: string[] = ['idiomas']; // applyCvSuggestions already merges idiomas, never replaces
+  if (!profile.nombre?.trim()) keys.push('nombre');
+  if (!profile.email?.trim()) keys.push('email');
+  if (!profile.telefono?.trim()) keys.push('telefono');
+  if (!profile.ciudad?.trim()) keys.push('ciudad');
+  if (!profile.anios) keys.push('anios');
+  if (!profile.nivelRol?.trim()) keys.push('nivelRol');
+
+  let next = applyCvSuggestions(profile, s, keys) as CommercialProfile;
+
+  // historialLaboral / formacion: merge (append CV entries not already present, matched by
+  // empresa+cargo / institución+título) instead of wholesale replacing — so entries the
+  // candidate already edited or added by hand survive a re-upload.
+  if (s.historialLaboral?.length) {
+    const existing = profile.historialLaboral ?? [];
+    const existingKeys = new Set(existing.map((e) => entryKey(e.empresa, e.cargo)));
+    const additions = s.historialLaboral.filter((e) => !existingKeys.has(entryKey(e.empresa, e.cargo)));
+    next = { ...next, historialLaboral: normalizeWorkHistory([...existing, ...additions]) };
   }
-  if (next.formacion?.length) {
-    next = { ...next, formacion: normalizeEducation(next.formacion) };
+  if (s.formacion?.length) {
+    const existing = profile.formacion ?? [];
+    const existingKeys = new Set(existing.map((e) => entryKey(e.institucion, e.titulo)));
+    const additions = s.formacion.filter((e) => !existingKeys.has(entryKey(e.institucion, e.titulo)));
+    next = { ...next, formacion: normalizeEducation([...existing, ...additions]) };
   }
+
   return next;
 }
 

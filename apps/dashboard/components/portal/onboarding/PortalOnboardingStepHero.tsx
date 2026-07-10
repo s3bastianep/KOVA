@@ -7,6 +7,7 @@ type Props = {
   title: string;
   subtitle: string;
   eyebrow?: string;
+  progress?: string;
   showGreeting?: boolean;
 };
 
@@ -15,14 +16,21 @@ export function PortalOnboardingStepHero({
   title,
   subtitle,
   eyebrow,
+  progress,
   showGreeting = false,
 }: Props) {
   return (
     <header className="ob-step-hero">
-      {showGreeting && firstName ? (
-        <p className="ob-step-hero__eyebrow">{formatFirstName(firstName)}</p>
+      {eyebrow || progress ? (
+        <div className="ob-step-hero__meta">
+          {showGreeting && firstName ? (
+            <p className="ob-step-hero__eyebrow">{formatFirstName(firstName)}</p>
+          ) : eyebrow ? (
+            <p className="ob-step-hero__eyebrow">{eyebrow}</p>
+          ) : null}
+          {progress ? <p className="ob-step-hero__progress">{progress}</p> : null}
+        </div>
       ) : null}
-      {eyebrow ? <p className="ob-step-hero__eyebrow">{eyebrow}</p> : null}
       <h1>{title}</h1>
       <p>{subtitle}</p>
     </header>

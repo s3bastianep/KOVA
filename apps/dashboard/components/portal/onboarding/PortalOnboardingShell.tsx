@@ -1,8 +1,9 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { PortalOnboardingStepper } from './PortalOnboardingStepper';
+import { PortalOnboardingExitConfirm } from './PortalOnboardingExitConfirm';
 
 type Props = {
   percent: number;
@@ -34,6 +35,8 @@ export function PortalOnboardingShell({
   centered = true,
   narrow,
 }: Props) {
+  const [confirmingExit, setConfirmingExit] = useState(false);
+
   return (
     <div
       className={`portal-onboarding portal-onboarding--fullscreen portal-onboarding--v2 portal-onboarding--immersive${wide ? ' portal-onboarding--wide' : ''}${centered ? ' portal-onboarding--centered' : ''}${narrow ? ' portal-onboarding--narrow' : ''}`}
@@ -46,7 +49,7 @@ export function PortalOnboardingShell({
               <span className="ob-logo__text">OVA</span>
             </div>
             {onSaveExit ? (
-              <button type="button" className="ob-chrome__exit" onClick={onSaveExit}>
+              <button type="button" className="ob-chrome__exit" onClick={() => setConfirmingExit(true)}>
                 Salir
               </button>
             ) : null}
@@ -69,6 +72,10 @@ export function PortalOnboardingShell({
 
         {footer ? <div className="portal-onboarding-bottom">{footer}</div> : null}
       </div>
+
+      {confirmingExit ? (
+        <PortalOnboardingExitConfirm onCancel={() => setConfirmingExit(false)} onConfirm={() => onSaveExit?.()} />
+      ) : null}
     </div>
   );
 }

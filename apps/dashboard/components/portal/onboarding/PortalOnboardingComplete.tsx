@@ -12,6 +12,7 @@ type Props = {
   vacancyStatsLoading?: boolean;
   hasSkills?: boolean;
   busy?: boolean;
+  error?: string;
   onEnter: () => void;
 };
 
@@ -21,6 +22,7 @@ export function PortalOnboardingComplete({
   vacancyStatsLoading,
   hasSkills = true,
   busy,
+  error,
   onEnter,
 }: Props) {
   return (
@@ -54,6 +56,12 @@ export function PortalOnboardingComplete({
             hasSkills={hasSkills}
           />
         </div>
+
+        {error ? (
+          <p className="portal-onboarding-error" role="alert">
+            {error}
+          </p>
+        ) : null}
 
         <button
           type="button"

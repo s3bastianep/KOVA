@@ -989,9 +989,11 @@ export function getMockVacanciesForList() {
 }
 
 export function isMockMode() {
+  // Fail CLOSED in production: never infer/allow mock mode there, even if DATABASE_URL is
+  // missing or USE_MOCK got set by mistake. A misconfigured prod env should error loudly
+  // trying to reach a real DB, not silently start serving demo data with demo credentials.
+  if (process.env.NODE_ENV === 'production') return false;
   const url = process.env.DATABASE_URL?.trim();
-  // En Railway/producción con Postgres, siempre usar la base de datos real.
-  if (process.env.NODE_ENV === 'production' && url) return false;
   if (process.env.USE_MOCK === 'true') return true;
   return !url;
 }

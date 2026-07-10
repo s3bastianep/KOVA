@@ -172,7 +172,7 @@ export function PortalDashboardHome({ data }: { data: PortalDashboard }) {
       <section className="rounded-xl border border-[var(--kova-border)] bg-white p-6 lg:p-8">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-xl">
-            <p className="kova-portal-eyebrow">Bienvenido de vuelta</p>
+            <p className="kova-portal-eyebrow">Qué bueno verte de nuevo</p>
             <h1 className="kova-portal-title kova-portal-title-lg mt-2 font-heading capitalize">
               Hola, {data.greeting}
             </h1>

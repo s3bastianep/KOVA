@@ -124,7 +124,7 @@
 .kv-login-lead {
   font-size: 1rem;
   line-height: 1.65;
-  color: rgba(255, 255, 255, 0.52);
+  color: rgba(255, 255, 255, 0.7);
   margin: 0;
   max-width: 28rem;
 }
@@ -162,6 +162,66 @@
   color: #fff;
 }
 
+.kv-login-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(2.5rem, 6vw, 3.5rem) clamp(1.5rem, 4vw, 2rem);
+}
+
+.kv-login-success-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 999px;
+  background: var(--kv-lime);
+  color: #14150f;
+  margin-bottom: 1.25rem;
+  animation: kv-login-success-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  box-shadow: 0 0 0 rgba(216, 242, 76, 0.4);
+}
+
+.kv-login-success-check svg {
+  animation: kv-login-success-draw 0.3s ease 0.25s both;
+}
+
+@keyframes kv-login-success-pop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.12);
+    opacity: 1;
+    box-shadow: 0 0 0 10px rgba(216, 242, 76, 0.16);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(216, 242, 76, 0);
+  }
+}
+
+@keyframes kv-login-success-draw {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-login-success-check,
+  .kv-login-success-check svg {
+    animation: none;
+  }
+}
+
 .kv-login-card-sub {
   margin: 0;
   font-size: 0.875rem;
@@ -181,6 +241,23 @@
 
 .kv-login-field {
   margin-bottom: 1rem;
+}
+
+.kv-login-field-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.kv-login-field-row .kv-login-field {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+@media (max-width: 420px) {
+  .kv-login-field-row {
+    flex-direction: column;
+    gap: 0;
+  }
 }
 
 .kv-login-label {
@@ -228,6 +305,28 @@
   color: rgba(255, 255, 255, 0.28);
 }
 
+.kv-login-hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.kv-login-toggle-visibility {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0.25rem;
+}
+
+.kv-login-toggle-visibility:hover {
+  color: rgba(255, 255, 255, 0.65);
+}
+
 /* Evita el fondo blanco/amarillo del autocompletado del navegador */
 @keyframes kv-login-autofill {
   to {
@@ -263,16 +362,52 @@
 
 .kv-login-remember {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  align-items: flex-start;
+  gap: 0.625rem;
   font-size: 0.8125rem;
   color: rgba(255, 255, 255, 0.55);
   cursor: pointer;
   margin: 0.25rem 0 1.25rem;
+  line-height: 1.5;
 }
 
 .kv-login-remember input {
-  accent-color: var(--kv-lime);
+  appearance: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  border-radius: 0.35rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.kv-login-remember input:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.kv-login-remember input:checked {
+  background: var(--kv-lime);
+  border-color: var(--kv-lime);
+}
+
+.kv-login-remember input:checked::after {
+  content: '';
+  width: 0.3rem;
+  height: 0.55rem;
+  border: solid #14150f;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+
+.kv-login-remember input:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(216, 242, 76, 0.25);
 }
 
 .kv-login-submit {

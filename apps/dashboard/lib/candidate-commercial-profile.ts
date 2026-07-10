@@ -147,6 +147,30 @@ export const CRM_SALES_OPTIONS = [
 export const TEAM_SIZE_OPTIONS = ['0', '1-5', '6-15', '16-30', '30+'];
 export const COMMISSION_OPTIONS = ['Fija sin variable', 'Variable con techo', 'Variable sin techo'];
 
+export const COLOMBIAN_CITIES = [
+  'Bogotá',
+  'Medellín',
+  'Cali',
+  'Barranquilla',
+  'Cartagena',
+  'Bucaramanga',
+  'Pereira',
+  'Santa Marta',
+  'Manizales',
+  'Ibagué',
+  'Cúcuta',
+  'Villavicencio',
+  'Pasto',
+  'Montería',
+  'Neiva',
+  'Armenia',
+  'Sincelejo',
+  'Popayán',
+  'Valledupar',
+  'Tunja',
+  'Otra',
+];
+
 export const COMMERCIAL_INDUSTRIES = [
   'Tecnología / SaaS',
   'Industrial',
@@ -390,9 +414,8 @@ export function calculateCommercialProfileMatch(
       weight: 12,
       met:
         !criteria.industria ||
-        (Array.isArray(profile.industrias) &&
-          (profile.industrias.includes(criteria.industria) ||
-            profile.industriaPrincipal === criteria.industria)),
+        profile.industriaPrincipal === criteria.industria ||
+        (Array.isArray(profile.industrias) && profile.industrias.includes(criteria.industria)),
       detail: `${profile.industriaPrincipal ?? profile.industrias?.join(', ') ?? '-'} · esperado ${criteria.industria ?? '-'}`,
     },
   ].filter((row) => {

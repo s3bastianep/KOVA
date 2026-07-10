@@ -517,6 +517,12 @@ model Candidate {
 
   @@index([tenantId, status])
   @@index([tenantId, email])
+  // NOTE: intentionally NOT added yet — @@unique([tenantId, email]) — this repo has no
+  // prisma/migrations history (only `db push` has ever run), so applying this blind against
+  // production could fail outright (or need manual dedup first) if duplicate (tenantId, email)
+  // rows already exist. Check for duplicates first, then add this constraint deliberately:
+  //   SELECT "tenantId", email, count(*) FROM candidates WHERE email IS NOT NULL
+  //   GROUP BY "tenantId", email HAVING count(*) > 1;
   @@map("candidates")
 }
 

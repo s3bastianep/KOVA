@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized } from '../../../lib/auth';
+import { getUserFromRequest, unauthorized, isStaffRole } from '../../../lib/auth';
 import { listAgendaItems, createAgendaItem } from '../../../lib/agenda-service';
 import { parseMonthParam, monthKey } from '../../../lib/agenda';
 
@@ -8,6 +8,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
 
   const monthParam = req.nextUrl.searchParams.get('month');
   const { year, month } = parseMonthParam(monthParam);
@@ -19,6 +20,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
 
   const body = await req.json().catch(() => ({}));
 

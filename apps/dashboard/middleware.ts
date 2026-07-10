@@ -41,6 +41,14 @@ function isAppRoute(pathname: string) {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // /dev is a design-preview scaffold (hardcoded fixture data, no auth) — never serve it in prod.
+  if (pathname === '/dev' || pathname.startsWith('/dev/')) {
+    if (process.env.NODE_ENV === 'production') {
+      return new NextResponse('Not found', { status: 404 });
+    }
+    return NextResponse.next();
+  }
+
   if (isAppRoute(pathname)) {
     return NextResponse.next();
   }

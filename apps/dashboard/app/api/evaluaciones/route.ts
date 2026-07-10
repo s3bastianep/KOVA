@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized } from '../../../lib/auth';
+import { getUserFromRequest, unauthorized, isStaffRole } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode, MOCK_ASSESSMENTS, ASSESSMENT_TYPE_LABELS } from '../../../lib/mock';
 import { groupAssessmentsByProcess, parseMistakesFromComments, type AssessmentRecord } from '../../../lib/evaluations';
@@ -67,6 +67,7 @@ function mapAssessment(a: {
 export async function GET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
 
   let items: AssessmentRecord[];
 
@@ -86,6 +87,7 @@ export async function GET(req: NextRequest) {
         vacancy: { select: { id: true, title: true, company: { select: { name: true } } } },
       },
       orderBy: { completedAt: 'desc' },
+      take: 200,
     }).catch(() => []);
 
     items = assessments.map(mapAssessment);

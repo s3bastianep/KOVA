@@ -4,7 +4,14 @@ import { UserRole } from '@prisma/client';
 import { prisma } from './prisma';
 import { isMockMode, MOCK_USER } from './mock';
 
-const JWT_SECRET = process.env.JWT_SECRET ?? 'kova-dev-secret-change-in-production';
+if (!process.env.JWT_SECRET) {
+  throw new Error(
+    'JWT_SECRET no está definido. Configúralo en tu .env (ver .env.example) — no hay valor por defecto porque ' +
+      'un secreto público en el código permite falsificar tokens de cualquier rol, incluido SUPER_ADMIN.',
+  );
+}
+
+const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN ?? '7d';
 
 export interface AuthUser {
@@ -52,11 +59,11 @@ export async function getUserFromRequest(req: NextRequest): Promise<AuthUser | n
       candidateId?: string | null;
     };
 
-    if (isMockMode() || payload.role === 'CANDIDATE') {
+    if (isMockMode()) {
       return {
         id: payload.sub,
         email: payload.email,
-        firstName: payload.firstName ?? (payload.role === 'CANDIDATE' ? 'Candidato' : MOCK_USER.firstName),
+        firstName: payload.firstName ?? MOCK_USER.firstName,
         lastName: payload.lastName ?? '',
         role: payload.role,
         tenantId: payload.tenantId,
@@ -64,6 +71,9 @@ export async function getUserFromRequest(req: NextRequest): Promise<AuthUser | n
         candidateId: payload.candidateId ?? null,
       };
     }
+
+    // CANDIDATE tokens are now validated against the DB too (below), same as staff — a token
+    // for a deleted/suspended candidate account must stop working before its 7-day expiry.
 
     try {
       const user = await prisma.user.findUnique({
@@ -95,6 +105,15 @@ export async function getUserFromRequest(req: NextRequest): Promise<AuthUser | n
 
 export function unauthorized() {
   return Response.json({ message: 'No autorizado' }, { status: 401 });
+}
+
+/**
+ * True for every role except CANDIDATE. Self-registered portal candidates share a tenant with
+ * ATS staff/clients, so every internal (non-portal) route MUST reject CANDIDATE explicitly —
+ * tenantId scoping alone does not separate them. Use as: `if (!isStaffRole(user.role)) return unauthorized();`
+ */
+export function isStaffRole(role: UserRole): boolean {
+  return role !== 'CANDIDATE';
 }
 
 export function companyWhereForUser(user: AuthUser) {

@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized, companyWhereForUser } from '../../../lib/auth';
+import { getUserFromRequest, unauthorized, companyWhereForUser, isStaffRole } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode, getMockVacanciesForList } from '../../../lib/mock';
 import { computeProcessPipelineMetrics } from '../../../lib/process-metrics';
@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
+  if (!isStaffRole(user.role)) return unauthorized();
 
   if (isMockMode()) return Response.json(getMockVacanciesForList());
 
@@ -25,6 +26,9 @@ export async function GET(req: NextRequest) {
       candidates: { select: { stage: true } },
     },
     orderBy: { updatedAt: 'desc' },
+    // Same rationale as /api/candidatos: without a cap this loads every vacancy in the tenant,
+    // each with its full candidate-stage list, in one response.
+    take: 200,
   });
 
   return Response.json(

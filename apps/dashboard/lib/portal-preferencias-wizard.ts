@@ -3,7 +3,6 @@ import {
   CONTRACT_TYPE_OPTIONS,
   LANGUAGE_LEVEL_OPTIONS,
   LANGUAGE_OPTIONS,
-  SALARY_EXPECTATION_OPTIONS,
 } from './commercial-profile-builder';
 import { isLanguageComplete } from './commercial-profile-builder';
 
@@ -38,7 +37,18 @@ export const PREFERENCIAS_BLOCK_HINTS: Record<PreferenciasBlock, string> = {
 
 export const PREFERENCIAS_BLOCKS: PreferenciasBlock[] = ['buscas', 'vendes', 'cierras'];
 
-export const SALARY_SLIDER_LABELS = [...SALARY_EXPECTATION_OPTIONS] as const;
+/** Rango granular de aspiración salarial, de $1 millón COP en $1 millón COP. */
+function buildSalarySliderLabels(): string[] {
+  const labels: string[] = ['Menos de $1 millón COP / mes'];
+  for (let millones = 1; millones <= 40; millones += 1) {
+    labels.push(`$${millones} millones COP / mes`);
+  }
+  labels.push('Más de $40 millones COP / mes');
+  labels.push('Prefiero no indicar por ahora');
+  return labels;
+}
+
+export const SALARY_SLIDER_LABELS = buildSalarySliderLabels();
 
 const join = (values: string[]) => values.join(', ');
 
@@ -588,7 +598,8 @@ export function profileSnapshot(profile: CommercialProfile) {
 }
 
 export function salarySliderIndex(value?: string): number {
-  if (!value) return 2;
-  const idx = SALARY_SLIDER_LABELS.indexOf(value as (typeof SALARY_SLIDER_LABELS)[number]);
-  return idx >= 0 ? idx : 2;
+  const fallback = 8; // "$8 millones COP / mes"
+  if (!value) return fallback;
+  const idx = SALARY_SLIDER_LABELS.indexOf(value);
+  return idx >= 0 ? idx : fallback;
 }
