@@ -11,6 +11,7 @@ type Props = {
   className?: string;
   variant?: 'default' | 'strip';
   hasSkills?: boolean;
+  onAddSkills?: () => void;
 };
 
 export function PortalOnboardingVacancyMetrics({
@@ -19,6 +20,7 @@ export function PortalOnboardingVacancyMetrics({
   className,
   variant = 'default',
   hasSkills = true,
+  onAddSkills,
 }: Props) {
   if (loading) {
     return (
@@ -31,10 +33,13 @@ export function PortalOnboardingVacancyMetrics({
   }
 
   if (!hasSkills) {
-    return (
-      <div
-        className={`ob-vacancy-metrics ob-vacancy-metrics--nudge${variant === 'strip' ? ' ob-vacancy-metrics--strip' : ''}${className ? ` ${className}` : ''}`}
-      >
+    const nudgeClassName = `ob-vacancy-metrics ob-vacancy-metrics--nudge${variant === 'strip' ? ' ob-vacancy-metrics--strip' : ''}${className ? ` ${className}` : ''}`;
+    return onAddSkills ? (
+      <button type="button" className={`${nudgeClassName} ob-vacancy-metrics--nudge-action`} onClick={onAddSkills}>
+        <span>Agrega tus habilidades para ver tu compatibilidad con vacantes</span>
+      </button>
+    ) : (
+      <div className={nudgeClassName}>
         <span>Agrega tus habilidades para ver tu compatibilidad con vacantes</span>
       </div>
     );

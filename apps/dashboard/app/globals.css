@@ -40,6 +40,12 @@
   --kova-radius: 16px;
   --kova-radius-sm: 12px;
   --kova-radius-lg: 22px;
+
+  /* Font tokens. --font-heading is referenced by some components (ApplyMatchWizard, assessments)
+     that were written against the landing's variable naming; define it here so those headings
+     resolve to Sora like everything else instead of silently falling back to the body font. */
+  --font-heading: var(--font-sora), 'Sora', 'Inter', sans-serif;
+  --font-body: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
 html {
@@ -47,6 +53,16 @@ html {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* The onboarding is dark, but <body>'s own background is the light landing/dashboard cream.
+   If the dark immersive container is ever shorter than the document (long lists, elastic
+   overscroll, the desktop `zoom` scale-down), that light background peeks through underneath
+   it. Pin html/body to the same dark ink whenever the immersive flow is active so nothing light
+   can show through, no matter the cause. */
+html.portal-onboarding-immersive,
+html.portal-onboarding-immersive body {
+  background: var(--kv-ink);
 }
 
 body {

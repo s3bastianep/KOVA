@@ -62,7 +62,7 @@
   margin: 0 0 1.25rem;
   font-size: 0.875rem;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.62);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .ob-exit-confirm__actions {
@@ -111,7 +111,7 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(237, 239, 234, 0.55);
+  color: rgba(237, 239, 234, 0.72);
   margin-bottom: 0.875rem;
 }
 
@@ -161,7 +161,7 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(237, 239, 234, 0.55);
+  color: rgba(237, 239, 234, 0.72);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
@@ -229,7 +229,7 @@
 
 .portal-onboarding-muted {
   font-size: 0.875rem;
-  color: rgba(237, 239, 234, 0.55);
+  color: rgba(237, 239, 234, 0.72);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
@@ -261,7 +261,29 @@
 .portal-onboarding-field::placeholder,
 .portal-onboarding-shell input::placeholder,
 .portal-onboarding-shell textarea::placeholder {
-  color: rgba(237, 239, 234, 0.4);
+  color: rgba(237, 239, 234, 0.72);
+}
+
+/* Neutralize Chrome's native autofill styling (light background + blue accent) — without this
+   override it shows through at the edges of our dark inputs as stray blue highlights. */
+.portal-onboarding-field:-webkit-autofill,
+.portal-onboarding-field:-webkit-autofill:hover,
+.portal-onboarding-field:-webkit-autofill:focus,
+.portal-onboarding-field:-webkit-autofill:active,
+.portal-onboarding-shell input:-webkit-autofill,
+.portal-onboarding-shell input:-webkit-autofill:hover,
+.portal-onboarding-shell input:-webkit-autofill:focus,
+.portal-onboarding-shell input:-webkit-autofill:active {
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff;
+  -webkit-box-shadow: 0 0 0 1000px var(--ob-surface, #181a16) inset !important;
+  box-shadow: 0 0 0 1000px var(--ob-surface, #181a16) inset !important;
+  background-clip: padding-box !important;
+  -webkit-background-clip: padding-box !important;
+  transition:
+    background-color 600000s 0s,
+    color 600000s 0s,
+    -webkit-text-fill-color 600000s 0s;
 }
 
 .portal-onboarding-upload-zone {
@@ -299,7 +321,7 @@
   margin: 0.75rem 0;
   font-size: 0.75rem;
   font-weight: 500;
-  color: rgba(237, 239, 234, 0.5);
+  color: rgba(237, 239, 234, 0.72);
   text-transform: lowercase;
 }
 
@@ -315,7 +337,7 @@
 .portal-onboarding-upload-hint {
   margin: 1rem 0 0;
   font-size: 0.75rem;
-  color: rgba(237, 239, 234, 0.5);
+  color: rgba(237, 239, 234, 0.72);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
@@ -445,7 +467,7 @@
   align-items: center;
   gap: 0.65rem;
   font-size: 0.875rem;
-  color: rgba(237, 239, 234, 0.55);
+  color: rgba(237, 239, 234, 0.72);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
@@ -526,7 +548,7 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(237, 239, 234, 0.55);
+  color: rgba(237, 239, 234, 0.72);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
@@ -546,7 +568,7 @@
 .portal-onboarding-cv-summary__field dt {
   margin: 0;
   font-size: 0.8125rem;
-  color: rgba(237, 239, 234, 0.5);
+  color: rgba(237, 239, 234, 0.72);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
@@ -589,7 +611,7 @@
 
 .portal-onboarding-cv-summary__stat-label {
   font-size: 0.8125rem;
-  color: rgba(237, 239, 234, 0.68);
+  color: rgba(237, 239, 234, 0.72);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
@@ -704,7 +726,7 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(237, 239, 234, 0.55);
+  color: rgba(237, 239, 234, 0.72);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
@@ -746,7 +768,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: rgba(237, 239, 234, 0.55);
+  color: rgba(237, 239, 234, 0.72);
   margin: 1.5rem 0 0.75rem;
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
@@ -811,7 +833,7 @@
 
 .portal-onboarding-work-field__hint {
   font-size: 0.6875rem;
-  color: rgba(237, 239, 234, 0.45);
+  color: rgba(237, 239, 234, 0.72);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
@@ -1012,7 +1034,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(237, 239, 234, 0.55);
+  color: rgba(237, 239, 234, 0.72);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
@@ -1030,7 +1052,7 @@
   margin: 0;
   font-size: 0.8125rem;
   line-height: 1.5;
-  color: rgba(237, 239, 234, 0.65);
+  color: rgba(237, 239, 234, 0.72);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
@@ -1045,7 +1067,7 @@
   justify-self: center;
   border: none;
   background: transparent;
-  color: rgba(237, 239, 234, 0.55);
+  color: rgba(237, 239, 234, 0.72);
   font-size: 0.75rem;
   font-weight: 600;
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
@@ -1104,7 +1126,7 @@
   align-items: center;
   padding: 0.875rem 0;
   font-size: 0.875rem;
-  color: rgba(237, 239, 234, 0.62);
+  color: rgba(237, 239, 234, 0.72);
   border-bottom: 1px solid rgba(237, 239, 234, 0.12);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
@@ -1126,7 +1148,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(237, 239, 234, 0.35);
+  color: rgba(237, 239, 234, 0.72);
 }
 
 .portal-onboarding-checklist li.is-done .portal-onboarding-checklist__icon {
@@ -1137,7 +1159,7 @@
   font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.02em;
-  color: rgba(237, 239, 234, 0.45);
+  color: rgba(237, 239, 234, 0.72);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -1166,7 +1188,7 @@
   min-height: 1.25rem;
   font-size: 0.75rem;
   font-weight: 500;
-  color: rgba(237, 239, 234, 0.55);
+  color: rgba(237, 239, 234, 0.72);
   margin: 0.75rem 0 0;
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
@@ -1303,7 +1325,7 @@ html.portal-onboarding-active .kova-topbar {
 .portal-onboarding-upload-future {
   margin: 1.25rem 0 0;
   font-size: 0.6875rem;
-  color: rgba(237, 239, 234, 0.4);
+  color: rgba(237, 239, 234, 0.72);
 }
 
 .portal-onboarding-review-hub {
@@ -1345,7 +1367,7 @@ html.portal-onboarding-active .kova-topbar {
 .portal-onboarding-review-card p {
   margin: 0.25rem 0 0;
   font-size: 0.8125rem;
-  color: rgba(237, 239, 234, 0.65);
+  color: rgba(237, 239, 234, 0.72);
 }
 
 .portal-onboarding-review-card__status {
@@ -1368,12 +1390,12 @@ html.portal-onboarding-active .kova-topbar {
 
 .portal-onboarding-review-card__status.is-pending {
   background: rgba(255, 255, 255, 0.08);
-  color: rgba(237, 239, 234, 0.7);
+  color: rgba(237, 239, 234, 0.72);
 }
 
 .portal-onboarding-review-card__status.is-empty {
   background: transparent;
-  color: rgba(237, 239, 234, 0.45);
+  color: rgba(237, 239, 234, 0.72);
 }
 
 .portal-onboarding-review-card__actions {
@@ -1439,7 +1461,7 @@ html.portal-onboarding-active .kova-topbar {
 .portal-onboarding-optional {
   margin: 0.75rem 0 0;
   font-size: 0.75rem;
-  color: rgba(237, 239, 234, 0.55);
+  color: rgba(237, 239, 234, 0.72);
 }
 
 .portal-onboarding-salary {
@@ -1457,7 +1479,49 @@ html.portal-onboarding-active .kova-topbar {
 
 .portal-onboarding-salary__slider {
   width: 100%;
-  accent-color: var(--kova-lime);
+  appearance: none;
+  -webkit-appearance: none;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--kv-lime) 0%,
+    var(--kv-lime) var(--salary-fill, 0%),
+    rgba(255, 255, 255, 0.12) var(--salary-fill, 0%),
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  cursor: pointer;
+  outline-offset: 4px;
+}
+
+.portal-onboarding-salary__slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 3px solid var(--kv-lime);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.portal-onboarding-salary__slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 3px solid var(--kv-lime);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.portal-onboarding-salary__value {
+  width: fit-content;
+  margin: 0 auto 1.25rem;
+  padding: 0.4rem 1.1rem;
+  border-radius: 999px;
+  background: rgba(216, 242, 76, 0.1);
+  border: 1px solid rgba(216, 242, 76, 0.28);
+  color: var(--kv-lime);
 }
 
 .portal-onboarding-salary__labels {
@@ -1465,32 +1529,98 @@ html.portal-onboarding-active .kova-topbar {
   justify-content: space-between;
   margin-top: 0.5rem;
   font-size: 0.625rem;
-  color: rgba(237, 239, 234, 0.5);
+  color: rgba(237, 239, 234, 0.72);
 }
 
-.portal-onboarding-idiomas-review ul {
+.portal-onboarding-idiomas-review__list {
   list-style: none;
   margin: 1rem 0;
   padding: 0;
-  border: 1px solid rgba(237, 239, 234, 0.12);
-  border-radius: var(--kova-radius-sm);
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.portal-onboarding-idiomas-review li {
+.portal-onboarding-idiomas-review__list li {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1rem;
-  font-size: 0.875rem;
-  color: #ffffff;
-  border-bottom: 1px solid rgba(237, 239, 234, 0.08);
+  border-radius: var(--kova-radius-sm);
+  border: 1px solid rgba(237, 239, 234, 0.14);
+  background: rgba(255, 255, 255, 0.03);
 }
 
-.portal-onboarding-idiomas-review li span:first-child {
+.portal-onboarding-idiomas-review__lang {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.625rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.portal-onboarding-idiomas-review__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: rgba(216, 242, 76, 0.12);
+  color: var(--kova-lime);
+  flex-shrink: 0;
+}
+
+.portal-onboarding-idiomas-review__level {
+  padding: 0.2rem 0.625rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: rgba(237, 239, 234, 0.85);
+}
+
+.portal-onboarding-idiomas-review__actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.portal-onboarding-idiomas-review__btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: var(--kova-radius-sm);
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.12s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.portal-onboarding-idiomas-review__btn:active {
+  transform: scale(0.98);
+}
+
+.portal-onboarding-idiomas-review__btn.is-confirm {
+  border: none;
+  background: var(--kova-lime);
+  color: #14150f;
+}
+
+.portal-onboarding-idiomas-review__btn.is-confirm:hover {
+  background: var(--kv-lime-hover);
+}
+
+.portal-onboarding-idiomas-review__btn.is-review {
+  border: 1.5px solid rgba(237, 239, 234, 0.25);
+  background: transparent;
+  color: #ffffff;
+}
+
+.portal-onboarding-idiomas-review__btn.is-review:hover {
+  border-color: rgba(237, 239, 234, 0.45);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .portal-onboarding-chips--inline {
@@ -1539,7 +1669,7 @@ html.portal-onboarding-active .kova-topbar {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(237, 239, 234, 0.6);
+  color: rgba(237, 239, 234, 0.72);
 }
 
 .portal-onboarding-complete-checklist {
@@ -1597,7 +1727,7 @@ html.portal-onboarding-active .kova-topbar {
 .portal-onboarding-evidence__field span {
   font-size: 0.75rem;
   font-weight: 600;
-  color: rgba(237, 239, 234, 0.6);
+  color: rgba(237, 239, 234, 0.72);
 }
 
 .portal-onboarding-evidence__preview {
@@ -1677,9 +1807,11 @@ html.portal-onboarding-immersive,
   --kv-lime-hover: #e2f85a;
   --kv-lime-dark: #5c6e12;
   --kv-lime-soft: rgba(216, 242, 76, 0.14);
-  --kv-slate: #6b6f64;
+  /* Secondary/muted text on the dark ground — raised from the original #6b6f64 / #a7aba0, which
+     were too faint to read (the "gris que no se entiende"). These now clear ~4.5:1 on #181a16. */
+  --kv-slate: #b4b8ab;
   --kv-line: #d7d9ce;
-  --kv-nav-muted: #a7aba0;
+  --kv-nav-muted: #c2c6ba;
   --kova-lime: var(--kv-lime);
   --ob-bg: var(--kv-ink);
   --ob-surface: #181a16;
@@ -1703,6 +1835,15 @@ html.portal-onboarding-immersive,
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  /* Ambient depth instead of flat black — two soft, off-center glows (brand lime + a cool violet
+     counter-tone) that never compete with content, plus a faint top vignette so the page reads
+     as a considered space rather than a default dark-mode background. */
+  background:
+    radial-gradient(1100px 600px at 12% -10%, rgba(216, 242, 76, 0.05), transparent 60%),
+    radial-gradient(900px 700px at 100% 10%, rgba(99, 102, 241, 0.05), transparent 55%),
+    radial-gradient(1400px 500px at 50% 100%, rgba(216, 242, 76, 0.025), transparent 60%),
+    var(--kv-ink);
+  background-attachment: fixed;
 }
 
 html.portal-onboarding-immersive .kova-sidebar {
@@ -1805,7 +1946,7 @@ html.portal-onboarding-immersive .kova-topbar {
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding-header__actions {
@@ -1820,7 +1961,7 @@ html.portal-onboarding-immersive .kova-topbar {
   gap: 0.3rem;
   font-size: 0.75rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding-header__exit {
@@ -1828,7 +1969,7 @@ html.portal-onboarding-immersive .kova-topbar {
   background: transparent;
   font-size: 0.75rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.72);
   text-decoration: underline;
   text-underline-offset: 0.15em;
   cursor: pointer;
@@ -1919,7 +2060,7 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .portal-onboarding-preview-strip__role {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.62);
+  color: rgba(255, 255, 255, 0.72);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1953,7 +2094,7 @@ html.portal-onboarding-immersive .kova-topbar {
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.58);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding-preview-strip__divider {
@@ -1975,7 +2116,7 @@ html.portal-onboarding-immersive .kova-topbar {
 .portal-onboarding-motivation {
   margin: 0 0 1rem;
   font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.72);
   line-height: 1.5;
 }
 
@@ -1999,7 +2140,7 @@ html.portal-onboarding-immersive .kova-topbar {
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-question-title {
@@ -2015,46 +2156,189 @@ html.portal-onboarding-immersive .kova-topbar {
 .portal-onboarding--fullscreen .portal-onboarding-question-subtitle {
   margin: 0 0 0.25rem;
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.72);
   line-height: 1.5;
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-chips {
   margin-top: 1.25rem;
   gap: 0.625rem;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-chip {
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.03);
-  color: #ffffff;
-  min-height: 2.875rem;
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
-  font-size: 0.875rem;
+  gap: 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.02);
+  color: rgba(255, 255, 255, 0.88);
+  min-height: 3.25rem;
+  padding: 0.8rem 1rem;
+  border-radius: 0.9rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.12s ease;
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-chip:hover {
-  border-color: rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(216, 242, 76, 0.4);
+  background: rgba(255, 255, 255, 0.045);
+  transform: translateY(-1px);
 }
 
-.portal-onboarding--fullscreen .portal-onboarding-chip--on {
+.portal-onboarding--fullscreen .portal-onboarding-chip:active {
+  transform: translateY(0);
+}
+
+/* Modern selection indicator — an empty ring that fills lime with a check when chosen. */
+.portal-onboarding-chip__ind {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  color: var(--kv-ink);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.portal-onboarding-chip__label {
+  min-width: 0;
+  line-height: 1.3;
+}
+
+/* Selected state — scoped under .portal-onboarding-chips for higher specificity so it reliably
+   beats the idle `.portal-onboarding--fullscreen .portal-onboarding-chip` rule (which otherwise
+   ties on specificity and can win on source order). */
+.portal-onboarding--fullscreen .portal-onboarding-chips .portal-onboarding-chip--on {
   border-color: var(--kova-lime);
   background: rgba(216, 242, 76, 0.1);
   color: #ffffff;
 }
 
-.portal-onboarding--fullscreen .portal-onboarding-micro-feedback {
-  margin-top: 1rem;
-  padding: 0.5rem 0.75rem;
+.portal-onboarding--fullscreen .portal-onboarding-chips .portal-onboarding-chip--on .portal-onboarding-chip__ind {
+  background: var(--kv-lime);
+  border-color: var(--kv-lime);
+}
+
+/* Check sits inside the lime ring, so it must be ink-dark (not lime-on-lime). */
+.portal-onboarding--fullscreen .portal-onboarding-chip--on .portal-onboarding-chip__ind svg {
+  color: var(--kv-ink);
+}
+
+/* List-style option rows — full-width rows with a checkbox-style indicator on the right and
+   hairline dividers between them, instead of a grid of separately-bordered chip boxes. Sits
+   inside the existing .ob-panel.ob-question-panel card, so it doesn't need its own outer border. */
+.portal-onboarding-chip-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Divider lives on the wrapper, not the button — so it draws after the free-text "Otra" input
+   too, instead of cutting between the row and its own input. */
+.portal-onboarding-chip-row-wrap {
+  border-bottom: 1px solid var(--ob-border);
+}
+
+.portal-onboarding-chip-list .portal-onboarding-chip-row-wrap:last-child {
+  border-bottom: none;
+}
+
+.portal-onboarding-chip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.85rem 0.25rem;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.portal-onboarding-chip-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.portal-onboarding-chip-row--on {
+  color: #ffffff;
+}
+
+.portal-onboarding-chip-row__label {
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.portal-onboarding-chip-row__box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.375rem;
+  height: 1.375rem;
+  flex-shrink: 0;
+  border-radius: 5px;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  color: var(--kv-ink);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.portal-onboarding-chip-row--on .portal-onboarding-chip-row__box {
+  background: var(--kv-lime);
+  border-color: var(--kv-lime);
+}
+
+.portal-onboarding-chip-row__other-input {
+  display: block;
+  width: 100%;
+  margin: 0 0 0.85rem;
+  padding: 0.6rem 0.75rem;
   border-radius: 0.5rem;
-  background: rgba(216, 242, 76, 0.08);
-  border: 1px solid rgba(216, 242, 76, 0.18);
+  border: 1px solid rgba(216, 242, 76, 0.3);
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+.portal-onboarding-chip-row__other-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.portal-onboarding-chip-row__other-input:focus {
+  outline: none;
+  border-color: var(--kv-lime);
+}
+
+.portal-onboarding--fullscreen .portal-onboarding-micro-feedback {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.1rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--ob-border);
+  border-left: 2px solid var(--kv-lime);
+  background: var(--ob-surface);
   color: rgba(255, 255, 255, 0.85);
   font-size: 0.8125rem;
+}
+
+.portal-onboarding-micro-feedback__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.375rem;
+  height: 1.375rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(216, 242, 76, 0.4);
+  color: var(--kv-lime);
 }
 
 /* Footer */
@@ -2093,7 +2377,7 @@ html.portal-onboarding-immersive .kova-topbar {
 .portal-onboarding--fullscreen .portal-onboarding-btn--back {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-btn--primary {
@@ -2111,7 +2395,7 @@ html.portal-onboarding-immersive .kova-topbar {
   margin-top: 0.75rem;
   text-align: center;
   font-size: 0.6875rem;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-shell__header h1,
@@ -2138,7 +2422,7 @@ html.portal-onboarding-immersive .kova-topbar {
 .portal-onboarding--fullscreen .portal-onboarding-section-title,
 .portal-onboarding--fullscreen .portal-onboarding-work-field__label,
 .portal-onboarding--fullscreen .portal-onboarding-salary__labels {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-steps li.is-done,
@@ -2166,7 +2450,7 @@ html.portal-onboarding-immersive .kova-topbar {
 .portal-onboarding--fullscreen .portal-onboarding-upload-or,
 .portal-onboarding--fullscreen .portal-onboarding-upload-hint,
 .portal-onboarding--fullscreen .portal-onboarding-upload-future {
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-review-card,
@@ -2184,7 +2468,7 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .portal-onboarding--fullscreen .portal-onboarding-review-card p,
 .portal-onboarding--fullscreen .portal-onboarding-review-card__confirm {
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-review-card__edit,
@@ -2192,14 +2476,10 @@ html.portal-onboarding-immersive .kova-topbar {
   color: var(--kova-lime);
 }
 
-.portal-onboarding--fullscreen .portal-onboarding-idiomas-review li {
+.portal-onboarding--fullscreen .portal-onboarding-idiomas-review__list li {
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.03);
-}
-
-.portal-onboarding--fullscreen .portal-onboarding-idiomas-review ul {
-  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-cv-summary__stat {
@@ -2215,7 +2495,7 @@ html.portal-onboarding-immersive .kova-topbar {
 .portal-onboarding--fullscreen .portal-onboarding-btn--back {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-btn--primary {
@@ -2236,7 +2516,7 @@ html.portal-onboarding-immersive .kova-topbar {
 .portal-onboarding--fullscreen .portal-onboarding-footer__later,
 .portal-onboarding--fullscreen .portal-onboarding-footer__hint,
 .portal-onboarding--fullscreen .portal-onboarding-save-state--centered {
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 @media (min-width: 640px) {
@@ -2281,7 +2561,7 @@ html.portal-onboarding-immersive .kova-topbar {
   margin: 0 0 0.75rem;
   font-size: 1.125rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding-welcome__title {
@@ -2297,15 +2577,15 @@ html.portal-onboarding-immersive .kova-topbar {
 .portal-onboarding-welcome__subtitle {
   margin: 0 0 1.75rem;
   font-size: 1.0625rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding-welcome__milestone-icon {
-  color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding-welcome__milestone-glyph {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding-complete {
@@ -2321,7 +2601,7 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .portal-onboarding-complete__hero p {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding-complete__stat {
@@ -2330,7 +2610,7 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .portal-onboarding-complete__stat-label {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding-complete__stat strong {
@@ -2357,7 +2637,7 @@ html.portal-onboarding-immersive .kova-topbar {
 .portal-onboarding-welcome__percent {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.72);
   font-variant-numeric: tabular-nums;
 }
 
@@ -2365,7 +2645,7 @@ html.portal-onboarding-immersive .kova-topbar {
   margin: 0 0 2rem;
   font-size: 0.9375rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.72);
   max-width: 28rem;
 }
 
@@ -2395,7 +2675,7 @@ html.portal-onboarding-immersive .kova-topbar {
   gap: 0.875rem;
   font-size: 0.9375rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.72);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
   animation: portal-onboarding-fade-in 0.5s ease both;
 }
@@ -2502,7 +2782,7 @@ html.portal-onboarding-immersive .kova-topbar {
   margin: 0 0 0.5rem;
   font-size: 0.75rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding-preview__tag {
@@ -2511,17 +2791,17 @@ html.portal-onboarding-immersive .kova-topbar {
   padding: 0.15rem 0.45rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding-preview__years {
   margin: 0 0 0.625rem;
   font-size: 0.6875rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding-preview__meter-head {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding-preview__meter-head strong {
@@ -2534,7 +2814,7 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .portal-onboarding-preview__stats dt {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding-preview__stats dd {
@@ -2648,7 +2928,7 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .portal-onboarding-transition__card p {
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding-transition__delta strong {
@@ -2685,7 +2965,7 @@ html.portal-onboarding-immersive .kova-topbar {
 .portal-onboarding-transition__card p {
   margin: 0;
   font-size: 0.9375rem;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.72);
   line-height: 1.5;
 }
 
@@ -2866,7 +3146,7 @@ html.portal-onboarding-immersive .kova-topbar {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(237, 239, 234, 0.5);
+  color: rgba(237, 239, 234, 0.72);
 }
 
 .portal-onboarding-exp-conv__input-wrap {
@@ -2882,7 +3162,7 @@ html.portal-onboarding-immersive .kova-topbar {
 .portal-onboarding-exp-conv__hint {
   margin: 0 0 0.75rem;
   font-size: 0.8125rem;
-  color: rgba(237, 239, 234, 0.65);
+  color: rgba(237, 239, 234, 0.72);
 }
 
 .portal-onboarding-chip--hinted {
@@ -2963,7 +3243,12 @@ html.portal-onboarding-immersive .kova-topbar {
 /* Centered layout — readable column, not edge-to-edge */
 
 .portal-onboarding--centered .portal-onboarding-viewport {
-  max-width: 900px;
+  /* Genuinely responsive instead of a flat 900px. The previous 62vw/1200px cap left ~330px of
+     dead space on each side on a wide monitor (e.g. 1728px) — content looked stranded in a
+     strip down the middle of the screen instead of filling it. This scales much closer to the
+     full viewport, still capped so it never gets absurdly wide on an ultra-wide display.
+     min() keeps it from ever overflowing a small screen. */
+  max-width: min(100%, clamp(900px, 84vw, 1520px));
   margin: 0 auto;
   width: 100%;
 }
@@ -2998,10 +3283,18 @@ html.portal-onboarding-immersive .kova-topbar {
   padding-top: 1rem;
 }
 
-/* Narrow immersive column (Spotify / Revolut style) */
-
+/* Narrow immersive column (Spotify / Revolut style). Stays compact on mobile — where the
+   guided, one-question-at-a-time feel matters most and screen width is scarce — but widens on
+   desktop so it reads as a considered B2B product with room to breathe, not a phone screen
+   stretched into a sea of empty page. */
 .portal-onboarding--narrow .portal-onboarding-viewport {
   max-width: 520px;
+}
+
+@media (min-width: 900px) {
+  .portal-onboarding--narrow .portal-onboarding-viewport {
+    max-width: 640px;
+  }
 }
 
 .portal-onboarding--immersive .portal-onboarding-main--immersive {
@@ -3068,28 +3361,31 @@ html.portal-onboarding-immersive .kova-topbar {
   margin: 0 auto;
 }
 
-/* CV upload step */
-
-.ob-cv-upload__hero {
-  margin-bottom: 1rem;
+/* CV upload step — wide two-column layout: pitch + trust note on the left, the actual dropzone
+   on the right. Reads as a considered B2B product page rather than a single centered mobile
+   card stretched across a desktop screen. */
+.ob-cv-upload__top {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
 
-.ob-cv-upload__eyebrow {
-  margin: 0 0 0.5rem;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--kv-lime);
+@media (min-width: 860px) {
+  .ob-cv-upload__top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 3rem;
+  }
 }
 
 .ob-cv-upload__hero h1 {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.75rem;
   font-family: var(--font-sora), 'Sora', sans-serif;
-  font-size: clamp(1.375rem, 4vw, 1.625rem);
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
   color: var(--ob-text);
 }
 
@@ -3099,118 +3395,198 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .ob-cv-upload__lead {
   margin: 0;
-  font-size: 14px;
-  line-height: 1.55;
-  color: var(--kv-nav-muted);
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 30rem;
 }
 
-.ob-cv-upload__card {
-  padding: 0.75rem;
+.ob-cv-upload__note {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 1.5rem;
+  padding: 0.85rem 1rem;
   border-radius: 12px;
   border: 1px solid var(--ob-border);
   background: var(--ob-surface);
 }
 
-.ob-cv-upload__card.is-busy {
-  opacity: 0.85;
-  pointer-events: none;
+.ob-cv-upload__note-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: rgba(216, 242, 76, 0.14);
+  color: var(--kv-lime);
 }
 
+.ob-cv-upload__note strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.ob-cv-upload__note span {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 13px;
+  color: var(--kv-nav-muted);
+}
+
+/* Outer solid-border panel wrapping the dashed dropzone — gives the whole upload area a
+   considered frame instead of the dashed box floating on its own. */
+.ob-cv-upload__panel {
+  padding: 1.25rem;
+  border-radius: 20px;
+  border: 1px solid var(--ob-border);
+  background: var(--ob-surface);
+}
+
+/* Nested dashed dropzone inside .ob-cv-upload__panel's solid frame — the dashed border reads as
+   "drop target" while the outer panel gives the whole area a considered, contained look. */
 .ob-cv-upload__drop {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 1.75rem 1.25rem 1.5rem;
-  border-radius: 10px;
-  border: 1px dashed var(--ob-border-strong);
+  padding: 3rem 1.75rem 2.5rem;
+  border-radius: 14px;
+  border: 1.5px dashed var(--ob-border-strong);
   background: var(--ob-surface-raised);
-  transition: border-color 0.2s ease, background 0.2s ease;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
 }
 
-.ob-cv-upload__card:not(.is-busy) .ob-cv-upload__drop:hover {
-  border-color: rgba(237, 239, 234, 0.28);
-  background: rgba(255, 255, 255, 0.02);
+.ob-cv-upload__drop.is-busy {
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.ob-cv-upload__drop:not(.is-busy):hover {
+  border-color: rgba(216, 242, 76, 0.45);
+  background: rgba(216, 242, 76, 0.02);
 }
 
 .ob-cv-upload__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
+  width: 4.5rem;
+  height: 4.5rem;
   border-radius: 999px;
-  background: var(--kv-lime-soft);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--kv-lime);
-  margin-bottom: 1rem;
+  margin-bottom: 1.4rem;
 }
 
 .ob-cv-upload__prompt {
-  margin: 0 0 1.25rem;
-  font-size: 14px;
-  line-height: 1.55;
-  color: var(--kv-nav-muted);
-  max-width: 18rem;
+  margin: 0 0 1.4rem;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ob-text);
 }
 
-.ob-cv-upload__prompt strong {
-  color: var(--ob-text);
-  font-weight: 600;
+.ob-cv-upload__prompt span {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--kv-nav-muted);
 }
 
 .ob-cv-upload__btn {
   max-width: 16rem;
-}
-
-.ob-cv-upload__btn:hover {
-  background: var(--kv-lime-hover);
+  min-height: 3rem;
 }
 
 .ob-cv-upload__hint {
-  margin: 0.875rem 0 0;
-  font-size: 12px;
+  margin: 1rem 0 0;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   color: var(--kv-slate);
 }
 
 .ob-cv-upload__error {
-  margin-top: 0.75rem;
+  margin-top: 0.875rem;
+}
+
+/* Three-step explainer strip — builds trust by showing what happens after upload, instead of
+   leaving it as a black box. */
+.ob-cv-upload__steps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 14px;
+  border: 1px solid var(--ob-border);
+  background: var(--ob-surface);
+}
+
+@media (min-width: 700px) {
+  .ob-cv-upload__steps {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.ob-cv-upload__step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.ob-cv-upload__step-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: 0.625rem;
+  background: rgba(216, 242, 76, 0.1);
+  color: var(--kv-lime);
+}
+
+.ob-cv-upload__step strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.ob-cv-upload__step p {
+  margin: 0.2rem 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--kv-nav-muted);
 }
 
 .ob-cv-upload__secure {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-top: 1rem;
-  padding: 0.875rem 1rem;
-  border-radius: 12px;
-  border: 1px solid var(--ob-border);
-  background: var(--ob-surface);
-}
-
-.ob-cv-upload__secure-icon {
-  flex-shrink: 0;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--ob-border);
+  font-size: 12px;
+  line-height: 1.4;
   color: var(--kv-nav-muted);
 }
 
 .ob-cv-upload__secure strong {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ob-text);
-  line-height: 1.3;
+  color: #ffffff;
+  font-weight: 700;
 }
 
-.ob-cv-upload__secure span {
-  display: block;
-  margin-top: 0.125rem;
-  font-size: 11px;
-  line-height: 1.45;
-  color: var(--kv-nav-muted);
-}
-
-.ob-cv-upload__secure-badge {
+.ob-cv-upload__secure-icon {
   flex-shrink: 0;
-  margin-left: auto;
   color: var(--kv-lime-dark);
 }
 
@@ -3225,15 +3601,32 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .ob-build__hero {
+  margin-bottom: 1.5rem;
+}
+
+/* Check/ring on the left, title block on the right — a left-aligned row instead of a big
+   centered hero. Reads as part of the page's flow, not a full-width banner moment. */
+.ob-build__hero-row {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  margin-bottom: 1.25rem;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+@media (max-width: 560px) {
+  .ob-build__hero-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+  }
+}
+
+.ob-build__hero-text {
+  min-width: 0;
 }
 
 .ob-build__ring-wrap {
-  margin-bottom: 1.25rem;
+  flex-shrink: 0;
 }
 
 .ob-build--complete .ob-build__ring-wrap {
@@ -3241,12 +3634,35 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .ob-build__ring-wrap .ob-ring__label strong {
-  font-size: 1.375rem;
+  font-size: 1.125rem;
 }
 
 .ob-build__ring-wrap .ob-ring__label span {
   color: var(--kova-lime);
-  font-size: 0.625rem;
+  font-size: 0.5625rem;
+}
+
+/* Completion state swaps the percent ring for a plain check circle — arriving reads better than
+   a ring still showing "100%", which looks like a metric rather than a finished state. */
+.ob-build__done-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 2px solid var(--kv-lime);
+  color: var(--kv-lime);
+}
+
+.ob-build__eyebrow {
+  margin: 0 0 0.4rem;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--kv-lime);
 }
 
 .ob-build__title {
@@ -3263,7 +3679,7 @@ html.portal-onboarding-immersive .kova-topbar {
   font-size: 13px;
   line-height: 1.55;
   color: var(--kv-nav-muted);
-  max-width: 22rem;
+  max-width: 26rem;
 }
 
 .ob-build__tasks {
@@ -3280,8 +3696,8 @@ html.portal-onboarding-immersive .kova-topbar {
 .ob-build__task {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
-  padding: 0.75rem 1rem;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
   border-bottom: 1px solid #1f1f1f;
   font-size: 13px;
   color: var(--kv-slate);
@@ -3300,13 +3716,26 @@ html.portal-onboarding-immersive .kova-topbar {
   background: rgba(216, 242, 76, 0.04);
 }
 
-.ob-build__task-check {
+/* Per-task icon in a rounded square — lets each row read at a glance instead of every task
+   looking like an identical checklist line. */
+.ob-build__task-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 2rem;
+  height: 2rem;
   flex-shrink: 0;
+  border-radius: 0.625rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.ob-build__task.is-done .ob-build__task-icon {
+  color: var(--kv-lime);
+}
+
+.ob-build__task.is-active .ob-build__task-icon {
+  background: rgba(216, 242, 76, 0.1);
   color: var(--kv-lime);
 }
 
@@ -3317,6 +3746,9 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .ob-build__task-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   flex-shrink: 0;
   padding: 0.2rem 0.5rem;
   border-radius: 999px;
@@ -3327,6 +3759,14 @@ html.portal-onboarding-immersive .kova-topbar {
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--kv-lime);
+}
+
+.ob-build__task-badge-dot {
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 999px;
+  background: currentColor;
+  flex-shrink: 0;
 }
 
 .ob-build__task-badge.is-active {
@@ -3394,7 +3834,6 @@ html.portal-onboarding-immersive .kova-topbar {
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.15s ease;
-  box-shadow: 0 0 20px rgba(216, 242, 76, 0.2);
 }
 
 .ob-build__continue:hover:not(:disabled) {
@@ -3494,26 +3933,26 @@ html.portal-onboarding-immersive .kova-topbar {
   margin-bottom: 1.25rem;
 }
 
+/* Match the plain-dot + "Kova" wordmark used on the landing page and /login — the onboarding
+   previously used a different pattern (a lettered "K" badge + "OVA"), which read as a different
+   logo when moving between sections. */
 .ob-logo {
   display: inline-flex;
   align-items: center;
-  gap: 0.15rem;
+  gap: 0.625rem;
   font-family: var(--font-sora), 'Sora', sans-serif;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 1.125rem;
   letter-spacing: -0.02em;
 }
 
 .ob-logo__mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
+  display: inline-block;
+  width: 1.35rem;
+  height: 1.35rem;
   border-radius: 50%;
   background: var(--kv-lime);
-  color: var(--kv-ink);
-  font-size: 0.8125rem;
+  flex-shrink: 0;
 }
 
 .ob-logo__text {
@@ -3524,34 +3963,151 @@ html.portal-onboarding-immersive .kova-topbar {
   border: none;
   background: transparent;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--kv-nav-muted);
   opacity: 0.7;
   cursor: pointer;
-  padding: 0;
+  padding: 0.375rem 0.75rem;
+  border-radius: 999px;
+  transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease;
 }
 
 .ob-chrome__exit:hover {
   opacity: 1;
+  background: rgba(255, 255, 255, 0.06);
   color: var(--kv-lime);
 }
 
-/* Stepper: slim progress bar, no numbers or labels */
+/* Stepper: segmented journey with orientation label ("Paso X de 5 · fase") */
 
 .ob-stepper {
   display: block;
-  height: 3px;
-  border-radius: 1px;
-  background: var(--ob-border);
+}
+
+.ob-stepper__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.ob-stepper__count {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ob-stepper__count::after {
+  content: '·';
+  margin-left: 0.5rem;
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.ob-stepper__label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--kv-lime);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ob-stepper__track {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.ob-stepper__seg {
+  position: relative;
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
   overflow: hidden;
 }
 
-.ob-stepper__fill {
-  display: block;
-  height: 100%;
+.ob-stepper__seg-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  width: 0;
   background: var(--kv-lime);
-  border-radius: 1px;
-  transition: width 0.4s ease;
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ob-stepper__seg.is-done .ob-stepper__seg-fill {
+  width: 100%;
+}
+
+.ob-stepper__seg.is-active .ob-stepper__seg-fill {
+  width: 55%;
+}
+
+/* Tu guía Kova — persistent companion presence */
+
+.ob-guide {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 1rem;
+  padding: 0.7rem 0.875rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--ob-border);
+  border-left: 2px solid var(--kv-lime);
+  background: var(--ob-surface);
+}
+
+.ob-guide__avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(216, 242, 76, 0.1);
+}
+
+.ob-guide__mark {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--kv-lime);
+}
+
+/* Pulse ring retired for the corporate treatment — kept as a no-op so markup
+   doesn't need to change. */
+.ob-guide__pulse {
+  display: none;
+}
+
+.ob-guide__body {
+  min-width: 0;
+}
+
+.ob-guide__name {
+  display: block;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.15rem;
+}
+
+.ob-guide__message {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 /* Progress ring */
@@ -3568,38 +4124,14 @@ html.portal-onboarding-immersive .kova-topbar {
 .ob-ring__progress {
   stroke: var(--kova-lime);
   transition: stroke-dashoffset 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  filter: drop-shadow(0 0 5px rgba(216, 242, 76, 0.55));
 }
 
 .ob-ring__handle {
   fill: #ffffff;
-  filter: drop-shadow(0 0 4px rgba(216, 242, 76, 0.9));
-}
-
-.ob-ring--complete svg {
-  animation: ob-ring-glow 1.8s ease-in-out 0.6s infinite;
 }
 
 .ob-ring--complete .ob-ring__progress {
-  stroke: #eaff6b;
-}
-
-@keyframes ob-ring-glow {
-  0%,
-  100% {
-    filter: drop-shadow(0 0 6px rgba(216, 242, 76, 0.55)) drop-shadow(0 0 16px rgba(216, 242, 76, 0.35));
-  }
-  50% {
-    filter: drop-shadow(0 0 12px rgba(234, 255, 140, 1)) drop-shadow(0 0 40px rgba(216, 242, 76, 0.9))
-      drop-shadow(0 0 70px rgba(216, 242, 76, 0.5));
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ob-ring--complete svg {
-    animation: none;
-    filter: drop-shadow(0 0 10px rgba(234, 255, 140, 0.9)) drop-shadow(0 0 32px rgba(216, 242, 76, 0.6));
-  }
+  stroke: var(--kv-lime);
 }
 
 .ob-ring__label {
@@ -3623,12 +4155,12 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .ob-ring__label span {
-  margin-top: 0.2rem;
+  margin-top: 0.3rem;
   font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.62);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .ob-ring__label em {
@@ -3637,7 +4169,7 @@ html.portal-onboarding-immersive .kova-topbar {
   font-style: normal;
   font-weight: 600;
   letter-spacing: 0.01em;
-  color: rgba(255, 255, 255, 0.52);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .ob-ring__label em:empty {
@@ -3707,10 +4239,14 @@ html.portal-onboarding-immersive .kova-topbar {
     align-items: center;
     max-width: none;
     text-align: left;
-    gap: 1rem;
+    gap: 1.25rem;
   }
 
   .ob-cv-summary__encourage {
+    padding-top: 0;
+    padding-left: 1.25rem;
+    border-top: none;
+    border-left: 1px solid var(--ob-border);
     text-align: left;
   }
 }
@@ -3734,9 +4270,11 @@ html.portal-onboarding-immersive .kova-topbar {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.625rem;
-  padding: 1rem;
-  border-radius: 12px;
+  /* Spacing before the message comes from its own padding-top + divider below, not this gap —
+     otherwise the two would stack into an oversized, uneven gap. */
+  gap: 0;
+  padding: 2rem 1.5rem;
+  border-radius: 14px;
   border: 1px solid var(--ob-border);
   background: var(--ob-surface);
   width: 100%;
@@ -3744,17 +4282,30 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .ob-cv-summary__encourage {
   margin: 0;
-  font-size: 11px;
-  line-height: 1.45;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--ob-border);
+  font-size: 13px;
+  line-height: 1.6;
   color: var(--kv-nav-muted);
   text-align: center;
 }
 
 .ob-cv-summary__encourage strong {
   display: block;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.5rem;
+  font-size: 14px;
   font-weight: 700;
   color: var(--kv-lime);
+}
+
+/* Label text scaled up to match the larger 112px ring used on this screen. */
+.ob-cv-summary__ring-card .ob-ring__label strong {
+  font-size: 1.5rem;
+}
+
+.ob-cv-summary__ring-card .ob-ring__label span {
+  margin-top: 0.3rem;
+  font-size: 0.75rem;
 }
 
 .ob-cv-summary__compat-note {
@@ -4038,6 +4589,42 @@ html.portal-onboarding-immersive .kova-topbar {
   color: #ffffff;
 }
 
+/* Clickable variant — each row jumps straight to editing/completing that section. */
+.ob-detected-list__row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.35rem 0.4rem;
+  margin: -0.35rem -0.4rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.ob-detected-list__row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ob-detected-list__row:hover .ob-detected-list__chevron {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.ob-detected-list__chevron {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--kv-nav-muted);
+  opacity: 0;
+  transform: translateX(-2px);
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+
 .ob-detected-list__icon {
   display: inline-flex;
   align-items: center;
@@ -4223,30 +4810,34 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .ob-panel {
-  padding: 1rem;
+  padding: 1.25rem;
   margin-bottom: 0.75rem;
-  border-radius: 0.875rem;
+  border-radius: 1.25rem;
   border: 1px solid var(--ob-border);
-  background: var(--ob-surface);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0) 40%),
+    var(--ob-surface);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.03) inset, 0 12px 24px -16px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .ob-panel__head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.875rem;
+  margin-bottom: 1rem;
 }
 
 .ob-panel__title {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .ob-panel__title h2 {
   margin: 0;
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   color: #ffffff;
 }
 
@@ -4254,36 +4845,41 @@ html.portal-onboarding-immersive .kova-topbar {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: 0.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
 }
 
 .ob-panel__icon--purple {
-  background: rgba(168, 85, 247, 0.15);
+  background: linear-gradient(155deg, rgba(168, 85, 247, 0.22), rgba(168, 85, 247, 0.08));
   color: #c084fc;
 }
 
 .ob-panel__icon--blue {
-  background: rgba(59, 130, 246, 0.15);
+  background: linear-gradient(155deg, rgba(59, 130, 246, 0.22), rgba(59, 130, 246, 0.08));
   color: #60a5fa;
 }
 
 .ob-panel__edit {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.375rem;
   border: none;
   background: transparent;
   font-size: 0.75rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.62);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.72);
   cursor: pointer;
-  padding: 0;
+  padding: 0.375rem 0.625rem;
+  margin: -0.375rem -0.625rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .ob-panel__edit:hover {
-  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
 }
 
 .ob-contact-list {
@@ -4319,7 +4915,7 @@ html.portal-onboarding-immersive .kova-topbar {
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.58);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .ob-contact-list__value {
@@ -4362,7 +4958,7 @@ html.portal-onboarding-immersive .kova-topbar {
 .ob-stat-chip span {
   font-size: 0.75rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .ob-stat-chip--green {
@@ -4404,11 +5000,11 @@ html.portal-onboarding-immersive .kova-topbar {
   border: 1px solid #2a2a2a;
   font-size: 0.75rem;
   line-height: 1.45;
-  color: rgba(255, 255, 255, 0.68);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .ob-panel__tip svg {
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.72);
   margin-top: 0.1rem;
 }
 
@@ -4539,6 +5135,24 @@ html.portal-onboarding-immersive .kova-topbar {
   line-height: 1.4;
   color: #facc15;
   text-align: right;
+}
+
+/* When clickable, reset the native <button> chrome and add an underline + hover so it reads as
+   an action ("add your skills now"), not just a passive warning label. */
+.ob-vacancy-metrics--nudge-action {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: rgba(250, 204, 21, 0.4);
+  text-underline-offset: 0.2em;
+  transition: color 0.15s ease;
+}
+
+.ob-vacancy-metrics--nudge-action:hover {
+  color: #fde047;
+  text-decoration-color: #fde047;
 }
 
 .ob-cv-canvas__metrics {
@@ -4696,7 +5310,7 @@ html.portal-onboarding-immersive .kova-topbar {
   background: transparent;
   font-size: 0.75rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.72);
   text-decoration: underline;
   text-underline-offset: 0.15em;
   cursor: pointer;
@@ -4705,7 +5319,7 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .portal-onboarding-footer__save-exit:hover {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .portal-onboarding--v2 .portal-onboarding-btn--primary {
@@ -4719,7 +5333,7 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .ob-step-hero {
   margin-bottom: 0;
-  padding-bottom: 1.25rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--ob-border);
 }
 
@@ -4729,46 +5343,51 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .ob-step-hero__meta {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 0.625rem;
+  margin-bottom: 0.75rem;
 }
 
 .ob-step-hero__eyebrow {
   margin: 0;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--kv-slate);
+  color: var(--kova-lime);
 }
 
 .ob-step-hero__progress {
   margin: 0;
   flex-shrink: 0;
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--kova-lime);
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.72);
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .ob-step-hero h1 {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.625rem;
   font-family: var(--font-sora), 'Sora', sans-serif;
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.625rem, 4vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
   color: #ffffff;
+  text-wrap: balance;
 }
 
 .ob-step-hero p {
   margin: 0;
   font-size: 15px;
-  line-height: 1.55;
-  color: var(--kv-slate);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.6);
   max-width: 42rem;
 }
 
@@ -4783,116 +5402,322 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .ob-panel__icon--yellow {
-  background: rgba(234, 179, 8, 0.15);
+  background: linear-gradient(155deg, rgba(234, 179, 8, 0.22), rgba(234, 179, 8, 0.08));
   color: #facc15;
 }
 
 .ob-panel__icon--teal {
-  background: rgba(20, 184, 166, 0.15);
+  background: linear-gradient(155deg, rgba(20, 184, 166, 0.22), rgba(20, 184, 166, 0.08));
   color: #2dd4bf;
 }
 
 .ob-panel__icon--green {
-  background: rgba(34, 197, 94, 0.15);
+  background: linear-gradient(155deg, rgba(34, 197, 94, 0.22), rgba(34, 197, 94, 0.08));
   color: #4ade80;
 }
 
 /* Review hub v2 */
 
-.ob-review-hub__progress {
-  margin-bottom: 1.25rem;
+.ob-review-hub__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.ob-review-hub__progress-head {
+.ob-review-hub__head .ob-step-hero {
+  flex: 1;
+  min-width: 16rem;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+/* Completion ring — a filled-arc circle via conic-gradient (no SVG needed) with the raw count
+   in the middle, replacing the plain "X de Y revisadas" progress bar with something that reads
+   as a considered summary widget, not just a status line. */
+.ob-review-hub__summary {
   display: flex;
-  align-items: baseline;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 14px;
+  border: 1px solid var(--ob-border);
+  background: var(--ob-surface);
+  flex-shrink: 0;
+}
+
+.ob-review-hub__ring {
+  width: 3.75rem;
+  height: 3.75rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: conic-gradient(
+    var(--kova-lime) calc(var(--pct, 0) * 1%),
+    rgba(255, 255, 255, 0.08) 0
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ob-review-hub__ring-inner {
+  width: calc(100% - 9px);
+  height: calc(100% - 9px);
+  border-radius: 999px;
+  background: var(--ob-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ob-review-hub__ring-inner strong {
+  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+}
+
+.ob-review-hub__summary-text span {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.ob-review-hub__summary-text p {
+  margin: 0.3rem 0 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 14rem;
+}
+
+.ob-review-hub__next {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 0.5rem;
-}
-
-.ob-review-hub__progress-label {
-  margin: 0;
+  width: 100%;
+  margin: 0 0 1.5rem;
+  padding: 0.875rem 1.125rem;
+  border: 1px solid var(--ob-border);
+  border-left: 2px solid var(--kv-lime);
+  border-radius: 0.625rem;
+  background: var(--ob-surface);
+  color: var(--ob-text);
   font-size: 0.8125rem;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.ob-review-hub__next:hover {
+  background: var(--ob-surface-raised);
+}
+
+.ob-review-hub__next-label {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.ob-review-hub__next-label strong {
+  color: var(--kova-lime);
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.85);
 }
 
-.ob-review-hub__progress-hint {
-  margin: 0;
+.ob-review-hub__next-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex-shrink: 0;
+  padding: 0.375rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(216, 242, 76, 0.14);
+  font-weight: 700;
+  color: var(--kova-lime);
+  white-space: nowrap;
+  transition: gap 0.15s ease;
+}
+
+.ob-review-hub__next:hover .ob-review-hub__next-action {
+  gap: 0.5rem;
+}
+
+.ob-review-hub__order-hint {
+  margin: 0 0 0.875rem;
   font-size: 0.75rem;
-  font-weight: 500;
   color: rgba(255, 255, 255, 0.45);
-  text-align: right;
-}
-
-.ob-review-hub__progress-track {
-  height: 3px;
-  border-radius: 1px;
-  background: var(--ob-border);
-  overflow: hidden;
-}
-
-.ob-review-hub__progress-track > span {
-  display: block;
-  height: 100%;
-  background: var(--kova-lime);
-  border-radius: 1px;
-  transition: width 0.4s ease;
 }
 
 .ob-review-hub__list {
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: 0;
+}
+
+/* Numbered stepper: index badge + connecting line to its left, card content to its right. The
+   line only spans between badges (not past the last one) via the :last-child guard in JSX. */
+.ob-review-hub__item {
+  display: flex;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.ob-review-hub__index {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 2rem;
+  padding-top: 0.25rem;
+}
+
+.ob-review-hub__index-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 1.5px solid var(--ob-border-strong);
+  background: var(--ob-surface);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.ob-review-hub__index-badge.is-done {
+  border-color: var(--kova-lime);
+  background: var(--kova-lime);
+  color: var(--kv-ink);
+}
+
+.ob-review-hub__index-line {
+  flex: 1;
+  width: 0;
+  min-height: 1rem;
+  margin: 0.35rem 0;
+  border-left: 1.5px dashed var(--ob-border-strong);
+}
+
+.ob-review-hub__item .ob-review-card {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0.75rem;
+}
+
+.ob-review-card {
+  position: relative;
+}
+
+.ob-review-card:hover {
+  border-color: rgba(237, 239, 234, 0.24);
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.03) inset, 0 16px 32px -18px rgba(0, 0, 0, 0.6);
 }
 
 .ob-review-card.is-reviewed {
-  border-color: rgba(216, 242, 76, 0.15);
-  background: rgba(216, 242, 76, 0.03);
+  border-color: rgba(216, 242, 76, 0.18);
+  background: linear-gradient(180deg, rgba(216, 242, 76, 0.05), rgba(216, 242, 76, 0) 40%),
+    var(--ob-surface);
+}
+
+.ob-review-card.is-next {
+  border-color: var(--kova-lime);
 }
 
 .ob-review-card__badge {
-  display: inline-block;
-  margin-top: 0.125rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.25rem;
   font-size: 0.625rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(250, 204, 21, 0.75);
+  color: #facc15;
+}
+
+.ob-review-card__badge::before {
+  content: '';
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 .ob-review-card__badge--optional {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 700;
+}
+
+/* Status pill + chevron as one clickable unit — the whole thing opens the section editor, not
+   just the small pencil link at the bottom of the card. */
+.ob-review-card__status-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.ob-review-card__status-chevron {
   color: rgba(255, 255, 255, 0.4);
-  font-weight: 600;
+  transition: transform 0.15s ease;
+}
+
+.ob-review-card__status-btn:hover .ob-review-card__status-chevron {
+  transform: translateX(2px);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .ob-review-card__status {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.3rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
   font-size: 0.6875rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.32);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .ob-review-card__status.is-done {
+  border-color: rgba(216, 242, 76, 0.3);
+  background: rgba(216, 242, 76, 0.12);
   color: var(--kova-lime);
 }
 
+/* Distinct from the lime "Confirmar sección" action below — pending needs to read as an
+   alert (something still missing your attention), not just another shade of the same accent. */
 .ob-review-card__status.is-pending {
-  color: #facc15;
+  border-color: rgba(248, 113, 113, 0.35);
+  background: rgba(248, 113, 113, 0.14);
+  color: #f87171;
 }
 
 .ob-review-card__status.is-empty {
-  color: rgba(255, 255, 255, 0.4);
+  border-color: var(--ob-border);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .ob-review-card__summary {
-  margin: 0 0 0.875rem;
+  margin: 0 0 1rem;
   font-size: 0.8125rem;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .ob-review-card__actions {
@@ -4900,23 +5725,27 @@ html.portal-onboarding-immersive .kova-topbar {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .ob-review-card__confirm {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.3rem;
   border: none;
   background: transparent;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--kova-lime);
   cursor: pointer;
   padding: 0;
+  transition: gap 0.15s ease;
 }
 
 .ob-review-card__confirm:hover {
-  color: var(--kv-lime);
+  gap: 0.5rem;
+  color: var(--kv-lime-hover);
 }
 
 /* Upload panel */
@@ -5007,6 +5836,40 @@ html.portal-onboarding-immersive .kova-topbar {
   width: 100%;
 }
 
+.ob-welcome__benefits {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 1.25rem;
+  animation: ob-welcome-fade 0.5s ease 0.2s both;
+}
+
+.ob-welcome__benefit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.62);
+  white-space: nowrap;
+}
+
+.ob-welcome__benefit-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: rgba(216, 242, 76, 0.1);
+  color: var(--kv-lime);
+  flex-shrink: 0;
+}
+
 @keyframes ob-welcome-fade {
   from {
     opacity: 0;
@@ -5037,11 +5900,26 @@ html.portal-onboarding-immersive .kova-topbar {
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .ob-complete__status svg {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.ob-complete__status--live {
+  border-color: rgba(216, 242, 76, 0.28);
+  background: rgba(216, 242, 76, 0.06);
+  color: var(--kv-lime);
+}
+
+.ob-complete__status-dot {
+  display: inline-flex;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--kv-lime);
+  flex-shrink: 0;
 }
 
 .ob-complete__hero-icon {
@@ -5057,4 +5935,68 @@ html.portal-onboarding-immersive .kova-topbar {
   max-width: 280px;
   margin: 0 auto;
   display: flex;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Corporate B2B polish: restrained, professional, brand accent used sparingly.
+   No animated aurora, no neon glows — quiet depth and precise typography for a
+   senior commercial-hire audience.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Static, very faint ambient depth — a single low-opacity brand wash at the top,
+   no motion. Reads as a considered corporate surface, not a glowing app. */
+.portal-onboarding.portal-onboarding--fullscreen {
+  position: relative;
+  isolation: isolate;
+}
+
+.portal-onboarding.portal-onboarding--fullscreen::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(70% 40% at 50% -8%, rgba(216, 242, 76, 0.035), transparent 60%),
+    radial-gradient(60% 40% at 90% 108%, rgba(51, 65, 196, 0.05), transparent 55%);
+}
+
+/* Primary CTA — solid brand fill, flat and confident. A quiet hover, no lift, no
+   glow. The lime does the work; the shadow stays neutral for depth, not shine. */
+.portal-onboarding--fullscreen .portal-onboarding-btn--primary,
+.portal-onboarding--fullscreen .ob-welcome__cta,
+.portal-onboarding--fullscreen .ob-complete__cta,
+.portal-onboarding--fullscreen .ob-btn-solid,
+.portal-onboarding--fullscreen .ob-build__continue {
+  background: var(--kv-lime);
+  box-shadow: none;
+  transition: background-color 0.15s ease;
+}
+
+.portal-onboarding--fullscreen .portal-onboarding-btn--primary:hover:not(:disabled),
+.portal-onboarding--fullscreen .ob-welcome__cta:hover:not(:disabled),
+.portal-onboarding--fullscreen .ob-complete__cta:hover:not(:disabled),
+.portal-onboarding--fullscreen .ob-btn-solid:hover:not(:disabled),
+.portal-onboarding--fullscreen .ob-build__continue:hover:not(:disabled) {
+  background: var(--kv-lime-hover);
+}
+
+/* Quiet cross-fade between steps — no vertical slide. */
+.portal-onboarding--fullscreen .portal-onboarding-stage {
+  animation: ob-stage-in 0.28s ease;
+}
+
+@keyframes ob-stage-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portal-onboarding--fullscreen .portal-onboarding-stage {
+    animation: none;
+  }
 }

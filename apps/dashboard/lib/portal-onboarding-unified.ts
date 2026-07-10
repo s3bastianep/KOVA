@@ -26,11 +26,12 @@ export type OnboardingJourneyId = (typeof ONBOARDING_JOURNEY_STEPS)[number]['id'
 
 export function onboardingJourneyIndex(step: OnboardingStep): number {
   const s = normalizeOnboardingStep(step);
-  if (s === 'welcome' || s === 'cv_upload' || s === 'cv_analyzing' || s === 'cv_summary') return 0;
+  if (s === 'welcome' || s === 'cv_upload' || s === 'cv_analyzing') return 0;
   if (s === 'review_hub' || s === 'cv_review') return 1;
   if (s === 'preferencias' || s === 'evidence') return 2;
   if (s === 'competencies') return 3;
-  if (s === 'complete') return 4;
+  // cv_summary is now the final profile reveal shown right before 'complete', not an early step.
+  if (s === 'cv_summary' || s === 'complete') return 4;
   return 0;
 }
 
@@ -106,7 +107,6 @@ export function macroStepIndex(step: OnboardingStep): number {
       return 1;
     case 'cv_analyzing':
       return 2;
-    case 'cv_summary':
     case 'review_hub':
     case 'cv_review':
       return 3;
@@ -116,6 +116,9 @@ export function macroStepIndex(step: OnboardingStep): number {
       return 7;
     case 'competencies':
       return 8;
+    // cv_summary is the final profile reveal (right before 'complete'), so it scores near the end.
+    case 'cv_summary':
+      return 9;
     case 'complete':
       return 9;
     default:
@@ -161,12 +164,13 @@ export function unifiedProgressPercent(
     return Math.min(98, Math.round(macroBase + ((competencyIndex + 1) / total) * 8));
   }
   if (s === 'complete') return 100;
+  // cv_summary is the final reveal right before 'complete' — the profile is fully built by now.
+  if (s === 'cv_summary') return 99;
 
   const stepWeights: Partial<Record<OnboardingStep, number>> = {
     welcome: 4,
     cv_upload: 10,
     cv_analyzing: 16,
-    cv_summary: 22,
     review_hub: 28,
     cv_review: 34,
   };
@@ -181,9 +185,11 @@ export function estimatedMinutesLeft(
 ): number {
   const s = normalizeOnboardingStep(step);
   if (s === 'complete') return 0;
+  // cv_summary is the final reveal now — essentially done.
+  if (s === 'cv_summary') return 0;
   if (s === 'welcome') return 5;
   if (s === 'cv_upload' || s === 'cv_analyzing') return 4;
-  if (s === 'cv_summary' || s === 'review_hub' || s === 'cv_review') return 3;
+  if (s === 'review_hub' || s === 'cv_review') return 3;
   if (s === 'preferencias') {
     const remaining = Math.max(0, getActiveSteps(profile).length - prefStepIndex - 1);
     return Math.max(1, Math.ceil(remaining * 0.25)) + 2;
@@ -307,17 +313,12 @@ export function transitionAfterStep(
     case 'review_hub':
       return {
         headline: 'Trayectoria confirmada',
-        detail: 'Continuemos con tu perfil comercial.',
+        detail: 'Ahora unas preguntas para saber a qué vacantes avisarte.',
       };
     case 'preferencias':
       return {
         headline: 'Preferencias registradas',
-        detail: 'Esto optimiza la compatibilidad con vacantes.',
-      };
-    case 'evidence':
-      return {
-        headline: 'Logros documentados',
-        detail: 'Tu perfil gana credibilidad ante empresas.',
+        detail: 'Con esto ya podemos avisarte apenas se abra una vacante para ti.',
       };
   }
   return null;

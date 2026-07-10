@@ -53,18 +53,36 @@ function PersonalSection({ profile, onChange }: Props) {
   const isKnownCity = COLOMBIAN_CITIES.includes(ciudad) && ciudad !== 'Otra';
   const citySelectValue = !ciudad ? '' : isKnownCity ? ciudad : 'Otra';
 
+  // profile.nombre stores the full name as one string; split it for two fields and recombine
+  // on change, same pattern as the signup form's Nombre/Apellido split.
+  const fullName = profile.nombre?.trim() ?? '';
+  const spaceIdx = fullName.indexOf(' ');
+  const nombreVal = spaceIdx === -1 ? fullName : fullName.slice(0, spaceIdx);
+  const apellidoVal = spaceIdx === -1 ? '' : fullName.slice(spaceIdx + 1);
+
   return (
     <div className="space-y-3">
       <p className="portal-onboarding-section-title">Información personal</p>
-      <label className="portal-onboarding-work-field">
-        <span className="portal-onboarding-work-field__label">Nombre completo</span>
-        <input
-          className="portal-onboarding-field"
-          value={profile.nombre ?? ''}
-          placeholder="Tu nombre"
-          onChange={(e) => onChange({ ...profile, nombre: e.target.value })}
-        />
-      </label>
+      <div className="portal-onboarding-work-dates">
+        <label className="portal-onboarding-work-field">
+          <span className="portal-onboarding-work-field__label">Nombre</span>
+          <input
+            className="portal-onboarding-field"
+            value={nombreVal}
+            placeholder="Tu nombre"
+            onChange={(e) => onChange({ ...profile, nombre: `${e.target.value} ${apellidoVal}`.trim() })}
+          />
+        </label>
+        <label className="portal-onboarding-work-field">
+          <span className="portal-onboarding-work-field__label">Apellido</span>
+          <input
+            className="portal-onboarding-field"
+            value={apellidoVal}
+            placeholder="Tu apellido"
+            onChange={(e) => onChange({ ...profile, nombre: `${nombreVal} ${e.target.value}`.trim() })}
+          />
+        </label>
+      </div>
       <label className="portal-onboarding-work-field">
         <span className="portal-onboarding-work-field__label">Correo</span>
         <input
@@ -482,7 +500,8 @@ function SkillsSection({ profile, onChange }: Props) {
     <div className="space-y-3">
       <p className="portal-onboarding-section-title">Habilidades y herramientas</p>
       <p className="portal-onboarding-muted">
-        Agrega una por una. Al escribir verás sugerencias como prospección, Salesforce o negociación.
+        Elige de la lista de sugerencias mientras escribes, o toca uno de los chips de abajo.
+        Cuantas más agregues, mejor te podemos ubicar en las vacantes correctas.
       </p>
       <PortalSkillPicker
         skills={skills}

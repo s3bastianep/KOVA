@@ -135,7 +135,7 @@ function timelineYear(entry: WorkHistoryEntry): string {
 function periodShort(entry: WorkHistoryEntry): string {
   const start = formatMonthYearDisplay(entry.fechaInicio) || '?';
   const end = entry.trabajoActual ? 'Actual' : formatMonthYearDisplay(entry.fechaFin ?? '') || '?';
-  return `${start} – ${end}`;
+  return `${start} a ${end}`;
 }
 
 function YesNoToggle({ value, onChange }: { value: boolean; onChange: (next: boolean) => void }) {

@@ -32,7 +32,6 @@ export function SignupForm() {
       });
       saveSession(data);
       setSuccess(true);
-      window.setTimeout(() => window.location.assign('/portal'), 1400);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No pudimos crear tu cuenta');
       setLoading(false);
@@ -70,7 +69,15 @@ export function SignupForm() {
               <Check className="w-7 h-7" strokeWidth={3} aria-hidden />
             </span>
             <h2 className="kv-login-card-title">¡Cuenta creada!</h2>
-            <p className="kv-login-card-sub">Te estamos llevando a tu portal…</p>
+            <p className="kv-login-card-sub">Ya puedes entrar a construir tu perfil.</p>
+            <button
+              type="button"
+              className="kv-login-submit kv-login-success-cta"
+              onClick={() => window.location.assign('/portal')}
+            >
+              Continuar
+              <ArrowRight className="w-4 h-4" aria-hidden />
+            </button>
           </div>
         ) : (
         <form onSubmit={submit} className="kv-login-card">

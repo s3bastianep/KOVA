@@ -19,20 +19,32 @@ export const SKILLS_QUESTION_ID = 'skills';
 /** Habilidades comerciales evaluadas - mismas del formulario del puesto comercial */
 export const COMMERCIAL_SKILLS = [
   'Prospección',
+  'Generación de leads',
+  'Llamadas en frío',
   'Cierre de ventas',
   'Negociación',
+  'Negociación de contratos',
   'Presentación comercial',
+  'Elaboración de propuestas comerciales',
   'Manejo de objeciones',
   'Cuentas clave',
   'Venta consultiva',
+  'Ventas B2B',
+  'Ventas B2C',
+  'Venta cruzada (upselling)',
+  'Ventas digitales / social selling',
   'Gestión de pipeline',
+  'Forecast de ventas',
+  'Gestión de KPIs comerciales',
+  'Networking comercial',
   'Liderazgo comercial',
   'Postventa',
+  'Retención de clientes',
+  'Fidelización',
   'Inteligencia emocional',
   'Trabajo en equipo',
   'Análisis de mercado',
   'Pricing',
-  'Fidelización',
 ];
 
 /** Cargos comerciales - selección múltiple en wizard de proceso */

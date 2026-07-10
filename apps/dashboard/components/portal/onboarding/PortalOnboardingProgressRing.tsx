@@ -13,10 +13,6 @@ export function PortalOnboardingProgressRing({ percent, size = 88 }: Props) {
   const offset = circumference - (clamped / 100) * circumference;
 
   const isComplete = percent >= 100;
-  const center = size / 2;
-  const angle = (clamped / 100) * 2 * Math.PI - Math.PI / 2;
-  const handleX = center + radius * Math.cos(angle);
-  const handleY = center + radius * Math.sin(angle);
 
   return (
     <div
@@ -46,9 +42,6 @@ export function PortalOnboardingProgressRing({ percent, size = 88 }: Props) {
           shapeRendering="geometricPrecision"
           transform={`rotate(-90 ${size / 2} ${size / 2})`}
         />
-        {clamped > 0 && clamped < 100 ? (
-          <circle className="ob-ring__handle" cx={handleX} cy={handleY} r={stroke / 2 + 1} />
-        ) : null}
       </svg>
       <div className="ob-ring__label">
         <strong>{percent}%</strong>

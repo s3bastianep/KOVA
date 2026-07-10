@@ -48,7 +48,9 @@ export function resolveOnboardingStep(meta: OnboardingMeta, hasCv: boolean): Onb
   if (isOnboardingComplete(meta)) return 'done';
   const saved = normalizeStep(meta.onboardingStep);
   if (saved && saved !== 'welcome') return saved;
-  if (hasCv && meta.cvExtraction) return 'cv_summary';
+  // A CV was uploaded but no step was saved → send them to verify the extracted data (review_hub),
+  // not to the final profile-reveal summary (which now lives at the end of the flow).
+  if (hasCv && meta.cvExtraction) return 'review_hub';
   return 'welcome';
 }
 

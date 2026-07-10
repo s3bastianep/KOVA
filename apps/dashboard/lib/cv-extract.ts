@@ -51,15 +51,45 @@ export type CvExtractionResult = {
   reviewFields: CvReviewField[];
 };
 
-const EXPERIENCE_SECTION =
-  /^(experiencia\s*(laboral|profesional)?|trayectoria\s*profesional|historial\s*laboral|work\s*experience|employment\s*history|experiencia|antecedentes\s*laborales|experiencia\s*relevante|experiencia\s*comercial)$/i;
+// Section headers in real CVs rarely appear as the exact bare word: they show up with leading
+// numbering ("1. Experiencia laboral"), trailing colons/punctuation, or extra words tacked on
+// ("EXPERIENCIA LABORAL Y PROYECTOS"). A strict ^...$ match against only the known phrases missed
+// most of these and silently fell back to a much less precise date-scan across the whole CV,
+// which is the single biggest cause of "empresa"/section fields coming back empty. These now
+// tolerate optional leading list markers and trailing decoration/extra words on the same line.
+const SECTION_PREFIX = '^\\s*(?:\\d+[.)]\\s*)?';
+// Bounded to a short trailing phrase (e.g. "Y PROYECTOS:") — unbounded would let a long sentence
+// that merely starts with "Experiencia" (not a header at all) false-match as a section title.
+// The trailing punctuation class is repeated at the very end too, since a decorated header
+// commonly ends with its own colon/dash AFTER the extra words ("...Y PROYECTOS:"), not only
+// right after the core phrase.
+const SECTION_SUFFIX = '\\s*[:.\\-–—]*\\s*[a-záéíóúñ\\s]{0,25}[:.\\-–—]*$';
 
-const EDUCATION_SECTION =
-  /^(formaci[oó]n\s*(acad[eé]mica)?|educaci[oó]n|estudios|education|academic\s*background|formaci[oó]n\s*acad[eé]mica)$/i;
+const EXPERIENCE_SECTION = new RegExp(
+  SECTION_PREFIX +
+    '(experiencia\\s*(laboral|profesional)?|trayectoria\\s*profesional|historial\\s*laboral|work\\s*experience|employment\\s*history|experiencia|antecedentes\\s*laborales|experiencia\\s*relevante|experiencia\\s*comercial)' +
+    SECTION_SUFFIX,
+  'i',
+);
 
-const LANGUAGE_SECTION = /^(idiomas?|languages?|idiomas\s*y\s*habilidades)$/i;
+const EDUCATION_SECTION = new RegExp(
+  SECTION_PREFIX +
+    '(formaci[oó]n\\s*(acad[eé]mica)?|educaci[oó]n|estudios|education|academic\\s*background)' +
+    SECTION_SUFFIX,
+  'i',
+);
 
-const CONTACT_SECTION = /^(datos\s*personales|informaci[oó]n\s*personal|contacto|contact|perfil\s*profesional|resumen\s*profesional)$/i;
+const LANGUAGE_SECTION = new RegExp(
+  SECTION_PREFIX + '(idiomas?|languages?|idiomas\\s*y\\s*habilidades)' + SECTION_SUFFIX,
+  'i',
+);
+
+const CONTACT_SECTION = new RegExp(
+  SECTION_PREFIX +
+    '(datos\\s*personales|informaci[oó]n\\s*personal|contacto|contact|perfil\\s*profesional|resumen\\s*profesional)' +
+    SECTION_SUFFIX,
+  'i',
+);
 
 const SECTION_STOP =
   /^(experiencia|trayectoria|historial|formaci[oó]n|educaci[oó]n|estudios|idiomas?|habilidades|competencias|referencias|certificaciones|logros|resumen|perfil|contacto|datos\s*personales)/i;
@@ -563,6 +593,18 @@ function assignPreDateLines(entry: Partial<WorkHistoryEntry>, buffer: string[]) 
   if (lines.length >= 2) {
     const first = lines[lines.length - 2];
     const second = lines[lines.length - 1];
+
+    // Either line can itself be a combined "Cargo - Empresa" / "Cargo en Empresa" string (common
+    // when a CV puts role and company on one line, then the date range on the next). Split it
+    // before falling back to whole-line heuristics below — otherwise the entire line lands in
+    // "cargo" and "empresa" is silently left empty.
+    const secondSplit = parseRoleCompanyLine(second);
+    if (secondSplit.cargo && secondSplit.empresa) {
+      if (!entry.cargo) entry.cargo = secondSplit.cargo;
+      if (!entry.empresa) entry.empresa = secondSplit.empresa;
+      return;
+    }
+
     if (!entry.cargo && looksLikeJobTitle(first)) entry.cargo = first;
     if (!entry.empresa) entry.empresa = second;
     if (!entry.cargo && looksLikeJobTitle(second) && looksLikeCompany(first)) {
@@ -573,7 +615,11 @@ function assignPreDateLines(entry: Partial<WorkHistoryEntry>, buffer: string[]) 
   }
 
   const only = lines[0];
-  if (looksLikeJobTitle(only)) entry.cargo = only;
+  const split = parseRoleCompanyLine(only);
+  if (split.cargo && split.empresa) {
+    entry.cargo = split.cargo;
+    entry.empresa = split.empresa;
+  } else if (looksLikeJobTitle(only)) entry.cargo = only;
   else if (looksLikeCompany(only)) entry.empresa = only;
   else entry.cargo = only;
 }

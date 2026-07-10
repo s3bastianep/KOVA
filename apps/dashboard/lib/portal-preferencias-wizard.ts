@@ -24,15 +24,15 @@ export type PreferenciasWizardStep = {
 };
 
 export const PREFERENCIAS_BLOCK_LABELS: Record<PreferenciasBlock, string> = {
-  buscas: 'Qué buscas',
-  vendes: 'Cómo vendes',
-  cierras: 'Preferencias finales',
+  buscas: 'El trabajo que quieres',
+  vendes: 'Tu experiencia vendiendo',
+  cierras: 'Lo que buscas en un trabajo',
 };
 
 export const PREFERENCIAS_BLOCK_HINTS: Record<PreferenciasBlock, string> = {
-  buscas: 'Roles, industrias y cómo quieres trabajar',
-  vendes: 'Tu experiencia comercial en lenguaje simple',
-  cierras: 'Condiciones, herramientas y expectativas',
+  buscas: 'Para mostrarte solo vacantes que te interesan',
+  vendes: 'Esto es lo que las empresas buscan al abrir una vacante comercial',
+  cierras: 'Para que el match también encaje con tus condiciones',
 };
 
 export const PREFERENCIAS_BLOCKS: PreferenciasBlock[] = ['buscas', 'vendes', 'cierras'];
@@ -217,6 +217,7 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
   },
   {
     id: 'contrato',
+    skipIf: () => true, // simplificado: fuera del flujo activo
     block: 'buscas',
     title: '¿Qué tipo de contrato prefieres?',
     multi: true,
@@ -288,6 +289,7 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
   },
   {
     id: 'interlocutores',
+    skipIf: () => true, // simplificado: fuera del flujo activo
     block: 'vendes',
     title: '¿Con quién hablas normalmente?',
     multi: true,
@@ -308,6 +310,7 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
   },
   {
     id: 'como-consigues',
+    skipIf: () => true, // simplificado: fuera del flujo activo
     block: 'vendes',
     title: '¿Cómo consigues clientes?',
     multi: true,
@@ -328,6 +331,7 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
   },
   {
     id: 'ciclo-venta',
+    skipIf: () => true, // simplificado: fuera del flujo activo
     block: 'vendes',
     title: '¿Cómo es tu ciclo de venta?',
     multi: false,
@@ -355,6 +359,7 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
   },
   {
     id: 'tamano-negocio',
+    skipIf: () => true, // simplificado: fuera del flujo activo
     block: 'vendes',
     title: '¿Qué tamaño de negocio manejas?',
     subtitle: 'Valor aproximado del negocio o contrato.',
@@ -429,6 +434,7 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
   },
   {
     id: 'herramientas',
+    skipIf: () => true, // simplificado: fuera del flujo activo
     block: 'cierras',
     title: '¿Qué otras herramientas dominas?',
     subtitle: 'ERP, analítica y productividad.',

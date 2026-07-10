@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { CvExtractionResult } from '@/lib/cv-extract';
-import type { CommercialProfile, CompetencyEntry } from '@/lib/candidate-commercial-profile';
+import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
 import { stripIncompleteCertifications } from '@/lib/commercial-profile-builder';
 import { portalApi } from '@/lib/api';
 import { getStoredUser } from '@/lib/api';
@@ -35,25 +35,7 @@ import {
   salarySliderIndex,
 } from '@/lib/portal-preferencias-wizard';
 import { normalizeEducation, normalizeWorkHistory } from '@/lib/cv-extract';
-import {
-  applyCompetencyRatings,
-  applyLanguageLevels,
-  competencyDefsForProfile,
-  draftEvidenceFromProfile,
-  EVIDENCE_PHASES,
-  mergeEvidenceIntoProfile,
-  type EvidencePhase,
-} from '@/lib/portal-onboarding-evidence';
-import {
-  canContinueCompetencyStep,
-  PortalOnboardingCompetencies,
-} from './PortalOnboardingCompetencies';
-import {
-  canContinueEvidencePhase,
-  nextEvidencePhase,
-  PortalOnboardingEvidence,
-  prevEvidencePhase,
-} from './PortalOnboardingEvidence';
+import { applyLanguageLevels } from '@/lib/portal-onboarding-evidence';
 import { PortalOnboardingReviewCards } from './PortalOnboardingReviewCards';
 import { PortalOnboardingReviewHub } from './PortalOnboardingReviewHub';
 import {
@@ -61,6 +43,7 @@ import {
   PortalOnboardingPreferencias,
 } from './PortalOnboardingPreferencias';
 import { PortalOnboardingFooter, PortalOnboardingShell } from './PortalOnboardingShell';
+import { guideMessageForStep } from './PortalOnboardingGuide';
 import { PortalOnboardingWelcome } from './PortalOnboardingWelcome';
 import { PortalOnboardingTransition } from './PortalOnboardingTransition';
 import { PortalOnboardingComplete } from './PortalOnboardingComplete';
@@ -76,8 +59,6 @@ const STEPS_WITH_VACANCY_STATS = new Set<OnboardingStep>([
   'review_hub',
   'cv_review',
   'preferencias',
-  'evidence',
-  'competencies',
   'complete',
 ]);
 
@@ -102,10 +83,18 @@ export function PortalOnboardingFlow({
   const firstName = user?.firstName ?? initialProfile.nombre?.split(' ')[0] ?? 'Candidato';
 
   const normalizedInitial = normalizeOnboardingStep(initialStep);
-  // cv_analyzing is a transient animation, never a valid resume point: if a reload
-  // lands here, the previous session already saved the extracted profile before
-  // reaching this step, so there is nothing left to animate — skip to the summary.
-  const resumableInitial = normalizedInitial === 'cv_analyzing' ? 'cv_summary' : normalizedInitial;
+  // cv_analyzing is a transient animation, never a valid resume point: if a reload lands here,
+  // the previous session already saved the extracted profile before reaching it, so send the
+  // user to verify that data (review_hub) rather than replaying the animation. 'evidence' and
+  // 'competencies' were removed from the active flow (self-reported achievements/self-ratings
+  // don't hold up in a selection process) — anyone resuming from a saved record with one of
+  // those steps goes straight to the final profile reveal instead.
+  const resumableInitial =
+    normalizedInitial === 'cv_analyzing'
+      ? 'review_hub'
+      : normalizedInitial === 'evidence' || normalizedInitial === 'competencies'
+        ? 'cv_summary'
+        : normalizedInitial;
 
   const [step, setStep] = useState<OnboardingStep>(() => resumableInitial);
   const [profile, setProfile] = useState<CommercialProfile>(() => ({
@@ -130,19 +119,9 @@ export function PortalOnboardingFlow({
     }
     return levels;
   });
-  const [evidenceDraft, setEvidenceDraft] = useState(() => draftEvidenceFromProfile(initialProfile));
   const [reviewEditSection, setReviewEditSection] = useState<ReviewSectionId>('experiencia');
   const [reviewEditOrigin, setReviewEditOrigin] = useState<'cv_summary' | 'review_hub' | 'preferencias'>(
     'review_hub',
-  );
-  const [evidencePhase, setEvidencePhase] = useState<EvidencePhase>(
-    () => (normalizedInitial === 'evidence' ? EVIDENCE_PHASES[initialSubStep] ?? 'titulo' : 'titulo'),
-  );
-  const [competencyRatings, setCompetencyRatings] = useState<Record<string, CompetencyEntry>>(
-    () => ({ ...(initialProfile.competencias ?? {}) }),
-  );
-  const [competencyIndex, setCompetencyIndex] = useState(
-    () => (normalizedInitial === 'competencies' ? initialSubStep : 0),
   );
   const [reviewed, setReviewed] = useState<Set<ReviewSectionId>>(
     () => new Set(initialReviewed as ReviewSectionId[]),
@@ -164,23 +143,13 @@ export function PortalOnboardingFlow({
   const buildMergedProfile = useCallback((): CommercialProfile => {
     let merged = applyPreferenciasAnswers(prefAnswers, profile);
     merged = applyLanguageLevels(merged, languageLevels);
-    if (canContinueEvidencePhase('tags', evidenceDraft)) {
-      merged = mergeEvidenceIntoProfile(merged, evidenceDraft);
-    }
-    merged = applyCompetencyRatings(merged, competencyRatings);
     return stripIncompleteCertifications(merged);
-  }, [competencyRatings, evidenceDraft, languageLevels, prefAnswers, profile]);
+  }, [languageLevels, prefAnswers, profile]);
 
-  const percent = unifiedProgressPercent(
-    step,
-    profile,
-    prefStepIndex,
-    prefAnswers,
-    evidencePhase,
-    competencyIndex,
-  );
-  const minutesLeft = estimatedMinutesLeft(step, profile, prefStepIndex, competencyIndex);
+  const percent = unifiedProgressPercent(step, profile, prefStepIndex, prefAnswers);
+  const minutesLeft = estimatedMinutesLeft(step, profile, prefStepIndex);
   const journeyIndex = onboardingJourneyIndex(step);
+  const guideMessage = guideMessageForStep(step, currentPrefStep?.block);
   const vacancyStatsEnabled = STEPS_WITH_VACANCY_STATS.has(step) && vacancyStatsKey > 0;
   const { stats: vacancyStats, loading: vacancyStatsLoading } = usePortalVacancyMatchStats(
     vacancyStatsEnabled ? vacancyStatsKey : null,
@@ -238,17 +207,13 @@ export function PortalOnboardingFlow({
 
       await portalApi.updateOnboarding({
         ...body,
-        ...(sanitizedPatch || step === 'preferencias' || step === 'evidence' || step === 'competencies'
+        ...(sanitizedPatch || step === 'preferencias'
           ? { profile: (sanitizedPatch ?? buildMergedProfile()) as Record<string, unknown> }
           : {}),
       });
       if (patch.nextStep) setStep(patch.nextStep);
-      if (patch.subStep !== undefined) {
-        if ((patch.nextStep ?? step) === 'preferencias') setPrefStepIndex(patch.subStep);
-        if ((patch.nextStep ?? step) === 'competencies') setCompetencyIndex(patch.subStep);
-        if ((patch.nextStep ?? step) === 'evidence') {
-          setEvidencePhase(EVIDENCE_PHASES[patch.subStep] ?? 'titulo');
-        }
+      if (patch.subStep !== undefined && (patch.nextStep ?? step) === 'preferencias') {
+        setPrefStepIndex(patch.subStep);
       }
     },
     [buildMergedProfile, prefStepIndex, reviewed, step],
@@ -277,12 +242,7 @@ export function PortalOnboardingFlow({
       const merged = buildMergedProfile();
       await portalApi.updateOnboarding({
         onboardingStep: step,
-        onboardingSubStep:
-          step === 'competencies'
-            ? competencyIndex
-            : step === 'evidence'
-              ? EVIDENCE_PHASES.indexOf(evidencePhase)
-              : prefStepIndex,
+        onboardingSubStep: prefStepIndex,
         onboardingReviewed: [...reviewed],
         profile: merged as Record<string, unknown>,
       });
@@ -336,7 +296,10 @@ export function PortalOnboardingFlow({
         (counts?.idiomas ?? 0) +
         (counts?.certificaciones ?? 0);
       setOverlayTransition(transitionAfterStep('cv_analyzing', profile, dataCount) ?? null);
-      await saveStep('cv_summary');
+      // Straight to verifying the extracted data — the rich profile summary is now shown at the
+      // end of the flow, not here (showing compatibility before the candidate confirms the data
+      // was confusing).
+      await saveStep('review_hub');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No pudimos continuar.');
     } finally {
@@ -385,6 +348,17 @@ export function PortalOnboardingFlow({
     });
   };
 
+  const handleCustomOptionText = (stepId: string, placeholder: string, text: string) => {
+    setPrefAnswers((prev) => {
+      const current = prev[stepId] ?? [];
+      const idx = current.findIndex((v) => v === placeholder || v.startsWith(`${placeholder}: `));
+      if (idx === -1) return prev;
+      const next = [...current];
+      next[idx] = text.trim() ? `${placeholder}: ${text.trim()}` : placeholder;
+      return { ...prev, [stepId]: next };
+    });
+  };
+
   const handleSalaryChange = (index: number) => {
     setSalaryIdx(index);
     setPrefAnswers((prev) => ({ ...prev, salario: [SALARY_SLIDER_LABELS[index]] }));
@@ -395,7 +369,7 @@ export function PortalOnboardingFlow({
   };
 
   useEffect(() => {
-    if (!['cv_review', 'review_hub', 'preferencias', 'evidence', 'competencies'].includes(step)) return;
+    if (!['cv_review', 'review_hub', 'preferencias'].includes(step)) return;
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(() => {
       setSaveStatus('saving');
@@ -403,12 +377,7 @@ export function PortalOnboardingFlow({
       portalApi
         .updateOnboarding({
           onboardingStep: step,
-          onboardingSubStep:
-            step === 'competencies'
-              ? competencyIndex
-              : step === 'evidence'
-                ? EVIDENCE_PHASES.indexOf(evidencePhase)
-                : prefStepIndex,
+          onboardingSubStep: prefStepIndex,
           onboardingReviewed: [...reviewed],
           profile: merged as Record<string, unknown>,
         })
@@ -418,19 +387,7 @@ export function PortalOnboardingFlow({
     return () => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     };
-  }, [
-    buildMergedProfile,
-    competencyIndex,
-    competencyRatings,
-    evidenceDraft,
-    evidencePhase,
-    languageLevels,
-    prefAnswers,
-    prefStepIndex,
-    profile,
-    reviewed,
-    step,
-  ]);
+  }, [buildMergedProfile, languageLevels, prefAnswers, prefStepIndex, profile, reviewed, step]);
 
   const displayCounts = counts ?? countsFromProfile(profile);
   const analysisProgress = Math.round((analysisDone / CV_ANALYSIS_STEPS.length) * 100);
@@ -439,13 +396,21 @@ export function PortalOnboardingFlow({
     setReviewed((prev) => new Set([...prev, section]));
   };
 
-  const goPrefNext = async () => {
+  const goPrefNext = async (overrideOption?: string) => {
     if (!currentPrefStep) return;
-    if (!canContinuePreferenciasStep(currentPrefStep, prefAnswers, languageLevels)) return;
+    // When called right from a chip click (e.g. the idiomas-review yes/no buttons), use the
+    // just-clicked value directly instead of `prefAnswers` — that state update from the same
+    // click hasn't necessarily landed yet, so reading it back here would race and silently no-op
+    // (exactly the "se queda marcado y ya" bug: click registers, nothing else happens).
+    const effectiveAnswers = overrideOption
+      ? { ...prefAnswers, [currentPrefStep.id]: [overrideOption] }
+      : prefAnswers;
+    if (!canContinuePreferenciasStep(currentPrefStep, effectiveAnswers, languageLevels)) return;
+    if (overrideOption) setPrefAnswers(effectiveAnswers);
 
     if (
       currentPrefStep.id === 'idiomas-review' &&
-      (prefAnswers['idiomas-review'] ?? []).includes('Quiero revisarlos')
+      (effectiveAnswers['idiomas-review'] ?? []).includes('Quiero revisarlos')
     ) {
       setReviewEditSection('idiomas');
       setReviewEditOrigin('preferencias');
@@ -454,7 +419,7 @@ export function PortalOnboardingFlow({
     }
 
     if (currentPrefStep.id === 'idiomas') {
-      const selected = prefAnswers['idiomas'] ?? [];
+      const selected = effectiveAnswers['idiomas'] ?? [];
       setLanguageLevels((prev) => {
         const next = { ...prev };
         for (const idioma of selected) {
@@ -464,18 +429,20 @@ export function PortalOnboardingFlow({
       });
     }
 
-    let merged = applyPreferenciasAnswers(prefAnswers, profile);
+    let merged = applyPreferenciasAnswers(effectiveAnswers, profile);
     merged = applyLanguageLevels(merged, languageLevels);
 
     if (prefStepIndex >= activePrefSteps.length - 1) {
+      // Logros (self-reported achievements) and Competencias (candidate self-rating) were
+      // removed from the flow: neither can be verified in a selection process, so they added
+      // questions without adding real signal. Preferencias now goes straight to the final
+      // profile reveal.
       setBusy(true);
       try {
         setProfile(merged);
-        setEvidenceDraft(draftEvidenceFromProfile(merged));
-        setEvidencePhase('titulo');
-        setCompetencyIndex(0);
+        setVacancyStatsKey((key) => key + 1);
         setOverlayTransition(transitionAfterStep('preferencias', merged));
-        await saveStep('evidence', merged, 0);
+        await saveStep('cv_summary', merged);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'No pudimos guardar');
       } finally {
@@ -497,79 +464,6 @@ export function PortalOnboardingFlow({
     const prev = prefStepIndex - 1;
     setPrefStepIndex(prev);
     await saveStep('preferencias', undefined, prev);
-  };
-
-  const goEvidenceNext = async () => {
-    const nextPhase = nextEvidencePhase(evidencePhase);
-    if (nextPhase) {
-      setEvidencePhase(nextPhase);
-      await saveStep('evidence', mergeEvidenceIntoProfile(profile, evidenceDraft), EVIDENCE_PHASES.indexOf(nextPhase));
-      return;
-    }
-    setBusy(true);
-    try {
-      const merged = mergeEvidenceIntoProfile(profile, evidenceDraft);
-      setProfile(merged);
-      setCompetencyIndex(0);
-      await saveStep('competencies', merged, 0);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'No pudimos guardar');
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const skipEvidence = async () => {
-    setBusy(true);
-    try {
-      const merged = buildMergedProfile();
-      setProfile(merged);
-      setCompetencyIndex(0);
-      await saveStep('competencies', merged, 0);
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const goEvidenceBack = async () => {
-    const prev = prevEvidencePhase(evidencePhase);
-    if (prev) {
-      setEvidencePhase(prev);
-      await saveStep('evidence', undefined, EVIDENCE_PHASES.indexOf(prev));
-      return;
-    }
-    const lastPref = Math.max(0, activePrefSteps.length - 1);
-    setPrefStepIndex(lastPref);
-    await saveStep('preferencias', undefined, lastPref);
-  };
-
-  const goCompetencyNext = async () => {
-    const merged = buildMergedProfile();
-    const defs = competencyDefsForProfile(merged);
-    if (competencyIndex >= defs.length - 1) {
-      setBusy(true);
-      try {
-        setProfile(merged);
-        await saveStep('complete', merged);
-      } finally {
-        setBusy(false);
-      }
-      return;
-    }
-    const next = competencyIndex + 1;
-    setCompetencyIndex(next);
-    await saveStep('competencies', merged, next);
-  };
-
-  const goCompetencyBack = async () => {
-    if (competencyIndex <= 0) {
-      setEvidencePhase('tags');
-      await saveStep('evidence', undefined, EVIDENCE_PHASES.indexOf('tags'));
-      return;
-    }
-    const prev = competencyIndex - 1;
-    setCompetencyIndex(prev);
-    await saveStep('competencies', buildMergedProfile(), prev);
   };
 
   const finishOnboarding = async () => {
@@ -605,8 +499,8 @@ export function PortalOnboardingFlow({
         percent={percent}
         minutesLeft={minutesLeft}
         journeyIndex={journeyIndex}
+        guideMessage={guideMessage}
         onSaveExit={() => void handleSaveExit()}
-        narrow
         hidePreview
         hideHeaderProgress
       >
@@ -627,7 +521,7 @@ export function PortalOnboardingFlow({
         percent={percent}
         minutesLeft={minutesLeft}
         journeyIndex={journeyIndex}
-        narrow
+        guideMessage={guideMessage}
         hidePreview
         hideHeaderProgress
       >
@@ -648,6 +542,7 @@ export function PortalOnboardingFlow({
         percent={percent}
         minutesLeft={minutesLeft}
         journeyIndex={journeyIndex}
+        guideMessage={guideMessage}
         onSaveExit={() => void handleSaveExit()}
         centered
         hidePreview
@@ -655,9 +550,9 @@ export function PortalOnboardingFlow({
         footer={
           <PortalOnboardingFooter
             layout="bar"
-            onBack={() => void saveStep('cv_upload')}
-            onContinue={() => void saveStep('review_hub')}
-            continueLabel="Continuar"
+            onBack={() => void saveStep('preferencias', undefined, Math.max(0, activePrefSteps.length - 1))}
+            onContinue={() => void saveStep('complete')}
+            continueLabel="Finalizar"
             busy={busy}
             saveStatus={saveStatus}
           />
@@ -682,6 +577,16 @@ export function PortalOnboardingFlow({
             setReviewEditOrigin('cv_summary');
             void saveStep('cv_review');
           }}
+          onAddSkills={() => {
+            setReviewEditSection('skills');
+            setReviewEditOrigin('cv_summary');
+            void saveStep('cv_review');
+          }}
+          onEditSection={(section) => {
+            setReviewEditSection(section);
+            setReviewEditOrigin('cv_summary');
+            void saveStep('cv_review');
+          }}
         />
       </PortalOnboardingShell>,
     );
@@ -694,12 +599,13 @@ export function PortalOnboardingFlow({
         percent={percent}
         minutesLeft={minutesLeft}
         journeyIndex={journeyIndex}
+        guideMessage={guideMessage}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
         hidePreview
         footer={
           <PortalOnboardingFooter
-            onBack={() => void saveStep('cv_summary')}
+            onBack={() => void saveStep('cv_upload')}
             onContinue={async () => {
               setBusy(true);
               try {
@@ -712,7 +618,6 @@ export function PortalOnboardingFlow({
             continueDisabled={!canContinue}
             continueLabel="Continuar"
             busy={busy}
-            hint={!canContinue ? 'Confirma personal y experiencia para seguir construyendo tu perfil.' : undefined}
           />
         }
       >
@@ -740,6 +645,7 @@ export function PortalOnboardingFlow({
         percent={percent}
         minutesLeft={minutesLeft}
         journeyIndex={journeyIndex}
+        guideMessage={guideMessage}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
         hidePreview
@@ -787,6 +693,7 @@ export function PortalOnboardingFlow({
         percent={percent}
         minutesLeft={minutesLeft}
         journeyIndex={journeyIndex}
+        guideMessage={guideMessage}
         saveStatus={saveStatus}
         onSaveExit={() => void handleSaveExit()}
         narrow
@@ -812,83 +719,11 @@ export function PortalOnboardingFlow({
           salaryIdx={salaryIdx}
           languageLevels={languageLevels}
           onToggle={togglePrefAnswer}
+          onCustomOptionText={handleCustomOptionText}
           onSalaryChange={handleSalaryChange}
           onLanguageLevel={handleLanguageLevel}
           onSkip={() => void goPrefNext()}
-        />
-        {error ? <p className="portal-onboarding-error">{error}</p> : null}
-      </PortalOnboardingShell>,
-    );
-  }
-
-  if (step === 'evidence') {
-    const isLastPhase = evidencePhase === 'tags';
-    return renderWithOverlay(
-      <PortalOnboardingShell
-        percent={percent}
-        minutesLeft={minutesLeft}
-        journeyIndex={journeyIndex}
-        saveStatus={saveStatus}
-        onSaveExit={() => void handleSaveExit()}
-        narrow
-        hidePreview
-        footer={
-          <PortalOnboardingFooter
-            onBack={() => void goEvidenceBack()}
-            onContinue={() => void goEvidenceNext()}
-            continueDisabled={!canContinueEvidencePhase(evidencePhase, evidenceDraft)}
-            continueLabel={isLastPhase ? 'Continuar a competencias' : 'Siguiente'}
-            busy={busy}
-          />
-        }
-      >
-        <PortalOnboardingEvidence
-          firstName={firstName}
-          percent={percent}
-          draft={evidenceDraft}
-          phase={evidencePhase}
-          onChange={setEvidenceDraft}
-          onPhaseChange={setEvidencePhase}
-        />
-        <p className="portal-onboarding-optional text-center">
-          <button type="button" className="portal-onboarding-link" onClick={() => void skipEvidence()}>
-            Omitir logros por ahora
-          </button>
-        </p>
-        {error ? <p className="portal-onboarding-error">{error}</p> : null}
-      </PortalOnboardingShell>,
-    );
-  }
-
-  if (step === 'competencies') {
-    const defs = competencyDefsForProfile(profile);
-    const isLastCompetency = competencyIndex >= defs.length - 1;
-    return renderWithOverlay(
-      <PortalOnboardingShell
-        percent={percent}
-        minutesLeft={minutesLeft}
-        journeyIndex={journeyIndex}
-        saveStatus={saveStatus}
-        onSaveExit={() => void handleSaveExit()}
-        narrow
-        hidePreview
-        footer={
-          <PortalOnboardingFooter
-            onBack={() => void goCompetencyBack()}
-            onContinue={() => void goCompetencyNext()}
-            continueDisabled={!canContinueCompetencyStep(profile, competencyIndex, competencyRatings)}
-            continueLabel={isLastCompetency ? 'Ver perfil listo' : 'Siguiente'}
-            busy={busy}
-          />
-        }
-      >
-        <PortalOnboardingCompetencies
-          firstName={firstName}
-          percent={percent}
-          profile={profile}
-          competencyIndex={competencyIndex}
-          ratings={competencyRatings}
-          onRate={(key, entry) => setCompetencyRatings((prev) => ({ ...prev, [key]: entry }))}
+          onAutoAdvance={(option) => void goPrefNext(option)}
         />
         {error ? <p className="portal-onboarding-error">{error}</p> : null}
       </PortalOnboardingShell>,

@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from 'react';
 import { PortalOnboardingStepper } from './PortalOnboardingStepper';
+import { PortalOnboardingGuide } from './PortalOnboardingGuide';
 import { PortalOnboardingExitConfirm } from './PortalOnboardingExitConfirm';
 
 type Props = {
@@ -14,6 +15,8 @@ type Props = {
   centered?: boolean;
   narrow?: boolean;
   hideHeaderProgress?: boolean;
+  hideGuide?: boolean;
+  guideMessage?: string;
 };
 
 export function PortalOnboardingChrome({
@@ -23,6 +26,8 @@ export function PortalOnboardingChrome({
   wide,
   centered = true,
   narrow,
+  hideGuide,
+  guideMessage,
 }: Props) {
   const [confirmingExit, setConfirmingExit] = useState(false);
 
@@ -33,9 +38,9 @@ export function PortalOnboardingChrome({
       <div className="portal-onboarding-viewport">
         <header className="ob-chrome">
           <div className="ob-chrome__top">
-            <div className="ob-logo" aria-label="KOVA">
-              <span className="ob-logo__mark">K</span>
-              <span className="ob-logo__text">OVA</span>
+            <div className="ob-logo" aria-label="Kova">
+              <span className="ob-logo__mark" aria-hidden />
+              <span className="ob-logo__text">Kova</span>
             </div>
             {onSaveExit ? (
               <button type="button" className="ob-chrome__exit" onClick={() => setConfirmingExit(true)}>
@@ -44,6 +49,9 @@ export function PortalOnboardingChrome({
             ) : null}
           </div>
           <PortalOnboardingStepper activeIndex={journeyIndex} />
+          {!hideGuide ? (
+            <PortalOnboardingGuide journeyIndex={journeyIndex} message={guideMessage} />
+          ) : null}
         </header>
 
         <main className="portal-onboarding-main portal-onboarding-main--immersive">

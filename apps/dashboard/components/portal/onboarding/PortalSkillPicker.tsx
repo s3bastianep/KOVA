@@ -55,7 +55,11 @@ export function PortalSkillPicker({ skills, onChange }: Props) {
   return (
     <div className="portal-onboarding-skill-picker">
       {skills.length > 0 ? (
-        <div className="portal-onboarding-skill-picker__selected" aria-label="Habilidades agregadas">
+        <div>
+          <p className="portal-onboarding-skill-picker__quick-label">
+            {skills.length} agregada{skills.length === 1 ? '' : 's'}
+          </p>
+          <div className="portal-onboarding-skill-picker__selected" aria-label="Habilidades agregadas">
           {skills.map((skill) => (
             <span key={skill} className="portal-onboarding-skill-picker__tag">
               {skill}
@@ -69,6 +73,7 @@ export function PortalSkillPicker({ skills, onChange }: Props) {
               </button>
             </span>
           ))}
+          </div>
         </div>
       ) : (
         <p className="portal-onboarding-muted">Aún no agregaste habilidades.</p>
@@ -82,7 +87,7 @@ export function PortalSkillPicker({ skills, onChange }: Props) {
               ref={inputRef}
               className="portal-onboarding-field"
               value={query}
-              placeholder="Escribe y elige una sugerencia"
+              placeholder="Ej. negociación, Salesforce, cierre de ventas…"
               onChange={(e) => {
                 setQuery(e.target.value);
                 setOpen(true);
@@ -131,7 +136,7 @@ export function PortalSkillPicker({ skills, onChange }: Props) {
 
       {quickPicks.length > 0 ? (
         <div className="portal-onboarding-skill-picker__quick">
-          <p className="portal-onboarding-skill-picker__quick-label">Sugeridas</p>
+          <p className="portal-onboarding-skill-picker__quick-label">Toca para agregar</p>
           <div className="portal-onboarding-chips portal-onboarding-chips--inline">
             {quickPicks.map((skill) => (
               <button

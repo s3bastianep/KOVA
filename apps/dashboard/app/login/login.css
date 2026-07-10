@@ -188,6 +188,10 @@
   animation: kv-login-success-draw 0.3s ease 0.25s both;
 }
 
+.kv-login-success-cta {
+  margin-top: 1.75rem;
+}
+
 @keyframes kv-login-success-pop {
   0% {
     transform: scale(0);
@@ -299,6 +303,15 @@
   font-size: 0.9rem;
   outline: none;
   padding: 0.65rem 0;
+}
+
+/* The wrapper (.kv-login-input-wrap:focus-within) already shows a lime focus ring, so the input
+   itself must not draw its own outline. This :focus-visible rule is specific enough to beat the
+   global `input:focus-visible { outline: ... }` in globals.css — without it, that global rule
+   painted a stray blue outline on top of the lime ring. */
+.kv-login-input:focus,
+.kv-login-input:focus-visible {
+  outline: none;
 }
 
 .kv-login-input::placeholder {

@@ -3,7 +3,7 @@
 import type { WorkHistoryEntry } from '@/lib/candidate-commercial-profile';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
 import type { OnboardingCounts } from '@/lib/portal-onboarding';
-import { formatPersonName } from '@/lib/portal-onboarding-unified';
+import { formatPersonName, type ReviewSectionId } from '@/lib/portal-onboarding-unified';
 import type { PortalVacancyMatchStats } from '@/lib/portal-vacancies';
 import {
   Briefcase,
@@ -30,6 +30,8 @@ type Props = {
   cvImportedAt?: string | null;
   onEditContact?: () => void;
   onReviewExperience?: () => void;
+  onAddSkills?: () => void;
+  onEditSection?: (section: ReviewSectionId) => void;
 };
 
 function initials(name: string): string {
@@ -54,7 +56,7 @@ function formatWorkPeriod(entry: WorkHistoryEntry): string {
   if (!start && !end) return 'Sin fechas';
   if (!start) return end;
   if (!end) return start;
-  return `${start} – ${end}`;
+  return `${start} a ${end}`;
 }
 
 function formatCvImportedAt(iso?: string | null): string {
@@ -88,6 +90,8 @@ export function PortalOnboardingCvSummary({
   cvImportedAt,
   onEditContact,
   onReviewExperience,
+  onAddSkills,
+  onEditSection,
 }: Props) {
   const displayName = formatPersonName(profile.nombre?.trim() || firstName);
   const stepNumber = journeyIndex + 1;
@@ -102,12 +106,12 @@ export function PortalOnboardingCvSummary({
     { label: 'Ciudad', value: profile.ciudad?.trim() ?? '', icon: MapPin },
   ].filter((row) => row.value);
 
-  const detectedItems = [
-    { label: 'Datos de contacto', done: contactRows.length > 0 },
-    { label: 'Experiencia laboral', done: counts.experiencias > 0 },
-    { label: 'Formación académica', done: counts.estudios > 0 },
-    { label: 'Idiomas', done: counts.idiomas > 0 },
-    { label: 'Certificaciones', done: counts.certificaciones > 0 },
+  const detectedItems: { label: string; done: boolean; section: ReviewSectionId }[] = [
+    { label: 'Datos de contacto', done: contactRows.length > 0, section: 'personal' },
+    { label: 'Experiencia laboral', done: counts.experiencias > 0, section: 'experiencia' },
+    { label: 'Formación académica', done: counts.estudios > 0, section: 'educacion' },
+    { label: 'Idiomas', done: counts.idiomas > 0, section: 'idiomas' },
+    { label: 'Certificaciones', done: counts.certificaciones > 0, section: 'certificaciones' },
   ];
 
   const pending = pendingItems(profile);
@@ -120,10 +124,10 @@ export function PortalOnboardingCvSummary({
           <p className="ob-cv-summary__eyebrow ob-cv-summary__eyebrow--lime">
             Paso {stepNumber} de 5
           </p>
-          <h1>Tu experiencia ya está organizada.</h1>
+          <h1>Así quedó tu perfil.</h1>
           <p>
-            Revisa la información que importamos de tu CV. Puedes editar cualquier dato antes de
-            continuar.
+            Este es el perfil con el que las empresas te van a encontrar. Si algo no está bien,
+            aún puedes ajustarlo antes de finalizar.
           </p>
         </div>
       </div>
@@ -146,6 +150,7 @@ export function PortalOnboardingCvSummary({
                 loading={vacancyStatsLoading}
                 variant="strip"
                 hasSkills={(profile.herramientas?.length ?? 0) > 0}
+                onAddSkills={onAddSkills}
               />
               <div className="ob-profile-card__import">
                 <FileText className="h-4 w-4" aria-hidden />
@@ -226,7 +231,7 @@ export function PortalOnboardingCvSummary({
 
           <aside className="ob-cv-summary__aside">
             <div className="ob-cv-summary__ring-card">
-              <PortalOnboardingProgressRing percent={percent} size={96} />
+              <PortalOnboardingProgressRing percent={percent} size={112} />
               <p className="ob-cv-summary__encourage">
                 <strong>¡Vas muy bien!</strong> Tu perfil ya tiene lo esencial para empezar a
                 conectar con oportunidades.
@@ -238,10 +243,26 @@ export function PortalOnboardingCvSummary({
                 <ul className="ob-detected-list">
                   {detectedItems.map((item) => (
                     <li key={item.label} className={item.done ? 'is-done' : ''}>
-                      <span className="ob-detected-list__icon" aria-hidden>
-                        {item.done ? <Check className="h-3.5 w-3.5" /> : null}
-                      </span>
-                      <span>{item.label}</span>
+                      {onEditSection ? (
+                        <button
+                          type="button"
+                          className="ob-detected-list__row"
+                          onClick={() => onEditSection(item.section)}
+                        >
+                          <span className="ob-detected-list__icon" aria-hidden>
+                            {item.done ? <Check className="h-3.5 w-3.5" /> : null}
+                          </span>
+                          <span>{item.label}</span>
+                          <ChevronRight className="ob-detected-list__chevron h-3.5 w-3.5" aria-hidden />
+                        </button>
+                      ) : (
+                        <>
+                          <span className="ob-detected-list__icon" aria-hidden>
+                            {item.done ? <Check className="h-3.5 w-3.5" /> : null}
+                          </span>
+                          <span>{item.label}</span>
+                        </>
+                      )}
                     </li>
                   ))}
                 </ul>

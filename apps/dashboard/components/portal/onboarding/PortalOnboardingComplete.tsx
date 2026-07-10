@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRight, CheckCircle2, Loader2, Target } from 'lucide-react';
+import { ArrowRight, Loader2, Target } from 'lucide-react';
 import type { PortalVacancyMatchStats } from '@/lib/portal-vacancies';
 import { PortalOnboardingChrome } from './PortalOnboardingChrome';
 import { PortalOnboardingStepHero } from './PortalOnboardingStepHero';
@@ -30,13 +30,13 @@ export function PortalOnboardingComplete({
       <div className="ob-complete">
         <PortalOnboardingStepHero
           eyebrow="Perfil activo"
-          title="Perfil completado"
-          subtitle="Tu trayectoria está posicionada para oportunidades comerciales de alto nivel."
+          title="¡Listo! Ya estás en el radar"
+          subtitle="Desde ahora, cuando una empresa abra una vacante que encaje contigo, te avisamos. No tienes que estar buscando."
         />
 
-        <div className="ob-complete__status" aria-hidden>
-          <CheckCircle2 className="h-5 w-5" />
-          <span>Listo para matching</span>
+        <div className="ob-complete__status ob-complete__status--live">
+          <span className="ob-complete__status-dot" aria-hidden />
+          <span>Buscando vacantes para ti en tiempo real</span>
         </div>
 
         <div className="ob-complete__stats">
