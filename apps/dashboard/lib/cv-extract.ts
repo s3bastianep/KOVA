@@ -261,10 +261,20 @@ function extractPhone(text: string): string | undefined {
     /(?:\+57\s*)?(?:\(\d{1,3}\)\s*)?3\d{2}[\s.-]?\d{3}[\s.-]?\d{4}/,
     /\+57\s*\d{10}/,
     /\b3\d{9}\b/,
+    // International / non-Colombian formats: +<country code> followed by 7-12 digits, allowing
+    // spaces, dots or dashes as separators (e.g. "+1 555-234-1289", "+34 611 22 33 44").
+    /\+\d{1,3}[\s.-]?(?:\d[\s.-]?){7,12}\d/,
+    // Local number with a parenthesized area code, e.g. "(601) 234 5678".
+    /\(\d{2,4}\)\s*\d{3,4}[\s.-]?\d{3,4}/,
+    // Generic three-group local numbers without a country code, e.g. "601-234-5678".
+    /\b\d{3}[\s.-]\d{3,4}[\s.-]\d{3,4}\b/,
   ];
   for (const pattern of patterns) {
     const match = text.match(pattern);
-    if (match) return cleanPhone(match[0]);
+    if (match) {
+      const cleaned = cleanPhone(match[0]);
+      if (cleaned.replace(/\D/g, '').length >= 7) return cleaned;
+    }
   }
   return undefined;
 }

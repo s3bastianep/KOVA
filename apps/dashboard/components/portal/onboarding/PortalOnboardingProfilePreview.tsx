@@ -43,6 +43,7 @@ export function PortalOnboardingProfilePreview({
         stats={vacancyStats}
         loading={vacancyStatsLoading}
         className="portal-onboarding-preview-strip__metrics"
+        hasSkills={(profile.herramientas?.length ?? 0) > 0}
       />
     </div>
   );

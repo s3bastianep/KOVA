@@ -7,25 +7,19 @@ type Props = {
 };
 
 export function PortalOnboardingStepper({ activeIndex }: Props) {
+  const total = ONBOARDING_JOURNEY_STEPS.length;
+  const filled = Math.min(100, Math.round(((activeIndex + 1) / total) * 100));
+
   return (
-    <nav className="ob-stepper" aria-label="Progreso del perfil">
-      <ol className="ob-stepper__list">
-        {ONBOARDING_JOURNEY_STEPS.map((step, index) => {
-          const isActive = index === activeIndex;
-          const isDone = index < activeIndex;
-          return (
-            <li
-              key={step.id}
-              className={`ob-stepper__item${isActive ? ' is-active' : ''}${isDone ? ' is-done' : ''}`}
-            >
-              <span className="ob-stepper__marker" aria-hidden>
-                {isDone ? '✓' : index + 1}
-              </span>
-              <span className="ob-stepper__label">{step.label}</span>
-            </li>
-          );
-        })}
-      </ol>
-    </nav>
+    <div
+      className="ob-stepper"
+      role="progressbar"
+      aria-valuenow={filled}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-label={`Paso ${activeIndex + 1} de ${total}`}
+    >
+      <span className="ob-stepper__fill" style={{ width: `${filled}%` }} />
+    </div>
   );
 }

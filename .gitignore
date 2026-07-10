@@ -5,6 +5,7 @@
 
 # Next.js
 .next/
+.next-alt/
 next-env.d.ts
 *.tsbuildinfo
 apps/dashboard/public/www/*
@@ -41,3 +42,5 @@ data/bookings.json
 .vite
 .vite-cache
 apps/dashboard/storage/
+apps/dashboard/.mock-data/
+.claude/

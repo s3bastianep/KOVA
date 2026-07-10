@@ -38,6 +38,7 @@ const immutableCache = {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
   reactStrictMode: true,
   outputFileTracingRoot: path.join(__dirname),
   eslint: { ignoreDuringBuilds: true },

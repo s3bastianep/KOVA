@@ -5,6 +5,7 @@ import type { CvExtractionResult } from '@/lib/cv-extract';
 import type { CommercialProfile, CompetencyEntry } from '@/lib/candidate-commercial-profile';
 import { portalApi } from '@/lib/api';
 import { getStoredUser } from '@/lib/api';
+import { syncOnboardingSession } from '@/lib/portal-onboarding-session';
 import { enrichCvExtraction } from '@/app/registro/registro-utils';
 import {
   CV_ANALYSIS_STEPS,
@@ -85,6 +86,7 @@ type Props = {
   initialSubStep?: number;
   initialReviewed?: string[];
   onComplete: () => void;
+  onProgressSaved?: () => void;
 };
 
 export function PortalOnboardingFlow({
@@ -93,13 +95,18 @@ export function PortalOnboardingFlow({
   initialSubStep = 0,
   initialReviewed = [],
   onComplete,
+  onProgressSaved,
 }: Props) {
   const user = getStoredUser();
   const firstName = user?.firstName ?? initialProfile.nombre?.split(' ')[0] ?? 'Candidato';
 
   const normalizedInitial = normalizeOnboardingStep(initialStep);
+  // cv_analyzing is a transient animation, never a valid resume point: if a reload
+  // lands here, the previous session already saved the extracted profile before
+  // reaching this step, so there is nothing left to animate — skip to the summary.
+  const resumableInitial = normalizedInitial === 'cv_analyzing' ? 'cv_summary' : normalizedInitial;
 
-  const [step, setStep] = useState<OnboardingStep>(() => normalizedInitial);
+  const [step, setStep] = useState<OnboardingStep>(() => resumableInitial);
   const [profile, setProfile] = useState<CommercialProfile>(() => ({
     ...initialProfile,
     historialLaboral: normalizeWorkHistory(initialProfile.historialLaboral ?? []),
@@ -273,6 +280,8 @@ export function PortalOnboardingFlow({
         onboardingReviewed: [...reviewed],
         profile: merged as Record<string, unknown>,
       });
+      syncOnboardingSession(false);
+      onProgressSaved?.();
     } catch {
       setError('No pudimos guardar tu progreso.');
     } finally {
@@ -541,9 +550,7 @@ export function PortalOnboardingFlow({
       const merged = buildMergedProfile();
       setProfile(merged);
       await persist({ complete: true, profilePatch: merged });
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem('kova_portal_onboarding_complete', 'true');
-      }
+      syncOnboardingSession(true);
       onComplete();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No pudimos completar el onboarding');
@@ -855,6 +862,7 @@ export function PortalOnboardingFlow({
         percent={percent}
         vacancyStats={vacancyStats}
         vacancyStatsLoading={vacancyStatsLoading}
+        hasSkills={(profile.herramientas?.length ?? 0) > 0}
         busy={busy}
         onEnter={() => void finishOnboarding()}
       />,

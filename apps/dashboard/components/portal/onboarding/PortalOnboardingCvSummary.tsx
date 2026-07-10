@@ -147,6 +147,7 @@ export function PortalOnboardingCvSummary({
                 stats={vacancyStats}
                 loading={vacancyStatsLoading}
                 variant="strip"
+                hasSkills={(profile.herramientas?.length ?? 0) > 0}
               />
               <div className="ob-profile-card__import">
                 <FileText className="h-4 w-4" aria-hidden />

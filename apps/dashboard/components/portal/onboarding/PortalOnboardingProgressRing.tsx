@@ -11,8 +11,13 @@ export function PortalOnboardingProgressRing({ percent, size = 88 }: Props) {
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (percent / 100) * circumference;
 
+  const isComplete = percent >= 100;
+
   return (
-    <div className="ob-ring" style={{ width: size, height: size }}>
+    <div
+      className={`ob-ring${isComplete ? ' ob-ring--complete' : ''}`}
+      style={{ width: size, height: size }}
+    >
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden>
         <circle
           className="ob-ring__track"

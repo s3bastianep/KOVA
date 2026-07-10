@@ -2,69 +2,49 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
-import { portalApi, type PortalDashboard, type PortalPerfilResponse } from '@/lib/api';
-import { PORTAL_CACHE_KEYS, portalCacheGet } from '@/lib/portal-cache';
+import { portalApi, type PortalDashboard } from '@/lib/api';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
+import { calculateProfileCompleteness } from '@/lib/commercial-profile-builder';
 import type { OnboardingStep } from '@/lib/portal-onboarding';
+import { nextIncompleteOnboardingStep } from '@/lib/portal-onboarding-unified';
 import { PortalDashboardHome } from '@/components/portal/PortalDashboardHome';
 import { PortalOnboardingFlow } from '@/components/portal/onboarding/PortalOnboardingFlow';
-
-function readCachedHome() {
-  const perfil = portalCacheGet<PortalPerfilResponse>(PORTAL_CACHE_KEYS.perfil);
-  const dashboard = portalCacheGet<PortalDashboard>(PORTAL_CACHE_KEYS.dashboard);
-  return { perfil, dashboard };
-}
+import { usePortalOnboarding } from '@/components/portal/PortalOnboardingProvider';
 
 export default function PortalDashboardPage() {
-  const initial = readCachedHome();
-  const [data, setData] = useState<PortalDashboard | null>(initial.dashboard ?? null);
-  const [profile, setProfile] = useState<CommercialProfile | null>(
-    () => (initial.perfil?.profile as CommercialProfile) ?? null,
-  );
-  const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>(
-    () => (initial.perfil?.onboardingStep as OnboardingStep) ?? 'welcome',
-  );
-  const [onboardingSubStep, setOnboardingSubStep] = useState(
-    () => initial.perfil?.onboardingSubStep ?? 0,
-  );
-  const [onboardingReviewed, setOnboardingReviewed] = useState<string[]>(
-    () => initial.perfil?.onboardingReviewed ?? [],
-  );
-  const [onboardingComplete, setOnboardingComplete] = useState(
-    () => Boolean(initial.perfil?.onboardingComplete),
-  );
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(!initial.perfil);
+  const { status, perfil, markComplete, refresh } = usePortalOnboarding();
+  const [data, setData] = useState<PortalDashboard | null>(null);
+  const [dashboardError, setDashboardError] = useState('');
+  const [dashboardLoading, setDashboardLoading] = useState(false);
 
-  const load = useCallback((showSpinner = false) => {
-    if (showSpinner) setLoading(true);
-    Promise.all([portalApi.perfil(), portalApi.dashboard().catch(() => null)])
-      .then(([perfil, dashboard]) => {
-        setProfile(perfil.profile as CommercialProfile);
-        setOnboardingComplete(Boolean(perfil.onboardingComplete));
-        setOnboardingStep((perfil.onboardingStep as OnboardingStep) ?? 'welcome');
-        setOnboardingSubStep(perfil.onboardingSubStep ?? 0);
-        setOnboardingReviewed(perfil.onboardingReviewed ?? []);
-        if (dashboard) setData(dashboard);
-        setError('');
-      })
-      .catch((err) => setError(err instanceof Error ? err.message : 'Error al cargar'))
-      .finally(() => setLoading(false));
+  const loadDashboard = useCallback(async () => {
+    setDashboardLoading(true);
+    try {
+      const dashboard = await portalApi.dashboard();
+      setData(dashboard);
+      setDashboardError('');
+    } catch (err) {
+      setDashboardError(err instanceof Error ? err.message : 'Error al cargar');
+    } finally {
+      setDashboardLoading(false);
+    }
   }, []);
 
+  const profile = perfil?.profile as CommercialProfile | undefined;
+  const profileCompleteness = profile ? calculateProfileCompleteness(profile) : 0;
+  const mustFinishProfile = status === 'complete' && profileCompleteness < 100;
+
   useEffect(() => {
-    load(false);
-  }, [load]);
+    if (status !== 'complete' || mustFinishProfile) return;
+    void loadDashboard();
+  }, [status, mustFinishProfile, loadDashboard]);
 
   const handleOnboardingComplete = () => {
-    setOnboardingComplete(true);
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('kova_portal_onboarding_complete', 'true');
-    }
-    load(true);
+    markComplete();
+    void refresh().then(() => loadDashboard());
   };
 
-  if (loading && !profile) {
+  if (status === 'loading') {
     return (
       <div className="flex items-center justify-center py-24 text-[var(--kova-muted)]">
         <Loader2 className="mr-2 h-6 w-6 animate-spin" />
@@ -73,30 +53,51 @@ export default function PortalDashboardPage() {
     );
   }
 
-  if (error && !profile) {
-    return (
-      <div className="kova-card rounded-2xl border p-8 text-center">
-        <p className="text-[var(--kova-muted)]">{error}</p>
-      </div>
-    );
-  }
+  if (status === 'incomplete' || mustFinishProfile) {
+    if (!perfil?.profile || !profile) {
+      return (
+        <div className="kova-card rounded-2xl border p-8 text-center">
+          <p className="text-[var(--kova-muted)]">No pudimos cargar tu perfil.</p>
+          <button
+            type="button"
+            className="mt-4 text-sm font-medium text-[var(--kova-navy)] underline"
+            onClick={() => void refresh()}
+          >
+            Reintentar
+          </button>
+        </div>
+      );
+    }
 
-  if (!onboardingComplete && profile) {
+    const onboardingStep = mustFinishProfile
+      ? nextIncompleteOnboardingStep(profile)
+      : ((perfil.onboardingStep as OnboardingStep) ?? 'welcome');
+
     return (
       <PortalOnboardingFlow
         initialProfile={profile}
         initialStep={onboardingStep === 'done' ? 'complete' : onboardingStep}
-        initialSubStep={onboardingSubStep}
-        initialReviewed={onboardingReviewed}
+        initialSubStep={perfil.onboardingSubStep ?? 0}
+        initialReviewed={perfil.onboardingReviewed ?? []}
         onComplete={handleOnboardingComplete}
+        onProgressSaved={() => void refresh()}
       />
+    );
+  }
+
+  if (dashboardLoading && !data) {
+    return (
+      <div className="flex items-center justify-center py-24 text-[var(--kova-muted)]">
+        <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+        Cargando tu espacio...
+      </div>
     );
   }
 
   if (!data) {
     return (
       <div className="kova-card rounded-2xl border p-8 text-center">
-        <p className="text-[var(--kova-muted)]">{error || 'No pudimos cargar el dashboard'}</p>
+        <p className="text-[var(--kova-muted)]">{dashboardError || 'No pudimos cargar el dashboard'}</p>
       </div>
     );
   }

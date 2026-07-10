@@ -1,9 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { Clock3 } from 'lucide-react';
 import { PortalOnboardingStepper } from './PortalOnboardingStepper';
-import { PortalOnboardingProgressIndicator } from './PortalOnboardingProgressIndicator';
 
 type Props = {
   journeyIndex: number;
@@ -19,14 +17,11 @@ type Props = {
 
 export function PortalOnboardingChrome({
   journeyIndex,
-  minutesLeft,
-  percent = 0,
   onSaveExit,
   children,
   wide,
   centered = true,
   narrow,
-  hideHeaderProgress,
 }: Props) {
   return (
     <div
@@ -39,22 +34,13 @@ export function PortalOnboardingChrome({
               <span className="ob-logo__mark">K</span>
               <span className="ob-logo__text">OVA</span>
             </div>
-            <div className="ob-chrome__actions">
-              <span className="ob-chrome__time">
-                <Clock3 className="h-3.5 w-3.5" aria-hidden />
-                {minutesLeft <= 0 ? 'Listo' : `${minutesLeft} min restantes`}
-              </span>
-              {onSaveExit ? (
-                <button type="button" className="ob-chrome__exit" onClick={onSaveExit}>
-                  Salir
-                </button>
-              ) : null}
-            </div>
+            {onSaveExit ? (
+              <button type="button" className="ob-chrome__exit" onClick={onSaveExit}>
+                Salir
+              </button>
+            ) : null}
           </div>
           <PortalOnboardingStepper activeIndex={journeyIndex} />
-          {!hideHeaderProgress ? (
-            <PortalOnboardingProgressIndicator percent={percent} compact />
-          ) : null}
         </header>
 
         <main className="portal-onboarding-main portal-onboarding-main--immersive">

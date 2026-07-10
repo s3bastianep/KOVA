@@ -10,6 +10,7 @@ type Props = {
   percent: number;
   vacancyStats: PortalVacancyMatchStats | null;
   vacancyStatsLoading?: boolean;
+  hasSkills?: boolean;
   busy?: boolean;
   onEnter: () => void;
 };
@@ -18,6 +19,7 @@ export function PortalOnboardingComplete({
   percent,
   vacancyStats,
   vacancyStatsLoading,
+  hasSkills = true,
   busy,
   onEnter,
 }: Props) {
@@ -49,6 +51,7 @@ export function PortalOnboardingComplete({
             stats={vacancyStats}
             loading={vacancyStatsLoading}
             className="ob-complete__vacancy-metrics"
+            hasSkills={hasSkills}
           />
         </div>
 

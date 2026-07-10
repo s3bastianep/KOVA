@@ -50,6 +50,9 @@ export function PortalOnboardingReviewHub({
   onMarkReviewed,
 }: Props) {
   const reviewedCount = REVIEW_SECTIONS.filter((s) => reviewed.has(s.id)).length;
+  const requiredSections = REVIEW_SECTIONS.filter((s) => s.required);
+  const requiredPendingCount = requiredSections.filter((s) => !reviewed.has(s.id)).length;
+  const hubProgress = Math.round((reviewedCount / REVIEW_SECTIONS.length) * 100);
 
   return (
     <div className="ob-review-hub">
@@ -59,9 +62,21 @@ export function PortalOnboardingReviewHub({
         subtitle="Confirma cada sección. Puedes editar cualquier dato antes de continuar."
       />
 
-      <p className="ob-review-hub__progress-label">
-        {reviewedCount} de {REVIEW_SECTIONS.length} secciones revisadas
-      </p>
+      <div className="ob-review-hub__progress">
+        <div className="ob-review-hub__progress-head">
+          <p className="ob-review-hub__progress-label">
+            {reviewedCount} de {REVIEW_SECTIONS.length} secciones revisadas
+          </p>
+          <p className="ob-review-hub__progress-hint">
+            {requiredPendingCount > 0
+              ? `Faltan ${requiredPendingCount} secciones obligatorias por confirmar`
+              : 'Obligatorias listas · lo opcional queda a tu criterio'}
+          </p>
+        </div>
+        <div className="ob-review-hub__progress-track">
+          <span style={{ width: `${hubProgress}%` }} />
+        </div>
+      </div>
 
       <div className="ob-review-hub__list">
         {REVIEW_SECTIONS.map((section) => {
@@ -98,8 +113,10 @@ export function PortalOnboardingReviewHub({
                       <Check className="h-3 w-3" />
                       Revisado
                     </>
+                  ) : hasData ? (
+                    'Por confirmar'
                   ) : (
-                    'Pendiente'
+                    'Sin datos'
                   )}
                 </span>
               </header>
@@ -117,7 +134,7 @@ export function PortalOnboardingReviewHub({
                     className="ob-review-card__confirm"
                     onClick={() => onMarkReviewed(section.id)}
                   >
-                    Marcar revisado
+                    {hasData ? 'Confirmar sección' : 'Omitir por ahora'}
                     <ChevronRight className="h-3.5 w-3.5" aria-hidden />
                   </button>
                 ) : null}

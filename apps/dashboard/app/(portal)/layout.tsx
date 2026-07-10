@@ -1,22 +1,20 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { PortalSidebar } from '@/components/portal/PortalSidebar';
 import { PortalTopbar } from '@/components/portal/PortalTopbar';
+import {
+  PortalOnboardingProvider,
+  usePortalOnboarding,
+} from '@/components/portal/PortalOnboardingProvider';
 import { getStoredUser, portalApi } from '@/lib/api';
 import { PORTAL_CACHE_KEYS, portalCacheGet } from '@/lib/portal-cache';
 
-const ONBOARDING_CACHE_KEY = 'kova_portal_onboarding_complete';
-
-export default function PortalLayout({ children }: { children: React.ReactNode }) {
+function PortalLayoutInner({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [onboardingComplete, setOnboardingComplete] = useState<boolean | null>(() => {
-    if (typeof window === 'undefined') return null;
-    const cached = sessionStorage.getItem(ONBOARDING_CACHE_KEY);
-    return cached === null ? null : cached === 'true';
-  });
+  const { status } = usePortalOnboarding();
   const authChecked = useRef(false);
 
   useEffect(() => {
@@ -34,7 +32,6 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
       return;
     }
 
-    // Precarga diferida: no compite con la página que el usuario abre primero.
     const prefetchLater = () => {
       if (!portalCacheGet(PORTAL_CACHE_KEYS.vacantes(0))) {
         void portalApi.vacantes().catch(() => {});
@@ -54,34 +51,10 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
   }, [router]);
 
   useEffect(() => {
-    if (onboardingComplete !== null) return;
-
-    const cached = portalCacheGet<{ onboardingComplete?: boolean }>(PORTAL_CACHE_KEYS.perfil);
-    if (cached) {
-      const complete = Boolean(cached.onboardingComplete);
-      sessionStorage.setItem(ONBOARDING_CACHE_KEY, String(complete));
-      setOnboardingComplete(complete);
-      return;
-    }
-
-    portalApi
-      .perfil()
-      .then((data) => {
-        const complete = Boolean(data.onboardingComplete);
-        sessionStorage.setItem(ONBOARDING_CACHE_KEY, String(complete));
-        setOnboardingComplete(complete);
-      })
-      .catch(() => {
-        sessionStorage.setItem(ONBOARDING_CACHE_KEY, 'true');
-        setOnboardingComplete(true);
-      });
-  }, [onboardingComplete]);
-
-  useEffect(() => {
-    if (onboardingComplete === false && pathname !== '/portal') {
+    if (status === 'incomplete' && pathname !== '/portal') {
       router.replace('/portal');
     }
-  }, [onboardingComplete, pathname, router]);
+  }, [status, pathname, router]);
 
   return (
     <div className="kova-portal flex h-screen overflow-hidden kova-shell-bg">
@@ -93,5 +66,13 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
         </main>
       </div>
     </div>
+  );
+}
+
+export default function PortalLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <PortalOnboardingProvider>
+      <PortalLayoutInner>{children}</PortalLayoutInner>
+    </PortalOnboardingProvider>
   );
 }

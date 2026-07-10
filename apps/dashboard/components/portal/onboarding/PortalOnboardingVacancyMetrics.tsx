@@ -2,11 +2,15 @@
 
 import type { PortalVacancyMatchStats } from '@/lib/portal-vacancies';
 
+/** Below this average match, we hide the number instead of showing a discouraging low score. */
+const MIN_COMPATIBILITY_TO_SHOW = 70;
+
 type Props = {
   stats: PortalVacancyMatchStats | null;
   loading?: boolean;
   className?: string;
   variant?: 'default' | 'strip';
+  hasSkills?: boolean;
 };
 
 export function PortalOnboardingVacancyMetrics({
@@ -14,6 +18,7 @@ export function PortalOnboardingVacancyMetrics({
   loading,
   className,
   variant = 'default',
+  hasSkills = true,
 }: Props) {
   if (loading) {
     return (
@@ -21,6 +26,16 @@ export function PortalOnboardingVacancyMetrics({
         className={`ob-vacancy-metrics ob-vacancy-metrics--loading${variant === 'strip' ? ' ob-vacancy-metrics--strip' : ''}${className ? ` ${className}` : ''}`}
       >
         <span>Calculando compatibilidad…</span>
+      </div>
+    );
+  }
+
+  if (!hasSkills) {
+    return (
+      <div
+        className={`ob-vacancy-metrics ob-vacancy-metrics--nudge${variant === 'strip' ? ' ob-vacancy-metrics--strip' : ''}${className ? ` ${className}` : ''}`}
+      >
+        <span>Agrega tus habilidades para ver tu compatibilidad con vacantes</span>
       </div>
     );
   }
@@ -37,6 +52,10 @@ export function PortalOnboardingVacancyMetrics({
         <span>Sin vacantes abiertas</span>
       </div>
     );
+  }
+
+  if (stats.averageCompatibility <= MIN_COMPATIBILITY_TO_SHOW) {
+    return null;
   }
 
   const compatLabel = variant === 'strip' ? 'Compatibilidad inicial' : 'Compatibilidad';

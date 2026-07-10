@@ -1,8 +1,11 @@
 import {
   PORTAL_CACHE_KEYS,
+  portalCacheDelete,
   portalCacheInvalidate,
+  portalCacheSet,
   portalFetchCached,
 } from './portal-cache';
+import { clearOnboardingSession } from './portal-onboarding-session';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '/api';
 
@@ -200,6 +203,12 @@ export const portalApi = {
     portalFetchCached(PORTAL_CACHE_KEYS.dashboard, () => apiFetch<PortalDashboard>('/portal/dashboard')),
   perfil: () =>
     portalFetchCached(PORTAL_CACHE_KEYS.perfil, () => apiFetch<PortalPerfilResponse>('/portal/perfil')),
+  perfilFresh: async () => {
+    portalCacheDelete(PORTAL_CACHE_KEYS.perfil);
+    const data = await apiFetch<PortalPerfilResponse>('/portal/perfil');
+    portalCacheSet(PORTAL_CACHE_KEYS.perfil, data);
+    return data;
+  },
   updatePerfil: async (profile: Record<string, unknown>) => {
     const res = await apiFetch<{ ok: boolean; profile: Record<string, unknown>; message: string }>(
       '/portal/perfil',
@@ -426,7 +435,7 @@ export function clearSession() {
   localStorage.removeItem('kova_refresh_token');
   localStorage.removeItem('kova_user');
   if (typeof window !== 'undefined') {
-    sessionStorage.removeItem('kova_portal_onboarding_complete');
+    clearOnboardingSession();
     portalCacheInvalidate();
   }
 }

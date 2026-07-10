@@ -57,7 +57,7 @@ export function PortalOnboardingCvUpload({ journeyIndex, inputRef, onFile, error
             o selecciona un archivo desde tu dispositivo
           </p>
 
-          <label htmlFor="portal-cv-file" className="ob-cv-upload__btn">
+          <label htmlFor="portal-cv-file" className="ob-btn-solid ob-cv-upload__btn">
             {busy ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" aria-hidden />

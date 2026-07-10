@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { portalApi, type PortalPerfilResponse } from '@/lib/api';
 import { PORTAL_CACHE_KEYS, portalCacheGet } from '@/lib/portal-cache';
+import { syncOnboardingSession } from '@/lib/portal-onboarding-session';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
 import {
   PREFERENCIAS_BLOCK_HINTS,
@@ -161,7 +162,7 @@ export function PortalPreferenciasWizard({ fromOnboarding = false, initialBlock 
       await portalApi.updatePerfil(merged as Record<string, unknown>);
       if (fromOnboarding) {
         await portalApi.updateOnboarding({ completeOnboarding: true, profile: merged as Record<string, unknown> });
-        sessionStorage.setItem('kova_portal_onboarding_complete', 'true');
+        syncOnboardingSession(true);
         router.push('/portal');
         router.refresh();
         return;

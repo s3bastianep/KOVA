@@ -22,14 +22,24 @@ export function portalCacheHas(key: string) {
   return portalCacheGet(key) !== undefined;
 }
 
+export function portalCacheDelete(key: string) {
+  if (typeof window === 'undefined') return;
+  CACHE.delete(key);
+  INFLIGHT.delete(key);
+}
+
 export function portalCacheInvalidate(prefix?: string) {
   if (typeof window === 'undefined') return;
   if (!prefix) {
     CACHE.clear();
+    INFLIGHT.clear();
     return;
   }
   for (const key of [...CACHE.keys()]) {
     if (key.startsWith(prefix)) CACHE.delete(key);
+  }
+  for (const key of [...INFLIGHT.keys()]) {
+    if (key.startsWith(prefix)) INFLIGHT.delete(key);
   }
 }
 

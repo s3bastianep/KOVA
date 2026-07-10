@@ -1,21 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ArrowRight, Briefcase, CheckCircle2, Loader2, Sparkles, Target, TrendingUp } from 'lucide-react';
-import {
-  PROFILE_BUILD_MILESTONES,
-  formatFirstName,
-  type ProfileMilestoneId,
-} from '@/lib/portal-onboarding-unified';
+import { ArrowRight, Loader2 } from 'lucide-react';
+import { formatFirstName } from '@/lib/portal-onboarding-unified';
 import { PortalOnboardingChrome } from './PortalOnboardingChrome';
-
-const MILESTONE_ICONS: Record<ProfileMilestoneId, typeof Briefcase> = {
-  experiencia: Briefcase,
-  trayectoria: TrendingUp,
-  estilo: Target,
-  fortalezas: Sparkles,
-  listo: CheckCircle2,
-};
 
 const BOOT_MESSAGES = [
   'Preparando tu espacio de perfil…',
@@ -71,35 +59,11 @@ export function PortalOnboardingWelcome({ firstName, minutesLeft, onStart, onSav
         ) : (
           <>
             <header className="ob-welcome__intro">
-              <p className="ob-welcome__eyebrow">Perfil ejecutivo</p>
               <h1>Bienvenido, {formatFirstName(firstName)}</h1>
               <p className="ob-welcome__lead">
-                Construye un perfil de alto impacto para oportunidades comerciales selectivas.
+                Vamos a construir tu perfil en un par de minutos.
               </p>
             </header>
-
-            <div className="ob-welcome__card">
-              <p className="ob-welcome__card-label">Qué vamos a construir</p>
-              <ol className="ob-welcome__milestones" aria-label="Estructura del perfil">
-                {PROFILE_BUILD_MILESTONES.map((item, index) => {
-                  const Icon = MILESTONE_ICONS[item.id];
-                  return (
-                    <li
-                      key={item.id}
-                      className="ob-welcome__milestone"
-                      style={{ animationDelay: `${index * 80}ms` }}
-                    >
-                      <span className="ob-welcome__milestone-index">{index + 1}</span>
-                      <Icon className="h-3.5 w-3.5 ob-welcome__milestone-icon" aria-hidden />
-                      <span>{item.label}</span>
-                    </li>
-                  );
-                })}
-              </ol>
-              <p className="ob-welcome__benefit">
-                Los perfiles completos reciben prioridad en procesos con empresas líderes.
-              </p>
-            </div>
 
             <div className="ob-welcome__cta-wrap">
               <button

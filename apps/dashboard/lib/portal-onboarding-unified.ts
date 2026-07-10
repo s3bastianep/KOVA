@@ -348,8 +348,8 @@ export function reviewSectionSummary(
 ): string {
   switch (id) {
     case 'personal': {
-      const parts = [profile.nombre, profile.email, profile.telefono, profile.ciudad].filter(Boolean);
-      return parts.length ? parts.slice(0, 2).join(' · ') : 'Completa tus datos de contacto';
+      const parts = [profile.nombre, profile.telefono, profile.email].filter(Boolean);
+      return parts.length ? parts.join(' · ') : 'Completa tus datos de contacto';
     }
     case 'experiencia': {
       const items = profile.historialLaboral ?? [];
@@ -453,4 +453,36 @@ export function profileCompletenessScore(
   if ((profile.logros ?? []).some((l) => l.titulo?.trim() && l.cifra?.trim())) score += 8;
   if (Object.keys(profile.competencias ?? {}).length >= 3) score += 8;
   return Math.min(98, score);
+}
+
+/**
+ * Mirrors calculateProfileCompleteness's checks to find where a candidate marked
+ * onboarding "done" should resume when their profile isn't actually at 100%.
+ */
+export function nextIncompleteOnboardingStep(profile: CommercialProfile): OnboardingStep {
+  const hasContact = Boolean(profile.nombre?.trim() && profile.email?.trim() && profile.telefono?.trim());
+  const hasConsent = Boolean(profile.consentimientoDatos);
+  const hasWork = (profile.historialLaboral?.length ?? 0) > 0;
+  const hasEducation = (profile.formacion?.length ?? 0) > 0;
+  const hasLanguages = (profile.idiomas?.length ?? 0) > 0;
+
+  if (!hasContact || !hasConsent || !hasWork || !hasEducation || !hasLanguages) {
+    return 'review_hub';
+  }
+
+  const hasRole = Boolean(profile.nivelRol && profile.objetivoProfesional);
+  const hasSalary = Boolean(profile.expectativaSalarial);
+  const hasSaleType = Boolean(profile.tipoVenta);
+  const hasIndustries = (profile.industrias?.length ?? 0) > 0;
+
+  if (!hasRole || !hasSalary || !hasSaleType || !hasIndustries) {
+    return 'preferencias';
+  }
+
+  const hasEvidence = (profile.logros ?? []).some((l) => l.titulo?.trim() && l.cifra?.trim());
+  if (!hasEvidence) {
+    return 'evidence';
+  }
+
+  return 'competencies';
 }
