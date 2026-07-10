@@ -1,17 +1,11 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import {
-  FileText,
-  Loader2,
-  Upload,
-} from 'lucide-react';
 import type { CvExtractionResult } from '@/lib/cv-extract';
 import type { CommercialProfile, CompetencyEntry } from '@/lib/candidate-commercial-profile';
 import { portalApi } from '@/lib/api';
 import { getStoredUser } from '@/lib/api';
 import { enrichCvExtraction } from '@/app/registro/registro-utils';
-import { CV_FILE_ACCEPT } from '@/lib/cv-file-formats';
 import {
   CV_ANALYSIS_STEPS,
   applyFullCvExtraction,
@@ -69,6 +63,7 @@ import { PortalOnboardingWelcome } from './PortalOnboardingWelcome';
 import { PortalOnboardingTransition } from './PortalOnboardingTransition';
 import { PortalOnboardingComplete } from './PortalOnboardingComplete';
 import { PortalOnboardingCvSummary } from './PortalOnboardingCvSummary';
+import { PortalOnboardingCvUpload } from './PortalOnboardingCvUpload';
 import { PortalOnboardingCvAnalyzing } from './PortalOnboardingCvAnalyzing';
 import { PortalOnboardingStepHero } from './PortalOnboardingStepHero';
 import { usePortalVacancyMatchStats } from './usePortalVacancyMatchStats';
@@ -564,47 +559,13 @@ export function PortalOnboardingFlow({
         hidePreview
         hideHeaderProgress
       >
-        <PortalOnboardingStepHero
-          eyebrow="Paso 1 · Documentación"
-          title="Sube tu hoja de vida"
-          subtitle="Extraeremos y estructuraremos tu experiencia profesional automáticamente."
+        <PortalOnboardingCvUpload
+          journeyIndex={journeyIndex}
+          inputRef={inputRef}
+          onFile={(file) => void handleFile(file)}
+          error={error}
+          busy={busy}
         />
-
-        <div
-          className="ob-panel ob-upload-panel portal-onboarding-upload-zone portal-onboarding-upload-zone--immersive"
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) => {
-            e.preventDefault();
-            void handleFile(e.dataTransfer.files?.[0]);
-          }}
-        >
-          <input
-            ref={inputRef}
-            id="portal-cv-file"
-            type="file"
-            accept={CV_FILE_ACCEPT}
-            className="sr-only"
-            onChange={(e) => void handleFile(e.target.files?.[0])}
-          />
-          <div className="portal-onboarding-upload-icon" aria-hidden>
-            <FileText className="w-7 h-7" />
-          </div>
-          <p className="portal-onboarding-upload-title">Arrastra tu hoja de vida</p>
-          <p className="portal-onboarding-upload-or">o</p>
-          <label htmlFor="portal-cv-file" className="portal-onboarding-btn portal-onboarding-btn--primary portal-onboarding-upload-btn">
-            <Upload className="w-4 h-4" />
-            Selecciona un archivo
-          </label>
-          <p className="portal-onboarding-upload-hint">PDF · Word · DOCX · máximo 5 MB</p>
-          <p className="portal-onboarding-upload-future">Dropbox y Google Drive (próximamente)</p>
-        </div>
-
-        {error ? <p className="portal-onboarding-error">{error}</p> : null}
-        {busy ? (
-          <p className="portal-onboarding-busy">
-            <Loader2 className="w-4 h-4 animate-spin" /> Preparando análisis...
-          </p>
-        ) : null}
       </PortalOnboardingShell>,
     );
   }
