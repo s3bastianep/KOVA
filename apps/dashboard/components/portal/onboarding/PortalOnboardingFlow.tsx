@@ -107,6 +107,7 @@ export function PortalOnboardingFlow({
   }));
   const [counts, setCounts] = useState<OnboardingCounts | null>(null);
   const [analysisDone, setAnalysisDone] = useState(0);
+  const [analysisComplete, setAnalysisComplete] = useState(false);
   const [prefAnswers, setPrefAnswers] = useState<Record<string, string[]>>(() =>
     answersFromProfile(initialProfile),
   );
@@ -283,6 +284,7 @@ export function PortalOnboardingFlow({
     async (uploadPromise: Promise<CvExtractionResult>) => {
       setStep('cv_analyzing');
       setAnalysisDone(0);
+      setAnalysisComplete(false);
       await saveStep('cv_analyzing');
 
       const delays = CV_ANALYSIS_STEPS.map((_, i) =>
@@ -303,16 +305,29 @@ export function PortalOnboardingFlow({
       setPrefAnswers(answersFromProfile(nextProfile));
       setCounts(nextCounts);
       setCvImportedAt(new Date().toISOString());
-      await saveStep('cv_summary', nextProfile);
-      const dataCount =
-        nextCounts.experiencias +
-        nextCounts.estudios +
-        nextCounts.idiomas +
-        nextCounts.certificaciones;
-      setOverlayTransition(transitionAfterStep('cv_analyzing', nextProfile, dataCount) ?? null);
+      await saveStep('cv_analyzing', nextProfile);
+      setAnalysisComplete(true);
+      setVacancyStatsKey((key) => key + 1);
     },
     [profile, saveStep],
   );
+
+  const continueFromAnalysis = async () => {
+    setBusy(true);
+    try {
+      const dataCount =
+        (counts?.experiencias ?? 0) +
+        (counts?.estudios ?? 0) +
+        (counts?.idiomas ?? 0) +
+        (counts?.certificaciones ?? 0);
+      setOverlayTransition(transitionAfterStep('cv_analyzing', profile, dataCount) ?? null);
+      await saveStep('cv_summary');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'No pudimos continuar.');
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const handleFile = async (file: File | null | undefined) => {
     if (!file) return;
@@ -580,7 +595,13 @@ export function PortalOnboardingFlow({
         hidePreview
         hideHeaderProgress
       >
-        <PortalOnboardingCvAnalyzing analysisDone={analysisDone} analysisProgress={analysisProgress} />
+        <PortalOnboardingCvAnalyzing
+          analysisDone={analysisDone}
+          analysisProgress={analysisProgress}
+          complete={analysisComplete}
+          busy={busy}
+          onContinue={() => void continueFromAnalysis()}
+        />
       </PortalOnboardingShell>,
     );
   }
