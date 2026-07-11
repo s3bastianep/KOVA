@@ -243,9 +243,11 @@ export function calculateProfileCompleteness(profile: {
   expectativaSalarial?: string;
   tipoVenta?: string;
   industrias?: string[];
-  logros?: EvidenceCard[];
-  competencias?: Record<string, CompetencyEntry>;
 }): number {
+  // "logros" (self-reported achievements) and "competencias" (self-rating) were removed from
+  // the active onboarding flow — there's no screen left where a candidate can fill them in. They
+  // used to count toward this score, which meant 100% was mathematically unreachable for every
+  // candidate and permanently tripped the "finish your profile" redirect on /portal.
   const checks = [
     Boolean(profile.nombre?.trim() && profile.email?.trim() && profile.telefono?.trim()),
     Boolean(profile.consentimientoDatos),
@@ -256,8 +258,6 @@ export function calculateProfileCompleteness(profile: {
     Boolean(profile.expectativaSalarial),
     Boolean(profile.tipoVenta),
     (profile.industrias?.length ?? 0) > 0,
-    (profile.logros ?? []).some(isEvidenceCardComplete),
-    Object.keys(profile.competencias ?? {}).length > 0,
   ];
   const done = checks.filter(Boolean).length;
   return Math.round((done / checks.length) * 100);
@@ -286,10 +286,14 @@ export function newWorkHistoryEntry(): WorkHistoryEntry {
 }
 
 export function isWorkHistoryComplete(entry: WorkHistoryEntry): boolean {
+  // `sector` is intentionally not required here: nothing extracts it from a CV, and no screen in
+  // the onboarding flow lets a candidate set it either — requiring it meant isWorkHistoryComplete
+  // (and therefore calculateProfileCompleteness / nextIncompleteOnboardingStep) could never be
+  // satisfied by any candidate, trapping every completed profile in an infinite "finish your
+  // profile" redirect back to review_hub.
   return Boolean(
     entry.cargo.trim() &&
       entry.empresa.trim() &&
-      entry.sector.trim() &&
       entry.fechaInicio.trim() &&
       entry.descripcion.trim() &&
       (entry.trabajoActual || entry.fechaFin?.trim()),

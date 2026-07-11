@@ -673,7 +673,7 @@ html:has(.kova-landing-wave) {
 }
 
 .kova-landing-wave .kv-report-title {
-  font-size: 0.65625rem;
+  font-size: 0.75rem;
   color: #8b8f80;
   text-align: center;
   flex: 1;
@@ -691,7 +691,7 @@ html:has(.kova-landing-wave) {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   color: var(--kv-lime);
   flex-shrink: 0;
 }
@@ -767,9 +767,9 @@ html:has(.kova-landing-wave) {
 .kova-landing-wave .kv-badge-reco {
   background: rgba(216, 242, 76, 0.16);
   color: var(--kv-lime);
-  font-size: 0.59375rem;
+  font-size: 0.6875rem;
   font-weight: 600;
-  padding: 2px 8px;
+  padding: 3px 9px;
   border-radius: 100px;
 }
 
@@ -799,15 +799,15 @@ html:has(.kova-landing-wave) {
 
 .kova-landing-wave .kv-cand-score small {
   display: block;
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   color: #8b8f80;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  margin-top: 1px;
+  margin-top: 2px;
 }
 
 .kova-landing-wave .kv-cand-ref {
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   color: #6b6f5f;
   margin-top: 0.25rem;
 }
@@ -851,7 +851,7 @@ html:has(.kova-landing-wave) {
 }
 
 .kova-landing-wave .kv-skills-label {
-  font-size: 0.59375rem;
+  font-size: 0.6875rem;
   color: #8b8f80;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -917,7 +917,7 @@ html:has(.kova-landing-wave) {
 }
 
 .kova-landing-wave .kv-metric-stat span {
-  font-size: 0.59375rem;
+  font-size: 0.6875rem;
   color: #8b8f80;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -1483,7 +1483,7 @@ html:has(.kova-landing-wave) {
 .kova-landing-wave .kv-problem-stakes-stat span {
   display: block;
   margin-top: 0.3125rem;
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.58);
 }
@@ -1492,7 +1492,7 @@ html:has(.kova-landing-wave) {
   margin: 0.75rem 0 0;
   padding-top: 0.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.35);
   text-align: left;
@@ -1632,7 +1632,7 @@ html:has(.kova-landing-wave) {
 }
 
 .kova-landing-wave .kv-profile-tag {
-  font-size: 0.65625rem;
+  font-size: 0.6875rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.75rem;
@@ -2220,7 +2220,7 @@ html:has(.kova-landing-wave) {
 .kova-landing-wave .kv-compare-matrix-label {
   flex-basis: 100%;
   display: block;
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: -0.25rem;

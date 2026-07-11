@@ -404,6 +404,16 @@
   border-color: rgba(255, 255, 255, 0.5);
 }
 
+.kv-login-inline-link {
+  color: var(--kv-lime, #d8f24c);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.kv-login-inline-link:hover {
+  color: #e2f85a;
+}
+
 .kv-login-remember input:checked {
   background: var(--kv-lime);
   border-color: var(--kv-lime);

@@ -94,7 +94,6 @@ export function PortalOnboardingCvSummary({
   onEditSection,
 }: Props) {
   const displayName = formatPersonName(profile.nombre?.trim() || firstName);
-  const stepNumber = journeyIndex + 1;
   const experiences = (profile.historialLaboral ?? []).filter(
     (entry) => entry.empresa?.trim() || entry.cargo?.trim(),
   );
@@ -121,9 +120,6 @@ export function PortalOnboardingCvSummary({
     <div className="ob-cv-summary">
       <div className="ob-cv-summary__hero">
         <div className="ob-cv-summary__hero-text">
-          <p className="ob-cv-summary__eyebrow ob-cv-summary__eyebrow--lime">
-            Paso {stepNumber} de 5
-          </p>
           <h1>Así quedó tu perfil.</h1>
           <p>
             Este es el perfil con el que las empresas te van a encontrar. Si algo no está bien,

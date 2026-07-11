@@ -62,6 +62,21 @@ const STEPS_WITH_VACANCY_STATS = new Set<OnboardingStep>([
   'complete',
 ]);
 
+/**
+ * Same as answersFromProfile, but also seeds the salary slider's answer with whatever value it
+ * already renders. The slider always displays a value (defaulting to "$8 millones COP/mes" when
+ * the candidate hasn't set one), but canContinuePreferenciasStep only reads this answers record —
+ * without seeding it, "Continuar" stayed silently disabled on a step that visually already looked
+ * answered, with no hint telling the candidate why they were stuck.
+ */
+function answersFromProfileWithSalaryDefault(profile: CommercialProfile): Record<string, string[]> {
+  const answers = answersFromProfile(profile);
+  if (!answers.salario?.length) {
+    answers.salario = [SALARY_SLIDER_LABELS[salarySliderIndex(profile.expectativaSalarial)]];
+  }
+  return answers;
+}
+
 type Props = {
   initialProfile: CommercialProfile;
   initialStep: OnboardingStep;
@@ -106,7 +121,7 @@ export function PortalOnboardingFlow({
   const [analysisDone, setAnalysisDone] = useState(0);
   const [analysisComplete, setAnalysisComplete] = useState(false);
   const [prefAnswers, setPrefAnswers] = useState<Record<string, string[]>>(() =>
-    answersFromProfile(initialProfile),
+    answersFromProfileWithSalaryDefault(initialProfile),
   );
   const [prefStepIndex, setPrefStepIndex] = useState(
     () => (normalizedInitial === 'preferencias' ? initialSubStep : 0),
@@ -277,7 +292,7 @@ export function PortalOnboardingFlow({
       const nextProfile = applyFullCvExtraction(profile, aligned);
       const nextCounts = countsFromExtraction(aligned);
       setProfile(nextProfile);
-      setPrefAnswers(answersFromProfile(nextProfile));
+      setPrefAnswers(answersFromProfileWithSalaryDefault(nextProfile));
       setCounts(nextCounts);
       setCvImportedAt(new Date().toISOString());
       await saveStep('cv_analyzing', nextProfile);

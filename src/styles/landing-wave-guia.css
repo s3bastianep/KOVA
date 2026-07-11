@@ -219,7 +219,7 @@
 }
 
 .kova-landing-wave .kv-guia-sidebar-meta {
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   color: var(--kv-slate);
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -551,7 +551,7 @@
 
 .kova-landing-wave .kv-guia-feature-badge {
   display: inline-block;
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--kv-indigo);

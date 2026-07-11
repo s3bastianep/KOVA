@@ -212,7 +212,10 @@ export function SignupForm() {
               onChange={(e) => setConsent(e.target.checked)}
               required
             />
-            Acepto el tratamiento de mis datos personales según la política de privacidad de Kova
+            Acepto el tratamiento de mis datos personales según la{' '}
+            <a href="/privacidad" target="_blank" rel="noopener noreferrer" className="kv-login-inline-link">
+              política de privacidad de Kova
+            </a>
           </label>
 
           <button type="submit" disabled={loading} className="kv-login-submit">

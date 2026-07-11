@@ -2,7 +2,6 @@ import type { CommercialProfile } from './candidate-commercial-profile';
 import {
   isCertificationComplete,
   isEducationComplete,
-  isEvidenceCardComplete,
   isLanguageComplete,
   isWorkHistoryComplete,
 } from './commercial-profile-builder';
@@ -487,10 +486,9 @@ export function nextIncompleteOnboardingStep(profile: CommercialProfile): Onboar
     return 'preferencias';
   }
 
-  const hasEvidence = (profile.logros ?? []).some(isEvidenceCardComplete);
-  if (!hasEvidence) {
-    return 'evidence';
-  }
-
-  return 'competencies';
+  // "evidence" and "competencias" used to be the remaining steps here, but both were removed
+  // from the active flow (self-reported achievements/self-ratings don't hold up in a selection
+  // process) — PortalOnboardingFlow has no render case for them anymore. Once everything above
+  // is satisfied there's nothing left to resume into.
+  return 'complete';
 }

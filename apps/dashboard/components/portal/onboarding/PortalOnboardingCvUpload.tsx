@@ -1,7 +1,17 @@
 'use client';
 
-import type { RefObject } from 'react';
-import { CheckCircle2, FileSearch, ListChecks, Loader2, Lock, Sparkles, UploadCloud } from 'lucide-react';
+import { useState, type RefObject } from 'react';
+import {
+  CheckCircle2,
+  FileSearch,
+  FileText,
+  ListChecks,
+  Loader2,
+  Lock,
+  Sparkles,
+  UploadCloud,
+  X,
+} from 'lucide-react';
 import { CV_FILE_ACCEPT } from '@/lib/cv-file-formats';
 
 type Props = {
@@ -30,7 +40,27 @@ const STEPS = [
   },
 ] as const;
 
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 export function PortalOnboardingCvUpload({ inputRef, onFile, error, busy }: Props) {
+  // Selecting a file only stages it — it no longer starts the analysis immediately. That gave
+  // no way to back out of an accidental/wrong file before committing to the (slower) analysis
+  // step. Now the candidate sees the file and explicitly confirms or swaps it first.
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
+
+  const stageFile = (file: File | null | undefined) => {
+    if (!file) return;
+    setPendingFile(file);
+  };
+
+  const clearPending = () => {
+    setPendingFile(null);
+    if (inputRef.current) inputRef.current.value = '';
+  };
+
   return (
     <div className="ob-cv-upload">
       <div className="ob-cv-upload__top">
@@ -55,48 +85,81 @@ export function PortalOnboardingCvUpload({ inputRef, onFile, error, busy }: Prop
         </header>
 
         <div className="ob-cv-upload__panel">
-          <div
-            className={`ob-cv-upload__drop${busy ? ' is-busy' : ''}`}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => {
-              e.preventDefault();
-              onFile(e.dataTransfer.files?.[0]);
-            }}
-          >
-            <input
-              ref={inputRef}
-              id="portal-cv-file"
-              type="file"
-              accept={CV_FILE_ACCEPT}
-              className="sr-only"
-              onChange={(e) => onFile(e.target.files?.[0])}
-            />
+          {pendingFile ? (
+            <div className="ob-cv-upload__staged">
+              <span className="ob-cv-upload__icon" aria-hidden>
+                <FileText className="h-7 w-7" />
+              </span>
+              <p className="ob-cv-upload__staged-name" title={pendingFile.name}>
+                {pendingFile.name}
+              </p>
+              <p className="ob-cv-upload__staged-size">{formatFileSize(pendingFile.size)}</p>
 
-            <span className="ob-cv-upload__icon" aria-hidden>
-              <UploadCloud className="h-7 w-7" />
-            </span>
+              <div className="ob-cv-upload__staged-actions">
+                <button
+                  type="button"
+                  className="ob-cv-upload__staged-change"
+                  onClick={clearPending}
+                  disabled={busy}
+                >
+                  <X className="h-3.5 w-3.5" aria-hidden />
+                  Cambiar archivo
+                </button>
+                <button
+                  type="button"
+                  className="ob-btn-solid ob-cv-upload__btn"
+                  onClick={() => onFile(pendingFile)}
+                  disabled={busy}
+                >
+                  {busy ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                      Analizando…
+                    </>
+                  ) : (
+                    <>
+                      <UploadCloud className="h-4 w-4" aria-hidden />
+                      Analizar
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div
+              className="ob-cv-upload__drop"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                stageFile(e.dataTransfer.files?.[0]);
+              }}
+            >
+              <input
+                ref={inputRef}
+                id="portal-cv-file"
+                type="file"
+                accept={CV_FILE_ACCEPT}
+                className="sr-only"
+                onChange={(e) => stageFile(e.target.files?.[0])}
+              />
 
-            <p className="ob-cv-upload__prompt">
-              Arrastra tu archivo aquí
-              <span>o selecciónalo desde tu dispositivo</span>
-            </p>
+              <span className="ob-cv-upload__icon" aria-hidden>
+                <UploadCloud className="h-7 w-7" />
+              </span>
 
-            <label htmlFor="portal-cv-file" className="ob-btn-solid ob-cv-upload__btn">
-              {busy ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-                  Preparando análisis…
-                </>
-              ) : (
-                <>
-                  <UploadCloud className="h-4 w-4" aria-hidden />
-                  Seleccionar archivo
-                </>
-              )}
-            </label>
+              <p className="ob-cv-upload__prompt">
+                Arrastra tu archivo aquí
+                <span>o selecciónalo desde tu dispositivo</span>
+              </p>
 
-            <p className="ob-cv-upload__hint">PDF · Word · DOCX &nbsp;|&nbsp; Máximo 5 MB</p>
-          </div>
+              <label htmlFor="portal-cv-file" className="ob-btn-solid ob-cv-upload__btn">
+                <UploadCloud className="h-4 w-4" aria-hidden />
+                Seleccionar archivo
+              </label>
+
+              <p className="ob-cv-upload__hint">PDF · Word · DOCX &nbsp;|&nbsp; Máximo 5 MB</p>
+            </div>
+          )}
         </div>
       </div>
 

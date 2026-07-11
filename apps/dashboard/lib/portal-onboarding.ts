@@ -119,26 +119,6 @@ export function applyFullCvExtraction(
   return next;
 }
 
-export function onboardingProgressPercent(step: OnboardingStep) {
-  const order: OnboardingStep[] = [
-    'welcome',
-    'cv_upload',
-    'cv_analyzing',
-    'cv_summary',
-    'review_hub',
-    'cv_review',
-    'preferencias',
-    'evidence',
-    'competencies',
-    'complete',
-    'done',
-  ];
-  const normalized = normalizeStep(step);
-  const idx = order.indexOf(normalized);
-  if (idx < 0) return 0;
-  return Math.round((idx / (order.length - 1)) * 100);
-}
-
 export const CV_ANALYSIS_STEPS = [
   'Extrayendo experiencia',
   'Leyendo formación',

@@ -50,7 +50,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: rgba(255, 255, 255, 0.38);
@@ -409,7 +409,7 @@
 }
 
 .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-head_cell {
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.4);
   text-transform: uppercase;
