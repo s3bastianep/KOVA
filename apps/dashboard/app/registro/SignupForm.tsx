@@ -43,9 +43,13 @@ export function SignupForm() {
 
   useEffect(() => {
     const run = () => prefetchPortal();
-    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      const id = window.requestIdleCallback(run, { timeout: 2000 });
-      return () => window.cancelIdleCallback(id);
+    const win = window as Window & {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    if (typeof win.requestIdleCallback === 'function') {
+      const id = win.requestIdleCallback(run, { timeout: 2000 });
+      return () => win.cancelIdleCallback?.(id);
     }
     const t = window.setTimeout(run, 800);
     return () => window.clearTimeout(t);

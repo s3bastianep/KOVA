@@ -55,9 +55,10 @@ export default function Login({ mode = 'candidate' }) {
   useEffect(() => {
     if (mode !== 'candidate') return;
     const run = () => prefetchPortal();
-    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      const id = window.requestIdleCallback(run, { timeout: 2000 });
-      return () => window.cancelIdleCallback(id);
+    const ric = window.requestIdleCallback?.bind(window);
+    if (typeof ric === 'function') {
+      const id = ric(run, { timeout: 2000 });
+      return () => window.cancelIdleCallback?.(id);
     }
     const t = window.setTimeout(run, 800);
     return () => window.clearTimeout(t);
