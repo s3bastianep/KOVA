@@ -195,14 +195,14 @@ export default function Servicios() {
     const mapped = HASH_TO_STAGE[hash];
     if (!mapped) return undefined;
     setActiveStage(mapped);
-    const id = hash.slice(1);
-    const node = document.getElementById(id) || document.getElementById(STAGES[mapped].id);
-    if (node) {
-      requestAnimationFrame(() => {
-        node.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    }
-    return undefined;
+    const targetId = hash.slice(1);
+    const timer = window.setTimeout(() => {
+      const node =
+        document.getElementById(STAGES[mapped].id) ||
+        document.getElementById(targetId);
+      node?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+    return () => window.clearTimeout(timer);
   }, [hash]);
 
   return (

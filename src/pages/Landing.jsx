@@ -164,7 +164,7 @@ const METHOD_POINTS = [
   },
   {
     q: '¿Cómo lo logramos?',
-    a: 'Con una metodología propia que evalúa múltiples factores comerciales — el detalle lo vemos juntos en la conversación.',
+    a: 'Con una metodología propia que evalúa múltiples factores comerciales. El detalle lo vemos juntos en la conversación.',
   },
 ];
 
@@ -777,7 +777,7 @@ export default function Landing() {
 
       <section id="contacto" className="kh-contact">
         <div className="kh-contact__grid">
-          <div>
+          <div className="kh-contact__copy">
             <div className="kh-eyebrow">
               <span className="kh-eyebrow__dot" aria-hidden />
               <span className="kh-eyebrow__label">Conversemos</span>
@@ -787,27 +787,24 @@ export default function Landing() {
               <span className="kh-accent">necesita realmente</span> su empresa.
             </h2>
             <p className="kh-contact__lead">
-              Todo comienza con una conversación de 30 minutos. Sin compromiso. Aterrizamos su
-              modelo comercial y el perfil con más probabilidad de éxito — sin partir de la hoja
-              de vida.
+              Todo comienza con una conversación de 30 minutos. Sin compromiso.
+              Aterrizamos su modelo comercial y el perfil con más probabilidad de
+              éxito, sin partir de la hoja de vida.
             </p>
-            <div className="kh-contact__checks">
-              <div>
-                <em>✓</em>
+            <ul className="kh-contact__checks">
+              <li>
+                <em aria-hidden>✓</em>
                 <span>Diagnóstico inicial sin costo</span>
-              </div>
-              <div>
-                <em>✓</em>
+              </li>
+              <li>
+                <em aria-hidden>✓</em>
                 <span>Respuesta en menos de 24 horas</span>
-              </div>
-              <div>
-                <em>✓</em>
+              </li>
+              <li>
+                <em aria-hidden>✓</em>
                 <span>Acompañamiento los primeros 90 días</span>
-              </div>
-            </div>
-            <div className="kh-contact__links">
-              <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-            </div>
+              </li>
+            </ul>
           </div>
 
           <div className="kh-form">
@@ -852,7 +849,7 @@ export default function Landing() {
               />
             </label>
             <button type="button" className="kh-btn kh-btn--lime" onClick={sendMail}>
-              Agendar diagnóstico comercial →
+              Agendar diagnóstico comercial
             </button>
             <button type="button" className="kh-btn kh-btn--wa" onClick={sendWhatsApp}>
               Escribir por WhatsApp
@@ -863,34 +860,28 @@ export default function Landing() {
       </section>
 
       <footer className="kh-footer">
-        <div className="kh-footer__row">
-          <div>
-            <div className="kh-footer__brand">
+        <div className="kh-footer__inner">
+          <div className="kh-footer__top">
+            <a href="#top" className="kh-footer__brand">
               kova<span>.</span>
-            </div>
-            <p className="kh-footer__desc">
-              Selección por compatibilidad con el modelo comercial de su empresa.
-            </p>
-          </div>
-          <div className="kh-footer__cols">
-            <div className="kh-footer__col">
-              <span>Navegar</span>
+            </a>
+            <nav className="kh-footer__nav" aria-label="Pie de página">
               <a href="#metodologia">Metodología</a>
               <Link to="/servicios">Servicios</Link>
-              <a href="#calculadora">El costo real</a>
+              <a href="#calculadora">Costo real</a>
               <Link to="/guias">Blog</Link>
-              <Link to="/registro">Busco empleo</Link>
-            </div>
-            <div className="kh-footer__col">
-              <span>Contacto</span>
-              <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-              <Link to="/login">Iniciar sesión</Link>
-              <a href="#contacto">Agendar consultoría</a>
-              <p>Colombia</p>
-            </div>
+              <Link to="/registro">Empleo</Link>
+              <a href="#contacto">Agendar</a>
+              <Link to="/login">Entrar</Link>
+            </nav>
+          </div>
+          <div className="kh-footer__bottom">
+            <p className="kh-footer__copy">© 2026 Kova</p>
+            <a className="kh-footer__mail" href={`mailto:${CONTACT_EMAIL}`}>
+              {CONTACT_EMAIL}
+            </a>
           </div>
         </div>
-        <div className="kh-footer__copy">© 2026 Kova · Selección comercial</div>
       </footer>
     </div>
   );
