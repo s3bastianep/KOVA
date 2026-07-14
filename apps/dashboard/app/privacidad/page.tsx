@@ -16,14 +16,15 @@ export default function PrivacidadPage() {
       <div className="kv-login-bg" aria-hidden />
 
       <header className="kv-login-nav">
-        <a href="/" className="kv-login-logo">
-          <span className="kv-login-logo-mark" aria-hidden />
-          Kova
-        </a>
-        <a href="/registro" className="kv-login-back">
-          <ArrowLeft size={16} aria-hidden />
-          Volver al registro
-        </a>
+        <div className="kv-login-nav-inner">
+          <a href="/" className="kv-login-logo">
+            kova<span className="kv-login-logo-dot">.</span>
+          </a>
+          <a href="/registro" className="kv-login-back">
+            <ArrowLeft size={16} aria-hidden />
+            Volver al registro
+          </a>
+        </div>
       </header>
 
       <main style={{ maxWidth: '42rem', margin: '0 auto', padding: '2rem 1.5rem 4rem', color: '#fff' }}>

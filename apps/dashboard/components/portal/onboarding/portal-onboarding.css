@@ -3390,7 +3390,11 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .ob-cv-upload__accent {
+  font-family: var(--font-serif), 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
   color: var(--kv-lime);
+  letter-spacing: -0.01em;
 }
 
 .ob-cv-upload__lead {
@@ -3402,40 +3406,43 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .ob-cv-upload__note {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  margin-top: 1.5rem;
-  padding: 0.85rem 1rem;
-  border-radius: 12px;
-  border: 1px solid var(--ob-border);
-  background: var(--ob-surface);
-}
-
-.ob-cv-upload__note-icon {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  flex-shrink: 0;
-  border-radius: 999px;
-  background: rgba(216, 242, 76, 0.14);
-  color: var(--kv-lime);
-}
-
-.ob-cv-upload__note strong {
-  display: block;
-  font-size: 14px;
-  font-weight: 700;
-  color: #ffffff;
-}
-
-.ob-cv-upload__note span {
-  display: block;
-  margin-top: 0.15rem;
-  font-size: 13px;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin: 1.35rem 0 0;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: 0;
+  font-family: var(--font-mono), 'Space Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.4;
   color: var(--kv-nav-muted);
+}
+
+.ob-cv-upload__note-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--kv-lime);
+  flex-shrink: 0;
+}
+
+.ob-cv-upload__note-label {
+  color: var(--kv-lime);
+  font-weight: 700;
+}
+
+.ob-cv-upload__note-sep {
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.ob-cv-upload__note-meta {
+  color: rgba(255, 255, 255, 0.48);
+  font-weight: 400;
 }
 
 /* Outer solid-border panel wrapping the dashed dropzone — gives the whole upload area a
@@ -3594,6 +3601,46 @@ html.portal-onboarding-immersive .kova-topbar {
 @media (min-width: 700px) {
   .ob-cv-upload__steps {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .ob-cv-upload__panel {
+    padding: 0.85rem;
+    border-radius: 14px;
+  }
+
+  .ob-cv-upload__drop {
+    padding: 2rem 1rem 1.75rem;
+  }
+
+  .ob-cv-upload__note {
+    gap: 6px 8px;
+    font-size: 10px;
+  }
+
+  .ob-cv-upload__note-sep {
+    display: none;
+  }
+
+  .ob-cv-upload__note-meta {
+    flex: 1 1 100%;
+    padding-left: 17px;
+  }
+
+  .ob-cv-upload__staged-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .ob-cv-upload__staged-change,
+  .ob-cv-upload__btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .ob-cv-upload__steps {
+    padding: 1.1rem;
   }
 }
 

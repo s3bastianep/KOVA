@@ -1,4 +1,4 @@
-﻿/* Contacto */
+/* Contacto */
 .kova-landing-wave .kv-contact-trust {
   position: relative;
   z-index: 2;
@@ -14,7 +14,7 @@
   background: #fff;
   border: 1px solid var(--kv-line);
   border-radius: 0.875rem;
-  box-shadow: 0 12px 40px rgba(18, 20, 15, 0.1);
+  box-shadow: 0 12px 40px rgba(10, 11, 10, 0.1);
 }
 
 .kova-landing-wave .kv-contact-trust-chip {
@@ -52,18 +52,19 @@
 }
 
 .kova-landing-wave .kv-contact-heading {
-  font-size: clamp(1.5rem, 2.8vw, 2rem);
+  font-family: var(--kv-font-sans);
+  font-size: var(--kv-fs-h2);
   font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
   color: var(--kv-ink);
   margin: 0.875rem 0 1rem;
   max-width: 22rem;
 }
 
 .kova-landing-wave .kv-contact-lead {
-  font-size: 1rem;
-  line-height: 1.7;
+  font-size: var(--kv-fs-body);
+  line-height: 1.55;
   color: var(--kv-slate);
   margin-bottom: 1.75rem;
   max-width: 30rem;
@@ -92,7 +93,7 @@
 
 .kova-landing-wave .kv-contact-benefit:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(18, 20, 15, 0.07);
+  box-shadow: 0 10px 28px rgba(10, 11, 10, 0.07);
 }
 
 .kova-landing-wave .kv-contact-benefit:nth-child(4n + 1) {
@@ -311,100 +312,5 @@
 
 .kova-landing-wave .kv-booking-wrap {
   width: 100%;
-}
-
-.kova-landing-wave .kv-guia-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.25rem;
-}
-
-@media (min-width: 640px) {
-  .kova-landing-wave .kv-guia-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .kova-landing-wave .kv-guia-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.kova-landing-wave .kv-guia-card {
-  display: flex;
-  flex-direction: column;
-  background: #fff;
-  border: 1px solid var(--kv-line);
-  border-radius: 0.875rem;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.kova-landing-wave .kv-guia-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(18, 20, 15, 0.08);
-}
-
-.kova-landing-wave .kv-guia-card-media {
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  background: var(--kv-paper-2);
-}
-
-.kova-landing-wave .kv-guia-card-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.kova-landing-wave .kv-guia-card:hover .kv-guia-card-media img {
-  transform: scale(1.03);
-}
-
-.kova-landing-wave .kv-guia-card-placeholder {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #e3e6fa, var(--kv-paper-2));
-}
-
-.kova-landing-wave .kv-guia-card-body {
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.kova-landing-wave .kv-guia-card-meta {
-  font-size: 0.6875rem;
-  color: var(--kv-slate);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 0.5rem;
-}
-
-.kova-landing-wave .kv-guia-card-body h2 {
-  font-family: 'Sora', ui-sans-serif, sans-serif;
-  font-size: 1.0625rem;
-  font-weight: 600;
-  line-height: 1.3;
-  margin-bottom: 0.5rem;
-  color: var(--kv-ink);
-}
-
-.kova-landing-wave .kv-guia-card-body p {
-  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  font-size: 0.96875rem;
-  color: var(--kv-slate);
-  line-height: 1.72;
-  flex: 1;
-  margin-bottom: 0.875rem;
-}
-
-.kova-landing-wave .kv-guia-card-link {
-  font-size: 0.84375rem;
-  font-weight: 600;
-  color: var(--kv-indigo);
 }
 

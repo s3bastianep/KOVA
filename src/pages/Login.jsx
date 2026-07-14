@@ -1,23 +1,12 @@
-'use client';
-
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Eye, EyeOff, Loader2, Lock, Mail } from 'lucide-react';
-import { authApi, clearSession, saveSession } from '@/lib/api';
-import './login.css';
+import { authApi, clearSession, saveSession } from '@/lib/authSession';
+import { enterPortal, prefetchPortal } from '@/lib/enterPortal';
+import { usePageMeta } from '@/hooks/usePageMeta';
+import '@/styles/auth-login.css';
 
-type LoginMode = 'candidate' | 'staff';
-
-const COPY: Record<
-  LoginMode,
-  {
-    eyebrow: string;
-    title: ReactNode;
-    lead: string;
-    cardSub: string;
-    submit: string;
-    footer: ReactNode;
-  }
-> = {
+const COPY = {
   candidate: {
     eyebrow: 'Candidatos · Kova',
     title: (
@@ -30,7 +19,7 @@ const COPY: Record<
     submit: 'Entrar a mi portal',
     footer: (
       <>
-        ¿No tienes cuenta? <a href="/registro">Crea tu perfil gratis</a>
+        ¿No tienes cuenta? <Link to="/registro">Crea tu perfil gratis</Link>
       </>
     ),
   },
@@ -48,7 +37,7 @@ const COPY: Record<
   },
 };
 
-export function LoginForm({ mode = 'candidate' }: { mode?: LoginMode }) {
+export default function Login({ mode = 'candidate' }) {
   const copy = COPY[mode];
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -57,7 +46,24 @@ export function LoginForm({ mode = 'candidate' }: { mode?: LoginMode }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const submit = async (e: React.FormEvent) => {
+  usePageMeta({
+    title: mode === 'staff' ? 'Acceso interno' : 'Iniciar sesión',
+    description: 'Accede a tu cuenta Kova.',
+    path: mode === 'staff' ? '/acceso' : '/login',
+  });
+
+  useEffect(() => {
+    if (mode !== 'candidate') return;
+    const run = () => prefetchPortal();
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(run, { timeout: 2000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const t = window.setTimeout(run, 800);
+    return () => window.clearTimeout(t);
+  }, [mode]);
+
+  const submit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -77,7 +83,11 @@ export function LoginForm({ mode = 'candidate' }: { mode?: LoginMode }) {
       }
 
       saveSession(data);
-      window.location.assign(mode === 'candidate' ? '/portal' : '/dashboard');
+      if (mode === 'candidate') {
+        enterPortal();
+        return;
+      }
+      window.location.assign('/dashboard');
     } catch (err) {
       const msg = err instanceof Error ? err.message : '';
       setError(msg && msg !== 'Unauthorized' ? msg : 'Correo o contraseña incorrectos');
@@ -92,13 +102,13 @@ export function LoginForm({ mode = 'candidate' }: { mode?: LoginMode }) {
 
       <header className="kv-login-nav">
         <div className="kv-login-nav-inner">
-          <a href="/" className="kv-login-logo">
+          <Link to="/" className="kv-login-logo">
             kova<span className="kv-login-logo-dot">.</span>
-          </a>
-          <a href="/" className="kv-login-back">
+          </Link>
+          <Link to="/" className="kv-login-back">
             <ArrowLeft size={16} aria-hidden />
             Volver al inicio
-          </a>
+          </Link>
         </div>
       </header>
 
@@ -110,10 +120,10 @@ export function LoginForm({ mode = 'candidate' }: { mode?: LoginMode }) {
         </aside>
 
         <form onSubmit={submit} className="kv-login-card">
-          <a href="/" className="kv-login-back kv-login-mobile-back">
+          <Link to="/" className="kv-login-back kv-login-mobile-back">
             <ArrowLeft size={16} aria-hidden />
             Volver al inicio
-          </a>
+          </Link>
 
           <div className="kv-login-card-head">
             <h2 className="kv-login-card-title">Iniciar sesión</h2>

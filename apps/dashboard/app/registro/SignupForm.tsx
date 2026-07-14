@@ -1,9 +1,32 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowLeft, ArrowRight, Check, Eye, EyeOff, Loader2, Lock, Mail, Phone, User } from 'lucide-react';
 import { authApi, saveSession } from '@/lib/api';
 import '../login/login.css';
+
+function prefetchPortal() {
+  if (typeof window === 'undefined') return;
+  if (!document.querySelector('link[data-kova-prefetch-portal]')) {
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.as = 'document';
+    link.href = '/portal';
+    link.setAttribute('data-kova-prefetch-portal', '1');
+    document.head.appendChild(link);
+  }
+  const w = window as Window & { __kovaPortalWarmed?: boolean };
+  if (w.__kovaPortalWarmed) return;
+  w.__kovaPortalWarmed = true;
+  void fetch('/portal', { method: 'GET', credentials: 'same-origin' }).catch(() => {
+    w.__kovaPortalWarmed = false;
+  });
+}
+
+function enterPortal() {
+  prefetchPortal();
+  window.location.assign('/portal');
+}
 
 export function SignupForm() {
   const [nombre, setNombre] = useState('');
@@ -16,6 +39,32 @@ export function SignupForm() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [entering, setEntering] = useState(false);
+
+  useEffect(() => {
+    const run = () => prefetchPortal();
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(run, { timeout: 2000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const t = window.setTimeout(run, 800);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (!success || entering) return;
+    prefetchPortal();
+    const t = window.setTimeout(() => {
+      setEntering(true);
+      enterPortal();
+    }, 350);
+    return () => window.clearTimeout(t);
+  }, [success, entering]);
+
+  const goPortal = () => {
+    setEntering(true);
+    enterPortal();
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +80,7 @@ export function SignupForm() {
         consentimientoDatos: consent,
       });
       saveSession(data);
+      prefetchPortal();
       setSuccess(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No pudimos crear tu cuenta');
@@ -43,20 +93,23 @@ export function SignupForm() {
       <div className="kv-login-bg" aria-hidden />
 
       <header className="kv-login-nav">
-        <a href="/" className="kv-login-logo">
-          <span className="kv-login-logo-mark" aria-hidden />
-          Kova
-        </a>
-        <a href="/" className="kv-login-back">
-          <ArrowLeft size={16} aria-hidden />
-          Volver al inicio
-        </a>
+        <div className="kv-login-nav-inner">
+          <a href="/" className="kv-login-logo">
+            kova<span className="kv-login-logo-dot">.</span>
+          </a>
+          <a href="/" className="kv-login-back">
+            <ArrowLeft size={16} aria-hidden />
+            Volver al inicio
+          </a>
+        </div>
       </header>
 
       <div className="kv-login-stage">
         <aside className="kv-login-aside">
           <p className="kv-login-eyebrow">Candidatos · Kova</p>
-          <h1 className="kv-login-title">Tu espacio para oportunidades comerciales</h1>
+          <h1 className="kv-login-title">
+            Tu espacio para <span className="kv-login-accent">oportunidades</span> comerciales
+          </h1>
           <p className="kv-login-lead">
             Crea tu cuenta en 30 segundos. Después subes tu hoja de vida y nosotros completamos tu
             perfil por ti.
@@ -69,14 +122,26 @@ export function SignupForm() {
               <Check className="w-7 h-7" strokeWidth={3} aria-hidden />
             </span>
             <h2 className="kv-login-card-title">¡Cuenta creada!</h2>
-            <p className="kv-login-card-sub">Ya puedes entrar a construir tu perfil.</p>
+            <p className="kv-login-card-sub">
+              {entering ? 'Entrando a tu perfil…' : 'Ya puedes entrar a construir tu perfil.'}
+            </p>
             <button
               type="button"
               className="kv-login-submit kv-login-success-cta"
-              onClick={() => window.location.assign('/portal')}
+              onClick={goPortal}
+              disabled={entering}
             >
-              Continuar
-              <ArrowRight className="w-4 h-4" aria-hidden />
+              {entering ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" aria-hidden />
+                  Cargando portal…
+                </>
+              ) : (
+                <>
+                  Continuar
+                  <ArrowRight className="w-4 h-4" aria-hidden />
+                </>
+              )}
             </button>
           </div>
         ) : (

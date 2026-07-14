@@ -1,13 +1,13 @@
-﻿/* â”€â”€ Inner pages â”€â”€ */
+/* â”€â”€ Inner pages â”€â”€ */
 
 .kova-landing-wave .kv-inner-hero {
   background: var(--kv-ink);
   color: #fff;
-  padding: 4.375rem 0 5.625rem;
+  padding: 3.5rem 0 4.5rem;
 }
 
 .kova-landing-wave .kv-inner-hero--compact {
-  padding: 3.5rem 0 3rem;
+  padding: 2.75rem 0 2.5rem;
 }
 
 .kova-landing-wave .kv-inner-hero-grid {
@@ -25,32 +25,36 @@
 }
 
 .kova-landing-wave .kv-inner-hero h1 {
-  font-weight: 700;
-  font-size: clamp(2.125rem, 4.4vw, 3.125rem);
-  line-height: 1.08;
-  letter-spacing: -0.015em;
-  margin: 1.25rem 0 1.375rem;
+  font-family: var(--kv-font-sans);
+  font-weight: 800;
+  font-size: var(--kv-fs-hero);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  margin: 1.125rem 0 1.25rem;
   color: #fff;
 }
 
 .kova-landing-wave .kv-inner-hero h1 em {
-  font-style: normal;
+  font-family: var(--kv-font-serif);
+  font-style: italic;
+  font-weight: 400;
   color: var(--kv-lime);
+  letter-spacing: -0.01em;
 }
 
 .kova-landing-wave .kv-inner-hero-sub {
-  font-size: 1rem;
+  font-size: var(--kv-fs-lead);
   color: #c6c9be;
-  max-width: 32rem;
-  margin-bottom: 1.875rem;
-  line-height: 1.65;
+  max-width: 36rem;
+  margin-bottom: 1.75rem;
+  line-height: 1.55;
 }
 
 .kova-landing-wave .kv-inner-media {
-  border-radius: 0.875rem;
+  border-radius: 0.5rem;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
 }
 
 .kova-landing-wave .kv-inner-media img {

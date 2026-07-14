@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { getRelatedGuides } from './guiaRoutes';
-import GuiaSidebar from './GuiaSidebar';
 
 export function GuiaDivider() {
   return <hr className="kv-guia-divider" aria-hidden />;
@@ -146,37 +145,6 @@ export function GuiaInlineImage({ src, alt, caption }) {
       </div>
       {caption && <figcaption>{caption}</figcaption>}
     </figure>
-  );
-}
-
-export function GuiaArticleShell({ currentPath, children }) {
-  const related = getRelatedGuides(currentPath);
-
-  return (
-    <>
-      <div className="kv-wrap kv-guia-shell">
-        <div className="kv-guia-shell-grid">
-          <article className="kv-guia-article">{children}</article>
-          <GuiaSidebar currentPath={currentPath} />
-        </div>
-      </div>
-
-      {related.length > 0 && (
-        <div className="kv-guia-mobile-footer lg:hidden">
-          <div className="kv-wrap">
-            <p className="kv-guia-mobile-title font-display">Artículos recientes</p>
-            <div className="kv-guia-mobile-links">
-              {related.map(({ path, title, readTime }) => (
-                <Link key={path} to={path} className="kv-guia-mobile-link">
-                  <p className="font-display">{title}</p>
-                  <span className="font-mono">Lectura de {readTime}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-    </>
   );
 }
 

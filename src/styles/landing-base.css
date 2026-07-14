@@ -25,35 +25,36 @@
     --ring: 220 70% 15%;
     --radius: 0.625rem;
 
-    --font-heading: 'Sora', 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-display: 'Sora', 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-mono: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', Menlo, Monaco, Consolas, monospace;
+    --font-heading: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --font-body: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'Space Mono', ui-monospace, monospace;
   }
 
   ::selection {
     background: rgba(51, 65, 196, 0.14);
-    color: #12140f;
+    color: #0a0b0a;
   }
 
   * {
     @apply border-border outline-ring/50;
   }
 
-  html {
-    scroll-behavior: smooth;
-    font-size: 16px;
-    -webkit-text-size-adjust: 100%;
-    text-rendering: geometricPrecision;
-    overflow-x: hidden;
-  }
+html {
+  scroll-behavior: auto;
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: geometricPrecision;
+  overflow-x: hidden;
+}
 
-  body {
-    @apply bg-background text-foreground font-body;
-    overflow-x: hidden;
-    -webkit-font-smoothing: subpixel-antialiased;
-    -moz-osx-font-smoothing: auto;
-  }
+body {
+  @apply bg-background text-foreground font-body;
+  background-color: #0a0b0a;
+  overflow-x: hidden;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: auto;
+}
 
   h1,
   h2,

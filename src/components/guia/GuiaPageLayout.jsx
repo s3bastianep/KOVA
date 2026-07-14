@@ -7,6 +7,7 @@ import GuiaTableOfContents from './GuiaTableOfContents';
 import GuiaSidebar from './GuiaSidebar';
 import useGuiaActiveSection from './useGuiaActiveSection';
 import { getRelatedGuides } from './guiaRoutes';
+import { usePageMeta } from '@/hooks/usePageMeta';
 
 export default function GuiaPageLayout({
   currentPath,
@@ -17,6 +18,11 @@ export default function GuiaPageLayout({
   tocItems,
   children,
 }) {
+  usePageMeta({
+    title,
+    description: `Lectura de ${readTime}. ${title}`,
+    path: currentPath,
+  });
   const activeId = useGuiaActiveSection(tocItems);
   const related = getRelatedGuides(currentPath);
 

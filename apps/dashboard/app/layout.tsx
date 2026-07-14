@@ -1,26 +1,35 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono, Sora } from 'next/font/google';
+import { Hanken_Grotesk, Instrument_Serif, Space_Mono } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 
-const inter = Inter({
+// Mismas fuentes que la landing home: Hanken Grotesk + Space Mono + Instrument Serif.
+const hanken = Hanken_Grotesk({
   subsets: ['latin'],
-  weight: ['400', '600'],
+  weight: ['400', '500', '600', '700', '800'],
   variable: '--font-inter',
   display: 'swap',
 });
 
-const sora = Sora({
+const sora = Hanken_Grotesk({
   subsets: ['latin'],
-  weight: ['600', '700'],
+  weight: ['600', '700', '800'],
   variable: '--font-sora',
   display: 'swap',
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const spaceMono = Space_Mono({
   subsets: ['latin'],
-  weight: ['500'],
+  weight: ['400', '700'],
   variable: '--font-mono',
+  display: 'swap',
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: ['400'],
+  style: ['normal', 'italic'],
+  variable: '--font-serif',
   display: 'swap',
 });
 
@@ -31,7 +40,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${inter.variable} ${sora.variable} ${jetbrainsMono.variable}`}>
+    <html
+      lang="es"
+      className={`${hanken.variable} ${sora.variable} ${spaceMono.variable} ${instrumentSerif.variable}`}
+    >
       <body>
         <Providers>{children}</Providers>
       </body>

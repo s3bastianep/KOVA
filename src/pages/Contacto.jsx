@@ -5,6 +5,7 @@ import { Clock, MessageCircle } from 'lucide-react';
 import SiteLayout from '@/components/landing/SiteLayout';
 import InnerPageHero from '@/components/landing/InnerPageHero';
 import { CN_CTA_NOTE } from '@/theme/landingConsult';
+import { usePageMeta } from '@/hooks/usePageMeta';
 
 const PHONE_DISPLAY = '+57 300 000 0000';
 const PHONE_TEL = '+573000000000';
@@ -67,6 +68,12 @@ const pasos = [
 ];
 
 export default function Contacto() {
+  usePageMeta({
+    title: 'Contacto',
+    description:
+      'Agende una consultoría gratuita de 30 minutos. Un especialista le explica cómo Kova puede ayudarle a contratar con criterio y evidencia.',
+    path: '/contacto',
+  });
   return (
     <SiteLayout>
       <main>

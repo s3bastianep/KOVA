@@ -25,9 +25,9 @@ html:has(.kv-login) {
   --kv-line: rgba(244, 245, 240, 0.07);
   --kv-line-strong: rgba(244, 245, 240, 0.1);
   --kv-login-input-fill: #161816;
-  --font-sans: var(--font-inter), 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
-  --font-mono-face: var(--font-mono), 'Space Mono', ui-monospace, monospace;
-  --font-serif-face: var(--font-serif), 'Instrument Serif', Georgia, serif;
+  --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-mono-face: 'Space Mono', ui-monospace, monospace;
+  --font-serif-face: 'Instrument Serif', Georgia, serif;
   min-height: 100vh;
   background: var(--kv-ink);
   color: var(--kv-text);

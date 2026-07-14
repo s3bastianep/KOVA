@@ -7,9 +7,9 @@ import { buttonVariants } from "@/components/ui/button"
 
 function Calendar({
   className,
-  classNames,
+  classNames = {},
   showOutsideDays = true,
-  components,
+  components = {},
   ...props
 }) {
   return (

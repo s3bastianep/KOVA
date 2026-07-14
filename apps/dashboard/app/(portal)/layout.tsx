@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 import { PortalSidebar } from '@/components/portal/PortalSidebar';
 import { PortalTopbar } from '@/components/portal/PortalTopbar';
 import {
@@ -41,10 +42,11 @@ function PortalLayoutInner({ children }: { children: React.ReactNode }) {
       }
     };
     if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      (window as Window & { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback(
-        () => prefetchLater(),
-        { timeout: 4000 },
-      );
+      (
+        window as Window & {
+          requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number;
+        }
+      ).requestIdleCallback(() => prefetchLater(), { timeout: 4000 });
     } else {
       setTimeout(prefetchLater, 2000);
     }
@@ -55,6 +57,20 @@ function PortalLayoutInner({ children }: { children: React.ReactNode }) {
       router.replace('/portal');
     }
   }, [status, pathname, router]);
+
+  // Skip chrome while resolving session / during onboarding — faster first paint after signup.
+  if (status === 'loading') {
+    return (
+      <div className="flex h-screen items-center justify-center kova-shell-bg text-[var(--kova-muted)]">
+        <Loader2 className="mr-2 h-6 w-6 animate-spin" aria-hidden />
+        Entrando a tu perfil…
+      </div>
+    );
+  }
+
+  if (status === 'incomplete') {
+    return <div className="min-h-screen kova-shell-bg">{children}</div>;
+  }
 
   return (
     <div className="kova-portal flex h-screen overflow-hidden kova-shell-bg">

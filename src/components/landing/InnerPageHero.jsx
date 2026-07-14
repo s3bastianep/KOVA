@@ -5,10 +5,10 @@ export default function InnerPageHero({
   title,
   highlight,
   subtitle,
-  ctaLabel,
+  ctaLabel = null,
   ctaTo = '/contacto',
-  ctaHref,
-  children,
+  ctaHref = null,
+  children = null,
   compact = false,
 }) {
   return (

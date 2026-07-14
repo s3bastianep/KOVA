@@ -10,7 +10,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--kv-font-sans);
   font-size: 0.8125rem;
   color: var(--kv-nav-muted);
   margin-bottom: 1.5rem;
@@ -42,10 +42,11 @@
 }
 
 .kova-landing-wave .kv-guia-hero h1 {
-  font-weight: 700;
-  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
-  line-height: 1.12;
-  letter-spacing: -0.015em;
+  font-family: var(--kv-font-sans);
+  font-weight: 800;
+  font-size: clamp(1.875rem, 3.6vw, 2.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
   color: #fff;
   margin: 1rem 0 0;
 }
@@ -77,21 +78,21 @@
 }
 
 .kova-landing-wave .kv-guia-author-role {
-  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--kv-font-sans);
   font-size: 0.75rem;
   color: var(--kv-nav-muted);
 }
 
 .kova-landing-wave .kv-guia-hero-media {
-  min-height: 14rem;
-  border-radius: 0.875rem;
+  min-height: 12rem;
+  border-radius: 0.5rem;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 @media (min-width: 1024px) {
   .kova-landing-wave .kv-guia-hero-media {
-    min-height: 22rem;
+    min-height: 18rem;
   }
 }
 
@@ -155,7 +156,7 @@
 
 .kova-landing-wave .kv-guia-toc-link {
   display: block;
-  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--kv-font-sans);
   font-size: 0.8125rem;
   line-height: 1.5;
   padding: 0.4375rem 0 0.4375rem 0.625rem;
@@ -196,7 +197,7 @@
 
 .kova-landing-wave .kv-guia-sidebar-item:hover {
   border-color: rgba(51, 65, 196, 0.35);
-  box-shadow: 0 4px 16px rgba(18, 20, 15, 0.06);
+  box-shadow: 0 4px 16px rgba(10, 11, 10, 0.06);
 }
 
 .kova-landing-wave .kv-guia-sidebar-item--compact h3 {
@@ -320,7 +321,7 @@
 }
 
 .kova-landing-wave .kv-guia-toc-pill {
-  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--kv-font-sans);
   font-size: 0.75rem;
   padding: 0.5rem 0.75rem;
   border-radius: 100px;
@@ -334,7 +335,7 @@
 .kova-landing-wave .kv-guia-article,
 .kova-landing-wave .kv-prose {
   min-width: 0;
-  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--kv-font-sans);
   color: var(--kv-slate);
   font-size: 0.96875rem;
   line-height: 1.72;
@@ -369,7 +370,7 @@
 .kova-landing-wave .kv-guia-summary-item h4,
 .kova-landing-wave .kv-guia-cta-band-title,
 .kova-landing-wave .kv-guia-toc-title {
-  font-family: 'Sora', ui-sans-serif, sans-serif;
+  font-family: var(--kv-font-sans);
 }
 
 .kova-landing-wave .kv-guia-section-title {
@@ -918,24 +919,418 @@
   line-height: 1.55;
 }
 
+/* Guías index cards (legacy related cards still use these) */
+.kova-landing-wave .kv-guia-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .kova-landing-wave .kv-guia-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .kova-landing-wave .kv-guia-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.kova-landing-wave .kv-guia-card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--kv-line);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kova-landing-wave .kv-guia-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(10, 11, 10, 0.08);
+}
+
+.kova-landing-wave .kv-guia-card-media {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--kv-paper-2);
+}
+
+.kova-landing-wave .kv-guia-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.kova-landing-wave .kv-guia-card:hover .kv-guia-card-media img {
+  transform: scale(1.03);
+}
+
+.kova-landing-wave .kv-guia-card-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #e3e6fa, var(--kv-paper-2));
+}
+
+.kova-landing-wave .kv-guia-card-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.kova-landing-wave .kv-guia-card-meta {
+  font-size: 0.6875rem;
+  color: var(--kv-slate);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+}
+
+.kova-landing-wave .kv-guia-card-body h2 {
+  font-family: var(--kv-font-sans);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave .kv-guia-card-body p {
+  font-family: var(--kv-font-sans);
+  font-size: var(--kv-fs-body);
+  color: var(--kv-slate);
+  line-height: 1.55;
+  flex: 1;
+  margin-bottom: 0.875rem;
+}
+
+.kova-landing-wave .kv-guia-card-link {
+  font-size: 0.84375rem;
+  font-weight: 600;
+  color: var(--kv-lime-dark);
+}
+
+/* ── Blog index (dark editorial) ── */
+.kova-landing-wave .kv-blog-index {
+  background: var(--kv-ink);
+  color: #f4f5f0;
+  padding-bottom: clamp(4rem, 8vw, 6rem);
+}
+
+.kova-landing-wave .kv-blog-hero {
+  padding: clamp(2.75rem, 5vw, 4rem) 0 clamp(2rem, 4vw, 2.75rem);
+}
+
+.kova-landing-wave .kv-blog-hero-title {
+  font-family: var(--kv-font-sans);
+  font-weight: 800;
+  font-size: var(--kv-fs-hero);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  max-width: 16ch;
+  margin: 1.125rem 0 1.25rem;
+  color: #f4f5f0;
+}
+
+.kova-landing-wave .kv-blog-hero-title em {
+  font-family: var(--kv-font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--kv-lime);
+  letter-spacing: -0.01em;
+}
+
+.kova-landing-wave .kv-blog-hero-lead {
+  font-size: var(--kv-fs-lead);
+  line-height: 1.55;
+  color: #c6c9be;
+  max-width: 38rem;
+  margin: 0;
+}
+
+.kova-landing-wave .kv-blog-featured {
+  padding: 0 0 clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.kova-landing-wave .kv-blog-feature {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+@media (min-width: 900px) {
+  .kova-landing-wave .kv-blog-feature {
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(2rem, 4vw, 3.25rem);
+  }
+}
+
+.kova-landing-wave .kv-blog-feature-media {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  aspect-ratio: 16 / 10;
+  border: 1px solid rgba(244, 245, 240, 0.1);
+  background: #121412;
+}
+
+.kova-landing-wave .kv-blog-feature-media img,
+.kova-landing-wave .kv-blog-feature-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.55s ease;
+}
+
+.kova-landing-wave .kv-blog-feature-placeholder {
+  background:
+    radial-gradient(80% 70% at 70% 20%, rgba(216, 242, 76, 0.16), transparent 55%),
+    #151715;
+}
+
+.kova-landing-wave .kv-blog-feature:hover .kv-blog-feature-media img {
+  transform: scale(1.04);
+}
+
+.kova-landing-wave .kv-blog-feature-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+
+.kova-landing-wave .kv-blog-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(216, 242, 76, 0.85);
+}
+
+.kova-landing-wave .kv-blog-feature-copy h2 {
+  font-family: var(--kv-font-sans);
+  font-size: clamp(1.5rem, 2.8vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: #f4f5f0;
+  margin: 0;
+  max-width: 18ch;
+  transition: color 0.2s ease;
+}
+
+.kova-landing-wave .kv-blog-feature:hover .kv-blog-feature-copy h2 {
+  color: var(--kv-lime);
+}
+
+.kova-landing-wave .kv-blog-feature-copy p {
+  font-size: var(--kv-fs-body);
+  line-height: 1.55;
+  color: #aeb2a6;
+  margin: 0;
+  max-width: 36ch;
+}
+
+.kova-landing-wave .kv-blog-read {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.35rem;
+  font-family: var(--kv-font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--kv-lime);
+}
+
+.kova-landing-wave .kv-blog-read span {
+  transition: transform 0.2s ease;
+}
+
+.kova-landing-wave .kv-blog-feature:hover .kv-blog-read span,
+.kova-landing-wave .kv-blog-item:hover .kv-blog-read span {
+  transform: translateX(4px);
+}
+
+.kova-landing-wave .kv-blog-list {
+  padding-top: clamp(0.5rem, 2vw, 1rem);
+  border-top: 1px solid rgba(244, 245, 240, 0.08);
+}
+
+.kova-landing-wave .kv-blog-list-label {
+  margin: clamp(1.75rem, 3vw, 2.25rem) 0 1.5rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8b8f84;
+}
+
+.kova-landing-wave .kv-blog-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+@media (min-width: 860px) {
+  .kova-landing-wave .kv-blog-grid {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: clamp(2rem, 4vw, 3rem);
+  }
+}
+
+.kova-landing-wave .kv-blog-item {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 1.1rem;
+  align-items: start;
+  padding: 1.35rem 0;
+  border-bottom: 1px solid rgba(244, 245, 240, 0.08);
+  text-decoration: none;
+  color: inherit;
+  animation: kv-blog-rise 0.55s ease both;
+}
+
+.kova-landing-wave .kv-blog-item[data-delay='0'] { animation-delay: 0ms; }
+.kova-landing-wave .kv-blog-item[data-delay='1'] { animation-delay: 40ms; }
+.kova-landing-wave .kv-blog-item[data-delay='2'] { animation-delay: 80ms; }
+.kova-landing-wave .kv-blog-item[data-delay='3'] { animation-delay: 120ms; }
+.kova-landing-wave .kv-blog-item[data-delay='4'] { animation-delay: 160ms; }
+.kova-landing-wave .kv-blog-item[data-delay='5'] { animation-delay: 200ms; }
+
+@media (min-width: 860px) {
+  .kova-landing-wave .kv-blog-item {
+    grid-template-columns: 9rem minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+.kova-landing-wave .kv-blog-item-media {
+  overflow: hidden;
+  border-radius: 0.4rem;
+  aspect-ratio: 1;
+  border: 1px solid rgba(244, 245, 240, 0.1);
+  background: #121412;
+}
+
+.kova-landing-wave .kv-blog-item-media img,
+.kova-landing-wave .kv-blog-item-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.kova-landing-wave .kv-blog-item-placeholder {
+  background: #151715;
+}
+
+.kova-landing-wave .kv-blog-item:hover .kv-blog-item-media img {
+  transform: scale(1.05);
+}
+
+.kova-landing-wave .kv-blog-item-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.kova-landing-wave .kv-blog-item-copy .kv-blog-meta {
+  color: #8b8f84;
+}
+
+.kova-landing-wave .kv-blog-item-copy h2 {
+  font-family: var(--kv-font-sans);
+  font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  color: #f4f5f0;
+  margin: 0;
+  transition: color 0.2s ease;
+}
+
+.kova-landing-wave .kv-blog-item:hover .kv-blog-item-copy h2 {
+  color: var(--kv-lime);
+}
+
+.kova-landing-wave .kv-blog-item-copy p {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #8b8f84;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.kova-landing-wave .kv-blog-item-copy .kv-blog-read {
+  margin-top: 0.15rem;
+  font-size: 0.6875rem;
+  color: #c0c4b8;
+  transition: color 0.2s ease;
+}
+
+.kova-landing-wave .kv-blog-item:hover .kv-blog-read {
+  color: var(--kv-lime);
+}
+
+@keyframes kv-blog-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kova-landing-wave .kv-blog-item {
+    animation: none;
+  }
+
+  .kova-landing-wave .kv-blog-feature-media img,
+  .kova-landing-wave .kv-blog-item-media img,
+  .kova-landing-wave .kv-blog-read span {
+    transition: none;
+  }
+}
+
 .kova-landing-wave .kv-prose h2,
 .kova-landing-wave .kv-prose .font-heading {
-  font-family: 'Sora', sans-serif;
+  font-family: var(--kv-font-sans);
   font-weight: 700;
-  font-size: 1.65rem;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
   line-height: 1.2;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   color: var(--kv-ink);
-  margin: 2.5rem 0 1.25rem;
+  margin: 2.25rem 0 1rem;
   scroll-margin-top: 7rem;
 }
 
 .kova-landing-wave .kv-prose h3 {
-  font-family: 'Sora', sans-serif;
+  font-family: var(--kv-font-sans);
   font-weight: 700;
-  font-size: 1.25rem;
+  font-size: 1.1875rem;
   color: var(--kv-ink);
-  margin: 2rem 0 1rem;
+  margin: 1.75rem 0 0.875rem;
   scroll-margin-top: 7rem;
 }
 

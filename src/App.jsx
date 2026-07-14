@@ -1,42 +1,62 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
 import DashboardPathEscape from './components/DashboardPathEscape';
+import ErrorBoundary from './components/ErrorBoundary';
+import Navbar from './components/landing/Navbar';
 import Landing from './pages/Landing';
+import Servicios from './pages/Servicios';
+import Contacto from './pages/Contacto';
+import Guias from './pages/Guias';
+import Login from './pages/Login';
+import Registro from './pages/Registro';
+import Acceso from './pages/Acceso';
 
 const PageNotFound = lazy(() => import('./lib/PageNotFound'));
-const Guias = lazy(() => import('./pages/Guias'));
 const GuiaContratarComercial = lazy(() => import('./pages/GuiaContratarComercial'));
 const GuiaEvaluacionComercial = lazy(() => import('./pages/GuiaEvaluacionComercial'));
 const GuiaPsicometricasVsComercial = lazy(() => import('./pages/GuiaPsicometricasVsComercial'));
 const GuiaRotacionComercial = lazy(() => import('./pages/GuiaRotacionComercial'));
 const GuiaHabilidadesBlandasComercial = lazy(() => import('./pages/GuiaHabilidadesBlandasComercial'));
-const Contacto = lazy(() => import('./pages/Contacto'));
-const QuienesSomos = lazy(() => import('./pages/QuienesSomos'));
-const ComoTrabajamos = lazy(() => import('./pages/ComoTrabajamos'));
-const Servicios = lazy(() => import('./pages/Servicios'));
+
+const AUTH_PATHS = new Set(['/login', '/registro', '/acceso']);
+
+function AppShell() {
+  const { pathname } = useLocation();
+  const isAuth = AUTH_PATHS.has(pathname);
+
+  return (
+    <ErrorBoundary>
+      {!isAuth ? <Navbar /> : null}
+      <div className={isAuth ? undefined : 'kova-route-shell'}>
+        <Suspense fallback={isAuth ? null : <div className="kova-route-shell__fallback" aria-hidden />}>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/guias" element={<Guias />} />
+            <Route path="/guia-contratar-comercial" element={<GuiaContratarComercial />} />
+            <Route path="/guia-evaluacion-comercial" element={<GuiaEvaluacionComercial />} />
+            <Route path="/guia-psicometricas-vs-comercial" element={<GuiaPsicometricasVsComercial />} />
+            <Route path="/guia-rotacion-comercial" element={<GuiaRotacionComercial />} />
+            <Route path="/guia-habilidades-blandas-comercial" element={<GuiaHabilidadesBlandasComercial />} />
+            <Route path="/contacto" element={<Contacto />} />
+            <Route path="/servicios" element={<Servicios />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
+            <Route path="/acceso" element={<Acceso />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </Suspense>
+      </div>
+    </ErrorBoundary>
+  );
+}
 
 function App() {
   return (
     <Router>
       <DashboardPathEscape />
       <ScrollToTop />
-      <Suspense fallback={null}>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/guias" element={<Guias />} />
-          <Route path="/guia-contratar-comercial" element={<GuiaContratarComercial />} />
-          <Route path="/guia-evaluacion-comercial" element={<GuiaEvaluacionComercial />} />
-          <Route path="/guia-psicometricas-vs-comercial" element={<GuiaPsicometricasVsComercial />} />
-          <Route path="/guia-rotacion-comercial" element={<GuiaRotacionComercial />} />
-          <Route path="/guia-habilidades-blandas-comercial" element={<GuiaHabilidadesBlandasComercial />} />
-          <Route path="/contacto" element={<Contacto />} />
-          <Route path="/quienes-somos" element={<QuienesSomos />} />
-          <Route path="/como-trabajamos" element={<ComoTrabajamos />} />
-          <Route path="/servicios" element={<Servicios />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
-      </Suspense>
+      <AppShell />
     </Router>
   );
 }

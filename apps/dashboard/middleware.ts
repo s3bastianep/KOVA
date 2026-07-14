@@ -4,10 +4,7 @@ import type { NextRequest } from 'next/server';
 const APP_PREFIXES = [
   '/api',
   '/_next',
-  '/login',
-  '/acceso',
   '/postular',
-  '/registro',
   '/privacidad',
   '/dev',
   '/portal',

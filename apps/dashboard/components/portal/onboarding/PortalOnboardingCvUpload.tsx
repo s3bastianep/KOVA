@@ -8,7 +8,6 @@ import {
   ListChecks,
   Loader2,
   Lock,
-  Sparkles,
   UploadCloud,
   X,
 } from 'lucide-react';
@@ -73,15 +72,14 @@ export function PortalOnboardingCvUpload({ inputRef, onFile, error, busy }: Prop
           <p className="ob-cv-upload__lead">
             La leemos y estructuramos tu experiencia automáticamente. Tú solo revisas y confirmas.
           </p>
-          <div className="ob-cv-upload__note">
-            <span className="ob-cv-upload__note-icon" aria-hidden>
-              <Sparkles className="h-4 w-4" />
+          <p className="ob-cv-upload__note">
+            <span className="ob-cv-upload__note-dot" aria-hidden />
+            <span className="ob-cv-upload__note-label">Proceso 100% automático</span>
+            <span className="ob-cv-upload__note-sep" aria-hidden>
+              ·
             </span>
-            <div>
-              <strong>Proceso 100% automático</strong>
-              <span>Rápido, seguro y confidencial</span>
-            </div>
-          </div>
+            <span className="ob-cv-upload__note-meta">Rápido, seguro y confidencial</span>
+          </p>
         </header>
 
         <div className="ob-cv-upload__panel">

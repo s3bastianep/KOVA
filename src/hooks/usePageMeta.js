@@ -23,7 +23,7 @@ function upsertLink(rel, href) {
   el.setAttribute('href', href);
 }
 
-export function usePageMeta({ title, description, path = '' }) {
+export function usePageMeta({ title, description = DEFAULT_DESCRIPTION, path = '' }) {
   useEffect(() => {
     const desc = description || DEFAULT_DESCRIPTION;
     const fullTitle = title

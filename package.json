@@ -7,7 +7,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "node server/index.js --dev",
+    "dev": "concurrently -k -n dashboard,web \"npm run dev --prefix apps/dashboard\" \"node server/index.js --dev\"",
     "build": "npm install --no-audit --no-fund && cd apps/dashboard && npm install --no-audit --no-fund && npm run build:all",
     "start": "node apps/dashboard/scripts/railway-start.mjs",
     "build:landing": "vite build",

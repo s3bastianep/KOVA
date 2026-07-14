@@ -1,0 +1,234 @@
+/* Shared site chrome + content width (home + inner pages) */
+:root {
+  --kv-content-max: 1300px;
+  --kv-page-gutter: 6vw;
+  /* Shared type scale — home + wave pages read at the same optical size */
+  --kv-fs-hero: clamp(2.125rem, 4.4vw, 3.5rem);
+  --kv-fs-h2: clamp(1.5rem, 3vw, 2.25rem);
+  --kv-fs-lead: clamp(1rem, 1.2vw, 1.125rem);
+  --kv-fs-body: 0.9375rem;
+  --kv-font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --kv-font-mono: 'Space Mono', ui-monospace, monospace;
+  --kv-font-serif: 'Instrument Serif', Georgia, serif;
+}
+
+html {
+  scrollbar-gutter: stable;
+  background: #0a0b0a;
+}
+
+body {
+  background: #0a0b0a;
+}
+
+.kova-route-shell {
+  min-height: calc(100vh - 64px);
+  background: #0a0b0a;
+}
+
+.kova-route-shell__fallback {
+  min-height: calc(100vh - 64px);
+  background: #0a0b0a;
+}
+
+.kova-navbar.kv-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  padding: 18px 0;
+  background: rgba(10, 11, 10, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(244, 245, 240, 0.07);
+  box-shadow: none;
+}
+
+.kova-navbar .kova-navbar-inner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  width: 100%;
+  max-width: calc(var(--kv-content-max) + (var(--kv-page-gutter) * 2));
+  margin: 0 auto;
+  padding-inline: var(--kv-page-gutter);
+  gap: 1.25rem 2rem;
+  box-sizing: border-box;
+}
+
+.kova-navbar .kv-logo {
+  display: inline-flex;
+  align-items: baseline;
+  flex-shrink: 0;
+  font-family: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 23px;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #f4f5f0 !important;
+  text-decoration: none;
+}
+
+.kova-navbar .kv-logo-dot {
+  color: #d8f24c;
+}
+
+.kova-navbar .kv-navlinks {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 2rem;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.kova-navbar .kv-nav-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.15rem;
+  flex-shrink: 0;
+}
+
+.kova-navbar .kv-nav-quiet {
+  display: none;
+  align-items: center;
+  font-family: 'Space Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: #8b8f84 !important;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.kova-navbar .kv-nav-quiet:hover {
+  color: #f4f5f0 !important;
+}
+
+@media (min-width: 960px) {
+  .kova-navbar .kv-navlinks {
+    display: flex;
+  }
+
+  .kova-navbar .kv-nav-quiet {
+    display: inline-flex;
+  }
+}
+
+.kova-navbar .kv-navlinks a,
+.kova-navbar .kv-navlinks button {
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-family: 'Space Mono', ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: #c0c4b8 !important;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.kova-navbar .kv-navlinks a:hover,
+.kova-navbar .kv-navlinks button:hover {
+  color: #f4f5f0 !important;
+}
+
+.kova-navbar .kv-cta-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 11px 18px;
+  border-radius: 8px;
+  border: none !important;
+  box-shadow: none !important;
+  background: #d8f24c !important;
+  color: #0a0b0a !important;
+  font-family: 'Space Mono', ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.kova-navbar .kv-cta-pill:hover {
+  background: #f4f5f0 !important;
+  color: #0a0b0a !important;
+}
+
+/* Shared content shell — same usable width on home and inner pages */
+.kova-page-wrap,
+.kova-home-plain .kh-wrap,
+.kova-home-plain .kh-hero__grid,
+.kova-home-plain .kh-chart,
+.kova-home-plain .kh-trust__inner,
+.kova-home-plain .kh-contact__grid,
+.kova-home-plain .kh-footer__row,
+.kova-home-plain .kh-footer__copy,
+.kova-landing-wave .kv-wrap {
+  width: 100%;
+  max-width: calc(var(--kv-content-max) + (var(--kv-page-gutter) * 2));
+  margin-inline: auto;
+  padding-inline: var(--kv-page-gutter);
+  box-sizing: border-box;
+}
+
+@media (max-width: 860px) {
+  :root {
+    --kv-page-gutter: 20px;
+  }
+
+  .kova-navbar.kv-nav {
+    padding: 14px 0;
+  }
+
+  .kova-navbar .kova-navbar-inner {
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
+  }
+
+  .kova-navbar .kv-navlinks {
+    display: none !important;
+  }
+
+  .kova-navbar .kv-nav-actions {
+    gap: 0.65rem;
+  }
+
+  .kova-navbar .kv-cta-pill {
+    padding: 10px 14px;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+  }
+
+  .kova-navbar .kv-logo {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --kv-page-gutter: 16px;
+  }
+
+  .kova-navbar .kv-cta-pill {
+    padding: 9px 12px;
+    font-size: 10px;
+  }
+}
