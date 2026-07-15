@@ -1,5 +1,6 @@
 import '@/styles/landing-wave-inner.css';
 import '@/styles/landing-wave-guia.css';
+import '@/styles/landing-wave-blog-light.css';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import SiteLayout from '@/components/landing/SiteLayout';
@@ -27,7 +28,7 @@ export default function GuiaPageLayout({
   const related = getRelatedGuides(currentPath);
 
   return (
-    <SiteLayout>
+    <SiteLayout className="kv-blog-light">
       <header className="kv-guia-hero">
         <div className="kv-wrap">
           <Link to="/guias" className="kv-guia-back">

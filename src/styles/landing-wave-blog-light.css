@@ -1,0 +1,232 @@
+/* Blog (index + articles) — retheme the legacy dark "wave" pages to match the
+   rest of the site (cream + forest green + Hanken Grotesk). Scoped under
+   .kova-landing-wave.kv-blog-light (two classes) so Contacto / 404 (still on
+   the dark wave theme) are untouched. Tokens are redefined here directly
+   rather than relying on `.kova-home-plain`'s cascade — that class and
+   `.kova-landing-wave` both have single-class specificity, so which one wins
+   depends on unpredictable stylesheet load order (confirmed to flip between
+   dev and prod). A two-class selector always wins over either, regardless
+   of order. */
+
+.kova-landing-wave.kv-blog-light {
+  --kv-ink: #1a1712;
+  --kv-text: #1a1712;
+  --kv-body: #46403a;
+  --kv-muted: #6f6860;
+  --kv-nav-muted: #6f6860;
+  --kv-slate: #6f6860;
+  --kv-page: #f4f0e7;
+  --kv-surface: #fdfbf6;
+  --kv-surface-2: #ede7da;
+  --kv-line: rgba(20, 18, 13, 0.08);
+  --kv-lime: #0f7a40;
+  --kv-lime-dark: #0a5a2f;
+  --kv-lime-soft: rgba(15, 122, 64, 0.1);
+  --kv-lime-line: rgba(22, 162, 74, 0.24);
+  --kv-indigo: #16a24a;
+  background: var(--kv-page);
+  color: var(--kv-text);
+}
+
+.kova-landing-wave.kv-blog-light a {
+  color: var(--kv-lime);
+}
+
+.kova-landing-wave.kv-blog-light a:hover {
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave.kv-blog-light .font-mono {
+  font-family: var(--font-sans);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-cta-btn--primary {
+  color: #fff;
+}
+
+.kova-landing-wave.kv-blog-light .kv-blog-hero-title em {
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-weight: 800;
+  color: var(--kv-lime);
+  letter-spacing: -0.035em;
+}
+
+.kova-landing-wave.kv-blog-light .kv-eyebrow::before {
+  background: rgba(15, 122, 64, 0.75);
+}
+
+/* Blog index — was a full dark page background, now matches the cream site */
+.kova-landing-wave.kv-blog-light .kv-blog-index {
+  background: var(--kv-page);
+  color: var(--kv-text);
+}
+
+.kova-landing-wave.kv-blog-light .kv-blog-hero-title,
+.kova-landing-wave.kv-blog-light .kv-blog-feature-copy h2,
+.kova-landing-wave.kv-blog-light .kv-blog-item-copy h2 {
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave.kv-blog-light .kv-blog-hero-lead,
+.kova-landing-wave.kv-blog-light .kv-blog-feature-copy p,
+.kova-landing-wave.kv-blog-light .kv-blog-item-copy p {
+  color: var(--kv-body);
+}
+
+.kova-landing-wave.kv-blog-light .kv-blog-meta {
+  color: var(--kv-lime);
+}
+
+.kova-landing-wave.kv-blog-light .kv-blog-feature-media {
+  border-color: var(--kv-line);
+  background: var(--kv-surface-2);
+}
+
+.kova-landing-wave.kv-blog-light .kv-blog-feature-placeholder {
+  background: radial-gradient(80% 70% at 70% 20%, var(--kv-lime-soft), transparent 55%), var(--kv-surface-2);
+}
+
+.kova-landing-wave.kv-blog-light .kv-blog-list {
+  border-top-color: var(--kv-line);
+}
+
+.kova-landing-wave.kv-blog-light .kv-blog-list-label,
+.kova-landing-wave.kv-blog-light .kv-blog-item-copy .kv-blog-meta,
+.kova-landing-wave.kv-blog-light .kv-blog-item-copy .kv-blog-read {
+  color: var(--kv-muted);
+}
+
+.kova-landing-wave.kv-blog-light .kv-blog-item {
+  border-bottom-color: var(--kv-line);
+}
+
+.kova-landing-wave.kv-blog-light .kv-blog-item-media {
+  border-color: var(--kv-line);
+  background: var(--kv-surface-2);
+}
+
+.kova-landing-wave.kv-blog-light .kv-blog-item-placeholder {
+  background: var(--kv-surface-2);
+}
+
+/* Article hero — was a dark band; the rest of the site never uses a full
+   dark hero, only isolated accent cards, so put the title on the page bg. */
+.kova-landing-wave.kv-blog-light .kv-guia-hero {
+  background: transparent;
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-hero h1,
+.kova-landing-wave.kv-blog-light .kv-guia-author-name {
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-author-avatar {
+  color: #fff;
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-back,
+.kova-landing-wave.kv-blog-light .kv-guia-author-role {
+  color: var(--kv-muted);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-back:hover {
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-hero-media {
+  border-color: var(--kv-line);
+}
+
+/* Sidebar CTA + bottom CTA band — were dark ink panels; match the light
+   accent-card treatment used elsewhere on the site instead. */
+.kova-landing-wave.kv-blog-light .kv-guia-sidebar-cta {
+  background: var(--kv-surface-2);
+  border-color: var(--kv-line);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-sidebar-cta .font-display {
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-sidebar-cta p:last-child {
+  color: var(--kv-muted);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-cta-band {
+  background: var(--kv-surface-2);
+  border: 1px solid var(--kv-line);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-cta-band-title {
+  color: var(--kv-ink);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-cta-band-desc {
+  color: var(--kv-muted);
+}
+
+/* Article page — remaining blue accents and the yellow-lime highlight tint
+   left over from the old palette. */
+.kova-landing-wave.kv-blog-light .kv-guia-summary {
+  background: var(--kv-lime-soft);
+  border-color: var(--kv-lime-line);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-feature-badge {
+  background: var(--kv-lime-soft);
+  border-color: var(--kv-lime-line);
+}
+
+/* Side-stripe border on the feature panel reads as an accidental accent —
+   drop it, the light panel background already separates it from the photo */
+.kova-landing-wave.kv-blog-light .kv-guia-feature-body {
+  border-left: none;
+  border-top: none;
+}
+
+/* Same side-stripe issue on quotes — a tinted background carries the
+   emphasis on its own, no colored rule needed */
+.kova-landing-wave.kv-blog-light .kv-guia-quote {
+  border-left: none;
+}
+
+.kova-landing-wave.kv-blog-light .kv-prose blockquote {
+  border-left: none;
+  padding: 1rem 1.25rem;
+  background: var(--kv-surface-2);
+  border-radius: 0.75rem;
+}
+
+/* Rotating colored left-stripes on the skill cards and the callout box are
+   the same side-stripe tell — full border + tint already does the job */
+.kova-landing-wave.kv-blog-light .kv-guia-skill-card:nth-child(4n + 1),
+.kova-landing-wave.kv-blog-light .kv-guia-skill-card:nth-child(4n + 2),
+.kova-landing-wave.kv-blog-light .kv-guia-skill-card:nth-child(4n + 3),
+.kova-landing-wave.kv-blog-light .kv-guia-skill-card:nth-child(4n + 4) {
+  border-left: none;
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-callout {
+  border-left: none;
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-sidebar-item:hover {
+  border-color: var(--kv-lime-line);
+}
+
+/* Footer — was a dark band; the rest of the site uses a light footer */
+.kova-landing-wave.kv-blog-light .kv-footer {
+  background: var(--kv-surface-2);
+  color: var(--kv-muted);
+  border-top: 1px solid var(--kv-line);
+}
+
+.kova-landing-wave.kv-blog-light .kv-footer-meta {
+  color: var(--kv-muted);
+}
+
+.kova-landing-wave.kv-blog-light .kv-footer-meta a:hover {
+  color: var(--kv-ink);
+}

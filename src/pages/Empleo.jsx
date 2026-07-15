@@ -280,7 +280,7 @@ export default function Empleo() {
                   <span className="emp-dim__track">
                     <span
                       className="emp-dim__fill"
-                      style={{ width: lit ? `${d.pct}%` : '0%' }}
+                      style={{ transform: `scaleX(${lit ? d.pct / 100 : 0})` }}
                     />
                   </span>
                 </button>
@@ -301,7 +301,6 @@ export default function Empleo() {
       <section className="emp-sec emp-sec--tight">
         <div className="emp-wrap emp-feature">
           <div>
-            <div className="emp-eyebrow">Menos trámite, más oportunidades</div>
             <h2 className="emp-h2 emp-h2--sub">
               Deje de perseguir vacantes. Deje que <em>lo busquen a usted</em>.
             </h2>
@@ -349,7 +348,6 @@ export default function Empleo() {
       {/* JOURNEY INFOGRAPHIC */}
       <section className="emp-sec emp-sec--tight" style={{ background: '#efe9dc' }}>
         <div className="emp-wrap">
-          <div className="emp-eyebrow">Así de fácil</div>
           <h2 className="emp-h2 emp-h2--sub emp-head">
             De donde está hoy a su próxima <em>gran oportunidad</em>.
           </h2>

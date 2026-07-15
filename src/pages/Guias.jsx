@@ -1,5 +1,6 @@
 import '@/styles/landing-wave-inner.css';
 import '@/styles/landing-wave-guia.css';
+import '@/styles/landing-wave-blog-light.css';
 import { Link } from 'react-router-dom';
 import SiteLayout from '@/components/landing/SiteLayout';
 import { GUIAS } from '@/components/guia/guiaRoutes';
@@ -16,7 +17,7 @@ export default function Guias() {
   const [featured, ...rest] = GUIAS;
 
   return (
-    <SiteLayout>
+    <SiteLayout className="kv-blog-light">
       <main className="kv-blog-index">
         <section className="kv-blog-hero">
           <div className="kv-wrap">

@@ -361,7 +361,6 @@ export default function Landing() {
                     <span className="kh-score__name">Candidato ejemplo</span>
                   </div>
                   <div className="kh-score__meta">
-                    <span className="kh-score__badge">Recomendada</span>
                     <span className="kh-score__sub">Ejecutivo comercial · B2B consultivo</span>
                   </div>
                 </div>
@@ -378,7 +377,7 @@ export default function Landing() {
                     <div className="kh-dim__track">
                       <div
                         className="kh-dim__fill"
-                        style={{ width: lit ? `${d.pct}%` : '0%', background: d.color }}
+                        style={{ transform: `scaleX(${lit ? d.pct / 100 : 0})`, background: d.color }}
                       />
                     </div>
                     <span className="kh-dim__pct">{d.pct}%</span>
