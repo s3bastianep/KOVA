@@ -205,7 +205,17 @@ export default function Empleo() {
             </div>
 
             <div className="emp-float emp-float--stat">
-              <span className="emp-float__arrow">↑</span>
+              <span className="emp-float__arrow" aria-hidden>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
+                  <path
+                    d="M4 16 10 10 14 14 20 6M20 6h-5M20 6v5"
+                    stroke="currentColor"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
               <div>
                 <strong>+47% este mes</strong>
                 <span>Visibilidad del perfil</span>
@@ -219,7 +229,7 @@ export default function Empleo() {
       <section className="emp-band">
         <div className="emp-wrap">
           <h2 className="emp-band__title">
-            Sin trucos. Sin letra pequeña. <em>Sin dejarlo esperando</em>.
+            Condiciones claras. Procesos transparentes. <em>Seguimiento constante</em>.
           </h2>
           <div className="emp-band__grid">
             {BENEFITS.map((b) => (
