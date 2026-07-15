@@ -1,16 +1,13 @@
 import { useEffect, useId, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 
 const MAIN_LINKS = [
-  { to: { pathname: '/', hash: 'metodologia' }, label: 'Metodología' },
-  { to: '/servicios', label: 'Servicios' },
+  { to: '/empleo', label: 'Por talento' },
+  { to: '/', label: 'Para empresas' },
   { to: '/guias', label: 'Blog' },
 ];
 
-const ACTION_LINKS = [
-  { to: '/registro', label: 'Busco empleo' },
-  { to: '/login', label: 'Entrar' },
-];
+const ACTION_LINKS = [{ to: '/login', label: 'Iniciar sesión' }];
 
 export default function Navbar() {
   const { pathname, hash } = useLocation();
@@ -44,20 +41,29 @@ export default function Navbar() {
 
         <div className="kv-navlinks" aria-label="Secciones">
           {MAIN_LINKS.map((item) => (
-            <Link key={item.label} to={item.to}>
+            <NavLink
+              key={item.label}
+              to={item.to}
+              end={item.to === '/'}
+              className={({ isActive }) => (isActive ? 'is-active' : undefined)}
+            >
               {item.label}
-            </Link>
+            </NavLink>
           ))}
         </div>
 
         <div className="kv-nav-actions">
           {ACTION_LINKS.map((item) => (
-            <Link key={item.label} to={item.to} className="kv-nav-quiet">
+            <NavLink
+              key={item.label}
+              to={item.to}
+              className={({ isActive }) => `kv-nav-quiet${isActive ? ' is-active' : ''}`}
+            >
               {item.label}
-            </Link>
+            </NavLink>
           ))}
-          <Link to={{ pathname: '/', hash: 'contacto' }} className="kv-cta-pill">
-            Agendar
+          <Link to="/registro" className="kv-cta-pill kv-cta-pill--outline">
+            Regístrate
           </Link>
           <button
             type="button"
@@ -95,11 +101,11 @@ export default function Navbar() {
                 </Link>
               ))}
               <Link
-                to={{ pathname: '/', hash: 'contacto' }}
-                className="kv-cta-pill kv-nav-drawer__cta"
+                to="/registro"
+                className="kv-cta-pill kv-cta-pill--outline kv-nav-drawer__cta"
                 onClick={() => setOpen(false)}
               >
-                Agendar
+                Regístrate
               </Link>
             </div>
           </div>

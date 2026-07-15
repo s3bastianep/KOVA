@@ -3,10 +3,10 @@
   --kv-content-max: 1300px;
   --kv-page-gutter: 6vw;
   /* Shared type scale — home + wave pages read at the same optical size */
-  --kv-fs-hero: clamp(2.125rem, 4.4vw, 3.5rem);
-  --kv-fs-h2: clamp(1.5rem, 3vw, 2.25rem);
-  --kv-fs-lead: clamp(1rem, 1.2vw, 1.125rem);
-  --kv-fs-body: 0.9375rem;
+  --kv-fs-hero: clamp(2.5rem, 5.2vw, 4.25rem);
+  --kv-fs-h2: clamp(1.75rem, 3.4vw, 2.75rem);
+  --kv-fs-lead: clamp(1.0625rem, 1.3vw, 1.25rem);
+  --kv-fs-body: 1rem;
   --kv-font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
   --kv-font-mono: 'Space Mono', ui-monospace, monospace;
   --kv-font-serif: 'Instrument Serif', Georgia, serif;
@@ -14,21 +14,21 @@
 
 html {
   scrollbar-gutter: stable;
-  background: #0a0b0a;
+  background: #f7f5ee;
 }
 
 body {
-  background: #0a0b0a;
+  background: #f7f5ee;
 }
 
 .kova-route-shell {
   min-height: calc(100vh - 64px);
-  background: #0a0b0a;
+  background: #f7f5ee;
 }
 
 .kova-route-shell__fallback {
   min-height: calc(100vh - 64px);
-  background: #0a0b0a;
+  background: #f7f5ee;
 }
 
 .kova-navbar.kv-nav {
@@ -37,11 +37,11 @@ body {
   z-index: 50;
   display: flex;
   align-items: center;
-  padding: 18px 0;
-  background: rgba(10, 11, 10, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(244, 245, 240, 0.07);
+  padding: 20px 0;
+  background: rgba(246, 244, 238, 0.82);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid rgba(20, 18, 13, 0.08);
   box-shadow: none;
 }
 
@@ -63,15 +63,15 @@ body {
   flex-shrink: 0;
   font-family: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
   font-weight: 700;
-  font-size: 23px;
+  font-size: 26px;
   letter-spacing: -0.03em;
   line-height: 1;
-  color: #f4f5f0 !important;
+  color: #172019 !important;
   text-decoration: none;
 }
 
 .kova-navbar .kv-logo-dot {
-  color: #d8f24c;
+  color: #0f7a40;
 }
 
 .kova-navbar .kv-navlinks {
@@ -95,19 +95,23 @@ body {
 .kova-navbar .kv-nav-quiet {
   display: none;
   align-items: center;
-  font-family: 'Space Mono', ui-monospace, monospace;
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.05em;
+  font-family: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
   line-height: 1;
-  color: #8b8f84 !important;
+  color: #172019 !important;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .kova-navbar .kv-nav-quiet:hover {
-  color: #f4f5f0 !important;
+  color: #0f7a40 !important;
+}
+
+.kova-navbar .kv-nav-quiet.is-active {
+  color: #0f7a40 !important;
 }
 
 @media (min-width: 960px) {
@@ -122,27 +126,43 @@ body {
 
 .kova-navbar .kv-navlinks a,
 .kova-navbar .kv-navlinks button {
+  position: relative;
   display: inline-flex;
   align-items: center;
   background: none;
   border: none;
-  padding: 0;
+  padding: 0 0 4px;
   margin: 0;
   cursor: pointer;
-  font-family: 'Space Mono', ui-monospace, monospace;
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0.06em;
+  font-family: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
   line-height: 1;
-  color: #c0c4b8 !important;
+  color: #423E37 !important;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .kova-navbar .kv-navlinks a:hover,
 .kova-navbar .kv-navlinks button:hover {
-  color: #f4f5f0 !important;
+  color: #172019 !important;
+}
+
+.kova-navbar .kv-navlinks a.is-active {
+  color: #0f7a40 !important;
+}
+
+.kova-navbar .kv-navlinks a.is-active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: #0f7a40;
 }
 
 .kova-navbar .kv-cta-pill {
@@ -150,26 +170,44 @@ body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  padding: 11px 18px;
-  border-radius: 8px;
-  border: none !important;
-  box-shadow: none !important;
-  background: #d8f24c !important;
-  color: #0a0b0a !important;
-  font-family: 'Space Mono', ui-monospace, monospace;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  padding: 11px 20px;
+  border-radius: 11px;
+  border: 1px solid transparent !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    0 8px 18px -8px rgba(20, 18, 13, 0.4) !important;
+  background: linear-gradient(180deg, #34302a, #1c1813) !important;
+  color: #ffffff !important;
+  font-family: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: none;
   line-height: 1;
   text-decoration: none;
   white-space: nowrap;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.18s ease;
 }
 
 .kova-navbar .kv-cta-pill:hover {
-  background: #f4f5f0 !important;
-  color: #0a0b0a !important;
+  transform: translateY(-1px);
+  color: #ffffff !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.14) inset,
+    0 14px 28px -10px rgba(20, 18, 13, 0.45) !important;
+}
+
+.kova-navbar .kv-cta-pill--outline {
+  background: transparent !important;
+  border: 1.5px solid #172019 !important;
+  box-shadow: none !important;
+  color: #172019 !important;
+  font-weight: 700;
+}
+
+.kova-navbar .kv-cta-pill--outline:hover {
+  transform: translateY(-1px);
+  background: rgba(23, 32, 25, 0.05) !important;
+  box-shadow: none !important;
+  color: #172019 !important;
 }
 
 .kova-navbar .kv-nav-toggle {
@@ -180,9 +218,9 @@ body {
   height: 40px;
   margin: 0;
   padding: 0;
-  border: 1px solid rgba(244, 245, 240, 0.14);
+  border: 1px solid rgba(23, 32, 25, 0.14);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(23, 32, 25, 0.04);
   cursor: pointer;
   flex-shrink: 0;
 }
@@ -193,7 +231,7 @@ body {
   display: block;
   width: 16px;
   height: 1.5px;
-  background: #f4f5f0;
+  background: #172019;
   border-radius: 1px;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
@@ -270,7 +308,7 @@ body {
     border: 0;
     margin: 0;
     padding: 0;
-    background: rgba(10, 11, 10, 0.55);
+    background: rgba(247, 245, 238, 0.55);
     cursor: pointer;
   }
 
@@ -280,13 +318,13 @@ body {
     right: 0;
     width: min(320px, 88vw);
     height: 100%;
-    background: #0f100f;
-    border-left: 1px solid rgba(244, 245, 240, 0.08);
+    background: #ffffff;
+    border-left: 1px solid rgba(23, 32, 25, 0.08);
     padding: 88px 22px 28px;
     display: flex;
     flex-direction: column;
     gap: 28px;
-    box-shadow: -18px 0 40px rgba(0, 0, 0, 0.35);
+    box-shadow: -18px 0 40px rgba(23, 32, 25, 0.14);
     overflow-y: auto;
   }
 
@@ -305,14 +343,14 @@ body {
     font-size: 13px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: #c0c4b8 !important;
+    color: #5C6459 !important;
     text-decoration: none;
-    border-bottom: 1px solid rgba(244, 245, 240, 0.06);
+    border-bottom: 1px solid rgba(23, 32, 25, 0.06);
   }
 
   .kova-navbar .kv-nav-drawer__links a:hover,
   .kova-navbar .kv-nav-drawer__actions a:not(.kv-cta-pill):hover {
-    color: #f4f5f0 !important;
+    color: #172019 !important;
   }
 
   .kova-navbar .kv-nav-drawer__cta {

@@ -23,6 +23,7 @@ import { newWorkHistoryEntry } from '@/lib/candidate-commercial-profile';
 import { portalApi, type PortalPerfilResponse } from '@/lib/api';
 import { PORTAL_CACHE_KEYS, portalCacheGet } from '@/lib/portal-cache';
 import { formatMonthYearDisplay } from '@/app/registro/registro-utils';
+import { MonthYearPicker } from '@/components/portal/MonthYearPicker';
 
 function parseMonthYear(value: string): Date | null {
   if (!value) return null;
@@ -383,12 +384,12 @@ function ExperienceCard({
                   />
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <Field label="Desde" hint="Formato MM/AAAA">
-                    <input
-                      className={inputClass}
+                  <Field label="Desde">
+                    <MonthYearPicker
                       value={entry.fechaInicio}
-                      placeholder="03/2020"
-                      onChange={(e) => onChange({ fechaInicio: e.target.value })}
+                      placeholder="Elegir mes"
+                      onChange={(fechaInicio) => onChange({ fechaInicio })}
+                      className="!max-w-none"
                     />
                   </Field>
                   {entry.trabajoActual ? (
@@ -398,12 +399,12 @@ function ExperienceCard({
                       </div>
                     </Field>
                   ) : (
-                    <Field label="Hasta" hint="Formato MM/AAAA">
-                      <input
-                        className={inputClass}
+                    <Field label="Hasta">
+                      <MonthYearPicker
                         value={entry.fechaFin ?? ''}
-                        placeholder="06/2025"
-                        onChange={(e) => onChange({ fechaFin: e.target.value, trabajoActual: false })}
+                        placeholder="Elegir mes"
+                        onChange={(fechaFin) => onChange({ fechaFin, trabajoActual: false })}
+                        className="!max-w-none"
                       />
                     </Field>
                   )}

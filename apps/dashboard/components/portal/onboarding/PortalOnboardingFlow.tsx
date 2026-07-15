@@ -3,7 +3,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { CvExtractionResult } from '@/lib/cv-extract';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
-import { stripIncompleteCertifications } from '@/lib/commercial-profile-builder';
+import {
+  stripIncompleteCertifications,
+  stripIncompleteLanguages,
+} from '@/lib/commercial-profile-builder';
 import { portalApi } from '@/lib/api';
 import { getStoredUser } from '@/lib/api';
 import { syncOnboardingSession } from '@/lib/portal-onboarding-session';
@@ -35,7 +38,14 @@ import {
   salarySliderIndex,
 } from '@/lib/portal-preferencias-wizard';
 import { normalizeEducation, normalizeWorkHistory } from '@/lib/cv-extract';
-import { applyLanguageLevels } from '@/lib/portal-onboarding-evidence';
+import {
+  applyLanguageLevels,
+  languageLevelsFromProfile,
+} from '@/lib/portal-onboarding-evidence';
+
+function sanitizeOnboardingProfile<T extends Partial<CommercialProfile>>(patch: T): T {
+  return stripIncompleteLanguages(stripIncompleteCertifications(patch));
+}
 import { PortalOnboardingReviewCards } from './PortalOnboardingReviewCards';
 import { PortalOnboardingReviewHub } from './PortalOnboardingReviewHub';
 import {
@@ -151,6 +161,7 @@ export function PortalOnboardingFlow({
   );
   const inputRef = useRef<HTMLInputElement>(null);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const finishedRef = useRef(false);
 
   const activePrefSteps = useMemo(() => getActiveSteps(profile), [profile]);
   const currentPrefStep = activePrefSteps[prefStepIndex];
@@ -158,8 +169,16 @@ export function PortalOnboardingFlow({
   const buildMergedProfile = useCallback((): CommercialProfile => {
     let merged = applyPreferenciasAnswers(prefAnswers, profile);
     merged = applyLanguageLevels(merged, languageLevels);
-    return stripIncompleteCertifications(merged);
+    return sanitizeOnboardingProfile(merged);
   }, [languageLevels, prefAnswers, profile]);
+
+  // Keep wizard level state aligned with review-card edits so autosave can't wipe niveles.
+  // Only sync while editing/confirming in review — during preferencias the nivel picker owns
+  // `languageLevels` and must not be reset from a still-incomplete profile.
+  useEffect(() => {
+    if (step !== 'cv_review' && step !== 'review_hub') return;
+    setLanguageLevels(languageLevelsFromProfile(profile));
+  }, [profile.idiomas, step]);
 
   const percent = unifiedProgressPercent(step, profile, prefStepIndex, prefAnswers);
   const minutesLeft = estimatedMinutesLeft(step, profile, prefStepIndex);
@@ -201,7 +220,7 @@ export function PortalOnboardingFlow({
       complete?: boolean;
     }) => {
       const reviewedIds = patch.reviewedIds ?? [...reviewed];
-      const sanitizedPatch = patch.profilePatch ? stripIncompleteCertifications(patch.profilePatch) : undefined;
+      const sanitizedPatch = patch.profilePatch ? sanitizeOnboardingProfile(patch.profilePatch) : undefined;
       const body = {
         onboardingStep: patch.nextStep ?? step,
         onboardingSubStep: patch.subStep ?? prefStepIndex,
@@ -384,9 +403,11 @@ export function PortalOnboardingFlow({
   };
 
   useEffect(() => {
+    if (finishedRef.current) return;
     if (!['cv_review', 'review_hub', 'preferencias'].includes(step)) return;
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(() => {
+      if (finishedRef.current) return;
       setSaveStatus('saving');
       const merged = buildMergedProfile();
       portalApi
@@ -396,8 +417,12 @@ export function PortalOnboardingFlow({
           onboardingReviewed: [...reviewed],
           profile: merged as Record<string, unknown>,
         })
-        .then(() => setSaveStatus('saved'))
-        .catch(() => setSaveStatus('error'));
+        .then(() => {
+          if (!finishedRef.current) setSaveStatus('saved');
+        })
+        .catch(() => {
+          if (!finishedRef.current) setSaveStatus('error');
+        });
     }, 420);
     return () => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
@@ -408,7 +433,12 @@ export function PortalOnboardingFlow({
   const analysisProgress = Math.round((analysisDone / CV_ANALYSIS_STEPS.length) * 100);
 
   const markReviewed = (section: ReviewSectionId) => {
-    setReviewed((prev) => new Set([...prev, section]));
+    const nextReviewed = Array.from(new Set<ReviewSectionId>([...reviewed, section]));
+    setReviewed(new Set(nextReviewed));
+    setSaveStatus('saving');
+    void persist({ reviewedIds: nextReviewed, profilePatch: profile })
+      .then(() => setSaveStatus('saved'))
+      .catch(() => setSaveStatus('error'));
   };
 
   const goPrefNext = async (overrideOption?: string) => {
@@ -484,6 +514,8 @@ export function PortalOnboardingFlow({
   const finishOnboarding = async () => {
     setBusy(true);
     setError('');
+    finishedRef.current = true;
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     try {
       const merged = buildMergedProfile();
       setProfile(merged);
@@ -491,6 +523,7 @@ export function PortalOnboardingFlow({
       syncOnboardingSession(true);
       onComplete();
     } catch (err) {
+      finishedRef.current = false;
       setError(err instanceof Error ? err.message : 'No pudimos completar el onboarding');
     } finally {
       setBusy(false);
@@ -625,7 +658,17 @@ export function PortalOnboardingFlow({
               setBusy(true);
               try {
                 setOverlayTransition(transitionAfterStep('review_hub', profile));
-                await saveStep('preferencias', applyPreferenciasAnswers(prefAnswers, profile), 0);
+                // Prefer the languages just confirmed in review over stale preferencias chip
+                // answers (those can still hold the CV's first incomplete list).
+                const answersForSave = {
+                  ...prefAnswers,
+                  idiomas: (profile.idiomas ?? [])
+                    .map((lang) => lang.idioma?.trim())
+                    .filter((name): name is string => Boolean(name)),
+                };
+                setPrefAnswers(answersForSave);
+                setLanguageLevels(languageLevelsFromProfile(profile));
+                await saveStep('preferencias', applyPreferenciasAnswers(answersForSave, profile), 0);
               } finally {
                 setBusy(false);
               }
@@ -668,8 +711,25 @@ export function PortalOnboardingFlow({
           <PortalOnboardingFooter
             onBack={() => void saveStep(reviewEditOrigin)}
             onContinue={async () => {
-              setReviewed((prev) => new Set([...prev, reviewEditSection]));
-              await saveStep(reviewEditOrigin, profile);
+              const nextReviewed = Array.from(
+                new Set<ReviewSectionId>([...reviewed, reviewEditSection]),
+              );
+              setReviewed(new Set(nextReviewed));
+              setLanguageLevels(languageLevelsFromProfile(profile));
+              setBusy(true);
+              setSaveStatus('saving');
+              try {
+                await persist({
+                  nextStep: reviewEditOrigin,
+                  profilePatch: profile,
+                  reviewedIds: nextReviewed,
+                });
+                setSaveStatus('saved');
+              } catch {
+                setSaveStatus('error');
+              } finally {
+                setBusy(false);
+              }
             }}
             continueLabel={
               reviewEditOrigin === 'cv_summary'

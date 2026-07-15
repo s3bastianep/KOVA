@@ -55,16 +55,6 @@ export function SignupForm() {
     return () => window.clearTimeout(t);
   }, []);
 
-  useEffect(() => {
-    if (!success || entering) return;
-    prefetchPortal();
-    const t = window.setTimeout(() => {
-      setEntering(true);
-      enterPortal();
-    }, 350);
-    return () => window.clearTimeout(t);
-  }, [success, entering]);
-
   const goPortal = () => {
     setEntering(true);
     enterPortal();

@@ -1,11 +1,11 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
 import DashboardPathEscape from './components/DashboardPathEscape';
 import ErrorBoundary from './components/ErrorBoundary';
 import Navbar from './components/landing/Navbar';
 import Landing from './pages/Landing';
-import Servicios from './pages/Servicios';
+import Empleo from './pages/Empleo';
 import Contacto from './pages/Contacto';
 import Guias from './pages/Guias';
 import Login from './pages/Login';
@@ -32,6 +32,7 @@ function AppShell() {
         <Suspense fallback={isAuth ? null : <div className="kova-route-shell__fallback" aria-hidden />}>
           <Routes>
             <Route path="/" element={<Landing />} />
+            <Route path="/empleo" element={<Empleo />} />
             <Route path="/guias" element={<Guias />} />
             <Route path="/guia-contratar-comercial" element={<GuiaContratarComercial />} />
             <Route path="/guia-evaluacion-comercial" element={<GuiaEvaluacionComercial />} />
@@ -39,7 +40,7 @@ function AppShell() {
             <Route path="/guia-rotacion-comercial" element={<GuiaRotacionComercial />} />
             <Route path="/guia-habilidades-blandas-comercial" element={<GuiaHabilidadesBlandasComercial />} />
             <Route path="/contacto" element={<Contacto />} />
-            <Route path="/servicios" element={<Servicios />} />
+            <Route path="/servicios" element={<Navigate to="/" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
             <Route path="/acceso" element={<Acceso />} />

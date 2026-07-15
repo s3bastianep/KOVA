@@ -4,9 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { portalApi, type PortalDashboard } from '@/lib/api';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
-import { calculateProfileCompleteness } from '@/lib/commercial-profile-builder';
 import type { OnboardingStep } from '@/lib/portal-onboarding';
-import { nextIncompleteOnboardingStep } from '@/lib/portal-onboarding-unified';
 import { PortalDashboardHome } from '@/components/portal/PortalDashboardHome';
 import { PortalOnboardingFlow } from '@/components/portal/onboarding/PortalOnboardingFlow';
 import { usePortalOnboarding } from '@/components/portal/PortalOnboardingProvider';
@@ -31,13 +29,11 @@ export default function PortalDashboardPage() {
   }, []);
 
   const profile = perfil?.profile as CommercialProfile | undefined;
-  const profileCompleteness = profile ? calculateProfileCompleteness(profile) : 0;
-  const mustFinishProfile = status === 'complete' && profileCompleteness < 100;
 
   useEffect(() => {
-    if (status !== 'complete' || mustFinishProfile) return;
+    if (status !== 'complete') return;
     void loadDashboard();
-  }, [status, mustFinishProfile, loadDashboard]);
+  }, [status, loadDashboard]);
 
   const handleOnboardingComplete = () => {
     markComplete();
@@ -53,7 +49,10 @@ export default function PortalDashboardPage() {
     );
   }
 
-  if (status === 'incomplete' || mustFinishProfile) {
+  // Only the API completion flag opens the immersive flow. A partial profile score must
+  // not remount onboarding for finished users — that used to autosave an early step and
+  // wipe "completo", so the next login asked them to fill everything again.
+  if (status === 'incomplete') {
     if (!perfil?.profile || !profile) {
       return (
         <div className="kova-card rounded-2xl border p-8 text-center">
@@ -69,9 +68,7 @@ export default function PortalDashboardPage() {
       );
     }
 
-    const onboardingStep = mustFinishProfile
-      ? nextIncompleteOnboardingStep(profile)
-      : ((perfil.onboardingStep as OnboardingStep) ?? 'welcome');
+    const onboardingStep = (perfil.onboardingStep as OnboardingStep) ?? 'welcome';
 
     return (
       <PortalOnboardingFlow

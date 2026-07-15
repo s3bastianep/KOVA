@@ -74,22 +74,34 @@ export async function PATCH(req: NextRequest) {
         invalidateCandidateAuthCache(user.id);
       };
 
+      const existingMeta = readOnboardingMeta(candidate.metadata);
+      const alreadyComplete = isOnboardingComplete(existingMeta);
+
       if (isMockMode()) {
         const current = profileFromCandidate(candidate);
         const merged = mergeCommercialProfile(current, patch);
+        // Never let a mid-flow autosave downgrade a finished onboarding back to in_progress —
+        // that is what sent users through the whole form again after they had reached the dashboard.
+        const keepComplete = alreadyComplete && !completeOnboarding;
         updateMockPortalProfile(user.id, merged, {
           onboardingStep: completeOnboarding
             ? 'done'
-            : (onboardingStep as import('@/lib/registro-session').OnboardingStep | undefined),
-          profileStatus: completeOnboarding ? 'complete' : onboardingStep ? 'in_progress' : undefined,
+            : keepComplete
+              ? 'done'
+              : (onboardingStep as import('@/lib/registro-session').OnboardingStep | undefined),
+          profileStatus: completeOnboarding || keepComplete
+            ? 'complete'
+            : onboardingStep
+              ? 'in_progress'
+              : undefined,
         });
         invalidateCaches();
         return Response.json({
           ok: true,
           profile: merged,
           message: 'Perfil actualizado.',
-          onboardingComplete: completeOnboarding,
-          onboardingStep: completeOnboarding ? 'done' : onboardingStep,
+          onboardingComplete: completeOnboarding || keepComplete,
+          onboardingStep: completeOnboarding || keepComplete ? 'done' : onboardingStep,
         });
       }
 
@@ -110,6 +122,25 @@ export async function PATCH(req: NextRequest) {
       }
 
       if (onboardingStep) {
+        // Profile edits after finishing onboarding must not reopen/reset the immersive flow.
+        if (alreadyComplete) {
+          const profile = await persistPortalOnboarding(user.tenantId, candidate.id, {
+            profile: Object.keys(patch).length > 0 ? patch : undefined,
+            onboardingStep: 'done',
+            profileStatus: 'complete',
+            onboardingSubStep,
+            onboardingReviewed,
+          });
+          invalidateCaches();
+          return Response.json({
+            ok: true,
+            profile,
+            message: 'Perfil actualizado.',
+            onboardingComplete: true,
+            onboardingStep: 'done',
+          });
+        }
+
         const profile = await persistPortalOnboarding(user.tenantId, candidate.id, {
           profile: Object.keys(patch).length > 0 ? patch : undefined,
           onboardingStep: onboardingStep as import('@/lib/registro-session').OnboardingStep,

@@ -229,6 +229,14 @@ export function stripIncompleteCertifications<T extends { certificaciones?: Cert
   return { ...profile, certificaciones: complete };
 }
 
+/** Drops language rows left blank (added via "+ Agregar idioma" but never filled in) before persisting. */
+export function stripIncompleteLanguages<T extends { idiomas?: LanguageEntry[] }>(profile: T): T {
+  if (!profile.idiomas?.length) return profile;
+  const complete = profile.idiomas.filter(isLanguageComplete);
+  if (complete.length === profile.idiomas.length) return profile;
+  return { ...profile, idiomas: complete };
+}
+
 export function calculateProfileCompleteness(profile: {
   nombre?: string;
   email?: string;

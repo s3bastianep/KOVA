@@ -384,7 +384,7 @@ export function reviewSectionSummary(
       return preview || `${items.length} estudio${items.length === 1 ? '' : 's'}`;
     }
     case 'idiomas': {
-      const items = profile.idiomas ?? [];
+      const items = (profile.idiomas ?? []).filter(isLanguageComplete);
       if (!items.length) return 'Sin idiomas detectados';
       const preview = items
         .map((item) => (item.nivel?.trim() ? `${item.idioma} (${item.nivel})` : item.idioma))
@@ -422,7 +422,7 @@ export function isReviewSectionReady(id: ReviewSectionId, profile: CommercialPro
     case 'educacion':
       return (profile.formacion?.length ?? 0) > 0;
     case 'idiomas':
-      return (profile.idiomas?.length ?? 0) > 0;
+      return (profile.idiomas ?? []).some(isLanguageComplete);
     case 'certificaciones':
       return (profile.certificaciones ?? []).some(isCertificationComplete);
     case 'skills':

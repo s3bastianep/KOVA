@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import '@/styles/landing-home-plain.css';
@@ -7,12 +7,12 @@ const WHATSAPP_NUMERO = '573000000000';
 const CONTACT_EMAIL = 'hola@kova.com.co';
 
 const DIMS = [
-  { label: 'Compatibilidad comercial', pct: 94, color: '#d8f24c' },
-  { label: 'Competencias de venta', pct: 89, color: '#d8f24c' },
-  { label: 'Adaptabilidad', pct: 85, color: '#d8f24c' },
-  { label: 'Comunicación', pct: 91, color: '#d8f24c' },
-  { label: 'Alineación cultural', pct: 88, color: '#d8f24c' },
-  { label: 'Potencial a largo plazo', pct: 82, color: '#7E86EE' },
+  { label: 'Compatibilidad comercial', pct: 94, color: '#0f7a40' },
+  { label: 'Competencias de venta', pct: 89, color: '#0f7a40' },
+  { label: 'Adaptabilidad', pct: 85, color: '#0f7a40' },
+  { label: 'Comunicación', pct: 91, color: '#0f7a40' },
+  { label: 'Alineación cultural', pct: 88, color: '#0f7a40' },
+  { label: 'Potencial a largo plazo', pct: 82, color: '#0f7a40' },
 ];
 
 const DOLORES = [
@@ -43,55 +43,55 @@ const COSTOS = [
     n: '01',
     t: 'Horas de liderazgo desperdiciadas',
     d: 'Tiempo de jefatura gastado en corregir y acompañar.',
-    bg: '#111311',
-    fg: '#F4F5F0',
-    num: '#d8f24c',
-    sub: '#C0C4B8',
+    bg: '#FFFFFF',
+    fg: '#172019',
+    num: '#2C2620',
+    sub: '#5C6459',
   },
   {
     n: '02',
     t: 'Volver a empezar desde cero',
     d: 'Publicar, filtrar y entrevistar otra vez.',
-    bg: '#111311',
-    fg: '#F4F5F0',
-    num: '#d8f24c',
-    sub: '#C0C4B8',
+    bg: '#FFFFFF',
+    fg: '#172019',
+    num: '#2C2620',
+    sub: '#5C6459',
   },
   {
     n: '03',
     t: 'Meses de inducción desperdiciados',
     d: 'Formación invertida que no se recupera.',
-    bg: '#111311',
-    fg: '#F4F5F0',
-    num: '#d8f24c',
-    sub: '#C0C4B8',
+    bg: '#FFFFFF',
+    fg: '#172019',
+    num: '#2C2620',
+    sub: '#5C6459',
   },
   {
     n: '04',
     t: 'Ventas que nunca ocurrieron',
     d: 'Cuota perdida mientras el cargo no rinde.',
-    bg: '#111311',
-    fg: '#F4F5F0',
-    num: '#d8f24c',
-    sub: '#C0C4B8',
+    bg: '#FFFFFF',
+    fg: '#172019',
+    num: '#2C2620',
+    sub: '#5C6459',
   },
   {
     n: '05',
     t: 'Clientes que podrían no volver',
     d: 'Una mala experiencia cierra puertas por años.',
-    bg: '#111311',
-    fg: '#F4F5F0',
-    num: '#d8f24c',
-    sub: '#C0C4B8',
+    bg: '#FFFFFF',
+    fg: '#172019',
+    num: '#2C2620',
+    sub: '#5C6459',
   },
   {
     n: '06',
     t: 'El ciclo vuelve a comenzar',
     d: 'El proceso se repite y el costo se acumula.',
-    bg: '#d8f24c',
-    fg: '#0A0B0A',
-    num: '#0A0B0A',
-    sub: 'rgba(10,11,10,0.7)',
+    bg: '#2C2620',
+    fg: '#F7F5EE',
+    num: '#F7F5EE',
+    sub: 'rgba(247,245,238,0.75)',
   },
 ];
 
@@ -224,6 +224,31 @@ export default function Landing() {
   const [salario, setSalario] = useState(5000000);
   const [form, setForm] = useState({ nombre: '', tel: '', empresa: '', msg: '' });
 
+  // Hero score animation — bars fill + number counts up shortly after mount
+  const [lit, setLit] = useState(false);
+  const [scoreNum, setScoreNum] = useState(0);
+
+  useEffect(() => {
+    const start = setTimeout(() => setLit(true), 220);
+    return () => clearTimeout(start);
+  }, []);
+
+  useEffect(() => {
+    if (!lit) return undefined;
+    const target = 92;
+    const durationMs = 1100;
+    const startAt = performance.now();
+    let raf;
+    const tick = (now) => {
+      const p = Math.min(1, (now - startAt) / durationMs);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setScoreNum(Math.round(eased * target));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [lit]);
+
   const stage = STAGES[activeStage];
 
   const calc = useMemo(() => {
@@ -268,7 +293,6 @@ export default function Landing() {
         <div className="kh-hero__grid">
           <div>
             <span className="kh-pill">
-              <span className="kh-pill__dot" aria-hidden />
               Selección comercial
             </span>
             <h1>
@@ -282,6 +306,7 @@ export default function Landing() {
             <div className="kh-hero__ctas">
               <a href="#contacto" className="kh-btn kh-btn--lime">
                 Agendar diagnóstico comercial
+                <span className="kh-btn__icon" aria-hidden>↗</span>
               </a>
               <a href="#metodologia" className="kh-btn kh-btn--outline">
                 Ver cómo trabajamos
@@ -300,56 +325,81 @@ export default function Landing() {
             </div>
           </div>
 
-          <div className="kh-score">
-            <div className="kh-score__top">
-              <span className="kh-score__toplabel">Informe de evaluación</span>
-              <span className="kh-score__live">
-                <span className="kh-pill__dot" aria-hidden />
-                Ejemplo ilustrativo
+          <div className="kh-hero__collage">
+            <img
+              className="kh-collage__photo kh-collage__photo--a"
+              src="https://randomuser.me/api/portraits/women/44.jpg"
+              alt="Ejecutiva comercial"
+              loading="eager"
+            />
+            <img
+              className="kh-collage__photo kh-collage__photo--b"
+              src="https://randomuser.me/api/portraits/men/32.jpg"
+              alt="Ejecutivo comercial"
+              loading="eager"
+            />
+            <div className="kh-collage__chip" aria-hidden>
+              <span className="kh-collage__chip-icon">✓</span>
+              <span className="kh-collage__chip-text">
+                <strong>Recomendada</strong>
+                Alta compatibilidad
               </span>
             </div>
-            <div className="kh-score__person">
-              <div className="kh-score__avatar">ML</div>
-              <div>
-                <div className="kh-score__name-row">
-                  <span className="kh-score__name">Candidato ejemplo</span>
-                  <span className="kh-score__badge">Recomendada</span>
-                </div>
-                <div className="kh-score__sub">Ejecutivo comercial · B2B consultivo</div>
+            <div className="kh-score-shell">
+            <div className="kh-score">
+              <div className="kh-score__top">
+                <span className="kh-score__toplabel">Informe de evaluación</span>
+                <span className="kh-score__live">
+                  <span className="kh-pill__dot" aria-hidden />
+                  Ejemplo ilustrativo
+                </span>
               </div>
-              <div className="kh-score__num">
-                <strong>92</strong>
-                <span>Kova Score</span>
-              </div>
-            </div>
-            <div className="kh-score__dims-label">Dimensiones del Kova Score</div>
-            <div className="kh-dims">
-              {DIMS.map((d) => (
-                <div key={d.label} className="kh-dim">
-                  <span className="kh-dim__label">{d.label}</span>
-                  <div className="kh-dim__track">
-                    <div
-                      className="kh-dim__fill"
-                      style={{ width: `${d.pct}%`, background: d.color }}
-                    />
+              <div className="kh-score__person">
+                <div className="kh-score__avatar">ML</div>
+                <div>
+                  <div className="kh-score__name-row">
+                    <span className="kh-score__name">Candidato ejemplo</span>
                   </div>
-                  <span className="kh-dim__pct">{d.pct}%</span>
+                  <div className="kh-score__meta">
+                    <span className="kh-score__badge">Recomendada</span>
+                    <span className="kh-score__sub">Ejecutivo comercial · B2B consultivo</span>
+                  </div>
                 </div>
-              ))}
+                <div className="kh-score__num">
+                  <strong>{scoreNum}%</strong>
+                  <span>Compatibilidad</span>
+                </div>
+              </div>
+              <div className="kh-score__dims-label">Dimensiones del Kova Score</div>
+              <div className="kh-dims">
+                {DIMS.map((d) => (
+                  <div key={d.label} className="kh-dim">
+                    <span className="kh-dim__label">{d.label}</span>
+                    <div className="kh-dim__track">
+                      <div
+                        className="kh-dim__fill"
+                        style={{ width: lit ? `${d.pct}%` : '0%', background: d.color }}
+                      />
+                    </div>
+                    <span className="kh-dim__pct">{d.pct}%</span>
+                  </div>
+                ))}
+              </div>
+              <div className="kh-score__stats">
+                <div className="kh-score__stat">
+                  <strong>88%</strong>
+                  <span>Probabilidad de éxito</span>
+                </div>
+                <div className="kh-score__stat">
+                  <strong>95%</strong>
+                  <span>Potencial de cuota</span>
+                </div>
+                <div className="kh-score__stat">
+                  <strong className="is-lime">Bajo</strong>
+                  <span>Riesgo a 12 meses</span>
+                </div>
+              </div>
             </div>
-            <div className="kh-score__stats">
-              <div className="kh-score__stat">
-                <strong>88%</strong>
-                <span>Probabilidad de éxito</span>
-              </div>
-              <div className="kh-score__stat">
-                <strong>95%</strong>
-                <span>Potencial de cuota</span>
-              </div>
-              <div className="kh-score__stat">
-                <strong className="is-lime">Bajo</strong>
-                <span>Riesgo a 12 meses</span>
-              </div>
             </div>
           </div>
         </div>
@@ -376,7 +426,7 @@ export default function Landing() {
             <path
               d="M36,96 C78,128 118,128 160,96 C202,64 242,64 284,96 C326,128 366,128 408,96 C450,64 490,64 532,96 C564,120 592,112 620,96"
               fill="none"
-              stroke="#E0554E"
+              stroke="#B3A794"
               strokeWidth="1.9"
               strokeLinecap="round"
               opacity="0.72"
@@ -384,7 +434,7 @@ export default function Landing() {
             <path
               d="M36,96 C78,64 118,64 160,96 C202,128 242,128 284,96 C326,64 366,64 408,96 C450,128 490,128 532,96 C564,72 592,80 620,96"
               fill="none"
-              stroke="#4B54E6"
+              stroke="#C7BCA9"
               strokeWidth="1.9"
               strokeLinecap="round"
               opacity="0.72"
@@ -392,12 +442,12 @@ export default function Landing() {
             <path
               d="M620,96 C760,94 900,68 1020,44 C1100,28 1155,26 1184,24"
               fill="none"
-              stroke="#d8f24c"
+              stroke="#0f7a40"
               strokeWidth="2.4"
               strokeLinecap="round"
             />
-            <circle cx="620" cy="96" r="5.5" fill="#0A0B0A" stroke="#C0C4B8" strokeWidth="1.8" />
-            <circle cx="1020" cy="44" r="6.5" fill="#0A0B0A" stroke="#d8f24c" strokeWidth="2.2" />
+            <circle cx="620" cy="96" r="5.5" fill="#0f7a40" stroke="#0f7a40" strokeWidth="1.8" />
+            <circle cx="1020" cy="44" r="6.5" fill="#0f7a40" stroke="#0f7a40" strokeWidth="2.2" />
           </svg>
         </div>
       </header>
@@ -419,17 +469,13 @@ export default function Landing() {
 
       <section className="kh-section kh-section--tight">
         <div className="kh-wrap">
-          <div className="kh-eyebrow">
-            <span className="kh-eyebrow__dot" aria-hidden />
-            <span className="kh-eyebrow__label">¿Le pasó algo así?</span>
-          </div>
           <h2 className="kh-h2" style={{ maxWidth: '18ch' }}>
             Si dirige un equipo comercial, probablemente{' '}
             <span className="kh-accent">este problema ya le costó dinero</span>.
           </h2>
           <div className="kh-dolores">
-            {DOLORES.map((q) => (
-              <div key={q.n} className="kh-dolor">
+            {DOLORES.map((q, i) => (
+              <div key={q.n} className={i === 0 ? 'kh-dolor kh-dolor--featured' : 'kh-dolor'}>
                 <div className="kh-dolor__top">
                   <span className="kh-dolor__n">{q.n}</span>
                   <span className="kh-dolor__tag">{q.tag}</span>
@@ -438,19 +484,11 @@ export default function Landing() {
               </div>
             ))}
           </div>
-          <p className="kh-mirror-close">
-            No es mala suerte: es contratar sin validar si{' '}
-            <span className="kh-accent">encajan con cómo vende su empresa</span>.
-          </p>
         </div>
       </section>
 
       <section id="calculadora" className="kh-section">
         <div className="kh-wrap">
-          <div className="kh-eyebrow">
-            <span className="kh-eyebrow__dot" aria-hidden />
-            <span className="kh-eyebrow__label">El costo real</span>
-          </div>
           <div className="kh-costo-head">
             <h2 className="kh-h2 kh-h2--regular">
               Un mal fichaje comercial no se paga solo con el salario.{' '}
@@ -623,12 +661,8 @@ export default function Landing() {
         </div>
       </section>
 
-      <section id="metodo" className="kh-section kh-artifact" style={{ borderTop: '1px solid rgba(244,245,240,0.07)' }}>
+      <section id="metodo" className="kh-section kh-artifact" style={{ borderTop: '1px solid var(--kv-line)' }}>
         <div className="kh-wrap">
-          <div className="kh-eyebrow">
-            <span className="kh-eyebrow__dot" aria-hidden />
-            <span className="kh-eyebrow__label">Así funciona Kova</span>
-          </div>
           <h2 className="kh-h2 kh-h2--regular" style={{ maxWidth: '16ch' }}>
             Un método propio.{' '}
             <span className="kh-accent">Resultados claros</span>.
@@ -676,23 +710,40 @@ export default function Landing() {
               </div>
             </article>
 
-            <article className="kh-mock kh-mock--score" aria-label="Ejemplo de Kova Score">
+            <article className="kh-mock" aria-label="Ejemplo de shortlist priorizada">
               <div className="kh-mock__chrome">
                 <span className="kh-mock__dots" aria-hidden>
                   <i />
                   <i />
                   <i />
                 </span>
-                <span className="kh-mock__file">kova score</span>
+                <span className="kh-mock__file">shortlist priorizada</span>
               </div>
-              <div className="kh-mock__body kh-mock__body--score">
-                <div className="kh-mock__score-big">
-                  <span className="kh-mock__score-label">Kova Score</span>
-                  <strong>92%</strong>
-                  <span className="kh-mock__score-level">Compatibilidad alta</span>
-                  <div className="kh-mock__score-bar" aria-hidden>
-                    <div style={{ width: '92%' }} />
-                  </div>
+              <div className="kh-mock__body">
+                <div className="kh-mock__head">
+                  <span>Shortlist</span>
+                  <em>Ejemplo</em>
+                </div>
+                <ul className="kh-mock__rank">
+                  <li>
+                    <span className="kh-mock__rank-n">1</span>
+                    <span className="kh-mock__rank-name">Candidato A</span>
+                    <span className="kh-mock__rank-score is-top">92%</span>
+                  </li>
+                  <li>
+                    <span className="kh-mock__rank-n">2</span>
+                    <span className="kh-mock__rank-name">Candidato B</span>
+                    <span className="kh-mock__rank-score">81%</span>
+                  </li>
+                  <li>
+                    <span className="kh-mock__rank-n">3</span>
+                    <span className="kh-mock__rank-name">Candidato C</span>
+                    <span className="kh-mock__rank-score">74%</span>
+                  </li>
+                </ul>
+                <div className="kh-mock__result">
+                  <span>Recomendación</span>
+                  <strong>Priorizar Candidato A</strong>
                 </div>
               </div>
             </article>
@@ -731,12 +782,6 @@ export default function Landing() {
       <section className="kh-section">
         <div className="kh-wrap">
           <div className="kh-platform">
-            <div className="kh-eyebrow">
-              <span className="kh-eyebrow__dot" aria-hidden />
-              <span className="kh-eyebrow__label kh-eyebrow__label--lime">
-                Después de firmar
-              </span>
-            </div>
             <h2>
               La contratación no termina con el contrato.{' '}
               <span className="kh-accent">Ahí empieza a probarse el encaje.</span>
@@ -867,22 +912,31 @@ export default function Landing() {
             </a>
             <nav className="kh-footer__nav" aria-label="Pie de página">
               <a href="#metodologia">Metodología</a>
-              <Link to="/servicios">Servicios</Link>
               <a href="#calculadora">Costo real</a>
               <Link to="/guias">Blog</Link>
               <Link to="/registro">Empleo</Link>
               <a href="#contacto">Agendar</a>
               <Link to="/login">Entrar</Link>
             </nav>
-          </div>
-          <div className="kh-footer__bottom">
             <p className="kh-footer__copy">© 2026 Kova</p>
-            <a className="kh-footer__mail" href={`mailto:${CONTACT_EMAIL}`}>
-              {CONTACT_EMAIL}
-            </a>
           </div>
         </div>
       </footer>
+
+      <a
+        className="kh-wa-float"
+        href={`https://wa.me/${WHATSAPP_NUMERO}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Escríbenos por WhatsApp"
+      >
+        <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden focusable="false">
+          <path
+            fill="currentColor"
+            d="M16.003 3.2c-7.06 0-12.8 5.74-12.8 12.8 0 2.257.59 4.46 1.71 6.402L3.2 28.8l6.57-1.723a12.74 12.74 0 006.233 1.588h.005c7.06 0 12.8-5.74 12.8-12.8s-5.74-12.8-12.805-12.665zM16.01 26.49h-.004a10.63 10.63 0 01-5.42-1.486l-.389-.231-4.028 1.057 1.075-3.928-.253-.403a10.6 10.6 0 01-1.626-5.7c0-5.867 4.774-10.64 10.646-10.64 2.842 0 5.514 1.108 7.523 3.12a10.57 10.57 0 013.117 7.526c-.003 5.867-4.777 10.638-10.644 10.638zm5.834-7.968c-.32-.16-1.892-.933-2.185-1.04-.293-.107-.507-.16-.72.16-.213.32-.826 1.04-1.013 1.253-.187.213-.373.24-.693.08-.32-.16-1.35-.498-2.571-1.587-.95-.848-1.592-1.895-1.779-2.215-.187-.32-.02-.493.14-.652.144-.143.32-.373.48-.56.16-.187.213-.32.32-.533.107-.213.053-.4-.027-.56-.08-.16-.72-1.735-.986-2.375-.26-.624-.524-.539-.72-.549l-.613-.011c-.213 0-.56.08-.853.4-.293.32-1.12 1.093-1.12 2.667 0 1.573 1.146 3.093 1.306 3.307.16.213 2.253 3.44 5.46 4.827.763.33 1.36.527 1.824.674.767.244 1.464.21 2.016.127.615-.092 1.892-.773 2.159-1.52.267-.747.267-1.387.187-1.52-.08-.133-.293-.213-.613-.373z"
+          />
+        </svg>
+      </a>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, Eye, EyeOff, Loader2, Lock, Mail } from 'lucide-
 import { authApi, clearSession, saveSession } from '@/lib/authSession';
 import { enterPortal, prefetchPortal } from '@/lib/enterPortal';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import AuthMosaic from '@/components/auth/AuthMosaic';
 import '@/styles/auth-login.css';
 
 const COPY = {
@@ -115,6 +116,9 @@ export default function Login({ mode = 'candidate' }) {
 
       <div className="kv-login-stage">
         <aside className="kv-login-aside">
+          <div className="kv-login-mosaic-wrap">
+            <AuthMosaic />
+          </div>
           <p className="kv-login-eyebrow">{copy.eyebrow}</p>
           <h1 className="kv-login-title">{copy.title}</h1>
           <p className="kv-login-lead">{copy.lead}</p>

@@ -3,9 +3,9 @@
 /* Keep document chrome aligned with landing to avoid flash/jump on route change */
 html:has(.kv-login),
 html:has(.kv-login) body {
-  background: #0a0b0a !important;
+  background: #f7f5ee !important;
   background-image: none !important;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html:has(.kv-login) {
@@ -13,25 +13,26 @@ html:has(.kv-login) {
 }
 
 .kv-login {
-  --kv-ink: #0a0b0a;
-  --kv-surface: #111311;
-  --kv-surface-2: #0f110f;
-  --kv-lime: #d8f24c;
+  --kv-ink: #f7f5ee;
+  --kv-surface: #ffffff;
+  --kv-surface-2: #f6f4ec;
+  --kv-lime: #0f7a40;
+  --kv-lime-bright: #16a24a;
   --kv-indigo: #4b54e6;
-  --kv-text: #f4f5f0;
-  --kv-muted: #c0c4b8;
-  --kv-body: #cbcfc3;
-  --kv-soft: #aeb2a6;
-  --kv-line: rgba(244, 245, 240, 0.07);
-  --kv-line-strong: rgba(244, 245, 240, 0.1);
-  --kv-login-input-fill: #161816;
+  --kv-text: #14120d;
+  --kv-muted: #6f6860;
+  --kv-body: #46403a;
+  --kv-soft: #857e74;
+  --kv-line: rgba(20, 18, 13, 0.08);
+  --kv-line-strong: rgba(20, 18, 13, 0.12);
+  --kv-login-input-fill: #f6f4ec;
   --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
   --font-mono-face: 'Space Mono', ui-monospace, monospace;
   --font-serif-face: 'Instrument Serif', Georgia, serif;
   min-height: 100vh;
   background: var(--kv-ink);
   color: var(--kv-text);
-  color-scheme: dark;
+  color-scheme: light;
   position: relative;
   overflow-x: hidden;
   font-family: var(--font-sans);
@@ -43,8 +44,8 @@ html:has(.kv-login) {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(120% 90% at 85% 0%, rgba(216, 242, 76, 0.08), transparent 55%),
-    radial-gradient(90% 80% at 10% 100%, rgba(75, 84, 230, 0.1), transparent 60%),
+    radial-gradient(120% 90% at 85% 0%, rgba(15, 122, 64, 0.08), transparent 55%),
+    radial-gradient(90% 80% at 10% 100%, rgba(75, 84, 230, 0.05), transparent 60%),
     var(--kv-ink);
 }
 
@@ -57,7 +58,7 @@ html:has(.kv-login) {
   display: flex;
   align-items: center;
   padding: 18px 0;
-  background: rgba(10, 11, 10, 0.85);
+  background: rgba(246, 244, 238, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--kv-line);
@@ -102,10 +103,10 @@ html:has(.kv-login) {
   flex-shrink: 0;
   min-height: 34px;
   padding: 0 2px;
-  font-family: var(--font-mono-face);
+  font-family: var(--font-sans);
   font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0.06em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   line-height: 1;
   color: var(--kv-soft);
@@ -149,17 +150,82 @@ html:has(.kv-login) {
   }
 }
 
+/* Illustrated block mosaic (brand colors) */
+.kv-login-mosaic-wrap {
+  display: none;
+}
+
+@media (min-width: 960px) {
+  .kv-login-mosaic-wrap {
+    display: block;
+    margin-bottom: 2.5rem;
+  }
+}
+
+.kv-auth-mosaic__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 92px;
+  gap: 10px;
+  max-width: 380px;
+}
+
+.kv-auth-mosaic__block {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kv-auth-mosaic__block--dark { background: var(--kv-text); }
+.kv-auth-mosaic__block--green { background: #0f7a40; }
+.kv-auth-mosaic__block--lime { background: #d8f24c; }
+.kv-auth-mosaic__block--sage { background: #cfe4d6; }
+.kv-auth-mosaic__block--cream { background: #efe9dc; }
+
+.kv-auth-mosaic__shape--ring {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 6px solid #d8f24c;
+}
+
+.kv-auth-mosaic__shape--dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #0f7a40;
+}
+
+.kv-auth-mosaic__shape--zigzag {
+  width: 40px;
+  height: 40px;
+  background: repeating-linear-gradient(135deg, #fff 0 8px, transparent 8px 16px);
+  border-radius: 8px;
+  opacity: 0.9;
+}
+
+.kv-auth-mosaic__shape--check {
+  font-size: 22px;
+  font-weight: 800;
+  color: #d8f24c;
+}
+
 .kv-login-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: var(--font-mono-face);
-  font-size: 12px;
-  letter-spacing: 0.18em;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--kv-lime);
   margin: 0 0 1.25rem;
-  font-weight: 400;
+  font-weight: 700;
 }
 
 .kv-login-eyebrow::before {
@@ -241,11 +307,11 @@ html:has(.kv-login) {
 }
 
 .kv-login-accent {
-  font-family: var(--font-serif-face);
-  font-style: italic;
-  font-weight: 400;
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-weight: 800;
   color: var(--kv-lime);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.035em;
 }
 
 .kv-login-lead {
@@ -275,7 +341,7 @@ html:has(.kv-login) {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(216, 242, 76, 0.45), transparent);
+  background: linear-gradient(90deg, transparent, rgba(15, 122, 64, 0.4), transparent);
 }
 
 .kv-login-card-head {
@@ -310,7 +376,7 @@ html:has(.kv-login) {
   color: var(--kv-ink);
   margin-bottom: 1.25rem;
   animation: kv-login-success-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  box-shadow: 0 0 0 rgba(216, 242, 76, 0.4);
+  box-shadow: 0 0 0 rgba(15, 122, 64, 0.4);
 }
 
 .kv-login-success-check svg {
@@ -329,11 +395,11 @@ html:has(.kv-login) {
   60% {
     transform: scale(1.12);
     opacity: 1;
-    box-shadow: 0 0 0 10px rgba(216, 242, 76, 0.16);
+    box-shadow: 0 0 0 10px rgba(15, 122, 64, 0.16);
   }
   100% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(216, 242, 76, 0);
+    box-shadow: 0 0 0 0 rgba(15, 122, 64, 0);
   }
 }
 
@@ -367,9 +433,9 @@ html:has(.kv-login) {
   padding: 0.75rem 1rem;
   border-radius: 12px;
   font-size: 0.875rem;
-  color: #ffb4bc;
-  background: rgba(232, 92, 107, 0.12);
-  border: 1px solid rgba(232, 92, 107, 0.28);
+  color: #b3261e;
+  background: rgba(211, 47, 47, 0.08);
+  border: 1px solid rgba(211, 47, 47, 0.22);
 }
 
 .kv-login-field {
@@ -395,10 +461,10 @@ html:has(.kv-login) {
 
 .kv-login-label {
   display: block;
-  font-family: var(--font-mono-face);
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.1em;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--kv-muted);
   margin-bottom: 0.5rem;
@@ -418,8 +484,8 @@ html:has(.kv-login) {
 }
 
 .kv-login-input-wrap:focus-within {
-  border-color: rgba(216, 242, 76, 0.45);
-  box-shadow: 0 0 0 3px rgba(216, 242, 76, 0.12);
+  border-color: rgba(15, 122, 64, 0.45);
+  box-shadow: 0 0 0 3px rgba(15, 122, 64, 0.12);
 }
 
 .kv-login-input-wrap svg {
@@ -444,14 +510,14 @@ html:has(.kv-login) {
 }
 
 .kv-login-input::placeholder {
-  color: rgba(244, 245, 240, 0.28);
+  color: rgba(20, 18, 13, 0.3);
 }
 
 .kv-login-hint {
   margin: 0.4rem 0 0;
-  font-family: var(--font-mono-face);
-  font-size: 11px;
-  letter-spacing: 0.04em;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0;
   color: var(--kv-soft);
 }
 
@@ -521,8 +587,8 @@ html:has(.kv-login) {
   flex-shrink: 0;
   margin-top: 0.15rem;
   border-radius: 0.35rem;
-  border: 1.5px solid rgba(244, 245, 240, 0.28);
-  background: rgba(244, 245, 240, 0.04);
+  border: 1.5px solid rgba(20, 18, 13, 0.2);
+  background: #ffffff;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -531,7 +597,7 @@ html:has(.kv-login) {
 }
 
 .kv-login-remember input:hover {
-  border-color: rgba(244, 245, 240, 0.5);
+  border-color: rgba(20, 18, 13, 0.4);
 }
 
 .kv-login-inline-link {
@@ -560,7 +626,7 @@ html:has(.kv-login) {
 
 .kv-login-remember input:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(216, 242, 76, 0.25);
+  box-shadow: 0 0 0 3px rgba(15, 122, 64, 0.25);
 }
 
 .kv-login-submit {
@@ -572,12 +638,12 @@ html:has(.kv-login) {
   min-height: 3rem;
   padding: 0.75rem 1.25rem;
   border: none;
-  border-radius: 8px;
-  font-family: var(--font-mono-face);
-  font-size: 12px;
+  border-radius: 12px;
+  font-family: var(--font-sans);
+  font-size: 15px;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  text-transform: none;
   line-height: 1.2;
   cursor: pointer;
   background: var(--kv-lime);

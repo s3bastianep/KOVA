@@ -725,3 +725,140 @@ a:focus-visible {
 .risk-jar-drop {
   animation: risk-jar-drop 0.7s ease-out forwards;
 }
+
+/* Month / year picker (experience dates) */
+.kova-month-picker {
+  position: relative;
+  width: 100%;
+  max-width: 11rem;
+}
+
+.kova-month-picker__trigger {
+  display: flex;
+  width: 100%;
+  min-height: 2.65rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--kova-border, #d7d9ce);
+  background: #fff;
+  padding: 0.55rem 0.85rem;
+  color: var(--kova-navy, #12140f);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kova-month-picker__trigger.is-empty {
+  color: var(--kova-navy-muted, #6b6f64);
+  font-weight: 400;
+}
+
+.kova-month-picker__trigger:hover,
+.kova-month-picker__trigger.is-open,
+.kova-month-picker__trigger:focus-visible {
+  border-color: var(--kova-lime, #d8f24c);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(216, 242, 76, 0.25);
+}
+
+.kova-month-picker__trigger--dark {
+  border-color: rgba(244, 245, 240, 0.16);
+  background: transparent;
+  color: #edefea;
+}
+
+.kova-month-picker__trigger--dark.is-empty {
+  color: rgba(237, 239, 234, 0.45);
+}
+
+.kova-month-picker__trigger--dark:hover,
+.kova-month-picker__trigger--dark.is-open,
+.kova-month-picker__trigger--dark:focus-visible {
+  border-color: rgba(216, 242, 76, 0.65);
+  box-shadow: 0 0 0 2px rgba(216, 242, 76, 0.18);
+}
+
+.kova-month-picker__panel {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 6px);
+  left: 0;
+  width: min(17.5rem, 78vw);
+  border-radius: 0.85rem;
+  border: 1px solid var(--kova-border, #d7d9ce);
+  background: #fff;
+  padding: 0.75rem;
+  box-shadow: 0 14px 36px rgba(18, 20, 15, 0.16);
+}
+
+.kova-month-picker__panel--dark {
+  border-color: rgba(244, 245, 240, 0.12);
+  background: #151714;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  color: #edefea;
+}
+
+.kova-month-picker__year {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.kova-month-picker__nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.kova-month-picker__nav:hover {
+  background: rgba(216, 242, 76, 0.16);
+}
+
+.kova-month-picker__months {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.kova-month-picker__month {
+  min-height: 2.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.kova-month-picker__month:hover {
+  background: rgba(216, 242, 76, 0.18);
+}
+
+.kova-month-picker__month.is-selected {
+  background: var(--kova-lime, #d8f24c);
+  color: #12140f;
+}
+
+.kova-month-picker__month.is-muted {
+  opacity: 0.55;
+}
+
+.portal-onboarding-work-field .kova-month-picker {
+  max-width: 11rem;
+}

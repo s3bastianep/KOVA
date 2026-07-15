@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, Check, Eye, EyeOff, Loader2, Lock, Mail, Phone, 
 import { authApi, saveSession } from '@/lib/authSession';
 import { enterPortal, prefetchPortal } from '@/lib/enterPortal';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import AuthMosaic from '@/components/auth/AuthMosaic';
 import '@/styles/auth-login.css';
 
 export default function Registro() {
@@ -36,16 +37,6 @@ export default function Registro() {
     const t = window.setTimeout(run, 800);
     return () => window.clearTimeout(t);
   }, []);
-
-  useEffect(() => {
-    if (!success || entering) return;
-    prefetchPortal();
-    const t = window.setTimeout(() => {
-      setEntering(true);
-      enterPortal();
-    }, 350);
-    return () => window.clearTimeout(t);
-  }, [success, entering]);
 
   const goPortal = () => {
     setEntering(true);
@@ -92,6 +83,9 @@ export default function Registro() {
 
       <div className="kv-login-stage">
         <aside className="kv-login-aside">
+          <div className="kv-login-mosaic-wrap">
+            <AuthMosaic />
+          </div>
           <p className="kv-login-eyebrow">Candidatos · Kova</p>
           <h1 className="kv-login-title">
             Tu espacio para <span className="kv-login-accent">oportunidades</span> comerciales

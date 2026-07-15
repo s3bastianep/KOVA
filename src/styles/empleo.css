@@ -1,0 +1,926 @@
+/* Candidate page — distinct, energetic, infographic-led. Scoped under .kova-empleo.
+   Reuses the brand tokens from .kova-home-plain (buttons, pill, footer, colors). */
+
+.kova-empleo {
+  --emp-green: #0f7a40;
+  --emp-green-bright: #16a24a;
+  --emp-green-soft: rgba(15, 122, 64, 0.1);
+  --emp-ink: #14120d;
+  --emp-body: #46403a;
+  --emp-muted: #6f6860;
+  --emp-paper: #f6f4ec;
+  --emp-dark: #0d3a25;
+  --emp-dark-2: #0a2e1d;
+}
+
+/* ─── Section frame ─── */
+.kova-empleo .emp-wrap {
+  width: 100%;
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: 6vw;
+  box-sizing: border-box;
+}
+
+.kova-empleo .emp-sec {
+  padding: 96px 0;
+}
+
+.kova-empleo .emp-sec--tight {
+  padding: 72px 0;
+}
+
+/* ─── Hero ─── */
+.kova-empleo .emp-hero {
+  position: relative;
+  padding: 84px 0 72px;
+  overflow: hidden;
+}
+
+.kova-empleo .emp-hero__grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.kova-empleo .emp-hero h1 {
+  font-weight: 820;
+  font-size: clamp(2.75rem, 5.6vw, 4.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+  color: var(--emp-ink);
+  margin: 22px 0 0;
+}
+
+.kova-empleo .emp-hero h1 em {
+  font-style: normal;
+  color: var(--emp-green);
+}
+
+.kova-empleo .emp-hero__lead {
+  font-size: clamp(1.05rem, 1.3vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--emp-body);
+  max-width: 44ch;
+  margin: 24px 0 0;
+}
+
+.kova-empleo .emp-hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.kova-empleo .emp-hero__ctas .kh-btn {
+  font-size: 15px;
+  padding: 15px 26px;
+}
+
+/* Hero photo mosaic + floating cards */
+.kova-empleo .emp-mosaic {
+  position: relative;
+  justify-self: center;
+  width: 100%;
+  max-width: 460px;
+  padding: 58px 50px;
+}
+
+.kova-empleo .emp-mosaic__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  grid-template-rows: repeat(2, 150px);
+  gap: 14px;
+}
+
+.kova-empleo .emp-mosaic__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  border-radius: 18px;
+  border: 4px solid #fff;
+  box-shadow: 0 14px 34px -14px rgba(20, 18, 13, 0.28);
+}
+
+.kova-empleo .emp-mosaic__photo--1 { grid-column: 1; grid-row: 1; }
+.kova-empleo .emp-mosaic__photo--2 { grid-column: 2; grid-row: 1 / span 2; }
+.kova-empleo .emp-mosaic__photo--3 { grid-column: 1; grid-row: 2; }
+.kova-empleo .emp-mosaic__photo--4 { display: none; }
+
+/* Floating chips around the mosaic */
+.kova-empleo .emp-float {
+  position: absolute;
+  z-index: 2;
+  background: #fff;
+  border: 1px solid var(--kv-line);
+  border-radius: 14px;
+  box-shadow: 0 16px 40px -14px rgba(20, 18, 13, 0.3);
+  padding: 12px 15px;
+  animation: emp-float-y 5s ease-in-out infinite;
+}
+
+@keyframes emp-float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.kova-empleo .emp-float--score {
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.kova-empleo .emp-float__ring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--emp-green-soft);
+  border: 2px solid var(--emp-green);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--emp-green);
+  flex: none;
+}
+
+.kova-empleo .emp-float--score strong {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--emp-muted);
+}
+
+.kova-empleo .emp-float--score span {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--emp-green);
+}
+
+.kova-empleo .emp-float--checks {
+  bottom: 0;
+  left: -6px;
+  animation-delay: 0.4s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kova-empleo .emp-float--checks div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--emp-ink);
+  white-space: nowrap;
+}
+
+.kova-empleo .emp-float--checks em {
+  font-style: normal;
+  color: var(--emp-green);
+  font-weight: 800;
+}
+
+.kova-empleo .emp-float--match {
+  top: 4px;
+  right: -6px;
+  max-width: 180px;
+  animation-delay: 0.3s;
+}
+
+.kova-empleo .emp-float--match .emp-float__tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--emp-green);
+}
+
+.kova-empleo .emp-float--match strong {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--emp-ink);
+  margin-top: 2px;
+}
+
+.kova-empleo .emp-float--match span:last-child {
+  display: block;
+  font-size: 11.5px;
+  color: var(--emp-muted);
+  margin-top: 2px;
+}
+
+.kova-empleo .emp-float--stat {
+  bottom: -6px;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation-delay: 0.7s;
+}
+
+.kova-empleo .emp-float__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--emp-green-soft);
+  color: var(--emp-green);
+  font-weight: 800;
+  flex: none;
+}
+
+.kova-empleo .emp-float--stat strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--emp-ink);
+}
+
+.kova-empleo .emp-float--stat span {
+  display: block;
+  font-size: 11px;
+  color: var(--emp-muted);
+  margin-top: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kova-empleo .emp-float { animation: none; }
+}
+
+/* Hero trust row */
+.kova-empleo .emp-trust {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 36px;
+}
+
+.kova-empleo .emp-trust__avatars {
+  display: flex;
+}
+
+.kova-empleo .emp-trust__avatars img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid var(--emp-paper);
+  object-fit: cover;
+  margin-left: -12px;
+}
+
+.kova-empleo .emp-trust__avatars img:first-child { margin-left: 0; }
+
+.kova-empleo .emp-trust__text {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--emp-body);
+  max-width: 30ch;
+}
+
+.kova-empleo .emp-trust__text strong {
+  color: var(--emp-ink);
+  font-weight: 700;
+}
+
+/* ─── Benefits band (light, card-based) ─── */
+.kova-empleo .emp-band {
+  background: #e9f1ea;
+  color: var(--emp-ink);
+  padding: 80px 0;
+}
+
+.kova-empleo .emp-band__title {
+  font-weight: 800;
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  color: var(--emp-ink);
+  max-width: 20ch;
+  margin: 0 0 40px;
+}
+
+.kova-empleo .emp-band__title em {
+  font-style: normal;
+  color: var(--emp-green);
+}
+
+.kova-empleo .emp-band__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.kova-empleo .emp-benefit {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--kv-line);
+  border-radius: 18px;
+  padding: 26px 22px 24px;
+  box-shadow: 0 1px 2px rgba(20, 18, 13, 0.03);
+}
+
+.kova-empleo .emp-benefit__ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: var(--emp-green-soft);
+  color: var(--emp-green);
+  margin-bottom: 18px;
+}
+
+.kova-empleo .emp-benefit strong {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--emp-ink);
+}
+
+.kova-empleo .emp-benefit span {
+  margin-top: 9px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--emp-body);
+}
+
+.kova-empleo .emp-band__sectors {
+  margin-top: 48px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(15, 122, 64, 0.16);
+}
+
+.kova-empleo .emp-band__sectors-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--emp-muted);
+  margin-bottom: 14px;
+}
+
+.kova-empleo .emp-band__sectors-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.kova-empleo .emp-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 122, 64, 0.22);
+  background: #fff;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--emp-ink);
+}
+
+/* ─── Section heading ─── */
+.kova-empleo .emp-head {
+  max-width: 24ch;
+}
+
+.kova-empleo .emp-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--emp-green);
+  margin-bottom: 16px;
+}
+
+.kova-empleo .emp-eyebrow::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--emp-green-bright);
+  box-shadow: 0 0 0 4px var(--emp-green-soft);
+}
+
+.kova-empleo .emp-h2 {
+  font-weight: 800;
+  font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  color: var(--emp-ink);
+}
+
+.kova-empleo .emp-h2 em {
+  font-style: normal;
+  color: var(--emp-green);
+}
+
+/* Secondary sections read one notch quieter than the score explorer (the page's main proof point) */
+.kova-empleo .emp-h2--sub {
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+}
+
+.kova-empleo .emp-sub {
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.6;
+  color: var(--emp-body);
+  max-width: 52ch;
+  margin-top: 18px;
+}
+
+/* ─── Interactive Kova Score explorer ─── */
+.kova-empleo .emp-explorer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 44px;
+  margin-top: 48px;
+  align-items: start;
+}
+
+.kova-empleo .emp-dims {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.kova-empleo .emp-dim {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px 14px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 14px 16px;
+  border-radius: 14px;
+  transition: background 0.18s ease;
+}
+
+.kova-empleo .emp-dim:hover {
+  background: rgba(20, 18, 13, 0.03);
+}
+
+.kova-empleo .emp-dim.is-active {
+  background: var(--emp-green-soft);
+}
+
+.kova-empleo .emp-dim__label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--emp-ink);
+}
+
+.kova-empleo .emp-dim__pct {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--emp-green);
+  font-variant-numeric: tabular-nums;
+}
+
+.kova-empleo .emp-dim__track {
+  grid-column: 1 / -1;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(20, 18, 13, 0.07);
+  overflow: hidden;
+}
+
+.kova-empleo .emp-dim__fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--emp-green);
+  transition: width 0.9s cubic-bezier(0.32, 1, 0.36, 1);
+}
+
+.kova-empleo .emp-detail {
+  position: sticky;
+  top: 100px;
+  background: var(--emp-dark);
+  color: #eaf3ec;
+  border-radius: 22px;
+  padding: 34px 32px;
+  min-height: 260px;
+}
+
+.kova-empleo .emp-detail__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #6fe39a;
+  margin-bottom: 20px;
+}
+
+.kova-empleo .emp-detail__num {
+  font-size: 4rem;
+  font-weight: 820;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.kova-empleo .emp-detail__name {
+  font-size: 21px;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 14px;
+}
+
+.kova-empleo .emp-detail__desc {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(234, 243, 236, 0.78);
+  margin-top: 12px;
+  max-width: 34ch;
+}
+
+/* ─── Feature block with fan-out infographic ─── */
+.kova-empleo .emp-feature {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.kova-empleo .emp-feature__list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-top: 30px;
+}
+
+.kova-empleo .emp-feature__item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.kova-empleo .emp-feature__ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--emp-green-soft);
+  color: var(--emp-green);
+  font-size: 18px;
+  font-weight: 800;
+  flex: none;
+}
+
+.kova-empleo .emp-feature__item strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--emp-ink);
+}
+
+.kova-empleo .emp-feature__item span {
+  display: block;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--emp-body);
+  margin-top: 4px;
+  max-width: 38ch;
+}
+
+/* Fan-out infographic */
+.kova-empleo .emp-fan {
+  position: relative;
+  background: #fff;
+  border: 1px solid var(--kv-line);
+  border-radius: 24px;
+  box-shadow: var(--kv-shadow-lg);
+  padding: 34px 30px;
+}
+
+.kova-empleo .emp-fan__you {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--emp-green);
+  color: #fff;
+  width: fit-content;
+  margin: 0 auto 6px;
+}
+
+.kova-empleo .emp-fan__you-dot {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.kova-empleo .emp-fan__you strong {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.kova-empleo .emp-fan__lines {
+  display: block;
+  width: 100%;
+  height: 40px;
+}
+
+.kova-empleo .emp-fan__jobs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.kova-empleo .emp-fan__job {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--kv-line);
+  border-radius: 12px;
+  padding: 14px 10px;
+  text-align: center;
+  background: var(--emp-paper);
+}
+
+.kova-empleo .emp-fan__job-ring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--emp-green-soft);
+  border: 2px solid var(--emp-green);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--emp-green);
+}
+
+.kova-empleo .emp-fan__job strong {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--emp-ink);
+}
+
+/* ─── Journey infographic ─── */
+.kova-empleo .emp-journey {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 52px;
+}
+
+.kova-empleo .emp-journey::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: 12%;
+  right: 12%;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--emp-green) 0 8px, transparent 8px 16px);
+  opacity: 0.4;
+}
+
+.kova-empleo .emp-step {
+  position: relative;
+  text-align: center;
+}
+
+.kova-empleo .emp-step__n {
+  position: relative;
+  z-index: 1;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: var(--emp-green);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 800;
+  box-shadow: 0 0 0 6px var(--emp-paper);
+}
+
+.kova-empleo .emp-step h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--emp-ink);
+  margin: 0;
+}
+
+.kova-empleo .emp-step p {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--emp-body);
+  margin: 8px auto 0;
+  max-width: 30ch;
+}
+
+/* ─── Final CTA panel (asymmetric split, light) ─── */
+.kova-empleo .emp-cta__panel {
+  display: grid;
+  grid-template-columns: 1.3fr 0.9fr;
+  align-items: stretch;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--kv-line);
+  box-shadow: 0 40px 90px -50px rgba(20, 18, 13, 0.35);
+}
+
+.kova-empleo .emp-cta__col {
+  padding: 68px 52px;
+}
+
+.kova-empleo .emp-cta__eyebrow {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--emp-green);
+  margin-bottom: 18px;
+}
+
+.kova-empleo .emp-cta__panel h2 {
+  font-weight: 820;
+  font-size: clamp(1.9rem, 3.4vw, 2.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--emp-ink);
+  max-width: 16ch;
+  margin: 0;
+}
+
+.kova-empleo .emp-cta__panel h2 em {
+  font-style: normal;
+  color: var(--emp-green);
+}
+
+.kova-empleo .emp-cta__lead {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--emp-body);
+  max-width: 40ch;
+  margin: 18px 0 0;
+}
+
+.kova-empleo .emp-cta__ctas {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+.kova-empleo .emp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  border-radius: 12px;
+  padding: 15px 26px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.kova-empleo .emp-btn--light {
+  background: linear-gradient(180deg, #24211a, var(--emp-ink));
+  color: #fff;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset, 0 12px 26px -10px rgba(20, 18, 13, 0.4);
+}
+
+.kova-empleo .emp-btn--light:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 16px 32px -12px rgba(20, 18, 13, 0.45);
+}
+
+.kova-empleo .emp-btn--ghost {
+  background: transparent;
+  color: var(--emp-ink);
+  border: 1px solid var(--kv-line-strong);
+}
+
+.kova-empleo .emp-btn--ghost:hover {
+  background: rgba(20, 18, 13, 0.04);
+}
+
+.kova-empleo .emp-cta__note {
+  margin-top: 22px;
+  font-size: 13px;
+  color: var(--emp-muted);
+}
+
+.kova-empleo .emp-cta__recap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  padding: 68px 44px;
+  background: var(--emp-paper);
+  border-left: 1px solid var(--kv-line);
+}
+
+.kova-empleo .emp-cta__recap-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--emp-ink);
+}
+
+.kova-empleo .emp-cta__recap-row span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--emp-green-soft);
+  color: var(--emp-green);
+  font-weight: 800;
+  font-size: 13px;
+  flex: none;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 880px) {
+  .kova-empleo .emp-hero__grid,
+  .kova-empleo .emp-explorer,
+  .kova-empleo .emp-feature {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .kova-empleo .emp-mosaic { max-width: 360px; margin-top: 12px; padding: 46px 34px; }
+  .kova-empleo .emp-mosaic__grid { grid-template-rows: repeat(2, 110px); }
+  .kova-empleo .emp-float--match { right: -2px; top: 2px; }
+  .kova-empleo .emp-float--checks { left: -2px; bottom: 0; }
+  .kova-empleo .emp-float--stat { right: -2px; bottom: -2px; }
+
+  .kova-empleo .emp-detail { position: static; }
+
+  .kova-empleo .emp-band__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px 20px;
+  }
+
+  .kova-empleo .emp-journey {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .kova-empleo .emp-journey::before { display: none; }
+
+  .kova-empleo .emp-sec { padding: 64px 0; }
+  .kova-empleo .emp-fan { order: -1; }
+
+  .kova-empleo .emp-cta__panel { grid-template-columns: 1fr; }
+  .kova-empleo .emp-cta__col { padding: 44px 28px 36px; }
+  .kova-empleo .emp-cta__recap {
+    padding: 28px 28px 44px;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}

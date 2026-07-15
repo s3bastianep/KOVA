@@ -116,20 +116,39 @@ export function applyLanguageLevels(
   profile: CommercialProfile,
   levels: Record<string, string>,
 ): CommercialProfile {
-  // `levels` (the wizard's local level-picker state) only ever gets entries added when the
-  // language wizard steps run — it's never re-synced when languages are added/removed via the
-  // review-cards editor. Merging it on top of the languages already on `profile` (instead of
-  // rebuilding `idiomas` from `levels` alone) means a language added elsewhere is never dropped.
-  const fromProfile = languageLevelsFromProfile(profile);
-  const merged = { ...fromProfile, ...levels };
-  const names = Object.keys(merged);
+  // Wizard `levels` can hold stale empty strings from an earlier preferencias step. Spreading
+  // them over the profile used to wipe niveles the candidate set in the review editor
+  // (`…levels` won, then empty fell back to a fake "B2"). Only apply non-empty wizard picks,
+  // and never rebuild the list from wizard keys alone (that resurrected deleted languages).
+  const wizardFilled: Record<string, string> = {};
+  for (const [idioma, nivel] of Object.entries(levels)) {
+    const trimmed = nivel?.trim() ?? '';
+    if (trimmed) wizardFilled[idioma] = trimmed;
+  }
+
+  const profileLangs = profile.idiomas ?? [];
+  if (profileLangs.length > 0) {
+    return {
+      ...profile,
+      idiomas: profileLangs.map((entry) => {
+        const name = entry.idioma?.trim();
+        if (!name) return entry;
+        const fromWizard = wizardFilled[name];
+        return fromWizard ? { ...entry, nivel: fromWizard } : entry;
+      }),
+    };
+  }
+
+  const names = Object.keys(wizardFilled);
   if (names.length === 0) return profile;
-  const idiomas = names.map((idioma, i) => ({
-    id: profile.idiomas?.find((l) => l.idioma === idioma)?.id ?? `lang-${i}`,
-    idioma,
-    nivel: merged[idioma]?.trim() || 'B2',
-  }));
-  return { ...profile, idiomas };
+  return {
+    ...profile,
+    idiomas: names.map((idioma, i) => ({
+      id: `lang-${i}`,
+      idioma,
+      nivel: wizardFilled[idioma],
+    })),
+  };
 }
 
 export function languageLevelsFromProfile(profile: CommercialProfile): Record<string, string> {

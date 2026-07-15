@@ -19,6 +19,7 @@ import {
   newWorkHistoryEntry,
 } from '@/lib/commercial-profile-builder';
 import { PortalSkillPicker } from './PortalSkillPicker';
+import { MonthYearPicker } from '@/components/portal/MonthYearPicker';
 
 type Props = {
   profile: CommercialProfile;
@@ -197,15 +198,15 @@ function ExperienceSection({ profile, onChange }: Props) {
               </div>
 
               <div className="portal-onboarding-work-period__dates">
-                <label className="portal-onboarding-work-field">
+                <div className="portal-onboarding-work-field">
                   <span className="portal-onboarding-work-field__label">Inicio</span>
-                  <input
-                    className="portal-onboarding-field portal-onboarding-field--date"
+                  <MonthYearPicker
+                    tone="dark"
                     value={entry.fechaInicio}
-                    placeholder="MM/AAAA"
-                    onChange={(e) => updateWork(entry.id, { fechaInicio: e.target.value })}
+                    placeholder="Elegir mes"
+                    onChange={(fechaInicio) => updateWork(entry.id, { fechaInicio })}
                   />
-                </label>
+                </div>
 
                 {entry.trabajoActual ? (
                   <div className="portal-onboarding-work-field">
@@ -213,15 +214,17 @@ function ExperienceSection({ profile, onChange }: Props) {
                     <div className="portal-onboarding-current-badge">Actualidad</div>
                   </div>
                 ) : (
-                  <label className="portal-onboarding-work-field">
+                  <div className="portal-onboarding-work-field">
                     <span className="portal-onboarding-work-field__label">Fin</span>
-                    <input
-                      className="portal-onboarding-field portal-onboarding-field--date"
+                    <MonthYearPicker
+                      tone="dark"
                       value={entry.fechaFin ?? ''}
-                      placeholder="MM/AAAA"
-                      onChange={(e) => updateWork(entry.id, { fechaFin: e.target.value, trabajoActual: false })}
+                      placeholder="Elegir mes"
+                      onChange={(fechaFin) =>
+                        updateWork(entry.id, { fechaFin, trabajoActual: false })
+                      }
                     />
-                  </label>
+                  </div>
                 )}
               </div>
             </div>
