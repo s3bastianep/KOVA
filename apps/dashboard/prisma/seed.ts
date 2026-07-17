@@ -1,10 +1,85 @@
 import { PrismaClient, UserRole, CompanyStatus, VacancyStatus, CandidateStatus, PipelineStage, AssessmentType } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import crypto from 'node:crypto';
 
 const prisma = new PrismaClient();
 
+// La contraseña demo 'Kova2026!' vive en este archivo público: solo sirve para
+// desarrollo. En producción los usuarios demo son una puerta trasera.
+const DEMO_PASSWORD = 'Kova2026!';
+const IS_PRODUCTION = process.env.NODE_ENV === 'production' && process.env.SEED_DEMO_DATA !== 'true';
+
+function randomPassword(): string {
+  return crypto.randomBytes(24).toString('base64url');
+}
+
+/**
+ * Producción: crea solo el tenant y el usuario admin. La contraseña del admin
+ * sale de SEED_ADMIN_PASSWORD o, si no está definida, se genera aleatoria y se
+ * imprime UNA vez en el log de arranque para que la cambies al entrar.
+ * Además, si algún usuario existente todavía usa la contraseña demo pública,
+ * se le rota a una aleatoria (queda bloqueado hasta un reset manual).
+ */
+async function seedProduction() {
+  const tenant = await prisma.tenant.upsert({
+    where: { slug: 'kova' },
+    update: {},
+    create: { name: 'Kova Talent OS', slug: 'kova', plan: 'enterprise' },
+  });
+
+  const adminEmail = 'admin@kova.co';
+  const existingAdmin = await prisma.user.findFirst({
+    where: { tenantId: tenant.id, email: adminEmail },
+  });
+
+  if (!existingAdmin) {
+    const password = process.env.SEED_ADMIN_PASSWORD || randomPassword();
+    await prisma.user.create({
+      data: {
+        tenantId: tenant.id,
+        email: adminEmail,
+        passwordHash: await bcrypt.hash(password, 12),
+        firstName: 'Admin',
+        lastName: 'Kova',
+        role: UserRole.SUPER_ADMIN,
+      },
+    });
+    if (process.env.SEED_ADMIN_PASSWORD) {
+      console.log(`[seed] Admin creado: ${adminEmail} (contraseña de SEED_ADMIN_PASSWORD).`);
+    } else {
+      console.log(`[seed] Admin creado: ${adminEmail}`);
+      console.log(`[seed] Contraseña temporal (cámbiala al entrar): ${password}`);
+    }
+  }
+
+  // Remediación: rotar cualquier cuenta que siga con la contraseña demo pública.
+  const users = await prisma.user.findMany({
+    where: { tenantId: tenant.id },
+    select: { id: true, email: true, passwordHash: true },
+  });
+  for (const user of users) {
+    const usesDemo = await bcrypt.compare(DEMO_PASSWORD, user.passwordHash);
+    if (!usesDemo) continue;
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { passwordHash: await bcrypt.hash(randomPassword(), 12) },
+    });
+    console.warn(
+      `[seed] SEGURIDAD: ${user.email} usaba la contraseña demo pública; se rotó a una aleatoria. ` +
+        'Usa el admin para restablecerla si esa cuenta es legítima.',
+    );
+  }
+
+  console.log('[seed] Producción: sin datos demo (usa SEED_DEMO_DATA=true para forzarlos).');
+}
+
 async function main() {
-  const passwordHash = await bcrypt.hash('Kova2026!', 12);
+  if (IS_PRODUCTION) {
+    await seedProduction();
+    return;
+  }
+
+  const passwordHash = await bcrypt.hash(DEMO_PASSWORD, 12);
 
   const tenant = await prisma.tenant.upsert({
     where: { slug: 'kova' },
@@ -439,7 +514,7 @@ async function main() {
     assessments: assessments.length,
     calendarEvents: calendarEvents.length,
   });
-  console.log('Password for all users: Kova2026!');
+  console.log(`Password for all users (SOLO DESARROLLO): ${DEMO_PASSWORD}`);
 }
 
 main()

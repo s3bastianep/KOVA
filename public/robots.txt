@@ -4,5 +4,7 @@ Allow: /
 Disallow: /dashboard
 Disallow: /api/
 Disallow: /login
+Disallow: /portal
+Disallow: /acceso
 
 Sitemap: https://kova.com.co/sitemap.xml
