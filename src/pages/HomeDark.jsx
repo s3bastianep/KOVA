@@ -115,24 +115,6 @@ export default function HomeDark() {
     <main className="kova-dark">
       {/* 01 · HERO — vender la promesa */}
       <section className="kd-hero" id="inicio" aria-labelledby="kd-hero-title">
-        <header className="kd-header">
-          <Link className="kd-brand" to="/" aria-label="Kova, inicio">
-            kova<span>.</span>
-          </Link>
-          <nav className="kd-nav" aria-label="Navegación principal">
-            <Link to="/para-empresas">Empresas</Link>
-            <Link to="/empleo">Talento</Link>
-            <a href="#metodo">Método Kova</a>
-            <Link to="/guias">Blog</Link>
-          </nav>
-          <div className="kd-header-actions">
-            <Link to="/login">Ingresar</Link>
-            <a className="kd-btn kd-btn--lime kd-btn--sm" href="#caminos">
-              Empezar
-            </a>
-          </div>
-        </header>
-
         <svg className="kd-thread" viewBox="0 0 1320 780" preserveAspectRatio="none" aria-hidden>
           <path pathLength="1" d="M77 121 C115 142 166 154 226 154 C316 155 456 154 560 154 C624 154 672 192 672 244 V765" />
           <path pathLength="1" d="M50 94 L96 111 L77 121 L86 143 Z M50 94 L77 121" />

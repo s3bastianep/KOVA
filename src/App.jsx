@@ -30,7 +30,7 @@ function AppShell() {
 
   return (
     <ErrorBoundary>
-      {!isAuth && !isHome ? <Navbar /> : null}
+      {!isAuth ? <Navbar /> : null}
       <div className={isAuth || isHome ? undefined : 'kova-route-shell'}>
         <Suspense fallback={isAuth || isHome ? null : <div className="kova-route-shell__fallback" aria-hidden />}>
           <Routes>
