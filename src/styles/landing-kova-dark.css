@@ -199,7 +199,9 @@
 .kd-hero h1 {
   margin: 0;
   color: var(--kd-text);
-  font-size: clamp(44px, 4vw, 58px);
+  /* Mismo token de tamaño que los hero de /para-empresas y /empleo,
+     para que los tres títulos midan igual en cualquier ancho. */
+  font-size: var(--kv-fs-hero, clamp(2.5rem, 5.2vw, 64px));
   font-weight: 800;
   letter-spacing: -0.05em;
   line-height: 0.95;
