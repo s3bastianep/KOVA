@@ -10,6 +10,7 @@ import { getPublicTenantId } from '@/lib/public-tenant';
 import { isMockMode, upsertMockPortalCandidate, getMockPortalCandidateByEmail } from '@/lib/mock';
 import { splitFullName } from '@/lib/candidate-commercial-profile';
 import { waitForSchema } from '@/lib/schema-ready';
+import { passwordPolicyError } from '@/lib/password';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
 
 export const dynamic = 'force-dynamic';
@@ -60,11 +61,12 @@ async function handlePOST(req: NextRequest) {
     return Response.json({ message: 'Correo electrónico inválido' }, { status: 400 });
   }
 
-  if (password.length < 8) {
-    return Response.json({ message: 'La contraseña debe tener al menos 8 caracteres' }, { status: 400 });
+  const passwordError = passwordPolicyError(password, { email, nombre });
+  if (passwordError) {
+    return Response.json({ message: passwordError }, { status: 400 });
   }
 
-  if (nombre.length > 120 || email.length > 160 || telefono.length > 30 || ciudad.length > 80 || password.length > 128) {
+  if (nombre.length > 120 || email.length > 160 || telefono.length > 30 || ciudad.length > 80) {
     return Response.json({ message: 'Alguno de los campos es demasiado largo.' }, { status: 400 });
   }
 

@@ -14,6 +14,7 @@ import {
   verifyMockPortalPassword,
 } from '@/lib/mock';
 import { profileFromCandidate } from '@/lib/portal-profile';
+import { passwordPolicyError } from '@/lib/password';
 
 export const dynamic = 'force-dynamic';
 
@@ -96,8 +97,9 @@ export async function PATCH(req: NextRequest) {
         }
 
         const newPassword = String(body.newPassword ?? '');
-        if (newPassword.length < 8) {
-          return Response.json({ message: 'La nueva contraseña debe tener al menos 8 caracteres' }, { status: 400 });
+        const mockPolicyError = passwordPolicyError(newPassword, { email: mock.email ?? undefined });
+        if (mockPolicyError) {
+          return Response.json({ message: mockPolicyError }, { status: 400 });
         }
         await updateMockPortalPassword(user.id, newPassword);
         invalidate(user.id, candidate.id);
@@ -173,8 +175,15 @@ export async function PATCH(req: NextRequest) {
       }
 
       const newPassword = String(body.newPassword ?? '');
-      if (newPassword.length < 8) {
-        return Response.json({ message: 'La nueva contraseña debe tener al menos 8 caracteres' }, { status: 400 });
+      const policyError = passwordPolicyError(newPassword, { email: dbUser.email });
+      if (policyError) {
+        return Response.json({ message: policyError }, { status: 400 });
+      }
+      if (await bcrypt.compare(newPassword, dbUser.passwordHash)) {
+        return Response.json(
+          { message: 'La nueva contraseña no puede ser igual a la actual.' },
+          { status: 400 },
+        );
       }
 
       const passwordHash = await bcrypt.hash(newPassword, 12);
