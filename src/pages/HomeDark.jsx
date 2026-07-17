@@ -274,73 +274,64 @@ export default function HomeDark() {
           </p>
         </div>
 
-        <div className="kd-doors" data-reveal>
-          <Link className="kd-door kd-door--lime" to="/para-empresas">
-            <span className="kd-door__icon">
-              <svg viewBox="0 0 24 24" aria-hidden>
-                <rect x="5" y="4" width="14" height="17" rx="1.5" />
-                <path d="M9 8h.01M15 8h.01M9 12h.01M15 12h.01M9 16h.01M15 16h.01M3 21h18" />
-              </svg>
-            </span>
-            <span className="kd-door__body">
-              <span className="kd-door__tag">01 · Empresas</span>
+        <div className="kd-paths-stage" data-reveal>
+          <Link className="kd-path kd-path--ink" to="/para-empresas">
+            <span className="kd-path__label">Empresas</span>
+            <svg className="kd-path__ghost" viewBox="0 0 24 24" aria-hidden>
+              <rect x="5" y="4" width="14" height="17" rx="1.5" />
+              <path d="M9 8h.01M15 8h.01M9 12h.01M15 12h.01M9 16h.01M15 16h.01M3 21h18" />
+            </svg>
+            <span className="kd-path__body">
               <h3>Contrata con más contexto</h3>
-              <p>Encuentra talento alineado con la forma de vender de tu empresa.</p>
-              <span className="kd-door__link">
+              <p>
+                Talento alineado con la forma de vender de tu empresa, no solo con el
+                título del cargo.
+              </p>
+              <span className="kd-path__cta">
                 Conocer más <i aria-hidden>→</i>
               </span>
             </span>
           </Link>
 
-          <Link className="kd-door" to="/empleo">
-            <span className="kd-door__icon">
-              <svg viewBox="0 0 24 24" aria-hidden>
-                <circle cx="12" cy="8" r="3.6" />
-                <path d="M5.5 20c.8-3.6 3.4-5.4 6.5-5.4s5.7 1.8 6.5 5.4" />
-              </svg>
-            </span>
-            <span className="kd-door__body">
-              <span className="kd-door__tag">02 · Talento</span>
+          <span className="kd-paths-node" aria-hidden>
+            <svg viewBox="0 0 24 24">
+              <path d="M2.5 12h6.2M21.5 12h-6.2" />
+              <path d="M6.2 8.4l3.6 3.6-3.6 3.6" />
+              <path d="M17.8 8.4L14.2 12l3.6 3.6" />
+            </svg>
+          </span>
+
+          <Link className="kd-path kd-path--lime" to="/empleo">
+            <span className="kd-path__label">Talento</span>
+            <svg className="kd-path__ghost" viewBox="0 0 24 24" aria-hidden>
+              <circle cx="12" cy="8" r="3.6" />
+              <path d="M5.5 20c.8-3.6 3.4-5.4 6.5-5.4s5.7 1.8 6.5 5.4" />
+            </svg>
+            <span className="kd-path__body">
               <h3>Encuentra dónde crecer</h3>
-              <p>Haz visible tu experiencia y conecta con oportunidades que tienen sentido.</p>
-              <span className="kd-door__link">
+              <p>
+                Haz visible tu experiencia y conecta con oportunidades que tienen
+                sentido para tu carrera.
+              </p>
+              <span className="kd-path__cta">
                 Ver oportunidades <i aria-hidden>→</i>
               </span>
             </span>
           </Link>
+        </div>
 
-          <a className="kd-door" href="#alineacion">
-            <span className="kd-door__icon">
-              <svg viewBox="0 0 24 24" aria-hidden>
-                <circle cx="12" cy="12" r="8.5" />
-                <path d="M8.5 12.2l2.4 2.4 4.6-5" />
-              </svg>
-            </span>
-            <span className="kd-door__body">
-              <span className="kd-door__tag">03 · Método</span>
-              <h3>Alineación antes de entrevistar</h3>
-              <p>Leemos negocio, cultura y forma de trabajar antes de recomendar a alguien.</p>
-              <span className="kd-door__link">
-                Así funciona <i aria-hidden>→</i>
-              </span>
-            </span>
+        <div className="kd-paths-more" data-reveal>
+          <a className="kd-more" href="#alineacion">
+            <span>Nuestro método</span>
+            <strong>
+              Alineación antes de entrevistar <i aria-hidden>→</i>
+            </strong>
           </a>
-
-          <Link className="kd-door kd-door--lime" to="/empleo">
-            <span className="kd-door__icon">
-              <svg viewBox="0 0 24 24" aria-hidden>
-                <rect x="6" y="3" width="12" height="18" rx="2" />
-                <path d="M9.5 8h5M9.5 12h5M9.5 16h3" />
-              </svg>
-            </span>
-            <span className="kd-door__body">
-              <span className="kd-door__tag">04 · Vacantes</span>
-              <h3>Todo el universo comercial</h3>
-              <p>Roles en ventas, cuentas, operaciones y liderazgo comercial.</p>
-              <span className="kd-door__link">
-                Explorar vacantes <i aria-hidden>→</i>
-              </span>
-            </span>
+          <Link className="kd-more" to="/empleo">
+            <span>Vacantes activas</span>
+            <strong>
+              Explorar el universo comercial <i aria-hidden>→</i>
+            </strong>
           </Link>
         </div>
       </section>
