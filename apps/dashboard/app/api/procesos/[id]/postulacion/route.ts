@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { withApiErrors } from '@/lib/api-handler';
 import { getQuestionById, standardQuestionsFromMetadata } from '../../../../../lib/standard-questions';
 import { compatibilityFromVacancyAndAnswers } from '../../../../../lib/compatibility';
 import { prisma } from '../../../../../lib/prisma';
@@ -43,7 +44,9 @@ async function loadVacancy(id: string): Promise<VacancyMeta | null> {
   return vacancy;
 }
 
-export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export const GET = withApiErrors('postulacion', handleGET);
+
+async function handleGET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const vacancy = await loadVacancy(id);
   if (!vacancy) return Response.json({ message: 'Proceso no encontrado' }, { status: 404 });
@@ -70,7 +73,9 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   });
 }
 
-export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export const POST = withApiErrors('postulacion', handlePOST);
+
+async function handlePOST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   // Endpoint público: cap defensivo por IP contra bots que creen candidatos en masa.
   if (isRateLimited(req, 'postulacion', 5, 60_000)) {
     return Response.json(

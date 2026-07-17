@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { withApiErrors } from '@/lib/api-handler';
 import { CV_MAX_BYTES } from '@/lib/cv-extract';
 import { CvFileReadError, extractCvFromFileBuffer } from '@/lib/cv-extract-server';
 import { detectCvFileFormat } from '@/lib/cv-file-formats';
@@ -12,7 +13,9 @@ export const runtime = 'nodejs';
  * database persistence, so the /dev/onboarding-preview harness can prove the parser actually
  * reads a real PDF/DOCX and returns structured data. Never served in production.
  */
-export async function POST(req: NextRequest) {
+export const POST = withApiErrors('dev/cv-extract', handlePOST);
+
+async function handlePOST(req: NextRequest) {
   if (process.env.NODE_ENV === 'production') {
     return Response.json({ message: 'Not found' }, { status: 404 });
   }

@@ -1,11 +1,14 @@
 import { NextRequest } from 'next/server';
+import { withApiErrors } from '@/lib/api-handler';
 import { getUserFromRequest, unauthorized, forbidden, isInternalRole } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode, MOCK_TASKS } from '../../../lib/mock';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest) {
+export const GET = withApiErrors('tareas', handleGET);
+
+async function handleGET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
   if (!isInternalRole(user.role)) return forbidden();

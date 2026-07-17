@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { withApiErrors } from '@/lib/api-handler';
 import { ActivityType, PipelineStage, TaskPriority } from '@prisma/client';
 import { getUserFromRequest, unauthorized, companyWhereForUser, isStaffRole } from '../../../../../../lib/auth';
 import { prisma } from '../../../../../../lib/prisma';
@@ -43,7 +44,9 @@ function dueTomorrow() {
   return new Date(Date.now() + 24 * 60 * 60 * 1000);
 }
 
-export async function PATCH(
+export const PATCH = withApiErrors('vacantes/[id]/candidatos', handlePATCH);
+
+async function handlePATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string; candidateVacancyId: string }> },
 ) {

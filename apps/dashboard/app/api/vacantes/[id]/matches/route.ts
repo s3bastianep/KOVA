@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { withApiErrors } from '@/lib/api-handler';
 import { UserRole } from '@prisma/client';
 import { getUserFromRequest, unauthorized } from '../../../../../lib/auth';
 import { prisma } from '../../../../../lib/prisma';
@@ -35,7 +36,9 @@ type MatchRow = {
   breakdown: ReturnType<typeof calculateCompatibility>['breakdown'];
 };
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export const GET = withApiErrors('vacantes/[id]/matches', handleGET);
+
+async function handleGET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getUserFromRequest(req);
   if (!user || !STAFF_ROLES.has(user.role)) return unauthorized();
 

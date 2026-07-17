@@ -1,12 +1,15 @@
 import { isMockMode } from '../../../lib/mock';
 import { isSchemaReady } from '../../../lib/schema-ready';
+import { withApiErrors } from '../../../lib/api-handler';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export const GET = withApiErrors('health', handleGET);
+
+async function handleGET() {
   const hasDb = Boolean(process.env.DATABASE_URL?.trim());
   const mock = isMockMode();
-  const dbReady = hasDb && !mock ? await isSchemaReady() : false;
+  const dbReady = hasDb && !mock ? await isSchemaReady().catch(() => false) : false;
 
   return Response.json({
     ok: true,

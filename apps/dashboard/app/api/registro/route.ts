@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { withApiErrors } from '@/lib/api-handler';
 import type { Prisma } from '@prisma/client';
 import { type CommercialProfile } from '../../../lib/candidate-commercial-profile';
 import { getPublicTenantId } from '../../../lib/public-tenant';
@@ -42,7 +43,9 @@ export async function GET() {
   });
 }
 
-export async function POST(req: NextRequest) {
+export const POST = withApiErrors('registro', handlePOST);
+
+async function handlePOST(req: NextRequest) {
   // Endpoint público sin login: límite por IP contra bots.
   if (isRateLimited(req, 'registro', 20, 60_000)) {
     return Response.json(

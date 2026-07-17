@@ -7,6 +7,7 @@ import { getCandidateForUser } from '../../../../lib/candidate-auth';
 import { isMockMode, MOCK_USER, getMockPortalCandidateByEmail, verifyMockPortalPassword } from '../../../../lib/mock';
 import { isRateLimited, isKeyRateLimited, clientIp } from '../../../../lib/rate-limit';
 import { logSecurityEvent } from '../../../../lib/security-log';
+import { withApiErrors } from '../../../../lib/api-handler';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,7 +38,11 @@ async function sessionResponse(authUser: AuthUser) {
   );
 }
 
-export async function POST(req: NextRequest) {
+// El try/catch interno maneja la caída de la DB (503, fail closed); el wrapper
+// cubre lo demás (p. ej. el camino mock), que antes quedaba sin red de seguridad.
+export const POST = withApiErrors('auth/login', handlePOST);
+
+async function handlePOST(req: NextRequest) {
   // Límite por IP además del bloqueo por cuenta: frena fuerza bruta distribuida
   // sobre muchas cuentas distintas desde una misma dirección.
   if (isRateLimited(req, 'login', 15, 60_000)) {

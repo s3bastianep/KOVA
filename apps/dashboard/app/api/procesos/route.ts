@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { withApiErrors } from '@/lib/api-handler';
 import { PipelineStage, VacancyStatus } from '@prisma/client';
 import { getUserFromRequest, unauthorized, companyWhereForUser, isStaffRole } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
@@ -28,7 +29,9 @@ function mapStage(label: string, index: number): PipelineStage {
   return STAGE_MAP[label] ?? (['APPLIED', 'SCREENING', 'ASSESSMENT', 'INTERVIEW', 'CLIENT_REVIEW', 'OFFER', 'HIRED'][index] as PipelineStage) ?? 'APPLIED';
 }
 
-export async function POST(req: NextRequest) {
+export const POST = withApiErrors('procesos', handlePOST);
+
+async function handlePOST(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
   if (!isStaffRole(user.role)) return unauthorized();

@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { withApiErrors } from '@/lib/api-handler';
 import { getUserFromRequest, unauthorized, forbidden, isInternalRole } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode, MOCK_CALENDAR } from '../../../lib/mock';
@@ -72,7 +73,9 @@ function mapEvent(e: {
   };
 }
 
-export async function GET(req: NextRequest) {
+export const GET = withApiErrors('calendario', handleGET);
+
+async function handleGET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
   if (!isInternalRole(user.role)) return forbidden();

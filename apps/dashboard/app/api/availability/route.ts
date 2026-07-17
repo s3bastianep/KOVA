@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { getAvailabilityForDate } from '../../../lib/booking-slots';
+import { withApiErrors } from '../../../lib/api-handler';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +14,9 @@ export async function OPTIONS() {
   return new Response(null, { status: 204, headers: CORS_HEADERS });
 }
 
-export async function GET(req: NextRequest) {
+export const GET = withApiErrors('availability', handleGET, { headers: CORS_HEADERS });
+
+async function handleGET(req: NextRequest) {
   const date = String(req.nextUrl.searchParams.get('date') || '');
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return Response.json({ error: 'Fecha inválida.' }, { status: 400, headers: CORS_HEADERS });

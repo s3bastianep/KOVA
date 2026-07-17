@@ -1,11 +1,14 @@
 import { NextRequest } from 'next/server';
+import { withApiErrors } from '@/lib/api-handler';
 import { getUserFromRequest, unauthorized, companyWhereForUser, isStaffRole } from '../../../../lib/auth';
 import { prisma } from '../../../../lib/prisma';
 import { isMockMode, getMockVacancy } from '../../../../lib/mock';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export const GET = withApiErrors('vacantes/[id]', handleGET);
+
+async function handleGET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
   if (!isStaffRole(user.role)) return unauthorized();

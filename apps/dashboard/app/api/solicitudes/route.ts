@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { getUserFromRequest, unauthorized, forbidden, isInternalRole } from '../../../lib/auth';
 import { isRateLimited } from '../../../lib/rate-limit';
+import { withApiErrors } from '../../../lib/api-handler';
 import { isSlotAvailable } from '../../../lib/booking-slots';
 import { generateTimeSlots, isBookableDateKey } from '../../../../../shared/schedule.js';
 import {
@@ -21,7 +22,9 @@ export async function OPTIONS() {
   return new Response(null, { status: 204, headers: CORS_HEADERS });
 }
 
-export async function GET(req: NextRequest) {
+export const GET = withApiErrors('solicitudes', handleGET);
+
+async function handleGET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
   if (!isInternalRole(user.role)) return forbidden();
@@ -31,7 +34,9 @@ export async function GET(req: NextRequest) {
   return Response.json({ requests });
 }
 
-export async function POST(req: NextRequest) {
+export const POST = withApiErrors('solicitudes', handlePOST, { headers: CORS_HEADERS });
+
+async function handlePOST(req: NextRequest) {
   // Endpoint público (CORS abierto): mismo límite defensivo que /api/bookings.
   if (isRateLimited(req, 'solicitudes', 5, 60_000)) {
     return Response.json(

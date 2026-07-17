@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { withApiErrors } from '@/lib/api-handler';
 import { getUserFromRequest, unauthorized, companyWhereForUser, isStaffRole } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode, getMockVacanciesForList } from '../../../lib/mock';
@@ -6,7 +7,9 @@ import { computeProcessPipelineMetrics } from '../../../lib/process-metrics';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest) {
+export const GET = withApiErrors('vacantes', handleGET);
+
+async function handleGET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
   if (!isStaffRole(user.role)) return unauthorized();

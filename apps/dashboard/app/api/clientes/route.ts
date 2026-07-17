@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { withApiErrors } from '@/lib/api-handler';
 import { getUserFromRequest, unauthorized, companyWhereForUser, isStaffRole } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode, getMockClients } from '../../../lib/mock';
@@ -7,7 +8,9 @@ export const dynamic = 'force-dynamic';
 
 const ACTIVE_STATUSES = new Set(['SEARCH_ACTIVE', 'EVALUATION', 'FINALISTS', 'OFFER', 'PROFILE_BUILDING', 'DISCOVERY', 'DISCOVERY_PENDING', 'APPROVAL_PENDING']);
 
-export async function GET(req: NextRequest) {
+export const GET = withApiErrors('clientes', handleGET);
+
+async function handleGET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
   if (!isStaffRole(user.role)) return unauthorized();

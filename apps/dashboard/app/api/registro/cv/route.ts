@@ -8,6 +8,7 @@ import { persistCandidateCvFile } from '../../../../lib/persist-candidate-cv';
 import { readRegistroMetadata } from '../../../../lib/registro-session';
 import { prisma } from '../../../../lib/prisma';
 import { isRateLimited } from '../../../../lib/rate-limit';
+import { withApiErrors } from '../../../../lib/api-handler';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -23,7 +24,9 @@ async function validateSession(tenantId: string, candidateId: string, resumeToke
   return candidate;
 }
 
-export async function POST(req: NextRequest) {
+export const POST = withApiErrors('registro/cv', handlePOST);
+
+async function handlePOST(req: NextRequest) {
   if (isRateLimited(req, 'registro-cv', 10, 60_000)) {
     return Response.json({ message: 'Demasiados intentos. Espera un minuto e inténtalo de nuevo.' }, { status: 429 });
   }

@@ -1,11 +1,14 @@
 import { NextRequest } from 'next/server';
+import { withApiErrors } from '@/lib/api-handler';
 import { getUserFromRequest, unauthorized, companyWhereForUser, isStaffRole } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode, MOCK_COMPANIES } from '../../../lib/mock';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest) {
+export const GET = withApiErrors('empresas', handleGET);
+
+async function handleGET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
   if (!isStaffRole(user.role)) return unauthorized();
@@ -27,7 +30,9 @@ export async function GET(req: NextRequest) {
   return Response.json(companies);
 }
 
-export async function POST(req: NextRequest) {
+export const POST = withApiErrors('empresas', handlePOST);
+
+async function handlePOST(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
   if (!isStaffRole(user.role)) return unauthorized();

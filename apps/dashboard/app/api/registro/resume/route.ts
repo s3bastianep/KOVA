@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { withApiErrors } from '@/lib/api-handler';
 import { readRegistroMetadata } from '../../../../lib/registro-session';
 import { getPublicTenantId } from '../../../../lib/public-tenant';
 import { prisma } from '../../../../lib/prisma';
@@ -6,7 +7,9 @@ import { isMockMode } from '../../../../lib/mock';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest) {
+export const GET = withApiErrors('registro/resume', handleGET);
+
+async function handleGET(req: NextRequest) {
   const candidateId = String(req.nextUrl.searchParams.get('candidateId') ?? '').trim();
   const resumeToken = String(req.nextUrl.searchParams.get('token') ?? '').trim();
 

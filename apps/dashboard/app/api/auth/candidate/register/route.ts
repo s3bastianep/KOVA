@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { withApiErrors } from '@/lib/api-handler';
 import bcrypt from 'bcryptjs';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
@@ -31,7 +32,9 @@ async function sessionResponse(authUser: AuthUser) {
   );
 }
 
-export async function POST(req: NextRequest) {
+export const POST = withApiErrors('auth/candidate/register', handlePOST);
+
+async function handlePOST(req: NextRequest) {
   // Registro público: cap por IP contra creación masiva de cuentas.
   if (isRateLimited(req, 'candidate-register', 5, 60_000)) {
     return Response.json(

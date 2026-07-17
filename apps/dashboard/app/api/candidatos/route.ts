@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { withApiErrors } from '@/lib/api-handler';
 import {
   getUserFromRequest,
   unauthorized,
@@ -107,7 +108,9 @@ function deriveScores(compatibility: number, seed: string) {
   };
 }
 
-export async function GET(req: NextRequest) {
+export const GET = withApiErrors('candidatos', handleGET);
+
+async function handleGET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
   if (!isStaffRole(user.role)) return unauthorized();
@@ -188,7 +191,9 @@ export async function GET(req: NextRequest) {
   });
 }
 
-export async function POST(req: NextRequest) {
+export const POST = withApiErrors('candidatos', handlePOST);
+
+async function handlePOST(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
   // Crear/vincular candidatos es tarea interna; un CLIENT no gestiona la base de talento.

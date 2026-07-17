@@ -1,9 +1,12 @@
 import { NextRequest } from 'next/server';
+import { withApiErrors } from '@/lib/api-handler';
 import { clearRefreshCookie, readRefreshCookie, revokeRefreshToken } from '../../../../lib/session';
 
 export const dynamic = 'force-dynamic';
 
-export async function POST(req: NextRequest) {
+export const POST = withApiErrors('auth/logout', handlePOST);
+
+async function handlePOST(req: NextRequest) {
   const raw = readRefreshCookie(req);
   if (raw) await revokeRefreshToken(raw);
 
