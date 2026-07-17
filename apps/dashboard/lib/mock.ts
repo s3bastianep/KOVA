@@ -1172,3 +1172,28 @@ export function updateMockPortalProfile(
   saveMockPortalStore(mockPortalCandidates);
   return existing;
 }
+
+export function updateMockPortalEmail(userId: string, newEmail: string) {
+  const existing = getMockPortalCandidate(userId);
+  if (!existing) return null;
+  const email = newEmail.trim().toLowerCase();
+  existing.email = email;
+  if (existing.metadata.commercialProfile) {
+    existing.metadata.commercialProfile = {
+      ...existing.metadata.commercialProfile,
+      email,
+    };
+  }
+  mockPortalCandidates.set(userId, existing);
+  saveMockPortalStore(mockPortalCandidates);
+  return existing;
+}
+
+export async function updateMockPortalPassword(userId: string, newPassword: string) {
+  const existing = getMockPortalCandidate(userId);
+  if (!existing) return null;
+  existing.passwordHash = await bcrypt.hash(newPassword, 12);
+  mockPortalCandidates.set(userId, existing);
+  saveMockPortalStore(mockPortalCandidates);
+  return existing;
+}
