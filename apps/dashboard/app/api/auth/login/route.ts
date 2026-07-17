@@ -24,6 +24,27 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// Contador en memoria de fallos por correo INEXISTENTE. Las cuentas reales
+// acumulan `failedAttempts` en la base y responden cada vez más lento; sin este
+// contador, un correo inexistente respondía siempre igual de rápido y ese
+// contraste delataba qué correos están registrados (enumeración por timing).
+const unknownEmailFailures = new Map<string, { count: number; last: number }>();
+const UNKNOWN_FAILURE_WINDOW_MS = 15 * 60 * 1000;
+
+function nextUnknownFailureCount(email: string): number {
+  const now = Date.now();
+  const entry = unknownEmailFailures.get(email);
+  const count = entry && now - entry.last < UNKNOWN_FAILURE_WINDOW_MS ? entry.count + 1 : 1;
+  unknownEmailFailures.set(email, { count, last: now });
+
+  if (unknownEmailFailures.size > 5000) {
+    for (const [key, value] of unknownEmailFailures) {
+      if (now - value.last >= UNKNOWN_FAILURE_WINDOW_MS) unknownEmailFailures.delete(key);
+    }
+  }
+  return count;
+}
+
 /** Espera creciente tras fallos: 0.5s, 1s, 2s, 4s (tope). Encarece el diccionario. */
 function failureDelayMs(attempts: number) {
   return Math.min(500 * 2 ** Math.max(0, attempts - 1), 4000);
@@ -134,16 +155,19 @@ async function handlePOST(req: NextRequest) {
       // revela si el correo existe.
       await bcrypt.compare(password, DUMMY_HASH).catch(() => false);
       logSecurityEvent('login_failed', { email: String(email), ip: clientIp(req) });
-      await sleep(failureDelayMs(1));
+      // Misma espera progresiva que una cuenta real acumulando fallos.
+      await sleep(failureDelayMs(nextUnknownFailureCount(String(email).toLowerCase())));
       return Response.json({ message: 'Correo o contraseña incorrectos' }, { status: 401 });
     }
 
     if (user.lockedUntil && user.lockedUntil > new Date()) {
       logSecurityEvent('login_locked', { email: user.email, ip: clientIp(req), userId: user.id });
-      return Response.json(
-        { message: 'Cuenta bloqueada temporalmente. Intente más tarde.' },
-        { status: 403 },
-      );
+      // Mensaje y tiempos idénticos a un fallo normal: decir "cuenta bloqueada"
+      // confirmaría que el correo existe. El bloqueo sigue activo por dentro
+      // (ni la contraseña correcta entra hasta que expire).
+      await bcrypt.compare(password, DUMMY_HASH).catch(() => false);
+      await sleep(failureDelayMs(user.failedAttempts));
+      return Response.json({ message: 'Correo o contraseña incorrectos' }, { status: 401 });
     }
 
     const valid = await bcrypt.compare(password, user.passwordHash);
