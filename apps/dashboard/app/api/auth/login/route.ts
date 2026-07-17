@@ -38,6 +38,13 @@ export async function POST(req: NextRequest) {
     return Response.json({ message: 'Correo y contraseña son obligatorios' }, { status: 400 });
   }
 
+  if (
+    typeof email !== 'string' || email.length > 160 ||
+    typeof password !== 'string' || password.length > 128
+  ) {
+    return Response.json({ message: 'Correo o contraseña incorrectos' }, { status: 401 });
+  }
+
   if (isMockMode()) {
     const normalizedEmail = String(email).toLowerCase();
     const portalCandidate = getMockPortalCandidateByEmail(normalizedEmail);

@@ -61,6 +61,10 @@ export async function POST(req: NextRequest) {
     return Response.json({ message: 'La contraseña debe tener al menos 8 caracteres' }, { status: 400 });
   }
 
+  if (nombre.length > 120 || email.length > 160 || telefono.length > 30 || ciudad.length > 80 || password.length > 128) {
+    return Response.json({ message: 'Alguno de los campos es demasiado largo.' }, { status: 400 });
+  }
+
   if (!consentimientoDatos) {
     return Response.json({ message: 'Debes aceptar el tratamiento de datos personales' }, { status: 400 });
   }

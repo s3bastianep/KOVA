@@ -12,10 +12,16 @@ import {
   readRegistroMetadata,
   splitProfileName,
 } from '../../../lib/registro-session';
+import { isRateLimited } from '../../../lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
 type RegistroAction = 'account' | 'progress' | 'publish';
+
+const ACTIONS: RegistroAction[] = ['account', 'progress', 'publish'];
+// El perfil comercial es un objeto libre que se guarda en metadata; sin tope, un bot
+// puede inflar la fila del candidato con megabytes de JSON.
+const MAX_PROFILE_JSON = 20_000;
 
 async function findCandidateBySession(tenantId: string, candidateId: string, resumeToken: string) {
   const candidate = await prisma.candidate.findFirst({
@@ -37,15 +43,39 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  // Endpoint público sin login: límite por IP contra bots.
+  if (isRateLimited(req, 'registro', 20, 60_000)) {
+    return Response.json(
+      { message: 'Demasiadas solicitudes seguidas. Espera un minuto e intenta de nuevo.' },
+      { status: 429 },
+    );
+  }
+
   const body = await req.json().catch(() => ({}));
-  const action = String(body.action ?? 'publish') as RegistroAction;
+  const rawAction = String(body.action ?? 'publish');
+  if (!ACTIONS.includes(rawAction as RegistroAction)) {
+    return Response.json({ message: 'Acción no válida.' }, { status: 400 });
+  }
+  const action = rawAction as RegistroAction;
+
+  if (body.profile != null && typeof body.profile !== 'object') {
+    return Response.json({ message: 'Perfil no válido.' }, { status: 400 });
+  }
   const profile = (body.profile ?? {}) as CommercialProfile;
+  if (JSON.stringify(profile).length > MAX_PROFILE_JSON) {
+    return Response.json({ message: 'El perfil enviado es demasiado grande.' }, { status: 400 });
+  }
+
   const step = typeof body.step === 'number' ? Math.max(0, Math.min(7, body.step)) : 0;
   const { firstName, lastName } = splitProfileName(profile, body);
   const email = String(profile.email ?? body.email ?? '').trim().toLowerCase();
 
   if (!firstName || !lastName || !email) {
     return Response.json({ message: 'Nombre y correo son obligatorios' }, { status: 400 });
+  }
+
+  if (firstName.length > 80 || lastName.length > 80 || email.length > 160) {
+    return Response.json({ message: 'Nombre o correo demasiado largos.' }, { status: 400 });
   }
 
   if (!/.+@.+\..+/.test(email)) {
@@ -72,6 +102,25 @@ export async function POST(req: NextRequest) {
       where: { tenantId, email: { equals: email, mode: 'insensitive' } },
       select: { id: true, metadata: true },
     });
+
+    // Solo se puede retomar/sobrescribir un registro del propio funnel que siga
+    // incompleto. Sin este corte, cualquiera que conozca el correo de un candidato
+    // existente (creado por el equipo, del portal o ya publicado) recibiría su
+    // resumeToken y podría reescribir su perfil.
+    if (existing) {
+      const existingMeta = readRegistroMetadata(existing.metadata);
+      const isResumableFunnel =
+        existingMeta.registrationType === 'talent_pool' && existingMeta.profileStatus !== 'complete';
+      if (!isResumableFunnel) {
+        return Response.json(
+          {
+            message:
+              'Este correo ya está registrado. Si es tuyo, inicia sesión o escríbenos a contacto@kova.com.co.',
+          },
+          { status: 409 },
+        );
+      }
+    }
 
     const prevMeta = readRegistroMetadata(existing?.metadata);
     const resumeToken = prevMeta.resumeToken ?? newResumeToken();

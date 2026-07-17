@@ -17,13 +17,21 @@ export async function OPTIONS() {
 }
 
 function validateBody(body: Record<string, unknown> | null) {
-  const { date, time, nombre, correo, telefono, empresa } = body ?? {};
+  const { date, time, nombre, correo, telefono, empresa, rolVacante } = body ?? {};
   if (!date || !time || !nombre || !correo || !telefono || !empresa) {
     return 'Completa fecha, hora, nombre, correo, teléfono y empresa.';
   }
   if (typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return 'Fecha inválida.';
   if (typeof time !== 'string' || !/^\d{2}:\d{2}$/.test(time)) return 'Hora inválida.';
   if (typeof correo !== 'string' || !correo.includes('@')) return 'Correo inválido.';
+  // Topes de longitud: endpoint público, evita guardar payloads inflados por bots.
+  if (typeof nombre !== 'string' || nombre.trim().length > 120) return 'Nombre demasiado largo.';
+  if (correo.length > 160) return 'Correo demasiado largo.';
+  if (typeof telefono !== 'string' || telefono.trim().length > 30) return 'Teléfono inválido.';
+  if (typeof empresa !== 'string' || empresa.trim().length > 160) return 'Empresa demasiado larga.';
+  if (rolVacante != null && (typeof rolVacante !== 'string' || rolVacante.length > 160)) {
+    return 'Rol a contratar inválido.';
+  }
   if (!isBookableDateKey(date)) return 'La fecha seleccionada no está disponible.';
   const slots = generateTimeSlots(date);
   if (!slots.includes(time)) return 'El horario seleccionado no está disponible.';
@@ -89,7 +97,11 @@ export async function POST(req: NextRequest) {
       { status: 201, headers: CORS_HEADERS },
     );
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'No se pudo registrar la cita.';
-    return Response.json({ error: message }, { status: 500, headers: CORS_HEADERS });
+    // El detalle va al log; al cliente solo un mensaje genérico (no filtrar internos de DB).
+    console.error('[bookings]', err);
+    return Response.json(
+      { error: 'No se pudo registrar la cita. Intenta de nuevo en unos minutos.' },
+      { status: 500, headers: CORS_HEADERS },
+    );
   }
 }

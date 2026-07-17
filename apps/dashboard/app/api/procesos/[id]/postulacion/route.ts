@@ -87,6 +87,19 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     return Response.json({ message: 'Nombre, apellido y correo son obligatorios' }, { status: 400 });
   }
 
+  // Endpoint público: topes de longitud y de tamaño de respuestas contra payloads inflados.
+  if (
+    typeof firstName !== 'string' || firstName.length > 80 ||
+    typeof lastName !== 'string' || lastName.length > 80 ||
+    typeof email !== 'string' || email.length > 160 || !email.includes('@') ||
+    (phone != null && (typeof phone !== 'string' || phone.length > 30))
+  ) {
+    return Response.json({ message: 'Datos de contacto no válidos.' }, { status: 400 });
+  }
+  if (answers != null && (typeof answers !== 'object' || JSON.stringify(answers).length > 20_000)) {
+    return Response.json({ message: 'Respuestas no válidas.' }, { status: 400 });
+  }
+
   const vacancy = await loadVacancy(id);
   if (!vacancy) return Response.json({ message: 'Proceso no encontrado' }, { status: 404 });
 

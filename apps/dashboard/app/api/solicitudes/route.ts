@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { getUserFromRequest, unauthorized, forbidden, isInternalRole } from '../../../lib/auth';
+import { isRateLimited } from '../../../lib/rate-limit';
 import {
   createAgendaRequest,
   listAgendaRequests,
@@ -29,6 +30,14 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  // Endpoint público (CORS abierto): mismo límite defensivo que /api/bookings.
+  if (isRateLimited(req, 'solicitudes', 5, 60_000)) {
+    return Response.json(
+      { message: 'Demasiadas solicitudes seguidas. Espera un minuto e intenta de nuevo.' },
+      { status: 429, headers: CORS_HEADERS },
+    );
+  }
+
   const body = await req.json().catch(() => null);
   const { date, time, nombre, correo, telefono, empresa } = body ?? {};
 
@@ -47,6 +56,14 @@ export async function POST(req: NextRequest) {
   }
   if (!String(correo).includes('@')) {
     return Response.json({ message: 'Correo inválido.' }, { status: 400, headers: CORS_HEADERS });
+  }
+  if (
+    String(nombre).length > 120 ||
+    String(correo).length > 160 ||
+    String(telefono).length > 30 ||
+    String(empresa).length > 160
+  ) {
+    return Response.json({ message: 'Datos demasiado largos.' }, { status: 400, headers: CORS_HEADERS });
   }
 
   try {
@@ -74,7 +91,10 @@ export async function POST(req: NextRequest) {
       { status: 201, headers: CORS_HEADERS },
     );
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'No se pudo registrar la solicitud';
-    return Response.json({ message }, { status: 500, headers: CORS_HEADERS });
+    console.error('[solicitudes]', err);
+    return Response.json(
+      { message: 'No se pudo registrar la solicitud. Intenta de nuevo en unos minutos.' },
+      { status: 500, headers: CORS_HEADERS },
+    );
   }
 }
