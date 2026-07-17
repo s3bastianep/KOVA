@@ -163,7 +163,7 @@ export default function OnboardingPreviewPage() {
               fontWeight: 700,
               cursor: 'pointer',
               border: 'none',
-              background: step === s ? '#d8f24c' : 'rgba(255,255,255,0.08)',
+              background: step === s ? '#c5de4e' : 'rgba(255,255,255,0.08)',
               color: step === s ? '#12140f' : 'rgba(255,255,255,0.7)',
             }}
           >
@@ -258,7 +258,7 @@ export default function OnboardingPreviewPage() {
             <button type="button" onClick={() => setPrefStepIndex((i) => Math.max(0, i - 1))} style={{ color: '#888' }}>
               ← paso pref
             </button>
-            <button type="button" onClick={() => setPrefStepIndex((i) => i + 1)} style={{ color: '#d8f24c' }}>
+            <button type="button" onClick={() => setPrefStepIndex((i) => i + 1)} style={{ color: '#c5de4e' }}>
               paso pref →
             </button>
           </div>

@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "node scripts/sync-landing-www.mjs && next dev -p 3001",
     "build": "npm run build:all",
     "build:all": "node scripts/build-landing.mjs && prisma generate && node scripts/db-deploy-if-configured.mjs && next build",
+    "sync:www": "node scripts/sync-landing-www.mjs",
     "start": "node scripts/railway-start.mjs",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",

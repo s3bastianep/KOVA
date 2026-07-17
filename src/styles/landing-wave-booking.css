@@ -68,8 +68,8 @@
   border-radius: 0.625rem;
   padding: 0.625rem 0.75rem;
   color: var(--kv-lime);
-  background: rgba(216, 242, 76, 0.1);
-  border: 1px solid rgba(216, 242, 76, 0.28);
+  background: rgba(197, 222, 78, 0.1);
+  border: 1px solid rgba(197, 222, 78, 0.28);
 }
 
 .kova-landing-wave .kv-booking-body {
@@ -154,8 +154,8 @@
 }
 
 .kova-landing-wave .kv-booking-card--dark .kv-booking-slot:hover {
-  border-color: rgba(216, 242, 76, 0.45);
-  background: rgba(216, 242, 76, 0.08);
+  border-color: rgba(197, 222, 78, 0.45);
+  background: rgba(197, 222, 78, 0.08);
 }
 
 .kova-landing-wave .kv-booking-card--dark .kv-booking-slot.is-selected {
@@ -248,8 +248,8 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   padding: 0.4375rem 0.75rem;
-  background: rgba(216, 242, 76, 0.12);
-  border: 1px solid rgba(216, 242, 76, 0.35);
+  background: rgba(197, 222, 78, 0.12);
+  border: 1px solid rgba(197, 222, 78, 0.35);
   border-radius: 100px;
   color: #fff;
   margin-bottom: 0;
@@ -311,8 +311,8 @@
 
 .kova-landing-wave .kv-booking-card--dark .kv-booking-input:focus {
   outline: none;
-  border-color: rgba(216, 242, 76, 0.55);
-  box-shadow: 0 0 0 3px rgba(216, 242, 76, 0.14);
+  border-color: rgba(197, 222, 78, 0.55);
+  box-shadow: 0 0 0 3px rgba(197, 222, 78, 0.14);
 }
 
 .kova-landing-wave .kv-booking-submit {
@@ -352,7 +352,7 @@
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
-  background: rgba(216, 242, 76, 0.16);
+  background: rgba(197, 222, 78, 0.16);
   color: var(--kv-lime);
   display: flex;
   align-items: center;
@@ -425,7 +425,7 @@
 
 .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-button:hover:not(:disabled),
 .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_button:hover:not(:disabled) {
-  background: rgba(216, 242, 76, 0.12);
+  background: rgba(197, 222, 78, 0.12);
 }
 
 .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_selected .rdp-button,
@@ -438,8 +438,8 @@
 
 .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_today:not(.rdp-day_selected) .rdp-button,
 .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_today:not(.rdp-day_selected) .rdp-day_button {
-  background: rgba(216, 242, 76, 0.14);
-  box-shadow: inset 0 0 0 1px rgba(216, 242, 76, 0.55);
+  background: rgba(197, 222, 78, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(197, 222, 78, 0.55);
   font-weight: 600;
   color: #fff;
 }

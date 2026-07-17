@@ -45,8 +45,8 @@
   --gate-cream: #f7f4ec;
   --gate-black: #000000;
   --gate-panel: #0c0b0a;
-  --gate-lime: #d8f24c;
-  --gate-lime-bright: #d8f24c;
+  --gate-lime: #c5de4e;
+  --gate-lime-bright: #c5de4e;
   --gate-lime-deep: #08754c;
   --font-display: 'Geist', ui-sans-serif, system-ui, sans-serif;
   --font-serif: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
@@ -154,11 +154,11 @@
   gap: 12px;
   font-size: 15px;
   font-weight: 700;
-  box-shadow: 0 0 32px -8px rgba(216, 242, 76, 0.55);
+  box-shadow: 0 0 32px -8px rgba(197, 222, 78, 0.55);
 }
 
 .kh-gate-btn--pill:hover {
-  background: #d8f24c;
+  background: #c5de4e;
   transform: scale(1.03);
 }
 
@@ -226,7 +226,7 @@
 }
 
 .kh-connect__stroke {
-  filter: drop-shadow(0 0 8px rgba(216, 242, 76, 0.45));
+  filter: drop-shadow(0 0 8px rgba(197, 222, 78, 0.45));
   stroke-dasharray: 1400;
   stroke-dashoffset: 1400;
   animation: kh-connect-draw 1.6s var(--gate-ease) 0.2s forwards;
@@ -268,7 +268,7 @@
   font-size: 12px;
   font-weight: 800;
   letter-spacing: -0.04em;
-  box-shadow: 0 0 20px rgba(216, 242, 76, 0.55);
+  box-shadow: 0 0 20px rgba(197, 222, 78, 0.55);
 }
 
 /* Roles ticker */
@@ -327,11 +327,11 @@
 .kh-gate-btn--lime {
   background: var(--gate-lime-bright);
   color: #14120e;
-  box-shadow: 0 10px 28px -14px rgba(216, 242, 76, 0.55);
+  box-shadow: 0 10px 28px -14px rgba(197, 222, 78, 0.55);
 }
 
 .kh-gate-btn--lime:hover {
-  background: #d8f24c;
+  background: #c5de4e;
   transform: translateY(-2px);
 }
 
@@ -379,7 +379,7 @@
 
 .kh-gate-section--ink {
   background:
-    radial-gradient(ellipse 60% 50% at 80% 0%, rgba(216, 242, 76, 0.1), transparent 55%),
+    radial-gradient(ellipse 60% 50% at 80% 0%, rgba(197, 222, 78, 0.1), transparent 55%),
     #000000;
   color: #f5f1e8;
 }

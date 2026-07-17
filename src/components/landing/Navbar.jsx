@@ -49,8 +49,11 @@ export default function Navbar() {
               <NavLink
                 key={item.label}
                 to={item.to}
-                end={item.to === '/para-empresas'}
-                className={({ isActive }) => (isActive ? 'is-active' : undefined)}
+                end={item.to === '/para-empresas' || item.to === '/guias'}
+                className={({ isActive }) => {
+                  const onBlogArticle = item.to === '/guias' && pathname.startsWith('/guia-');
+                  return isActive || onBlogArticle ? 'is-active' : undefined;
+                }}
               >
                 {item.label}
               </NavLink>

@@ -6,7 +6,7 @@
   --kv-paper-2: #f6f7f2;
   --kv-indigo: #3341c4;
   --kv-indigo-dark: #212c93;
-  --kv-lime: #d8f24c;
+  --kv-lime: #c5de4e;
   --kv-lime-dark: #08754c;
   --kv-rose: #e85c6b;
   --kv-slate: #6b6f64;
@@ -95,7 +95,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.4375rem 0.875rem 0.4375rem 0.75rem;
-  color: rgba(216, 242, 76, 0.88);
+  color: rgba(197, 222, 78, 0.88);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 100px;
@@ -107,7 +107,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: rgba(216, 242, 76, 0.75);
+  background: rgba(197, 222, 78, 0.75);
   box-shadow: none;
 }
 
@@ -134,13 +134,13 @@
 }
 
 .kova-landing-wave .kv-hero .kv-btn-solid {
-  background: rgba(216, 242, 76, 0.94);
-  box-shadow: 0 2px 12px rgba(216, 242, 76, 0.12);
+  background: rgba(197, 222, 78, 0.94);
+  box-shadow: 0 2px 12px rgba(197, 222, 78, 0.12);
 }
 
 .kova-landing-wave .kv-hero .kv-btn-solid:hover {
   background: var(--kv-lime);
-  box-shadow: 0 4px 16px rgba(216, 242, 76, 0.18);
+  box-shadow: 0 4px 16px rgba(197, 222, 78, 0.18);
 }
 
 .kova-landing-wave .kv-btn-solid {
@@ -341,9 +341,9 @@
 }
 
 .kova-landing-wave .kv-section-tag--lime {
-  background: rgba(216, 242, 76, 0.14);
+  background: rgba(197, 222, 78, 0.14);
   color: var(--kv-lime);
-  border: 1px solid rgba(216, 242, 76, 0.38);
+  border: 1px solid rgba(197, 222, 78, 0.38);
   box-shadow: none;
 }
 
@@ -411,7 +411,7 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 55% 80% at 0% 100%, rgba(216, 242, 76, 0.07) 0%, transparent 58%),
+    radial-gradient(ellipse 55% 80% at 0% 100%, rgba(197, 222, 78, 0.07) 0%, transparent 58%),
     radial-gradient(ellipse 45% 60% at 100% 0%, rgba(255, 255, 255, 0.05) 0%, transparent 52%);
   pointer-events: none;
 }
@@ -468,7 +468,7 @@
 .kova-landing-wave .kv-brand-close-btn:hover {
   opacity: 1;
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(216, 242, 76, 0.2);
+  box-shadow: 0 4px 14px rgba(197, 222, 78, 0.2);
 }
 
 .kova-landing-wave .kv-brand-close-note {

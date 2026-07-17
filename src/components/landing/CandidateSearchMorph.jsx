@@ -257,10 +257,10 @@ export default function CandidateSearchMorph({ active = true, onComplete }) {
       if (fadeWorld > 0.02) {
         const glowR = Math.max(280, R * 1.9) * scale;
         const glow = ctx.createRadialGradient(cx, cy, R * 0.12 * scale, cx, cy, glowR);
-        glow.addColorStop(0, `rgba(216, 242, 76, ${0.18 * fadeWorld})`);
-        glow.addColorStop(0.4, `rgba(216, 242, 76, ${0.06 * fadeWorld})`);
-        glow.addColorStop(0.75, `rgba(216, 242, 76, ${0.015 * fadeWorld})`);
-        glow.addColorStop(1, 'rgba(216, 242, 76, 0)');
+        glow.addColorStop(0, `rgba(197, 222, 78, ${0.18 * fadeWorld})`);
+        glow.addColorStop(0.4, `rgba(197, 222, 78, ${0.06 * fadeWorld})`);
+        glow.addColorStop(0.75, `rgba(197, 222, 78, ${0.015 * fadeWorld})`);
+        glow.addColorStop(1, 'rgba(197, 222, 78, 0)');
         ctx.beginPath();
         ctx.fillStyle = glow;
         ctx.arc(cx, cy, glowR, 0, Math.PI * 2);
@@ -352,7 +352,7 @@ export default function CandidateSearchMorph({ active = true, onComplete }) {
 
       if (phase === 'explode' && explode > 0.04 && explode < 0.7 && fadeWorld > 0.1) {
         ctx.beginPath();
-        ctx.strokeStyle = `rgba(216, 242, 76, ${(1 - explode) * 0.22 * fadeWorld})`;
+        ctx.strokeStyle = `rgba(197, 222, 78, ${(1 - explode) * 0.22 * fadeWorld})`;
         ctx.lineWidth = 1.25;
         ctx.arc(cx, cy, R * 0.55 + explode * Math.max(width, height) * 0.38, 0, Math.PI * 2);
         ctx.stroke();

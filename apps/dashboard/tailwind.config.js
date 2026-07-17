@@ -10,7 +10,7 @@ module.exports = {
           paper2: '#F6F7F2',
           indigo: '#3341C4',
           indigoDark: '#212C93',
-          lime: '#D8F24C',
+          lime: '#c5de4e',
           limeDark: '#5C6E12',
           slate: '#6B6F64',
           line: '#D7D9CE',

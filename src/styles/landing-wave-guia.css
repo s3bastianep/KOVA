@@ -722,8 +722,8 @@
 .kova-landing-wave .kv-guia-summary {
   margin: 2.5rem 0;
   padding: 1.5rem;
-  background: rgba(216, 242, 76, 0.14);
-  border: 1px solid rgba(216, 242, 76, 0.45);
+  background: rgba(197, 222, 78, 0.14);
+  border: 1px solid rgba(197, 222, 78, 0.45);
   border-radius: 0.875rem;
   scroll-margin-top: 6.5rem;
 }
@@ -1094,7 +1094,7 @@
 
 .kova-landing-wave .kv-blog-feature-placeholder {
   background:
-    radial-gradient(80% 70% at 70% 20%, rgba(216, 242, 76, 0.16), transparent 55%),
+    radial-gradient(80% 70% at 70% 20%, rgba(197, 222, 78, 0.16), transparent 55%),
     #151715;
 }
 
@@ -1116,7 +1116,7 @@
   font-size: 0.6875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(216, 242, 76, 0.85);
+  color: rgba(197, 222, 78, 0.85);
 }
 
 .kova-landing-wave .kv-blog-feature-copy h2 {

@@ -80,7 +80,7 @@ export const CLIENT_JOURNEY_STAGES: ClientJourneyStage[] = [
     shortLabel: 'Selección + Preparación',
     description: 'Seleccionar, preparar el ingreso y estandarizar el proceso comercial.',
     color: '#5C6E12',
-    bg: 'rgba(216, 242, 76, 0.28)',
+    bg: 'rgba(197, 222, 78, 0.28)',
   },
 ];
 

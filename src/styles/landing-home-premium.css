@@ -9,11 +9,11 @@
 
 /* ── Shared yellow-green system ── */
 html.kova-home-chrome {
-  --kh-gold: #d8f24c;
-  --kh-gold-bright: #d8f24c;
+  --kh-gold: #c5de4e;
+  --kh-gold-bright: #c5de4e;
   --kh-gold-deep: #08754c;
-  --kh-gold-soft: rgba(216, 242, 76, 0.14);
-  --kh-gold-line: rgba(216, 242, 76, 0.34);
+  --kh-gold-soft: rgba(197, 222, 78, 0.14);
+  --kh-gold-line: rgba(197, 222, 78, 0.34);
   --kh-bone: #f6f2ea;
   --kh-bone-2: #faf8f3;
   --kh-ink: #16140f;
@@ -48,18 +48,18 @@ html.kova-home-chrome .kova-route-shell__fallback {
   --kv-surface-2: rgba(255, 255, 255, 0.06);
   --kv-surface-3: rgba(255, 255, 255, 0.09);
 
-  --kv-lime: #d8f24c;
-  --kv-lime-bright: #d8f24c;
+  --kv-lime: #c5de4e;
+  --kv-lime-bright: #c5de4e;
   --kv-lime-deep: #08754c;
-  --kv-lime-soft: rgba(216, 242, 76, 0.14);
-  --kv-lime-line: rgba(216, 242, 76, 0.32);
-  --kv-indigo: #d8f24c;
+  --kv-lime-soft: rgba(197, 222, 78, 0.14);
+  --kv-lime-line: rgba(197, 222, 78, 0.32);
+  --kv-indigo: #c5de4e;
 
-  --kv-volt: #d8f24c;
-  --kv-volt-bright: #d8f24c;
+  --kv-volt: #c5de4e;
+  --kv-volt-bright: #c5de4e;
   --kv-volt-ink: #08754c;
-  --kv-volt-soft: rgba(216, 242, 76, 0.16);
-  --kv-emerald: #d8f24c;
+  --kv-volt-soft: rgba(197, 222, 78, 0.16);
+  --kv-emerald: #c5de4e;
 
   --kv-line: rgba(255, 255, 255, 0.08);
   --kv-line-strong: rgba(255, 255, 255, 0.12);
@@ -117,7 +117,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   pointer-events: none;
   background: radial-gradient(
     640px circle at var(--kh-mx) var(--kh-my),
-    rgba(216, 242, 76, 0.08),
+    rgba(197, 222, 78, 0.08),
     transparent 55%
   );
   opacity: 1;
@@ -139,7 +139,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 .kova-home-plain ::selection {
-  background: rgba(216, 242, 76, 0.4);
+  background: rgba(197, 222, 78, 0.4);
   color: #16140f;
 }
 
@@ -150,8 +150,8 @@ html.kova-home-chrome .kova-route-shell__fallback {
   background: none !important;
   -webkit-background-clip: unset !important;
   background-clip: unset !important;
-  -webkit-text-fill-color: #d8f24c;
-  color: #d8f24c !important;
+  -webkit-text-fill-color: #c5de4e;
+  color: #c5de4e !important;
   animation: none;
 }
 
@@ -592,8 +592,8 @@ html.kova-home-chrome .kova-route-shell__fallback {
   --kv-body: #b8b0a4;
   --kv-muted: #8a8378;
   --kv-soft: #6f695f;
-  --kv-lime: #d8f24c;
-  --kv-lime-bright: #d8f24c;
+  --kv-lime: #c5de4e;
+  --kv-lime-bright: #c5de4e;
   --kv-line: rgba(255, 255, 255, 0.1);
   --kv-line-strong: rgba(255, 255, 255, 0.14);
   background: #000000 !important;
@@ -609,8 +609,8 @@ html.kova-home-chrome .kova-route-shell__fallback {
   background: none !important;
   -webkit-background-clip: unset !important;
   background-clip: unset !important;
-  color: #d8f24c !important;
-  -webkit-text-fill-color: #d8f24c;
+  color: #c5de4e !important;
+  -webkit-text-fill-color: #c5de4e;
 }
 
 .kova-home-plain .kh-contact .kh-eyebrow {
@@ -632,7 +632,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 .kova-home-plain .kh-contact .kh-contact__checks em {
-  color: #d8f24c !important;
+  color: #c5de4e !important;
 }
 
 .kova-home-plain .kh-contact .kh-form label > span {
@@ -648,7 +648,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   color: #f5f1e8 !important;
   box-shadow: none;
   padding: 14px 16px !important;
-  caret-color: #d8f24c;
+  caret-color: #c5de4e;
   -webkit-text-fill-color: #f5f1e8;
 }
 
@@ -667,9 +667,9 @@ html.kova-home-chrome .kova-route-shell__fallback {
 
 .kova-home-plain .kh-contact .kh-form input:focus,
 .kova-home-plain .kh-contact .kh-form textarea:focus {
-  border-color: rgba(216, 242, 76, 0.55) !important;
+  border-color: rgba(197, 222, 78, 0.55) !important;
   background: rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 0 0 3px rgba(216, 242, 76, 0.14);
+  box-shadow: 0 0 0 3px rgba(197, 222, 78, 0.14);
   outline: none;
 }
 
@@ -679,21 +679,21 @@ html.kova-home-chrome .kova-route-shell__fallback {
 
 .kova-home-plain .kh-contact .kh-btn--lime,
 .kova-home-plain .kh-contact button.kh-btn--lime {
-  background: #d8f24c !important;
+  background: #c5de4e !important;
   color: #14120e !important;
   border: none !important;
 }
 
 .kova-home-plain .kh-contact .kh-btn--wa {
   background: transparent !important;
-  color: #d8f24c !important;
-  border: 1px solid rgba(216, 242, 76, 0.4) !important;
+  color: #c5de4e !important;
+  border: 1px solid rgba(197, 222, 78, 0.4) !important;
 }
 
 .kova-home-plain .kh-contact .kh-btn--wa:hover {
-  background: rgba(216, 242, 76, 0.1) !important;
-  color: #d8f24c !important;
-  border-color: rgba(216, 242, 76, 0.65) !important;
+  background: rgba(197, 222, 78, 0.1) !important;
+  color: #c5de4e !important;
+  border-color: rgba(197, 222, 78, 0.65) !important;
 }
 
 /* Verde oliva sobre crema — mismo tono del “04” (no lima fluorescente) */
@@ -1092,7 +1092,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 .kova-home-plain #metodologia .kh-btn--lime,
 .kova-home-plain #metodologia .kh-btn--outline-lime,
 .kova-home-plain .kh-section:has(.kh-platform) .kh-btn--lime {
-  background: #d8f24c !important;
+  background: #c5de4e !important;
   color: #14120e !important;
   border: none !important;
   border-radius: 14px;
@@ -1105,7 +1105,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 .kova-home-plain #metodologia .kh-btn--lime:hover,
 .kova-home-plain #metodologia .kh-btn--outline-lime:hover,
 .kova-home-plain .kh-section:has(.kh-platform) .kh-btn--lime:hover {
-  background: #d8f24c !important;
+  background: #c5de4e !important;
   color: #14120e !important;
   transform: translateY(-1px);
   box-shadow: 0 12px 28px -10px rgba(20, 18, 14, 0.32);
@@ -1148,7 +1148,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 .kova-home-plain .kh-section:has(.kh-platform) .kh-card-light::after {
   background: radial-gradient(
     280px circle at var(--lx) var(--ly),
-    rgba(216, 242, 76, 0.08),
+    rgba(197, 222, 78, 0.08),
     transparent 55%
   );
 }
@@ -1184,8 +1184,8 @@ html.kova-home-chrome .kova-route-shell__fallback {
   --kv-soft: #6f695f;
   --kv-line: rgba(255, 255, 255, 0.1);
   --kv-line-strong: rgba(255, 255, 255, 0.14);
-  --kv-lime: #d8f24c;
-  --kv-lime-bright: #d8f24c;
+  --kv-lime: #c5de4e;
+  --kv-lime-bright: #c5de4e;
   background: #0a0908 !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
   color: #f5f1e8;
@@ -1214,7 +1214,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 
 .kova-home-plain #metodo .kh-case-stat strong,
 .kova-home-plain .kh-artifact .kh-case-stat strong {
-  color: #d8f24c !important;
+  color: #c5de4e !important;
 }
 
 .kova-home-plain #metodo .kh-case-stat,
@@ -1239,17 +1239,17 @@ html.kova-home-chrome .kova-route-shell__fallback {
 
 .kova-home-plain .kh-eyebrow__dot {
   background: var(--kv-lime);
-  box-shadow: 0 0 0 3px var(--kv-lime-soft), 0 0 12px rgba(216, 242, 76, 0.45);
+  box-shadow: 0 0 0 3px var(--kv-lime-soft), 0 0 12px rgba(197, 222, 78, 0.45);
   animation: kh-glow-breathe 3.2s ease-in-out infinite;
 }
 
 @keyframes kh-glow-breathe {
   0%,
   100% {
-    box-shadow: 0 0 0 3px var(--kv-lime-soft), 0 0 10px rgba(216, 242, 76, 0.35);
+    box-shadow: 0 0 0 3px var(--kv-lime-soft), 0 0 10px rgba(197, 222, 78, 0.35);
   }
   50% {
-    box-shadow: 0 0 0 4px rgba(216, 242, 76, 0.2), 0 0 18px rgba(216, 242, 76, 0.55);
+    box-shadow: 0 0 0 4px rgba(197, 222, 78, 0.2), 0 0 18px rgba(197, 222, 78, 0.55);
   }
 }
 
@@ -1285,7 +1285,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 .kova-home-plain #metodo .kh-btn--lime,
 .kova-home-plain .kh-artifact .kh-btn--lime,
 .kova-home-plain .kh-footer .kh-btn--lime {
-  background: #d8f24c !important;
+  background: #c5de4e !important;
   color: #14120e !important;
   border: 1px solid rgba(20, 18, 14, 0.12) !important;
   font-weight: 700;
@@ -1300,7 +1300,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 .kova-home-plain #metodo .kh-btn--lime:hover,
 .kova-home-plain .kh-artifact .kh-btn--lime:hover,
 .kova-home-plain .kh-footer .kh-btn--lime:hover {
-  background: #d8f24c !important;
+  background: #c5de4e !important;
   color: #14120e !important;
   transform: translateY(-2px) scale(1.02);
   box-shadow:
@@ -1337,8 +1337,8 @@ html.kova-home-chrome .kova-route-shell__fallback {
 .kova-home-plain .kh-artifact .kh-btn--outline-lime,
 .kova-home-plain .kh-footer .kh-btn--outline-lime {
   background: transparent !important;
-  color: #d8f24c !important;
-  border: 1px solid rgba(216, 242, 76, 0.45) !important;
+  color: #c5de4e !important;
+  border: 1px solid rgba(197, 222, 78, 0.45) !important;
   box-shadow: none;
 }
 
@@ -1347,9 +1347,9 @@ html.kova-home-chrome .kova-route-shell__fallback {
 .kova-home-plain #metodo .kh-btn--outline-lime:hover,
 .kova-home-plain .kh-artifact .kh-btn--outline-lime:hover,
 .kova-home-plain .kh-footer .kh-btn--outline-lime:hover {
-  background: rgba(216, 242, 76, 0.12) !important;
-  color: #d8f24c !important;
-  border-color: rgba(216, 242, 76, 0.7) !important;
+  background: rgba(197, 222, 78, 0.12) !important;
+  color: #c5de4e !important;
+  border-color: rgba(197, 222, 78, 0.7) !important;
 }
 
 .kova-home-plain .kh-hero a.kh-btn--lime,
@@ -1405,7 +1405,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   height: min(48vh, 420px);
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse at 40% 45%, rgba(216, 242, 76, 0.05), transparent 68%);
+  background: radial-gradient(ellipse at 40% 45%, rgba(197, 222, 78, 0.05), transparent 68%);
   filter: blur(52px);
   animation: kh-hero-breathe 9s ease-in-out infinite;
 }
@@ -1447,15 +1447,15 @@ html.kova-home-chrome .kova-route-shell__fallback {
 
 .kova-home-plain .kh-pill {
   background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(216, 242, 76, 0.35) !important;
-  color: #d8f24c !important;
+  border: 1px solid rgba(197, 222, 78, 0.35) !important;
+  color: #c5de4e !important;
   backdrop-filter: blur(12px);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
 }
 
 .kova-home-plain .kh-hero .kh-pill {
-  color: #d8f24c !important;
-  border-color: rgba(216, 242, 76, 0.4) !important;
+  color: #c5de4e !important;
+  border-color: rgba(197, 222, 78, 0.4) !important;
 }
 
 .kova-home-plain .kh-hero__checks span {
@@ -1463,7 +1463,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 .kova-home-plain .kh-hero__checks em {
-  color: #d8f24c !important;
+  color: #c5de4e !important;
 }
 
 .kova-home-plain .kh-collage__photo {
@@ -1485,13 +1485,13 @@ html.kova-home-chrome .kova-route-shell__fallback {
     145deg,
     rgba(255, 255, 255, 0.1) 0%,
     rgba(255, 255, 255, 0.03) 40%,
-    rgba(216, 242, 76, 0.08) 100%
+    rgba(197, 222, 78, 0.08) 100%
   );
   border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.14) inset,
     0 24px 64px -20px rgba(0, 0, 0, 0.7),
-    0 0 60px -28px rgba(216, 242, 76, 0.4);
+    0 0 60px -28px rgba(197, 222, 78, 0.4);
   backdrop-filter: blur(20px) saturate(1.25);
 }
 
@@ -1518,15 +1518,15 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 .kova-home-plain .kh-score__avatar {
-  background: linear-gradient(145deg, #d8f24c, #08754c);
+  background: linear-gradient(145deg, #c5de4e, #08754c);
   color: #16140f;
-  box-shadow: 0 0 24px -4px rgba(216, 242, 76, 0.5);
+  box-shadow: 0 0 24px -4px rgba(197, 222, 78, 0.5);
 }
 
 .kova-home-plain .kh-score__badge {
-  background: rgba(216, 242, 76, 0.16);
-  color: #d8f24c;
-  border: 1px solid rgba(216, 242, 76, 0.3);
+  background: rgba(197, 222, 78, 0.16);
+  color: #c5de4e;
+  border: 1px solid rgba(197, 222, 78, 0.3);
 }
 
 .kova-home-plain .kh-dim__track {
@@ -1554,9 +1554,9 @@ html.kova-home-chrome .kova-route-shell__fallback {
 /* Calculator — dark band */
 .kova-home-plain #calculadora {
   background:
-    radial-gradient(ellipse 55% 45% at 80% 10%, rgba(216, 242, 76, 0.16), transparent 55%),
+    radial-gradient(ellipse 55% 45% at 80% 10%, rgba(197, 222, 78, 0.16), transparent 55%),
     radial-gradient(ellipse 40% 50% at 15% 70%, rgba(255, 255, 255, 0.06), transparent 50%),
-    radial-gradient(ellipse 30% 35% at 55% 40%, rgba(216, 242, 76, 0.08), transparent 60%),
+    radial-gradient(ellipse 30% 35% at 55% 40%, rgba(197, 222, 78, 0.08), transparent 60%),
     linear-gradient(180deg, #100f0d 0%, #0c0b0a 100%);
 }
 
@@ -1642,7 +1642,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 
 .kova-home-plain .kh-costo-card--accent .kh-costo-card__n,
 .kova-home-plain .kh-costo-card:nth-child(6) .kh-costo-card__n {
-  color: rgba(216, 242, 76, 0.7) !important;
+  color: rgba(197, 222, 78, 0.7) !important;
 }
 
 .kova-home-plain .kh-costo-card--accent:hover,
@@ -1691,7 +1691,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 .kova-home-plain #calculadora .kh-calc__total-value {
-  color: #d8f24c !important;
+  color: #c5de4e !important;
 }
 
 .kova-home-plain #calculadora .kh-calc__total {
@@ -1736,10 +1736,10 @@ html.kova-home-chrome .kova-route-shell__fallback {
   height: 22px;
   margin-top: -8px;
   border-radius: 50%;
-  background: #d8f24c;
+  background: #c5de4e;
   border: 2px solid #0c0b0a;
   box-shadow:
-    0 0 0 4px rgba(216, 242, 76, 0.28),
+    0 0 0 4px rgba(197, 222, 78, 0.28),
     0 4px 12px rgba(0, 0, 0, 0.45);
   cursor: grab;
 }
@@ -1749,10 +1749,10 @@ html.kova-home-chrome .kova-route-shell__fallback {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #d8f24c;
+  background: #c5de4e;
   border: 2px solid #0c0b0a;
   box-shadow:
-    0 0 0 4px rgba(216, 242, 76, 0.28),
+    0 0 0 4px rgba(197, 222, 78, 0.28),
     0 4px 12px rgba(0, 0, 0, 0.45);
   cursor: grab;
 }
@@ -1768,7 +1768,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 .kova-home-plain #metodo,
 .kova-home-plain .kh-artifact {
   background:
-    radial-gradient(ellipse 50% 40% at 20% 30%, rgba(216, 242, 76, 0.14), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 20% 30%, rgba(197, 222, 78, 0.14), transparent 55%),
     radial-gradient(ellipse 45% 40% at 85% 65%, rgba(255, 255, 255, 0.05), transparent 50%),
     linear-gradient(180deg, #0e0d0b 0%, #0c0b0a 100%);
 }
@@ -1781,9 +1781,9 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 .kova-home-plain .kh-perfil-card--real {
-  border-color: rgba(216, 242, 76, 0.35) !important;
-  background: rgba(216, 242, 76, 0.1) !important;
-  box-shadow: 0 0 40px -20px rgba(216, 242, 76, 0.4), var(--kv-shadow-md);
+  border-color: rgba(197, 222, 78, 0.35) !important;
+  background: rgba(197, 222, 78, 0.1) !important;
+  box-shadow: 0 0 40px -20px rgba(197, 222, 78, 0.4), var(--kv-shadow-md);
 }
 
 .kova-home-plain .kh-mocks {
@@ -1831,7 +1831,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 .kova-home-plain .kh-mock__head span {
-  color: #d8f24c !important;
+  color: #c5de4e !important;
 }
 
 .kova-home-plain .kh-mock__head em {
@@ -1863,7 +1863,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 .kova-home-plain .kh-mock__rank-score.is-top {
-  color: #d8f24c !important;
+  color: #c5de4e !important;
 }
 
 .kova-home-plain .kh-compare {
@@ -1875,7 +1875,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 .kova-home-plain .kh-compare__h--kova {
-  background: rgba(216, 242, 76, 0.1);
+  background: rgba(197, 222, 78, 0.1);
 }
 
 .kova-home-plain .kh-guide-card,
@@ -1957,7 +1957,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 .kova-home-plain input:focus-visible,
 .kova-home-plain textarea:focus-visible,
 .kova-home-plain summary:focus-visible {
-  outline: 2px solid rgba(216, 242, 76, 0.75);
+  outline: 2px solid rgba(197, 222, 78, 0.75);
   outline-offset: 3px;
 }
 
@@ -2182,7 +2182,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 .kova-home-plain .kh-artifact {
   background-image:
     radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255, 255, 255, 0.03), transparent 55%),
-    radial-gradient(ellipse 40% 35% at 85% 70%, rgba(216, 242, 76, 0.04), transparent 50%),
+    radial-gradient(ellipse 40% 35% at 85% 70%, rgba(197, 222, 78, 0.04), transparent 50%),
     linear-gradient(180deg, #110f0d 0%, #0c0b0a 50%, #0e0d0b 100%);
 }
 
@@ -2240,7 +2240,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 
 .kova-home-plain .kh-perfil-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(216, 242, 76, 0.28) !important;
+  border-color: rgba(197, 222, 78, 0.28) !important;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.12) inset,
     0 18px 40px -22px rgba(0, 0, 0, 0.45);
@@ -2273,7 +2273,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
     linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, transparent 28%),
     radial-gradient(
       320px circle at var(--lx) var(--ly),
-      rgba(216, 242, 76, 0.1),
+      rgba(197, 222, 78, 0.1),
       transparent 55%
     );
 }
@@ -2315,8 +2315,8 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   background: linear-gradient(
     180deg,
     transparent,
-    rgba(216, 242, 76, 0.55),
-    rgba(216, 242, 76, 0.2)
+    rgba(197, 222, 78, 0.55),
+    rgba(197, 222, 78, 0.2)
   );
   transform: scaleY(var(--rail, 0));
   transform-origin: top center;
@@ -2335,10 +2335,10 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 @keyframes kh-glow-breathe {
   0%,
   100% {
-    box-shadow: 0 0 0 3px var(--kv-lime-soft), 0 0 8px rgba(216, 242, 76, 0.25);
+    box-shadow: 0 0 0 3px var(--kv-lime-soft), 0 0 8px rgba(197, 222, 78, 0.25);
   }
   50% {
-    box-shadow: 0 0 0 4px rgba(216, 242, 76, 0.14), 0 0 12px rgba(216, 242, 76, 0.35);
+    box-shadow: 0 0 0 4px rgba(197, 222, 78, 0.14), 0 0 12px rgba(197, 222, 78, 0.35);
   }
 }
 
@@ -2473,13 +2473,13 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
     145deg,
     rgba(255, 255, 255, 0.1) 0%,
     rgba(255, 255, 255, 0.03) 40%,
-    rgba(216, 242, 76, 0.08) 100%
+    rgba(197, 222, 78, 0.08) 100%
   );
   border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.14) inset,
     0 28px 64px -20px rgba(0, 0, 0, 0.7),
-    0 0 60px -28px rgba(216, 242, 76, 0.35);
+    0 0 60px -28px rgba(197, 222, 78, 0.35);
   backdrop-filter: blur(20px) saturate(1.2);
 }
 
@@ -2505,15 +2505,15 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 }
 
 .kova-home-plain .kh-hero__collage.is-report .kh-pill__dot {
-  background: #d8f24c;
-  box-shadow: 0 0 0 3px rgba(216, 242, 76, 0.22);
+  background: #c5de4e;
+  box-shadow: 0 0 0 3px rgba(197, 222, 78, 0.22);
 }
 
 .kova-home-plain .kh-hero__collage.is-report .kh-score__avatar {
-  background: linear-gradient(145deg, #d8f24c, #08754c);
+  background: linear-gradient(145deg, #c5de4e, #08754c);
   color: #14120e;
   font-weight: 800;
-  box-shadow: 0 0 24px -4px rgba(216, 242, 76, 0.45);
+  box-shadow: 0 0 24px -4px rgba(197, 222, 78, 0.45);
 }
 
 .kova-home-plain .kh-hero__collage.is-report .kh-score__name {
@@ -2532,7 +2532,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 }
 
 .kova-home-plain .kh-hero__collage.is-report .kh-score__num strong {
-  color: #d8f24c !important;
+  color: #c5de4e !important;
   font-weight: 800;
 }
 
@@ -2541,8 +2541,8 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 }
 
 .kova-home-plain .kh-hero__collage.is-report .kh-score__stats {
-  background: rgba(216, 242, 76, 0.08);
-  border-top: 1px solid rgba(216, 242, 76, 0.18);
+  background: rgba(197, 222, 78, 0.08);
+  border-top: 1px solid rgba(197, 222, 78, 0.18);
 }
 
 .kova-home-plain .kh-hero__collage.is-report .kh-score__stat {
@@ -2555,7 +2555,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 }
 
 .kova-home-plain .kh-hero__collage.is-report .kh-score__stat strong.is-lime {
-  color: #d8f24c !important;
+  color: #c5de4e !important;
 }
 
 .kova-home-plain .kh-hero__collage.is-report .kh-collage__photo {
@@ -2586,7 +2586,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 }
 
 .kova-home-plain .kh-hero__collage.is-report .kh-collage__chip-icon {
-  background: #d8f24c;
+  background: #c5de4e;
   color: #14120e;
 }
 
@@ -2687,7 +2687,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   font-weight: 800;
   font-size: 13px;
   color: #14120e;
-  background: #d8f24c;
+  background: #c5de4e;
   flex-shrink: 0;
 }
 
@@ -2795,7 +2795,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   font-size: 10px;
   font-weight: 800;
   color: #14120e;
-  background: #d8f24c;
+  background: #c5de4e;
 }
 
 .kova-home-plain .kh-dash__os-scroll {
@@ -3235,7 +3235,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   pointer-events: none;
   background: radial-gradient(
     420px circle at var(--sx, 50%) var(--sy, 30%),
-    rgba(216, 242, 76, 0.045),
+    rgba(197, 222, 78, 0.045),
     transparent 55%
   );
   mix-blend-mode: soft-light;
@@ -3379,7 +3379,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 42% 38% at 12% 18%, rgba(216, 242, 76, 0.18), transparent 60%),
+    radial-gradient(ellipse 42% 38% at 12% 18%, rgba(197, 222, 78, 0.18), transparent 60%),
     radial-gradient(ellipse 36% 42% at 88% 72%, rgba(255, 255, 255, 0.55), transparent 58%),
     radial-gradient(ellipse 28% 30% at 55% 40%, rgba(8, 117, 76, 0.1), transparent 65%);
 }
@@ -3465,11 +3465,11 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 }
 
 .kova-home-plain #metodologia .kh-perfil-card--real {
-  background: rgba(216, 242, 76, 0.22) !important;
-  border-color: rgba(216, 242, 76, 0.45) !important;
+  background: rgba(197, 222, 78, 0.22) !important;
+  border-color: rgba(197, 222, 78, 0.45) !important;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.55) inset,
-    0 0 40px -18px rgba(216, 242, 76, 0.45),
+    0 0 40px -18px rgba(197, 222, 78, 0.45),
     0 16px 40px -24px rgba(20, 18, 13, 0.2);
 }
 
@@ -3565,7 +3565,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.14) inset,
     0 32px 72px -28px rgba(0, 0, 0, 0.7),
-    0 0 60px -36px rgba(216, 242, 76, 0.25);
+    0 0 60px -36px rgba(197, 222, 78, 0.25);
   backdrop-filter: blur(32px) saturate(1.4);
   -webkit-backdrop-filter: blur(32px) saturate(1.4);
 }
@@ -3691,7 +3691,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 /* —— Dark frost: contacto —— */
 .kova-home-plain .kh-contact {
   background:
-    radial-gradient(ellipse 50% 45% at 75% 20%, rgba(216, 242, 76, 0.1), transparent 55%),
+    radial-gradient(ellipse 50% 45% at 75% 20%, rgba(197, 222, 78, 0.1), transparent 55%),
     radial-gradient(ellipse 40% 40% at 15% 80%, rgba(255, 255, 255, 0.04), transparent 50%),
     #000000 !important;
 }
@@ -3751,16 +3751,16 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
    ═══════════════════════════════════════════ */
 
 .kova-boutique {
-  --kv-lime: #d8f24c;
-  --kv-lime-bright: #d8f24c;
+  --kv-lime: #c5de4e;
+  --kv-lime-bright: #c5de4e;
   --kv-lime-soft: rgba(184, 201, 74, 0.12);
   --kv-lime-line: rgba(184, 201, 74, 0.28);
 }
 
 /* Accent: punctual, not dominant */
 .kova-boutique .kh-accent {
-  color: #d8f24c !important;
-  -webkit-text-fill-color: #d8f24c !important;
+  color: #c5de4e !important;
+  -webkit-text-fill-color: #c5de4e !important;
   background: none !important;
 }
 
@@ -3805,7 +3805,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 /* CTA: solid but quieter — less neon glow */
 .kova-boutique .kh-hero .kh-btn--lime,
 .kova-boutique .kh-btn--lime {
-  background: #d8f24c !important;
+  background: #c5de4e !important;
   color: #14120e !important;
   box-shadow: none !important;
   border-radius: 10px !important;
@@ -3814,7 +3814,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 
 .kova-boutique .kh-hero .kh-btn--lime:hover,
 .kova-boutique .kh-btn--lime:hover {
-  background: #d8f24c !important;
+  background: #c5de4e !important;
   box-shadow: none !important;
   transform: none;
 }
@@ -3845,7 +3845,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 }
 
 .kova-boutique .kh-hero__collage.is-report .kh-dim__fill {
-  background: #d8f24c !important;
+  background: #c5de4e !important;
   opacity: 0.85;
 }
 
@@ -3913,7 +3913,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 }
 
 .kova-boutique .kh-trust__brands li::before {
-  background: #d8f24c;
+  background: #c5de4e;
   opacity: 0.7;
 }
 
@@ -3950,7 +3950,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 }
 
 .kova-boutique #metodologia .kh-perfil-card--real {
-  background: rgba(216, 242, 76, 0.1) !important;
+  background: rgba(197, 222, 78, 0.1) !important;
   border-color: rgba(184, 201, 74, 0.35) !important;
   box-shadow: none !important;
 }
@@ -3965,7 +3965,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 }
 
 .kova-boutique #metodologia .kh-eyebrow__dot {
-  background: #d8f24c;
+  background: #c5de4e;
 }
 
 /* Platform: quiet cells */
@@ -4020,9 +4020,9 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   height: 2px;
   background: linear-gradient(
     90deg,
-    #d8f24c 0%,
-    #d8f24c 33%,
-    rgba(216, 242, 76, 0.35) 66%,
+    #c5de4e 0%,
+    #c5de4e 33%,
+    rgba(197, 222, 78, 0.35) 66%,
     rgba(26, 23, 18, 0.08) 100%
   );
 }
@@ -4087,7 +4087,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 .kova-home-plain .kh-platform--slim .kh-platform__close {
   max-width: 28ch !important;
   padding-left: 18px;
-  border-left: 2px solid #d8f24c;
+  border-left: 2px solid #c5de4e;
   font-size: clamp(1.05rem, 1.5vw, 1.25rem) !important;
 }
 
@@ -4160,8 +4160,8 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 
 .kova-boutique #calculadora .kh-calc__total-value,
 .kova-boutique #calculadora .kh-h2 .kh-accent {
-  color: #d8f24c !important;
-  -webkit-text-fill-color: #d8f24c !important;
+  color: #c5de4e !important;
+  -webkit-text-fill-color: #c5de4e !important;
 }
 
 .kova-boutique #calculadora .kh-calc__tag span:last-child,
@@ -4170,7 +4170,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 }
 
 .kova-boutique #calculadora .kh-pill__dot {
-  background: #d8f24c !important;
+  background: #c5de4e !important;
 }
 
 .kova-boutique #calculadora .kh-btn--lime {
@@ -4246,7 +4246,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 .kova-boutique .kh-contact .kh-form--asesoria input:focus,
 .kova-boutique .kh-contact .kh-form--asesoria textarea:focus {
   outline: none !important;
-  border-bottom-color: #d8f24c !important;
+  border-bottom-color: #c5de4e !important;
   box-shadow: none !important;
   background: transparent !important;
 }
@@ -4274,7 +4274,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   margin: 28px 0 0;
   max-width: 38ch;
   padding-left: 16px;
-  border-left: 2px solid rgba(216, 242, 76, 0.55);
+  border-left: 2px solid rgba(197, 222, 78, 0.55);
   color: rgba(245, 241, 232, 0.72);
   font-size: clamp(14.5px, 1.15vw, 16px);
   font-weight: 500;
@@ -4299,7 +4299,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 
 .kova-boutique .kh-form__trust em {
   font-style: normal;
-  color: #d8f24c;
+  color: #c5de4e;
   font-weight: 700;
   line-height: 1.35;
   flex-shrink: 0;
@@ -4326,13 +4326,13 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 }
 
 .kova-boutique .kh-contact .kh-btn--wa:hover {
-  border-color: rgba(216, 242, 76, 0.55) !important;
-  color: #d8f24c !important;
+  border-color: rgba(197, 222, 78, 0.55) !important;
+  color: #c5de4e !important;
 }
 
 .kova-boutique .kh-contact .kh-accent {
-  color: #d8f24c !important;
-  -webkit-text-fill-color: #d8f24c !important;
+  color: #c5de4e !important;
+  -webkit-text-fill-color: #c5de4e !important;
 }
 
 .kova-boutique .kh-contact .kh-btn--lime {

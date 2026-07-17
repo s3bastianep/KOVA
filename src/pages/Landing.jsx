@@ -10,12 +10,12 @@ import '@/styles/landing-home-premium.css';
 const WHATSAPP_NUMERO = '573000000000';
 
 const DIMS = [
-  { label: 'Compatibilidad comercial', pct: 94, color: '#d8f24c' },
-  { label: 'Competencias de venta', pct: 89, color: '#d8f24c' },
-  { label: 'Adaptabilidad', pct: 85, color: '#d8f24c' },
-  { label: 'Comunicación', pct: 91, color: '#d8f24c' },
-  { label: 'Alineación con la empresa', pct: 88, color: '#d8f24c' },
-  { label: 'Potencial de desarrollo', pct: 82, color: '#d8f24c' },
+  { label: 'Compatibilidad comercial', pct: 94, color: '#c5de4e' },
+  { label: 'Competencias de venta', pct: 89, color: '#c5de4e' },
+  { label: 'Adaptabilidad', pct: 85, color: '#c5de4e' },
+  { label: 'Comunicación', pct: 91, color: '#c5de4e' },
+  { label: 'Alineación con la empresa', pct: 88, color: '#c5de4e' },
+  { label: 'Potencial de desarrollo', pct: 82, color: '#c5de4e' },
 ];
 
 const DOLORES = [
@@ -93,7 +93,7 @@ const COSTOS = [
     d: 'El proceso se repite y el costo se acumula.',
     bg: 'rgba(201,217,79,0.14)',
     fg: '#F5F1E8',
-    num: '#d8f24c',
+    num: '#c5de4e',
     sub: 'rgba(245,241,232,0.72)',
   },
 ];
@@ -205,7 +205,7 @@ function CalcSlider({ label, value, display, min, max, step, onChange, minLabel,
         onChange={(e) => onChange(Number(e.target.value))}
         aria-label={`${label}: ${display}`}
         style={{
-          background: `linear-gradient(to right, #d8f24c 0%, #d8f24c ${pct}%, rgba(255,255,255,0.2) ${pct}%, rgba(255,255,255,0.2) 100%)`,
+          background: `linear-gradient(to right, #c5de4e 0%, #c5de4e ${pct}%, rgba(255,255,255,0.2) ${pct}%, rgba(255,255,255,0.2) 100%)`,
         }}
       />
       <div className="kh-calc__range-labels">
@@ -504,12 +504,12 @@ export default function Landing() {
             <path
               d="M620,96 C760,94 900,68 1020,44 C1100,28 1155,26 1184,24"
               fill="none"
-              stroke="#d8f24c"
+              stroke="#c5de4e"
               strokeWidth="2.4"
               strokeLinecap="round"
             />
-            <circle cx="620" cy="96" r="5.5" fill="#d8f24c" stroke="#d8f24c" strokeWidth="1.8" />
-            <circle cx="1020" cy="44" r="6.5" fill="#d8f24c" stroke="#d8f24c" strokeWidth="2.2" />
+            <circle cx="620" cy="96" r="5.5" fill="#c5de4e" stroke="#c5de4e" strokeWidth="1.8" />
+            <circle cx="1020" cy="44" r="6.5" fill="#c5de4e" stroke="#c5de4e" strokeWidth="2.2" />
           </svg>
         </div>
       </header>

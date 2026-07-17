@@ -16,19 +16,19 @@
   --kv-surface-3: #e4dccc;
 
   /* Brand — amarillo lima Kova (nunca verde bosque) */
-  --kv-lime: #d8f24c;
-  --kv-lime-bright: #d8f24c;
+  --kv-lime: #c5de4e;
+  --kv-lime-bright: #c5de4e;
   --kv-lime-deep: #08754c;
-  --kv-lime-soft: rgba(216, 242, 76, 0.14);
-  --kv-lime-line: rgba(216, 242, 76, 0.32);
-  --kv-indigo: #d8f24c;
+  --kv-lime-soft: rgba(197, 222, 78, 0.14);
+  --kv-lime-line: rgba(197, 222, 78, 0.32);
+  --kv-indigo: #c5de4e;
 
   /* Accent aliases → mismo amarillo */
-  --kv-volt: #d8f24c;
-  --kv-volt-bright: #d8f24c;
+  --kv-volt: #c5de4e;
+  --kv-volt-bright: #c5de4e;
   --kv-volt-ink: #08754c;
-  --kv-volt-soft: rgba(216, 242, 76, 0.16);
-  --kv-emerald: #d8f24c;
+  --kv-volt-soft: rgba(197, 222, 78, 0.16);
+  --kv-emerald: #c5de4e;
 
   /* Hairlines — tinted toward the ink */
   --kv-line: rgba(20, 18, 13, 0.08);
@@ -801,7 +801,7 @@
   background: transparent;
   padding: 17px 9px;
   text-align: center;
-  border-right: 1px solid rgba(216, 242, 76, 0.18);
+  border-right: 1px solid rgba(197, 222, 78, 0.18);
 }
 
 .kova-home-plain .kh-score__stat:last-child {

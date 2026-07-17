@@ -250,15 +250,15 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.875rem 1rem;
-  background: rgba(216, 242, 76, 0.12);
-  border: 1px solid rgba(216, 242, 76, 0.45);
+  background: rgba(197, 222, 78, 0.12);
+  border: 1px solid rgba(197, 222, 78, 0.45);
   border-radius: 0.75rem;
   color: var(--kv-ink);
   transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .kova-landing-wave .kv-contact-whatsapp:hover {
-  background: rgba(216, 242, 76, 0.2);
+  background: rgba(197, 222, 78, 0.2);
   border-color: var(--kv-lime);
 }
 

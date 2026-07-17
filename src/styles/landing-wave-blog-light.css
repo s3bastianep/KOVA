@@ -1,29 +1,28 @@
-/* Blog (index + articles) — retheme the legacy dark "wave" pages to match the
-   rest of the site (cream + forest green + Hanken Grotesk). Scoped under
-   .kova-landing-wave.kv-blog-light (two classes) so Contacto / 404 (still on
-   the dark wave theme) are untouched. Tokens are redefined here directly
-   rather than relying on `.kova-home-plain`'s cascade — that class and
-   `.kova-landing-wave` both have single-class specificity, so which one wins
-   depends on unpredictable stylesheet load order (confirmed to flip between
-   dev and prod). A two-class selector always wins over either, regardless
-   of order. */
+/* Blog (index + articles) — same palette as the dark landing / contacto:
+   #0d0f0f · #f5f5f5 · acento #c5de4e · bordes #2b2b2b.
+   Scoped under .kova-landing-wave.kv-blog-light (two classes) so Contacto / 404
+   stay untouched. Two-class specificity always beats single-class wave tokens. */
 
 .kova-landing-wave.kv-blog-light {
-  --kv-ink: #1a1712;
-  --kv-text: #1a1712;
-  --kv-body: #46403a;
-  --kv-muted: #6f6860;
-  --kv-nav-muted: #6f6860;
-  --kv-slate: #6f6860;
-  --kv-page: #f4f0e7;
-  --kv-surface: #fdfbf6;
-  --kv-surface-2: #ede7da;
-  --kv-line: rgba(20, 18, 13, 0.08);
-  --kv-lime: #0f7a40;
-  --kv-lime-dark: #0a5a2f;
-  --kv-lime-soft: rgba(15, 122, 64, 0.1);
-  --kv-lime-line: rgba(22, 162, 74, 0.24);
-  --kv-indigo: #16a24a;
+  --kv-ink: #f5f5f5;
+  --kv-text: #f5f5f5;
+  --kv-body: #b8b8b0;
+  --kv-muted: #8b8b8b;
+  --kv-nav-muted: #8b8b8b;
+  --kv-slate: #9a9a92;
+  --kv-page: #0d0f0f;
+  --kv-surface: #121514;
+  --kv-surface-2: #161918;
+  --kv-line: #2b2b2b;
+  --kv-lime: #c5de4e;
+  --kv-lime-dark: #c5de4e;
+  --kv-lime-soft: rgba(197, 222, 78, 0.12);
+  --kv-lime-line: rgba(197, 222, 78, 0.28);
+  --kv-indigo: #c5de4e;
+  --kv-indigo-dark: #a8c23a;
+  --kv-paper: #121514;
+  --kv-paper-2: #161918;
+  --kv-on-lime: #0d0f0f;
   background: var(--kv-page);
   color: var(--kv-text);
 }
@@ -33,15 +32,32 @@
 }
 
 .kova-landing-wave.kv-blog-light a:hover {
-  color: var(--kv-ink);
+  color: #e8f48a;
 }
 
 .kova-landing-wave.kv-blog-light .font-mono {
   font-family: var(--font-sans);
 }
 
-.kova-landing-wave.kv-blog-light .kv-guia-cta-btn--primary {
-  color: #fff;
+/* Lime CTAs need dark ink (we remapped --kv-ink to light text) */
+.kova-landing-wave.kv-blog-light .kv-guia-cta-btn--primary,
+.kova-landing-wave.kv-blog-light .kv-prose a.kv-guia-cta-btn--primary {
+  color: var(--kv-on-lime);
+  background: var(--kv-lime);
+  border-color: var(--kv-lime);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-cta-btn--secondary,
+.kova-landing-wave.kv-blog-light .kv-prose a.kv-guia-cta-btn--secondary {
+  color: var(--kv-text);
+  background: transparent;
+  border-color: var(--kv-line);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-cta-btn--secondary:hover {
+  border-color: var(--kv-lime);
+  background: var(--kv-lime-soft);
+  color: var(--kv-lime);
 }
 
 .kova-landing-wave.kv-blog-light .kv-blog-hero-title em {
@@ -52,11 +68,15 @@
   letter-spacing: -0.035em;
 }
 
-.kova-landing-wave.kv-blog-light .kv-eyebrow::before {
-  background: rgba(15, 122, 64, 0.75);
+.kova-landing-wave.kv-blog-light .kv-eyebrow {
+  color: var(--kv-lime);
 }
 
-/* Blog index — was a full dark page background, now matches the cream site */
+.kova-landing-wave.kv-blog-light .kv-eyebrow::before {
+  background: var(--kv-lime);
+}
+
+/* ── Index ── */
 .kova-landing-wave.kv-blog-light .kv-blog-index {
   background: var(--kv-page);
   color: var(--kv-text);
@@ -65,7 +85,7 @@
 .kova-landing-wave.kv-blog-light .kv-blog-hero-title,
 .kova-landing-wave.kv-blog-light .kv-blog-feature-copy h2,
 .kova-landing-wave.kv-blog-light .kv-blog-item-copy h2 {
-  color: var(--kv-ink);
+  color: var(--kv-text);
 }
 
 .kova-landing-wave.kv-blog-light .kv-blog-hero-lead,
@@ -80,11 +100,13 @@
 
 .kova-landing-wave.kv-blog-light .kv-blog-feature-media {
   border-color: var(--kv-line);
-  background: var(--kv-surface-2);
+  background: var(--kv-surface);
 }
 
 .kova-landing-wave.kv-blog-light .kv-blog-feature-placeholder {
-  background: radial-gradient(80% 70% at 70% 20%, var(--kv-lime-soft), transparent 55%), var(--kv-surface-2);
+  background:
+    radial-gradient(80% 70% at 70% 20%, var(--kv-lime-soft), transparent 55%),
+    var(--kv-surface-2);
 }
 
 .kova-landing-wave.kv-blog-light .kv-blog-list {
@@ -103,27 +125,37 @@
 
 .kova-landing-wave.kv-blog-light .kv-blog-item-media {
   border-color: var(--kv-line);
-  background: var(--kv-surface-2);
+  background: var(--kv-surface);
 }
 
 .kova-landing-wave.kv-blog-light .kv-blog-item-placeholder {
   background: var(--kv-surface-2);
 }
 
-/* Article hero — was a dark band; the rest of the site never uses a full
-   dark hero, only isolated accent cards, so put the title on the page bg. */
+.kova-landing-wave.kv-blog-light .kv-blog-read {
+  color: var(--kv-lime);
+}
+
+.kova-landing-wave.kv-blog-light .kv-blog-feature:hover .kv-blog-feature-copy h2,
+.kova-landing-wave.kv-blog-light .kv-blog-item:hover .kv-blog-item-copy h2 {
+  color: var(--kv-lime);
+}
+
+/* ── Article hero ── */
 .kova-landing-wave.kv-blog-light .kv-guia-hero {
-  background: transparent;
-  color: var(--kv-ink);
+  background: var(--kv-page);
+  color: var(--kv-text);
+  border-bottom-color: var(--kv-lime);
 }
 
 .kova-landing-wave.kv-blog-light .kv-guia-hero h1,
 .kova-landing-wave.kv-blog-light .kv-guia-author-name {
-  color: var(--kv-ink);
+  color: var(--kv-text);
 }
 
 .kova-landing-wave.kv-blog-light .kv-guia-author-avatar {
-  color: #fff;
+  background: var(--kv-lime);
+  color: var(--kv-on-lime);
 }
 
 .kova-landing-wave.kv-blog-light .kv-guia-back,
@@ -132,22 +164,98 @@
 }
 
 .kova-landing-wave.kv-blog-light .kv-guia-back:hover {
-  color: var(--kv-ink);
+  color: var(--kv-lime);
 }
 
 .kova-landing-wave.kv-blog-light .kv-guia-hero-media {
   border-color: var(--kv-line);
+  background: var(--kv-surface);
 }
 
-/* Sidebar CTA + bottom CTA band — were dark ink panels; match the light
-   accent-card treatment used elsewhere on the site instead. */
+/* ── Body chrome: no cream/white cards ── */
+.kova-landing-wave.kv-blog-light .kv-guia-body,
+.kova-landing-wave.kv-blog-light .kv-guia-article {
+  background: transparent;
+  color: var(--kv-body);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-toc-panel,
+.kova-landing-wave.kv-blog-light .kv-guia-sidebar-item,
+.kova-landing-wave.kv-blog-light .kv-guia-mobile-link,
+.kova-landing-wave.kv-blog-light .kv-guia-toc-pill,
+.kova-landing-wave.kv-blog-light .kv-guia-issue,
+.kova-landing-wave.kv-blog-light .kv-guia-solution,
+.kova-landing-wave.kv-blog-light .kv-guia-feature,
+.kova-landing-wave.kv-blog-light .kv-guia-feature-body,
+.kova-landing-wave.kv-blog-light .kv-guia-feature-stat,
+.kova-landing-wave.kv-blog-light .kv-guia-skill-card,
+.kova-landing-wave.kv-blog-light .kv-guia-callout,
+.kova-landing-wave.kv-blog-light .kv-guia-summary-item,
+.kova-landing-wave.kv-blog-light .kv-guia-related,
+.kova-landing-wave.kv-blog-light .kv-prose blockquote {
+  background: var(--kv-surface);
+  border-color: var(--kv-line);
+  color: var(--kv-body);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-section-title,
+.kova-landing-wave.kv-blog-light .kv-guia-numbered h3,
+.kova-landing-wave.kv-blog-light .kv-guia-issue h3,
+.kova-landing-wave.kv-blog-light .kv-guia-feature-title,
+.kova-landing-wave.kv-blog-light .kv-guia-skill-card h4,
+.kova-landing-wave.kv-blog-light .kv-guia-summary-title,
+.kova-landing-wave.kv-blog-light .kv-guia-summary-item h4,
+.kova-landing-wave.kv-blog-light .kv-guia-toc-title,
+.kova-landing-wave.kv-blog-light .kv-guia-mobile-title,
+.kova-landing-wave.kv-blog-light .kv-guia-callout li,
+.kova-landing-wave.kv-blog-light .kv-guia-p strong,
+.kova-landing-wave.kv-blog-light .kv-guia-sidebar-item h3,
+.kova-landing-wave.kv-blog-light .kv-guia-mobile-link p {
+  color: var(--kv-text);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-p,
+.kova-landing-wave.kv-blog-light .kv-guia-numbered p,
+.kova-landing-wave.kv-blog-light .kv-guia-issue > p,
+.kova-landing-wave.kv-blog-light .kv-guia-feature-copy p,
+.kova-landing-wave.kv-blog-light .kv-guia-skill-card p,
+.kova-landing-wave.kv-blog-light .kv-guia-summary-item p,
+.kova-landing-wave.kv-blog-light .kv-guia-sidebar-item p,
+.kova-landing-wave.kv-blog-light .kv-guia-sidebar-meta,
+.kova-landing-wave.kv-blog-light .kv-guia-mobile-link span {
+  color: var(--kv-body);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-toc-link {
+  color: var(--kv-muted);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-toc-link--active,
+.kova-landing-wave.kv-blog-light .kv-guia-toc-link:hover {
+  color: var(--kv-lime);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-quote {
+  background: var(--kv-surface-2);
+  border-left: none;
+  color: var(--kv-text);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-quote p {
+  color: var(--kv-text);
+}
+
 .kova-landing-wave.kv-blog-light .kv-guia-sidebar-cta {
   background: var(--kv-surface-2);
   border-color: var(--kv-line);
 }
 
 .kova-landing-wave.kv-blog-light .kv-guia-sidebar-cta .font-display {
-  color: var(--kv-ink);
+  color: var(--kv-text);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-sidebar-cta span {
+  color: var(--kv-lime);
 }
 
 .kova-landing-wave.kv-blog-light .kv-guia-sidebar-cta p:last-child {
@@ -157,18 +265,17 @@
 .kova-landing-wave.kv-blog-light .kv-guia-cta-band {
   background: var(--kv-surface-2);
   border: 1px solid var(--kv-line);
+  border-top: 3px solid var(--kv-lime);
 }
 
 .kova-landing-wave.kv-blog-light .kv-guia-cta-band-title {
-  color: var(--kv-ink);
+  color: var(--kv-text);
 }
 
 .kova-landing-wave.kv-blog-light .kv-guia-cta-band-desc {
   color: var(--kv-muted);
 }
 
-/* Article page — remaining blue accents and the yellow-lime highlight tint
-   left over from the old palette. */
 .kova-landing-wave.kv-blog-light .kv-guia-summary {
   background: var(--kv-lime-soft);
   border-color: var(--kv-lime-line);
@@ -177,30 +284,14 @@
 .kova-landing-wave.kv-blog-light .kv-guia-feature-badge {
   background: var(--kv-lime-soft);
   border-color: var(--kv-lime-line);
+  color: var(--kv-lime);
 }
 
-/* Side-stripe border on the feature panel reads as an accidental accent —
-   drop it, the light panel background already separates it from the photo */
 .kova-landing-wave.kv-blog-light .kv-guia-feature-body {
   border-left: none;
   border-top: none;
 }
 
-/* Same side-stripe issue on quotes — a tinted background carries the
-   emphasis on its own, no colored rule needed */
-.kova-landing-wave.kv-blog-light .kv-guia-quote {
-  border-left: none;
-}
-
-.kova-landing-wave.kv-blog-light .kv-prose blockquote {
-  border-left: none;
-  padding: 1rem 1.25rem;
-  background: var(--kv-surface-2);
-  border-radius: 0.75rem;
-}
-
-/* Rotating colored left-stripes on the skill cards and the callout box are
-   the same side-stripe tell — full border + tint already does the job */
 .kova-landing-wave.kv-blog-light .kv-guia-skill-card:nth-child(4n + 1),
 .kova-landing-wave.kv-blog-light .kv-guia-skill-card:nth-child(4n + 2),
 .kova-landing-wave.kv-blog-light .kv-guia-skill-card:nth-child(4n + 3),
@@ -212,13 +303,40 @@
   border-left: none;
 }
 
+.kova-landing-wave.kv-blog-light .kv-guia-callout-label {
+  color: var(--kv-lime);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-callout li::before,
+.kova-landing-wave.kv-blog-light .kv-guia-summary-num,
+.kova-landing-wave.kv-blog-light .kv-guia-numbered-num,
+.kova-landing-wave.kv-blog-light .kv-guia-issue-num,
+.kova-landing-wave.kv-blog-light .kv-guia-feature-stat-value,
+.kova-landing-wave.kv-blog-light .kv-guia-summary-brand > span {
+  color: var(--kv-lime);
+  background: transparent;
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-summary-logo {
+  background: var(--kv-lime);
+  color: var(--kv-on-lime);
+}
+
 .kova-landing-wave.kv-blog-light .kv-guia-sidebar-item:hover {
   border-color: var(--kv-lime-line);
 }
 
-/* Footer — was a dark band; the rest of the site uses a light footer */
+.kova-landing-wave.kv-blog-light .kv-guia-mobile-footer {
+  background: var(--kv-page);
+  border-top-color: var(--kv-line);
+}
+
+.kova-landing-wave.kv-blog-light .kv-guia-related-title {
+  color: var(--kv-text);
+}
+
 .kova-landing-wave.kv-blog-light .kv-footer {
-  background: var(--kv-surface-2);
+  background: var(--kv-page);
   color: var(--kv-muted);
   border-top: 1px solid var(--kv-line);
 }
@@ -228,5 +346,5 @@
 }
 
 .kova-landing-wave.kv-blog-light .kv-footer-meta a:hover {
-  color: var(--kv-ink);
+  color: var(--kv-lime);
 }

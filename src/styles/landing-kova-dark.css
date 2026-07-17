@@ -2,7 +2,7 @@
 
 /*
   KOVA · Landing oscura (/dark)
-  Sistema: Manrope · #0D0F0F / #FAFAF8 · acento #d8f24c · radio 20px
+  Sistema: Manrope · #0D0F0F / #FAFAF8 · acento #c5de4e · radio 20px
   Todo scoped bajo .kova-dark para no interferir con la landing clara.
 */
 
@@ -13,7 +13,7 @@
   --kd-ink: #171717;
   --kd-text: #f5f5f5;
   --kd-muted: #8b8b8b;
-  --kd-lime: #d8f24c;
+  --kd-lime: #c5de4e;
   --kd-lime-ink: #08754c;
   --kd-border: #2b2b2b;
   --kd-border-light: rgba(23, 23, 23, 0.1);
@@ -78,11 +78,11 @@
 .kova-dark .kd-btn--lime {
   color: var(--kd-ink);
   background: var(--kd-lime);
-  box-shadow: 0 10px 30px rgba(216, 242, 76, 0.12);
+  box-shadow: 0 10px 30px rgba(197, 222, 78, 0.12);
 }
 
 .kova-dark .kd-btn--lime:hover {
-  background: #d8f24c;
+  background: #c5de4e;
 }
 
 .kova-dark .kd-btn--ghost {
@@ -361,7 +361,7 @@
   aspect-ratio: 1;
   border-radius: 50%;
   background: var(--kd-lime);
-  box-shadow: 0 0 0 4px rgba(216, 242, 76, 0.18);
+  box-shadow: 0 0 0 4px rgba(197, 222, 78, 0.18);
 }
 
 /* La línea del hero baja y se ramifica en 4 caminos (estilo raíz) */
@@ -390,7 +390,7 @@
 
 .kd-branch > svg path {
   fill: none;
-  stroke: rgba(23, 23, 23, 0.45);
+  stroke: rgba(8, 117, 76, 0.28);
   stroke-width: 1.4;
   stroke-linecap: round;
   stroke-dasharray: 1;
@@ -407,9 +407,11 @@
   aspect-ratio: 1;
   border-radius: 15px;
   transform: translate(-50%, -50%) scale(0);
-  background: #fff;
-  border: 1px solid rgba(23, 23, 23, 0.16);
-  box-shadow: 0 12px 26px rgba(23, 23, 23, 0.08);
+  background: linear-gradient(165deg, #f7fbe8 0%, #ffffff 62%);
+  border: 1px solid rgba(197, 222, 78, 0.45);
+  box-shadow:
+    0 12px 26px rgba(23, 23, 23, 0.06),
+    0 0 0 3px rgba(197, 222, 78, 0.08);
   display: grid;
   place-items: center;
 }
@@ -418,7 +420,7 @@
   width: 21px;
   height: 21px;
   fill: none;
-  stroke: var(--kd-ink);
+  stroke: var(--kd-lime-ink);
   stroke-width: 1.7;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -486,7 +488,7 @@
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 22px;
+  gap: 32px;
 }
 
 .kd-door {
@@ -695,8 +697,8 @@
 }
 
 .kd-compare__card--kova {
-  border-color: rgba(216, 242, 76, 0.45);
-  box-shadow: 0 30px 80px rgba(216, 242, 76, 0.07);
+  border-color: rgba(197, 222, 78, 0.45);
+  box-shadow: 0 30px 80px rgba(197, 222, 78, 0.07);
 }
 
 .kd-compare__card header {
@@ -774,8 +776,8 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: rgba(216, 242, 76, 0.12);
-  border: 1px solid rgba(216, 242, 76, 0.5);
+  background: rgba(197, 222, 78, 0.12);
+  border: 1px solid rgba(197, 222, 78, 0.5);
   color: var(--kd-lime);
   font-size: 11px;
   font-weight: 800;
@@ -799,7 +801,7 @@
 }
 
 .kd-compare__wire--b {
-  background: linear-gradient(to right, rgba(216, 242, 76, 0.6), rgba(216, 242, 76, 0.25));
+  background: linear-gradient(to right, rgba(197, 222, 78, 0.6), rgba(197, 222, 78, 0.25));
   transition-delay: 450ms;
 }
 
@@ -824,13 +826,13 @@
   aspect-ratio: 1;
   border-radius: 50%;
   background: var(--kd-lime);
-  box-shadow: 0 0 0 4px rgba(216, 242, 76, 0.16);
+  box-shadow: 0 0 0 4px rgba(197, 222, 78, 0.16);
 }
 
 .kd-compare__ring {
   position: absolute;
   inset: -1px;
-  border: 1px solid rgba(216, 242, 76, 0.4);
+  border: 1px solid rgba(197, 222, 78, 0.4);
   border-radius: 50%;
   animation: kd-pulse 2.6s ease-out infinite;
 }
@@ -1043,7 +1045,7 @@
   width: 0;
   height: 100%;
   border-radius: 4px;
-  background: linear-gradient(to right, rgba(216, 242, 76, 0.55), var(--kd-lime));
+  background: linear-gradient(to right, rgba(197, 222, 78, 0.55), var(--kd-lime));
   transition: width 600ms var(--kd-ease);
 }
 
@@ -1098,7 +1100,7 @@
   border: 1px solid var(--kd-border);
   border-radius: calc(var(--kd-radius) + 8px);
   background:
-    radial-gradient(420px 260px at 12% 50%, rgba(216, 242, 76, 0.07), transparent 70%),
+    radial-gradient(420px 260px at 12% 50%, rgba(197, 222, 78, 0.07), transparent 70%),
     var(--kd-dark-2);
 }
 
@@ -1111,7 +1113,7 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  border: 1px solid rgba(216, 242, 76, 0.4);
+  border: 1px solid rgba(197, 222, 78, 0.4);
   border-radius: 50%;
 }
 

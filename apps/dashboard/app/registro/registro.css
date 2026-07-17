@@ -5,8 +5,8 @@
 .kv-registro-cv {
   --kv-ink: #12140f;
   --kv-indigo: #3341c4;
-  --kv-lime: #d8f24c;
-  --kv-lime-soft: rgba(216, 242, 76, 0.35);
+  --kv-lime: #c5de4e;
+  --kv-lime-soft: rgba(197, 222, 78, 0.35);
   --kv-lime-dark: #5c6e12;
   --kv-slate: #6b6f64;
   --kv-line: #d7d9ce;
@@ -81,7 +81,7 @@
   padding: 1.15rem 1.2rem;
   border-radius: var(--kv-radius-field);
   border: 1px solid var(--kv-line);
-  background: linear-gradient(145deg, rgba(216, 242, 76, 0.14), rgba(51, 65, 196, 0.05));
+  background: linear-gradient(145deg, rgba(197, 222, 78, 0.14), rgba(51, 65, 196, 0.05));
   box-shadow: var(--kv-shadow-field);
 }
 

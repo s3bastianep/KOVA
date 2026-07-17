@@ -18,8 +18,8 @@ html:has(.kv-login) {
   --kv-paper: #f2efe7;
   --kv-surface: #0f100e;
   --kv-surface-2: #161714;
-  --kv-lime: #d8f24c;
-  --kv-lime-bright: #d8f24c;
+  --kv-lime: #c5de4e;
+  --kv-lime-bright: #c5de4e;
   --kv-text: #f2efe7;
   --kv-muted: rgba(242, 239, 231, 0.55);
   --kv-body: rgba(242, 239, 231, 0.72);
@@ -46,7 +46,7 @@ html:has(.kv-login) {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 45% 50% at 78% 30%, rgba(216, 242, 76, 0.07), transparent 60%),
+    radial-gradient(ellipse 45% 50% at 78% 30%, rgba(197, 222, 78, 0.07), transparent 60%),
     radial-gradient(ellipse 40% 40% at 15% 80%, rgba(255, 255, 255, 0.03), transparent 55%),
     var(--kv-ink);
 }
@@ -202,7 +202,7 @@ html:has(.kv-login) {
 }
 
 .kv-auth-mosaic__block--ink { background: #141510; }
-.kv-auth-mosaic__block--lime { background: #d8f24c; }
+.kv-auth-mosaic__block--lime { background: #c5de4e; }
 .kv-auth-mosaic__block--coral { background: #ff6b4a; }
 .kv-auth-mosaic__block--teal { background: #1f9b8a; }
 .kv-auth-mosaic__block--cream { background: #f2efe7; }
@@ -213,7 +213,7 @@ html:has(.kv-login) {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 6px solid #d8f24c;
+  border: 6px solid #c5de4e;
 }
 
 .kv-auth-mosaic__shape--dot {
@@ -367,7 +367,7 @@ html:has(.kv-login) {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(216, 242, 76, 0.55), transparent);
+  background: linear-gradient(90deg, transparent, rgba(197, 222, 78, 0.55), transparent);
 }
 
 .kv-login-card-head {
@@ -402,7 +402,7 @@ html:has(.kv-login) {
   color: #050605;
   margin-bottom: 1.25rem;
   animation: kv-login-success-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-  box-shadow: 0 0 0 rgba(216, 242, 76, 0.4);
+  box-shadow: 0 0 0 rgba(197, 222, 78, 0.4);
 }
 
 .kv-login-success-check svg {
@@ -417,12 +417,12 @@ html:has(.kv-login) {
   0% {
     transform: scale(0.7);
     opacity: 0;
-    box-shadow: 0 0 0 10px rgba(216, 242, 76, 0.16);
+    box-shadow: 0 0 0 10px rgba(197, 222, 78, 0.16);
   }
   100% {
     transform: scale(1);
     opacity: 1;
-    box-shadow: 0 0 0 0 rgba(216, 242, 76, 0);
+    box-shadow: 0 0 0 0 rgba(197, 222, 78, 0);
   }
 }
 
@@ -507,8 +507,8 @@ html:has(.kv-login) {
 }
 
 .kv-login-input-wrap:focus-within {
-  border-color: rgba(216, 242, 76, 0.55);
-  box-shadow: 0 0 0 3px rgba(216, 242, 76, 0.14);
+  border-color: rgba(197, 222, 78, 0.55);
+  box-shadow: 0 0 0 3px rgba(197, 222, 78, 0.14);
 }
 
 .kv-login-input-wrap svg {
@@ -620,7 +620,7 @@ html:has(.kv-login) {
 }
 
 .kv-login-remember input:hover {
-  border-color: rgba(216, 242, 76, 0.55);
+  border-color: rgba(197, 222, 78, 0.55);
 }
 
 .kv-login-inline-link {
@@ -649,7 +649,7 @@ html:has(.kv-login) {
 
 .kv-login-remember input:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(216, 242, 76, 0.25);
+  box-shadow: 0 0 0 3px rgba(197, 222, 78, 0.25);
 }
 
 .kv-login-submit {
@@ -671,7 +671,7 @@ html:has(.kv-login) {
   cursor: pointer;
   background: var(--kv-lime);
   color: #050605;
-  box-shadow: 0 12px 36px rgba(216, 242, 76, 0.16);
+  box-shadow: 0 12px 36px rgba(197, 222, 78, 0.16);
   transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease, opacity 0.15s ease;
 }
 
@@ -679,7 +679,7 @@ html:has(.kv-login) {
   transform: translateY(-2px);
   background: var(--kv-lime-bright);
   color: #050605;
-  box-shadow: 0 16px 42px rgba(216, 242, 76, 0.24);
+  box-shadow: 0 16px 42px rgba(197, 222, 78, 0.24);
 }
 
 .kv-login-submit:active:not(:disabled) {

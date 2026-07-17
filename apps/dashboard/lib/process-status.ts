@@ -29,7 +29,7 @@ export const PROCESS_BUCKET_META: Record<
   ProcessBucket,
   { label: string; hint: string; tint: string; tone: string }
 > = {
-  active: { label: 'Procesos activos', hint: 'En progreso', tint: 'rgba(216, 242, 76, 0.22)', tone: 'var(--kova-green)' },
+  active: { label: 'Procesos activos', hint: 'En progreso', tint: 'rgba(197, 222, 78, 0.22)', tone: 'var(--kova-green)' },
   review: { label: 'En revisión', hint: 'Pendientes de acción', tint: 'rgba(51, 65, 196, 0.08)', tone: 'var(--kova-blue)' },
   paused: { label: 'Pausados', hint: 'Temporales', tint: 'rgba(18, 20, 15, 0.05)', tone: 'var(--kova-navy-muted)' },
   closed: { label: 'Cerrados', hint: 'Contratados', tint: 'rgba(51, 65, 196, 0.06)', tone: 'var(--kova-blue-mid)' },

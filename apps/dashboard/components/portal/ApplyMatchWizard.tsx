@@ -202,7 +202,7 @@ export function ApplyMatchWizard({
         }
         .apply-wizard-progress-fill {
           height: 100%;
-          background: var(--kv-lime, #d8f24c);
+          background: var(--kv-lime, #c5de4e);
           opacity: 0.9;
           transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
         }
@@ -290,7 +290,7 @@ export function ApplyMatchWizard({
           width: 4px;
           height: 4px;
           border-radius: 50%;
-          background: var(--kv-lime, #d8f24c);
+          background: var(--kv-lime, #c5de4e);
           margin-right: 7px;
           vertical-align: middle;
           opacity: 0.85;
@@ -366,7 +366,7 @@ export function ApplyMatchWizard({
 
         .apply-wizard-choice--yes {
           border: none;
-          background: var(--kv-lime, #d8f24c);
+          background: var(--kv-lime, #c5de4e);
           color: #0a0a0a;
         }
         .apply-wizard-choice--yes:hover:not(:disabled) {

@@ -20,21 +20,21 @@
 
 html {
   scrollbar-gutter: stable;
-  background: #f7f5ee;
+  background: #0d0f0f;
 }
 
 body {
-  background: #f7f5ee;
+  background: #0d0f0f;
 }
 
 .kova-route-shell {
   min-height: calc(100vh - 64px);
-  background: #f7f5ee;
+  background: #0d0f0f;
 }
 
 .kova-route-shell__fallback {
   min-height: calc(100vh - 64px);
-  background: #f7f5ee;
+  background: #0d0f0f;
 }
 
 /* Barra unificada — mismo sistema que la home oscura (Manrope · #0d0f0f · lima) */
@@ -79,7 +79,7 @@ body {
 }
 
 .kova-navbar .kv-logo-dot {
-  color: #d8f24c;
+  color: #c5de4e;
 }
 
 .kova-navbar .kv-navlinks {
@@ -115,11 +115,11 @@ body {
 }
 
 .kova-navbar .kv-nav-quiet:hover {
-  color: #d8f24c !important;
+  color: #c5de4e !important;
 }
 
 .kova-navbar .kv-nav-quiet.is-active {
-  color: #d8f24c !important;
+  color: #c5de4e !important;
 }
 
 @media (min-width: 960px) {
@@ -155,11 +155,11 @@ body {
 
 .kova-navbar .kv-navlinks a:hover,
 .kova-navbar .kv-navlinks button:hover {
-  color: #d8f24c !important;
+  color: #c5de4e !important;
 }
 
 .kova-navbar .kv-navlinks a.is-active {
-  color: #d8f24c !important;
+  color: #c5de4e !important;
 }
 
 .kova-navbar .kv-cta-pill {
@@ -171,7 +171,7 @@ body {
   border-radius: 16px;
   border: 1px solid transparent !important;
   box-shadow: none !important;
-  background: #d8f24c !important;
+  background: #c5de4e !important;
   color: #171717 !important;
   font-family: inherit;
   font-size: 13.5px;
@@ -192,7 +192,7 @@ body {
 
 .kova-navbar .kv-cta-pill--outline,
 .kova-navbar .kv-cta-pill--lime {
-  background: #d8f24c !important;
+  background: #c5de4e !important;
   border: 1px solid transparent !important;
   box-shadow: none !important;
   color: #171717 !important;
@@ -202,7 +202,7 @@ body {
 .kova-navbar .kv-cta-pill--outline:hover,
 .kova-navbar .kv-cta-pill--lime:hover {
   transform: translateY(-2px);
-  background: #d8f24c !important;
+  background: #c5de4e !important;
   box-shadow: none !important;
   color: #171717 !important;
 }
@@ -350,7 +350,7 @@ body {
 
   .kova-navbar .kv-nav-drawer__links a:hover,
   .kova-navbar .kv-nav-drawer__actions a:not(.kv-cta-pill):hover {
-    color: #d8f24c !important;
+    color: #c5de4e !important;
   }
 
   .kova-navbar .kv-nav-drawer__cta {
