@@ -510,242 +510,160 @@
   line-height: 1.5;
 }
 
-/* Los dos caminos: dos paneles comprometidos unidos por un nodo central */
+/* Las cuatro puertas */
 
-.kd-paths-stage {
-  position: relative;
-  width: min(1020px, var(--kd-page));
+.kd-doors {
+  width: min(940px, var(--kd-page));
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 18px;
+  gap: 22px;
 }
 
-.kd-path {
+.kd-door {
   position: relative;
   overflow: hidden;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  min-height: 340px;
-  padding: 34px 36px 36px;
-  border-radius: calc(var(--kd-radius) + 6px);
-  transition: transform 500ms var(--kd-ease), box-shadow 500ms ease;
+  align-items: flex-start;
+  gap: 22px;
+  padding: 34px 34px 32px;
+  border: 1px solid rgba(23, 23, 23, 0.08);
+  border-radius: calc(var(--kd-radius) + 4px);
+  background: linear-gradient(180deg, #f4f4ee 0%, #efefe8 100%);
+  transition: transform 450ms var(--kd-ease), box-shadow 450ms ease, border-color 450ms ease;
 }
 
-.kd-path--ink {
-  background: var(--kd-ink);
-  color: var(--kd-light);
+.kd-door--lime {
+  border-color: rgba(148, 178, 20, 0.22);
+  background: linear-gradient(180deg, #f6fbe0 0%, #f0f7d2 100%);
 }
 
-.kd-path--lime {
-  background: var(--kd-lime);
-  color: var(--kd-ink);
-}
-
-.kd-path:hover {
-  transform: translateY(-7px);
-}
-
-.kd-path--ink:hover {
-  box-shadow: 0 30px 60px rgba(23, 23, 23, 0.28);
-}
-
-.kd-path--lime:hover {
-  box-shadow: 0 30px 60px rgba(148, 178, 20, 0.32);
-}
-
-.kd-path__label {
+/* Brillo suave en la esquina superior: da profundidad sin ensuciar el fondo. */
+.kd-door::before {
+  content: '';
   position: absolute;
-  top: 30px;
-  left: 36px;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  inset: 0;
+  background: radial-gradient(420px 180px at 88% -10%, rgba(255, 255, 255, 0.85), transparent 70%);
+  opacity: 0;
+  transition: opacity 500ms ease;
+  pointer-events: none;
 }
 
-.kd-path--ink .kd-path__label {
-  color: var(--kd-lime);
+.kd-door:hover::before {
+  opacity: 1;
 }
 
-.kd-path--lime .kd-path__label {
-  color: var(--kd-lime-ink);
+.kd-door:hover {
+  transform: translateY(-6px);
+  border-color: rgba(23, 23, 23, 0.2);
+  box-shadow: 0 30px 56px rgba(23, 23, 23, 0.12);
 }
 
-/* Icono fantasma: textura grande que asoma por la esquina */
-.kd-path__ghost {
-  position: absolute;
-  top: -34px;
-  right: -30px;
-  width: 190px;
-  height: 190px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 0.75;
-  opacity: 0.14;
-  transition: transform 700ms var(--kd-ease), opacity 500ms ease;
+.kd-door--lime:hover {
+  border-color: rgba(148, 178, 20, 0.5);
+  box-shadow: 0 30px 56px rgba(148, 178, 20, 0.2);
 }
 
-.kd-path--ink .kd-path__ghost {
-  stroke: var(--kd-lime);
-  opacity: 0.2;
-}
-
-.kd-path:hover .kd-path__ghost {
-  transform: rotate(-7deg) scale(1.06);
-  opacity: 0.22;
-}
-
-.kd-path__body {
-  display: block;
-  max-width: 40ch;
-}
-
-.kova-dark .kd-path h3 {
-  margin: 0 0 10px;
-  font-size: clamp(24px, 2.3vw, 30px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.08;
-  color: inherit;
-}
-
-.kova-dark .kd-path--ink h3 {
-  color: var(--kd-light);
-}
-
-.kova-dark .kd-path--lime h3 {
-  color: var(--kd-ink);
-}
-
-.kd-path p {
-  margin: 0 0 22px;
-  font-size: 15.5px;
-  line-height: 1.55;
-}
-
-.kd-path--ink p {
-  color: rgba(250, 250, 248, 0.72);
-}
-
-.kd-path--lime p {
-  color: rgba(23, 23, 23, 0.74);
-}
-
-.kd-path__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-}
-
-.kd-path--ink .kd-path__cta {
-  color: var(--kd-lime);
-}
-
-.kd-path__cta i {
-  font-style: normal;
-  transition: transform 400ms var(--kd-ease);
-}
-
-.kd-path:hover .kd-path__cta i {
-  transform: translateX(6px);
-}
-
-/* El nodo: la conexión entre ambos caminos */
-.kd-paths-node {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+.kd-door__icon {
+  position: relative;
   z-index: 1;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: var(--kd-light);
-  border: 1px solid rgba(23, 23, 23, 0.14);
-  box-shadow: 0 14px 34px rgba(23, 23, 23, 0.16);
+  flex: 0 0 58px;
+  height: 58px;
+  border-radius: 17px;
+  background: #fff;
+  border: 1px solid rgba(23, 23, 23, 0.12);
+  box-shadow: 0 6px 16px rgba(23, 23, 23, 0.06);
   display: grid;
   place-items: center;
+  transition: transform 450ms var(--kd-ease), border-color 450ms ease;
 }
 
-.kd-paths-node svg {
-  width: 30px;
-  height: 30px;
+.kd-door:hover .kd-door__icon {
+  transform: translateY(-3px) rotate(-4deg);
+  border-color: rgba(148, 178, 20, 0.55);
+}
+
+.kd-door__icon svg {
+  width: 26px;
+  height: 26px;
   fill: none;
-  stroke: var(--kd-lime-ink);
-  stroke-width: 1.8;
+  stroke: var(--kd-ink);
+  stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-/* Rutas secundarias: filas de enlace, no tarjetas */
-.kd-paths-more {
-  width: min(1020px, var(--kd-page));
-  margin: 54px auto 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 48px;
+.kd-door__body {
+  position: relative;
+  z-index: 1;
+  display: block;
 }
 
-.kd-more {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 20px 4px;
-  border-top: 1px solid rgba(23, 23, 23, 0.16);
-  transition: border-color 350ms ease;
+.kd-door__tag {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--kd-lime-ink);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
 }
 
-.kd-more:hover {
-  border-top-color: rgba(23, 23, 23, 0.45);
+.kova-dark .kd-door h3 {
+  margin: 0 0 8px;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--kd-ink);
 }
 
-.kd-more span {
+.kd-door p {
+  margin: 0 0 18px;
   color: var(--kd-muted);
-  font-size: 13.5px;
-  font-weight: 600;
-  white-space: nowrap;
+  font-size: 14.5px;
+  line-height: 1.55;
 }
 
-.kd-more strong {
+.kd-door__link {
   display: inline-flex;
   align-items: center;
   gap: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--kd-ink);
-  font-size: 15.5px;
-  font-weight: 800;
-  letter-spacing: -0.015em;
-  text-align: right;
 }
 
-.kd-more strong i {
+.kd-door__link i {
   color: var(--kd-lime-ink);
   font-style: normal;
   transition: transform 400ms var(--kd-ease);
 }
 
-.kd-more:hover strong i {
+.kd-door:hover .kd-door__link i {
   transform: translateX(6px);
 }
 
+.kd-door:focus-visible {
+  outline: 2px solid var(--kd-lime-ink);
+  outline-offset: 3px;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .kd-path,
-  .kd-path__ghost,
-  .kd-path__cta i,
-  .kd-more strong i {
+  .kd-door,
+  .kd-door::before,
+  .kd-door__icon,
+  .kd-door__link i {
     transition: none;
   }
 
-  .kd-path:hover {
+  .kd-door:hover {
     transform: none;
   }
 
-  .kd-path:hover .kd-path__ghost {
+  .kd-door:hover .kd-door__icon {
     transform: none;
   }
 }
@@ -1484,24 +1402,8 @@
     transform: scaleY(1);
   }
 
-  .kd-paths-stage {
+  .kd-doors {
     grid-template-columns: 1fr;
-  }
-
-  .kd-path {
-    min-height: 280px;
-  }
-
-  /* En una columna el nodo vive entre los dos paneles, girado 90°. */
-  .kd-paths-node {
-    transform: translate(-50%, -50%) rotate(90deg);
-    width: 56px;
-    height: 56px;
-  }
-
-  .kd-paths-more {
-    grid-template-columns: 1fr;
-    gap: 0;
   }
 
   .kd-method-close {
@@ -1524,30 +1426,15 @@
     font-size: 32px;
   }
 
-  .kd-path {
-    padding: 28px 24px 30px;
+  .kd-door {
+    padding: 26px 22px;
+    gap: 16px;
   }
 
-  .kd-path__label {
-    top: 26px;
-    left: 24px;
-  }
-
-  .kd-path__ghost {
-    width: 150px;
-    height: 150px;
-    top: -26px;
-    right: -26px;
-  }
-
-  .kd-more {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-
-  .kd-more strong {
-    text-align: left;
+  .kd-door__icon {
+    flex-basis: 50px;
+    height: 50px;
+    border-radius: 14px;
   }
 
   .kd-hero-actions {
