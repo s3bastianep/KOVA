@@ -2,7 +2,7 @@ export default function AuthMosaic() {
   return (
     <div className="kv-auth-mosaic" aria-hidden>
       <div className="kv-auth-mosaic__grid">
-        <div className="kv-auth-mosaic__block kv-auth-mosaic__block--dark">
+        <div className="kv-auth-mosaic__block kv-auth-mosaic__block--ink">
           <span className="kv-auth-mosaic__shape kv-auth-mosaic__shape--ring" />
         </div>
         <img
@@ -13,8 +13,8 @@ export default function AuthMosaic() {
         <div className="kv-auth-mosaic__block kv-auth-mosaic__block--lime">
           <span className="kv-auth-mosaic__shape kv-auth-mosaic__shape--dot" />
         </div>
-        <div className="kv-auth-mosaic__block kv-auth-mosaic__block--sage" />
-        <div className="kv-auth-mosaic__block kv-auth-mosaic__block--green">
+        <div className="kv-auth-mosaic__block kv-auth-mosaic__block--coral" />
+        <div className="kv-auth-mosaic__block kv-auth-mosaic__block--teal">
           <span className="kv-auth-mosaic__shape kv-auth-mosaic__shape--zigzag" />
         </div>
         <img
@@ -23,10 +23,10 @@ export default function AuthMosaic() {
           alt=""
         />
         <div className="kv-auth-mosaic__block kv-auth-mosaic__block--cream" />
-        <div className="kv-auth-mosaic__block kv-auth-mosaic__block--dark">
+        <div className="kv-auth-mosaic__block kv-auth-mosaic__block--violet">
           <span className="kv-auth-mosaic__shape kv-auth-mosaic__shape--check">✓</span>
         </div>
-        <div className="kv-auth-mosaic__block kv-auth-mosaic__block--green" />
+        <div className="kv-auth-mosaic__block kv-auth-mosaic__block--sky" />
       </div>
     </div>
   );

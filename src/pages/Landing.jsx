@@ -1,40 +1,43 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useMotionValue, useSpring } from 'framer-motion';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { useLandingPremiumMotion } from '@/hooks/useLandingPremiumMotion';
+import CandidateSearchMorph from '@/components/landing/CandidateSearchMorph';
 import '@/styles/landing-home-plain.css';
+import '@/styles/landing-home-premium.css';
 
 const WHATSAPP_NUMERO = '573000000000';
-const CONTACT_EMAIL = 'hola@kova.com.co';
 
 const DIMS = [
-  { label: 'Compatibilidad comercial', pct: 94, color: '#0f7a40' },
-  { label: 'Competencias de venta', pct: 89, color: '#0f7a40' },
-  { label: 'Adaptabilidad', pct: 85, color: '#0f7a40' },
-  { label: 'Comunicación', pct: 91, color: '#0f7a40' },
-  { label: 'Alineación cultural', pct: 88, color: '#0f7a40' },
-  { label: 'Potencial a largo plazo', pct: 82, color: '#0f7a40' },
+  { label: 'Compatibilidad comercial', pct: 94, color: '#d8f24c' },
+  { label: 'Competencias de venta', pct: 89, color: '#d8f24c' },
+  { label: 'Adaptabilidad', pct: 85, color: '#d8f24c' },
+  { label: 'Comunicación', pct: 91, color: '#d8f24c' },
+  { label: 'Alineación con la empresa', pct: 88, color: '#d8f24c' },
+  { label: 'Potencial de desarrollo', pct: 82, color: '#d8f24c' },
 ];
 
 const DOLORES = [
   {
     n: '01',
-    tag: 'Error de contratación',
-    text: 'Contrató al candidato perfecto… y tres meses después seguía sin vender.',
+    tag: 'Contratación equivocada',
+    text: 'El candidato tenía experiencia, pero nunca logró adaptarse a la forma de vender de tu empresa.',
   },
   {
     n: '02',
-    tag: 'Rotación',
-    text: 'Su mejor vendedor renunció y nadie logra reemplazar sus resultados.',
+    tag: 'Rotación constante',
+    text: 'Los buenos vendedores se van porque el perfil y la empresa nunca estuvieron realmente alineados.',
   },
   {
     n: '03',
-    tag: 'Tiempo perdido',
-    text: 'Pasan meses pagando salario mientras el nuevo vendedor todavía no despega.',
+    tag: 'Meses sin resultados',
+    text: 'El tiempo pasa entre inducción, capacitación y adaptación, mientras las metas comerciales siguen esperando.',
   },
   {
     n: '04',
-    tag: 'Incertidumbre',
-    text: 'Las ventas no despegan y no sabe si debe cambiar al vendedor o cambiar el proceso.',
+    tag: 'Decisiones sin certeza',
+    text: 'Cuando las ventas no llegan, es difícil saber si el problema está en el perfil, el proceso comercial o ambos.',
   },
 ];
 
@@ -43,106 +46,106 @@ const COSTOS = [
     n: '01',
     t: 'Horas de liderazgo desperdiciadas',
     d: 'Tiempo de jefatura gastado en corregir y acompañar.',
-    bg: '#FFFFFF',
-    fg: '#172019',
-    num: '#2C2620',
-    sub: '#5C6459',
+    bg: 'rgba(255,255,255,0.03)',
+    fg: '#F4F1EB',
+    num: '#A39E96',
+    sub: '#8A857C',
   },
   {
     n: '02',
     t: 'Volver a empezar desde cero',
     d: 'Publicar, filtrar y entrevistar otra vez.',
-    bg: '#FFFFFF',
-    fg: '#172019',
-    num: '#2C2620',
-    sub: '#5C6459',
+    bg: 'rgba(255,255,255,0.03)',
+    fg: '#F4F1EB',
+    num: '#A39E96',
+    sub: '#8A857C',
   },
   {
     n: '03',
     t: 'Meses de inducción desperdiciados',
     d: 'Formación invertida que no se recupera.',
-    bg: '#FFFFFF',
-    fg: '#172019',
-    num: '#2C2620',
-    sub: '#5C6459',
+    bg: 'rgba(255,255,255,0.03)',
+    fg: '#F4F1EB',
+    num: '#A39E96',
+    sub: '#8A857C',
   },
   {
     n: '04',
     t: 'Ventas que nunca ocurrieron',
     d: 'Cuota perdida mientras el cargo no rinde.',
-    bg: '#FFFFFF',
-    fg: '#172019',
-    num: '#2C2620',
-    sub: '#5C6459',
+    bg: 'rgba(255,255,255,0.03)',
+    fg: '#F4F1EB',
+    num: '#A39E96',
+    sub: '#8A857C',
   },
   {
     n: '05',
     t: 'Clientes que podrían no volver',
     d: 'Una mala experiencia cierra puertas por años.',
-    bg: '#FFFFFF',
-    fg: '#172019',
-    num: '#2C2620',
-    sub: '#5C6459',
+    bg: 'rgba(255,255,255,0.03)',
+    fg: '#F4F1EB',
+    num: '#A39E96',
+    sub: '#8A857C',
   },
   {
     n: '06',
     t: 'El ciclo vuelve a comenzar',
     d: 'El proceso se repite y el costo se acumula.',
-    bg: '#2C2620',
-    fg: '#F7F5EE',
-    num: '#F7F5EE',
-    sub: 'rgba(247,245,238,0.75)',
+    bg: 'rgba(201,217,79,0.14)',
+    fg: '#F5F1E8',
+    num: '#d8f24c',
+    sub: 'rgba(245,241,232,0.72)',
   },
 ];
 
 const STAGES = [
   {
     num: '01',
-    title: 'Comprendemos',
-    label: 'Entender el negocio',
-    desc: 'Antes de iniciar la búsqueda analizamos su modelo comercial: cliente ideal, ciclo de venta, ticket promedio, tipo de venta, cultura y objetivos. Así definimos el perfil correcto antes de evaluar candidatos.',
+    title: 'Entendemos su negocio',
+    label: 'Cómo vende usted',
+    desc: 'No empezamos buscando candidatos. Primero entendemos cómo vende su empresa, cómo funciona su operación comercial y qué necesita realmente el cargo. Solo así podemos definir el perfil adecuado e iniciar la búsqueda con un criterio claro.',
     bullets: [
-      'Cliente ideal y mercado objetivo',
-      'Duración y complejidad del ciclo comercial',
-      'Venta consultiva, técnica o transaccional',
-      'Apertura de mercado o desarrollo de cuentas',
-      'Cultura, liderazgo y objetivos del equipo',
+      'Cliente ideal y mercado objetivo.',
+      'Proceso, ciclo y complejidad de la venta.',
+      'Tipo de venta: consultiva, técnica o transaccional.',
+      'Apertura de mercado o desarrollo de cuentas.',
+      'Rol, expectativas y nivel de desempeño esperado.',
     ],
   },
   {
     num: '02',
-    title: 'Seleccionamos',
-    label: 'Validar compatibilidad',
-    desc: 'Evaluamos si el candidato puede vender como ustedes venden. Usamos pruebas, simulaciones y entrevistas estructurales, y lo condensamos en un Kova Score.',
+    title: 'Evaluamos con evidencia',
+    label: 'Si puede vender',
+    desc: 'Cada empresa vende de forma diferente. Por eso diseñamos las evaluaciones según el modelo comercial de su empresa, para medir cómo se desempeñaría cada candidato en el contexto real del cargo. Al finalizar, entregamos un informe detallado con la evidencia que respalda cada recomendación.',
     bullets: [
-      'Simulaciones alineadas a su ciclo de venta',
-      'Entrevistas por competencias comerciales',
-      'Pruebas de manejo de objeciones y cierre',
-      'Informe de compatibilidad (Kova Score)',
-      'Shortlist priorizada con evidencia',
+      'Evaluaciones diseñadas para su modelo comercial.',
+      'Simulaciones basadas en situaciones reales de venta.',
+      'Entrevistas por competencias comerciales.',
+      'Evaluación de prospección, negociación y cierre.',
+      'Informe detallado con fortalezas, riesgos y nivel de compatibilidad.',
     ],
   },
   {
     num: '03',
-    title: 'Acompañamos',
-    label: 'Integrar al equipo',
-    desc: 'Después de firmar, acompañamos los primeros 90 días para que la persona venda dentro de su modelo: meta del mes 1, revisiones y corrección de brechas a tiempo.',
+    title: 'Acompañamos la integración',
+    label: 'Después de firmar',
+    desc: 'Una buena contratación necesita una buena integración. Durante los primeros 90 días acompañamos el proceso para que el nuevo integrante se adapte a su equipo, entienda su modelo comercial y tenga las herramientas necesarias para empezar a generar resultados.',
     bullets: [
-      'Plan de los primeros 30 días',
-      'Revisiones a 30, 60 y 90 días',
-      'Indicadores de avance comercial',
-      'Ajustes sobre brechas detectadas',
-      'Traspaso ordenado al liderazgo interno',
+      'Plan de integración para los primeros 30 días.',
+      'Seguimiento a los 30, 60 y 90 días.',
+      'Monitoreo del proceso de adaptación y desempeño.',
+      'Recomendaciones y ajustes cuando sea necesario.',
+      'Cierre del proceso con la entrega al líder del equipo.',
     ],
   },
 ];
 
 const PROCESS_FLOW = [
-  'Entendemos cómo vende',
-  'Buscamos perfiles compatibles',
-  'Los evaluamos en situaciones reales',
-  'Presentamos solo a los mejores',
-  'Acompañamos la integración',
+  { num: '01', title: 'Entendemos su negocio.' },
+  { num: '02', title: 'Diseñamos el perfil de éxito.' },
+  { num: '03', title: 'Encontramos el talento más alineado.' },
+  { num: '04', title: 'Evaluamos con evidencia.' },
+  { num: '05', title: 'Acompañamos los primeros 90 días.' },
 ];
 
 const DIAG_CHECKS = [
@@ -156,15 +159,15 @@ const DIAG_CHECKS = [
 const METHOD_POINTS = [
   {
     q: '¿Qué es el Kova Score?',
-    a: 'Un índice de compatibilidad con el modelo comercial de su empresa.',
+    a: 'Una forma clara de ver qué tan bien encaja alguien con cómo vende su empresa.',
   },
   {
     q: '¿Qué obtiene?',
-    a: 'Un ranking claro de candidatos y una recomendación objetiva.',
+    a: 'Una lista corta de candidatos priorizados y una recomendación que puede defender.',
   },
   {
     q: '¿Cómo lo logramos?',
-    a: 'Con una metodología propia que evalúa múltiples factores comerciales. El detalle lo vemos juntos en la conversación.',
+    a: 'Con un método propio. El detalle lo vemos juntos en la conversación, no en un brochure.',
   },
 ];
 
@@ -184,11 +187,13 @@ function fmtMoney(n) {
 }
 
 function fmtCompact(n) {
-  const v = Math.round(n / 1000000);
+  const v = Math.round((n / 1000000) * 10) / 10;
   return `$${v.toLocaleString('es-CO')}M`;
 }
 
 function CalcSlider({ label, value, display, min, max, step, onChange, minLabel, maxLabel }) {
+  const pct = ((value - min) / (max - min)) * 100;
+
   return (
     <div className="kh-calc__control">
       <input
@@ -199,6 +204,9 @@ function CalcSlider({ label, value, display, min, max, step, onChange, minLabel,
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
         aria-label={`${label}: ${display}`}
+        style={{
+          background: `linear-gradient(to right, #d8f24c 0%, #d8f24c ${pct}%, rgba(255,255,255,0.2) ${pct}%, rgba(255,255,255,0.2) 100%)`,
+        }}
       />
       <div className="kh-calc__range-labels">
         <span>{minLabel}</span>
@@ -214,24 +222,61 @@ function CalcSlider({ label, value, display, min, max, step, onChange, minLabel,
 
 export default function Landing() {
   usePageMeta({
-    title: 'Selección comercial con evidencia',
+    title: 'Contrata talento comercial alineado con tu estrategia de ventas',
     description:
-      'Contrate talento comercial alineado con su estrategia de ventas. Empezamos entendiendo cómo vende su empresa.',
-    path: '/',
+      'Las mejores contrataciones comienzan entendiendo cómo vende su empresa, no revisando hojas de vida.',
+    path: '/para-empresas',
   });
+  useLandingPremiumMotion();
+
+  useEffect(() => {
+    document.documentElement.classList.add('kova-home-chrome');
+    return () => document.documentElement.classList.remove('kova-home-chrome');
+  }, []);
 
   const [activeStage, setActiveStage] = useState(0);
   const [salario, setSalario] = useState(5000000);
-  const [form, setForm] = useState({ nombre: '', tel: '', empresa: '', msg: '' });
+  const [form, setForm] = useState({ nombre: '', tel: '', empresa: '', cargo: '', msg: '' });
+  const [formErrors, setFormErrors] = useState({});
 
-  // Hero score animation — bars fill + number counts up shortly after mount
-  const [lit, setLit] = useState(false);
-  const [scoreNum, setScoreNum] = useState(0);
+  // Subtle ambient light follow (Framer Motion springs → CSS vars)
+  const mx = useMotionValue(50);
+  const my = useMotionValue(30);
+  const smx = useSpring(mx, { stiffness: 40, damping: 20, mass: 0.4 });
+  const smy = useSpring(my, { stiffness: 40, damping: 20, mass: 0.4 });
 
   useEffect(() => {
-    const start = setTimeout(() => setLit(true), 220);
-    return () => clearTimeout(start);
+    const root = document.querySelector('.kova-home-plain');
+    if (!root) return undefined;
+    const apply = () => {
+      root.style.setProperty('--kh-mx', `${smx.get()}%`);
+      root.style.setProperty('--kh-my', `${smy.get()}%`);
+    };
+    const ux = smx.on('change', apply);
+    const uy = smy.on('change', apply);
+    apply();
+    return () => {
+      ux();
+      uy();
+    };
+  }, [smx, smy]);
+
+  // Hero sequence: world search → explode → reunite → evaluation report
+  const [heroView, setHeroView] = useState('morph'); // morph | report
+  const [morphVisible, setMorphVisible] = useState(true);
+  const [lit, setLit] = useState(false);
+  const [scoreNum, setScoreNum] = useState(0);
+  const onMorphComplete = useCallback(() => {
+    setHeroView('report');
+    // Keep particles a beat so they dissolve into the mockup instead of cutting off
+    window.setTimeout(() => setMorphVisible(false), 560);
   }, []);
+
+  useEffect(() => {
+    if (heroView !== 'report') return undefined;
+    const start = setTimeout(() => setLit(true), 160);
+    return () => clearTimeout(start);
+  }, [heroView]);
 
   useEffect(() => {
     if (!lit) return undefined;
@@ -252,80 +297,98 @@ export default function Landing() {
   const stage = STAGES[activeStage];
 
   const calc = useMemo(() => {
-    const cargas = 1.52;
+    const cargas = 1.5;
     const meses = 6;
-    const mesesSeleccion = 2;
-    const ratioCuota = 3;
-    const mesesCuota = 4;
     const cSalarios = salario * cargas * meses;
-    const cIndemnizacion = salario;
-    const cProceso = salario * cargas * mesesSeleccion;
-    const cVentas = salario * ratioCuota * mesesCuota;
-    const total = cSalarios + cIndemnizacion + cProceso + cVentas;
-    return { cSalarios, cIndemnizacion, cProceso, cVentas, total, periodo: meses + mesesSeleccion };
+    const cIndemnizacion = salario * 0.5;
+    const total = cSalarios + cIndemnizacion;
+    return { cSalarios, cIndemnizacion, total, periodo: meses };
   }, [salario]);
 
-  const setField = (key) => (e) => setForm((prev) => ({ ...prev, [key]: e.target.value }));
+  const setField = (key) => (e) => {
+    const value = key === 'tel' ? e.target.value.replace(/[^\d+ ]/g, '') : e.target.value;
+    setForm((prev) => ({ ...prev, [key]: value }));
+    setFormErrors((prev) => (prev[key] ? { ...prev, [key]: false } : prev));
+  };
 
-  const sendMail = () => {
-    const cuerpo = [
-      `Nombre: ${form.nombre.trim()}`,
-      `Empresa: ${form.empresa.trim()}`,
-      `Teléfono: ${form.tel.trim()}`,
-      '',
-      form.msg.trim(),
-    ].join('\n');
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-      `Solicitud de consultoría: ${form.empresa.trim() || 'Kova'}`,
-    )}&body=${encodeURIComponent(cuerpo)}`;
+  const validateForm = () => {
+    const errors = {
+      nombre: !form.nombre.trim(),
+      tel: !form.tel.trim(),
+      empresa: !form.empresa.trim(),
+      cargo: !form.cargo.trim(),
+    };
+    setFormErrors(errors);
+    return !Object.values(errors).some(Boolean);
+  };
+
+  const goToCalendar = () => {
+    if (!validateForm()) return;
+    window.location.assign('/contacto#agendar');
   };
 
   const sendWhatsApp = () => {
+    if (!validateForm()) return;
     const txt = `Hola Kova, soy ${form.nombre.trim() || '...'}${
+      form.cargo.trim() ? `, ${form.cargo.trim()}` : ''
+    }${
       form.empresa.trim() ? ` de ${form.empresa.trim()}` : ''
-    }. Quiero agendar un diagnóstico comercial.${form.msg.trim() ? ` ${form.msg.trim()}` : ''}`;
+    }. Quiero hablar de mi próxima contratación.${form.msg.trim() ? ` ${form.msg.trim()}` : ''}`;
     window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(txt)}`, '_blank');
   };
 
   return (
-    <div className="kova-home-plain">
+    <div
+      className="kova-home-plain kova-boutique"
+      onPointerMove={(e) => {
+        const w = window.innerWidth || 1;
+        const h = window.innerHeight || 1;
+        mx.set((e.clientX / w) * 100);
+        my.set((e.clientY / h) * 100);
+      }}
+    >
       <header id="top" className="kh-hero">
         <div className="kh-hero__grid">
           <div>
-            <span className="kh-pill">
-              Selección comercial
-            </span>
+            <span className="kh-pill">Especialistas en talento comercial</span>
             <h1>
-              Contrate talento comercial{' '}
-              <span className="kh-accent">alineado con su estrategia de ventas</span>.
+              Contrata talento comercial alineado con{' '}
+              <span className="kh-accent">tu estrategia de ventas</span>.
             </h1>
             <p className="kh-hero__lead">
-              Las mejores contrataciones comienzan entendiendo cómo vende su empresa, no
-              revisando hojas de vida.
+              No somos una agencia generalista. Buscamos solo perfiles comerciales:
+              entendemos cómo vende su empresa y le presentamos candidatos que
+              encajan de verdad.
             </p>
             <div className="kh-hero__ctas">
               <a href="#contacto" className="kh-btn kh-btn--lime">
-                Agendar diagnóstico comercial
-                <span className="kh-btn__icon" aria-hidden>↗</span>
+                Agenda tu diagnóstico comercial
               </a>
               <a href="#metodologia" className="kh-btn kh-btn--outline">
-                Ver cómo trabajamos
+                Ver cómo lo hacemos
               </a>
             </div>
             <div className="kh-hero__checks">
               <span>
-                <em>✓</em> Sin costo inicial
+                <em>✓</em> 100% talento comercial
               </span>
               <span>
-                <em>✓</em> Respuesta en 24 horas
+                <em>✓</em> Asesoría sin costo
               </span>
               <span>
-                <em>✓</em> Acompañamiento los primeros 90 días
+                <em>✓</em> Acompañamos 90 días
               </span>
             </div>
           </div>
 
-          <div className="kh-hero__collage">
+          <div
+            className={`kh-hero__collage${
+              heroView === 'morph' ? ' is-morphing' : ' is-revealed is-report'
+            }`}
+          >
+            {morphVisible ? (
+              <CandidateSearchMorph active={heroView === 'morph'} onComplete={onMorphComplete} />
+            ) : null}
             <img
               className="kh-collage__photo kh-collage__photo--a"
               src="https://randomuser.me/api/portraits/women/44.jpg"
@@ -341,17 +404,17 @@ export default function Landing() {
             <div className="kh-collage__chip" aria-hidden>
               <span className="kh-collage__chip-icon">✓</span>
               <span className="kh-collage__chip-text">
-                <strong>Recomendada</strong>
-                Alta compatibilidad
+                <strong>Encaja</strong>
+                Puede vender como ustedes
               </span>
             </div>
             <div className="kh-score-shell">
             <div className="kh-score">
               <div className="kh-score__top">
-                <span className="kh-score__toplabel">Informe de evaluación</span>
+                <span className="kh-score__toplabel">Así se ve una evaluación</span>
                 <span className="kh-score__live">
                   <span className="kh-pill__dot" aria-hidden />
-                  Ejemplo ilustrativo
+                  Ejemplo
                 </span>
               </div>
               <div className="kh-score__person">
@@ -370,7 +433,7 @@ export default function Landing() {
                 </div>
               </div>
               <div className="kh-score__dims-label">Dimensiones del Kova Score</div>
-              <div className="kh-dims">
+              <div className="kh-dims" key={lit ? 'dims-on' : 'dims-off'}>
                 {DIMS.map((d) => (
                   <div key={d.label} className="kh-dim">
                     <span className="kh-dim__label">{d.label}</span>
@@ -384,7 +447,7 @@ export default function Landing() {
                   </div>
                 ))}
               </div>
-              <div className="kh-score__stats">
+              <div className="kh-score__stats" key={lit ? 'stats-on' : 'stats-off'}>
                 <div className="kh-score__stat">
                   <strong>88%</strong>
                   <span>Probabilidad de éxito</span>
@@ -406,12 +469,12 @@ export default function Landing() {
         <div className="kh-chart">
           <div className="kh-chart__head">
             <div className="kh-chart__cap">
-              <strong>Percepción</strong>
-              <p>sin evidencia ni estructura</p>
+              <strong>Contratar a ciegas</strong>
+              <p>mucho riesgo, poca claridad</p>
             </div>
             <div className="kh-chart__cap kh-chart__cap--end">
-              <strong>Decisión clara</strong>
-              <p>al trabajar con nosotros</p>
+              <strong>Contratar con Kova</strong>
+              <p>menos sorpresas, más resultados</p>
             </div>
           </div>
 
@@ -420,69 +483,106 @@ export default function Landing() {
             viewBox="0 0 1200 148"
             preserveAspectRatio="xMidYMid meet"
             role="img"
-            aria-label="De la percepción a una decisión clara al trabajar con Kova"
+            aria-label="De contratar a ciegas a contratar con Kova"
           >
             <path
               d="M36,96 C78,128 118,128 160,96 C202,64 242,64 284,96 C326,128 366,128 408,96 C450,64 490,64 532,96 C564,120 592,112 620,96"
               fill="none"
-              stroke="#B3A794"
+              stroke="#5c574f"
               strokeWidth="1.9"
               strokeLinecap="round"
-              opacity="0.72"
+              opacity="0.85"
             />
             <path
               d="M36,96 C78,64 118,64 160,96 C202,128 242,128 284,96 C326,64 366,64 408,96 C450,128 490,128 532,96 C564,72 592,80 620,96"
               fill="none"
-              stroke="#C7BCA9"
+              stroke="#7a746a"
               strokeWidth="1.9"
               strokeLinecap="round"
-              opacity="0.72"
+              opacity="0.8"
             />
             <path
               d="M620,96 C760,94 900,68 1020,44 C1100,28 1155,26 1184,24"
               fill="none"
-              stroke="#0f7a40"
+              stroke="#d8f24c"
               strokeWidth="2.4"
               strokeLinecap="round"
             />
-            <circle cx="620" cy="96" r="5.5" fill="#0f7a40" stroke="#0f7a40" strokeWidth="1.8" />
-            <circle cx="1020" cy="44" r="6.5" fill="#0f7a40" stroke="#0f7a40" strokeWidth="2.2" />
+            <circle cx="620" cy="96" r="5.5" fill="#d8f24c" stroke="#d8f24c" strokeWidth="1.8" />
+            <circle cx="1020" cy="44" r="6.5" fill="#d8f24c" stroke="#d8f24c" strokeWidth="2.2" />
           </svg>
         </div>
       </header>
 
-      <section className="kh-trust">
+      <section
+        className="kh-trust"
+        aria-label="Para equipos comerciales en distintos sectores: Energía y minería, Manufactura, Consumo masivo, Servicios financieros, Tecnología"
+      >
         <div className="kh-trust__inner">
-          <span className="kh-trust__label">
-            Para equipos comerciales en distintos sectores
-          </span>
-          <div className="kh-trust__brands">
-            <span>Energía y minería</span>
-            <span>Manufactura</span>
-            <span>Consumo masivo</span>
-            <span>Servicios financieros</span>
-            <span>Tecnología</span>
+          <p className="kh-trust__label">
+            Especialistas
+            <br />
+            en distintos sectores
+          </p>
+          <div className="kh-trust__marquee" aria-hidden="true">
+            <ul className="kh-trust__brands kh-trust__brands--track">
+              {[
+                'Energía y minería',
+                'Manufactura',
+                'Consumo masivo',
+                'Servicios financieros',
+                'Tecnología',
+                'Energía y minería',
+                'Manufactura',
+                'Consumo masivo',
+                'Servicios financieros',
+                'Tecnología',
+              ].map((sector, i) => (
+                <li key={`${sector}-${i}`}>{sector}</li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
 
-      <section className="kh-section kh-section--tight">
+      <section className="kh-section kh-section--tight kh-dolores-band">
         <div className="kh-wrap">
-          <h2 className="kh-h2" style={{ maxWidth: '18ch' }}>
-            Si dirige un equipo comercial, probablemente{' '}
-            <span className="kh-accent">este problema ya le costó dinero</span>.
-          </h2>
+          <div className="kh-dolores-band__head">
+            <h2 className="kh-h2 kh-dolores-band__title">
+              <span className="kh-dolores-band__title-main">
+                El perfil equivocado
+              </span>
+              <span className="kh-accent kh-dolores-band__title-punch">
+                frena el crecimiento.
+              </span>
+            </h2>
+            <p className="kh-dolores-band__aside">
+              Hay decisiones comerciales que cuestan más de lo que parecen.
+              Contratar es una de ellas.
+            </p>
+          </div>
+
+          <div className="kh-dolores-band__rail" aria-hidden>
+            <span className="kh-dolores-band__rail-dot" />
+            <span className="kh-dolores-band__rail-line" />
+            <span className="kh-dolores-band__rail-target">
+              <i />
+              <i />
+              <i />
+            </span>
+          </div>
+
           <div className="kh-dolores">
-            {DOLORES.map((q, i) => (
-              <div key={q.n} className={i === 0 ? 'kh-dolor kh-dolor--featured' : 'kh-dolor'}>
-                <div className="kh-dolor__top">
-                  <span className="kh-dolor__n">{q.n}</span>
-                  <span className="kh-dolor__tag">{q.tag}</span>
-                </div>
+            {DOLORES.map((q) => (
+              <article key={q.n} className="kh-dolor">
+                <span className="kh-dolor__n">{q.n}</span>
+                <span className="kh-dolor__rule" aria-hidden />
+                <h3 className="kh-dolor__tag">{q.tag}</h3>
                 <p>{q.text}</p>
-              </div>
+              </article>
             ))}
           </div>
+
         </div>
       </section>
 
@@ -490,26 +590,21 @@ export default function Landing() {
         <div className="kh-wrap">
           <div className="kh-costo-head">
             <h2 className="kh-h2 kh-h2--regular">
-              Un mal fichaje comercial no se paga solo con el salario.{' '}
-              <span className="kh-accent">Se paga con todo esto.</span>
+              El verdadero costo no aparece{' '}
+              <span className="kh-accent">en la nómina.</span>
             </h2>
           </div>
 
           <div className="kh-costo-grid">
             <div className="kh-costos">
-              {COSTOS.map((c) => (
+              {COSTOS.map((c, i) => (
                 <div
                   key={c.n}
-                  className="kh-costo-card"
-                  style={{ background: c.bg, color: c.fg }}
+                  className={`kh-costo-card${i === COSTOS.length - 1 ? ' kh-costo-card--accent' : ''}`}
                 >
-                  <span className="kh-costo-card__n" style={{ color: c.num }}>
-                    {c.n}
-                  </span>
+                  <span className="kh-costo-card__n">{c.n}</span>
                   <div className="kh-costo-card__t">{c.t}</div>
-                  <p className="kh-costo-card__d" style={{ color: c.sub }}>
-                    {c.d}
-                  </p>
+                  <p className="kh-costo-card__d">{c.d}</p>
                 </div>
               ))}
             </div>
@@ -543,28 +638,24 @@ export default function Landing() {
                   <span>{fmtCompact(calc.cIndemnizacion)}</span>
                 </div>
                 <div className="kh-calc__row">
-                  <span>Selección e inducción (2 meses)</span>
-                  <span>{fmtCompact(calc.cProceso)}</span>
-                </div>
-                <div className="kh-calc__row">
                   <span>Cuota incumplida (estimada)</span>
-                  <span>{fmtCompact(calc.cVentas)}</span>
+                  <span className="kh-calc__infinity">∞</span>
                 </div>
               </div>
 
               <div className="kh-calc__total">
                 <div>
                   <div className="kh-calc__total-label">Costo estimado</div>
-                  <div className="kh-calc__total-value">{fmtCompact(calc.total)}</div>
+                  <div className="kh-calc__total-value">{fmtCompact(calc.total)} + ∞</div>
                   <p className="kh-calc__total-sub">en ~{calc.periodo} meses</p>
                 </div>
               </div>
 
               <a href="#contacto" className="kh-btn kh-btn--lime">
-                Quiero un diagnóstico comercial →
+                Cuéntenos qué perfil necesita →
               </a>
               <p className="kh-calc__ref">
-                Cálculo estimado con supuestos fijos de mercado; úselo como referencia.
+                Es una estimación con supuestos fijos. Sirve para ver el tamaño del problema.
               </p>
             </div>
           </div>
@@ -575,11 +666,11 @@ export default function Landing() {
         <div className="kh-wrap">
           <div className="kh-eyebrow">
             <span className="kh-eyebrow__dot" aria-hidden />
-            <span className="kh-eyebrow__label">Cómo trabajamos</span>
+            <span className="kh-eyebrow__label">Búsqueda especializada</span>
           </div>
           <h2 className="kh-h2 kh-h2--regular" style={{ maxWidth: '22ch' }}>
-            Nuestro proceso no empieza con candidatos.{' '}
-            <span className="kh-accent">Empieza con su negocio</span>.
+            No empezamos por la hoja de vida.{' '}
+            <span className="kh-accent">Empezamos por entender su negocio</span>.
           </h2>
 
           <div className="kh-method-grid">
@@ -617,42 +708,40 @@ export default function Landing() {
 
           <div className="kh-method-cta">
             <a href="#contacto" className="kh-btn kh-btn--outline-lime">
-              Agendar diagnóstico comercial →
+              Empecemos por entender su equipo →
             </a>
             <p>30 minutos · sin compromiso</p>
           </div>
 
           <div className="kh-perfil">
-            <div className="kh-perfil__tag">Entregable del perfil</div>
             <h3>
-              El aviso genérico no selecciona bien.{' '}
-              <span className="kh-accent">El perfil real del cargo, sí.</span>
+              Todo cambia cuando se define{' '}
+              <span className="kh-accent">el perfil correcto</span>.
             </h3>
+            <p className="kh-perfil__lead">
+              Antes de buscar candidatos, entendemos tu negocio para definir el perfil que
+              realmente necesita tu empresa. Solo así encontramos profesionales con mayor
+              alineación.
+            </p>
             <div className="kh-perfil-grid">
               <div className="kh-perfil-card kh-perfil-card--generic">
-                <div className="kh-perfil-card__label">Perfil genérico</div>
+                <div className="kh-perfil-card__label">Perfil tradicional</div>
                 <ul>
-                  <li>&quot;Experiencia mínima de 3 años&quot;</li>
-                  <li>&quot;Buena actitud y trabajo en equipo&quot;</li>
-                  <li>&quot;Orientado a resultados&quot;</li>
-                  <li>&quot;Manejo de Office&quot;</li>
+                  <li>Años de experiencia.</li>
+                  <li>Competencias generales.</li>
+                  <li>Requisitos estándar.</li>
+                  <li>Habilidades blandas.</li>
+                  <li>Funciones del cargo.</li>
                 </ul>
               </div>
               <div className="kh-perfil-card kh-perfil-card--real">
-                <div className="kh-perfil-card__label">Perfil real</div>
+                <div className="kh-perfil-card__label">Perfil definido para su empresa</div>
                 <ul>
-                  <li>
-                    Puede <strong>abrir mercado</strong> en minería
-                  </li>
-                  <li>
-                    Vende <strong>soluciones técnicas B2B</strong>, no solo producto
-                  </li>
-                  <li>
-                    Soporta <strong>ciclos de venta de 6 meses</strong>
-                  </li>
-                  <li>
-                    Negocia con <strong>gerentes de mantenimiento</strong>
-                  </li>
+                  <li>Tipo de clientes que atenderá.</li>
+                  <li>Modelo comercial que deberá dominar.</li>
+                  <li>Ciclo de venta que gestionará.</li>
+                  <li>Nivel de negociación que exige el cargo.</li>
+                  <li>Resultados que se esperan del rol.</li>
                 </ul>
               </div>
             </div>
@@ -660,21 +749,27 @@ export default function Landing() {
         </div>
       </section>
 
-      <section id="metodo" className="kh-section kh-artifact" style={{ borderTop: '1px solid var(--kv-line)' }}>
+      <section
+        id="metodo"
+        className="kh-section kh-artifact"
+        style={{ borderTop: '1px solid var(--kv-line)' }}
+      >
         <div className="kh-wrap">
-          <h2 className="kh-h2 kh-h2--regular" style={{ maxWidth: '16ch' }}>
-            Un método propio.{' '}
-            <span className="kh-accent">Resultados claros</span>.
+          <h2 className="kh-h2 kh-h2--regular" style={{ maxWidth: '14ch' }}>
+            Nuestro <span className="kh-accent">método</span>
           </h2>
           <p className="kh-artifact__lead">
-            No improvisamos. Hay un proceso. El detalle de cómo lo ejecutamos lo reservamos para
-            la conversación con usted.
+            Cada contratación importante merece un método claro. Entendemos tu negocio,
+            definimos el perfil adecuado y encontramos el talento con mayor alineación.
           </p>
 
           <ol className="kh-flow">
             {PROCESS_FLOW.map((step) => (
-              <li key={step}>
-                <span>{step}</span>
+              <li key={step.num}>
+                <span>
+                  <em className="kh-flow__n">{step.num}</em>
+                  {step.title}
+                </span>
               </li>
             ))}
           </ol>
@@ -759,7 +854,7 @@ export default function Landing() {
 
           <div className="kh-case-panel kh-case-panel--compact">
             <div className="kh-case-panel__copy">
-              <div className="kh-perfil__tag">Caso ilustrativo</div>
+              <div className="kh-perfil__tag">Así se ve una buena contratación</div>
               <p>
                 <strong>{CASO.sector}</strong>
                 <span aria-hidden> · </span>
@@ -767,54 +862,102 @@ export default function Landing() {
               </p>
             </div>
             <div className="kh-case-panel__stats">
-              {CASO.items.map((item) => (
-                <div key={item.k} className="kh-case-stat">
-                  <span>{item.k}</span>
-                  <strong>{item.v}</strong>
-                </div>
-              ))}
+              {CASO.items.map((item) => {
+                const m = String(item.v).match(/^(\d+(?:[.,]\d+)?)(.*)$/);
+                return (
+                  <div key={item.k} className="kh-case-stat">
+                    <span>{item.k}</span>
+                    <strong
+                      data-count-original={item.v}
+                      data-count-value={m?.[1] ?? ''}
+                      data-count-suffix={m?.[2] ?? ''}
+                    >
+                      {item.v}
+                    </strong>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
       </section>
 
-      <section className="kh-section">
+      <section className="kh-section kh-platform-band">
         <div className="kh-wrap">
-          <div className="kh-platform">
-            <h2>
-              La contratación no termina con el contrato.{' '}
-              <span className="kh-accent">Ahí empieza a probarse el encaje.</span>
-            </h2>
-            <p className="kh-platform__lead">
-              Durante los primeros 90 días acompañamos la integración del nuevo vendedor para
-              acelerar su productividad y detectar desviaciones antes de que afecten los
-              resultados.
-            </p>
-            <div className="kh-platform__grid">
-              <div>
-                <strong>Proceso comercial documentado</strong>
-                <span>cómo se vende en su empresa, claro para el rol</span>
-              </div>
-              <div>
-                <strong>Seguimiento con indicadores</strong>
-                <span>revisión estructurada a 30, 60 y 90 días</span>
-              </div>
-              <div>
-                <strong>Corrección temprana</strong>
-                <span>brechas detectadas antes de que duelan</span>
-              </div>
-              <div>
-                <strong>Consistencia comercial</strong>
-                <span>mismo criterio en el equipo, menos improvisación</span>
-              </div>
+          <div className="kh-platform kh-platform--slim">
+            <header className="kh-platform__intro">
+              <h2>
+                Los primeros{' '}
+                <span className="kh-accent">90 días</span> también son nuestros.
+              </h2>
+              <p className="kh-platform__lead">
+                Una contratación exitosa no termina cuando el candidato acepta la oferta.
+                Acompañamos su integración para acelerar la adaptación al negocio,
+                fortalecer su proceso de incorporación y aumentar las probabilidades de
+                que genere resultados desde el inicio.
+              </p>
+            </header>
+
+            <ol className="kh-platform__track">
+              <li>
+                <span className="kh-platform__mark">Día 1</span>
+                <strong>Entra al modelo comercial</strong>
+                <span>Cómo vende su empresa, cómo trabaja el equipo y qué se espera del rol.</span>
+              </li>
+              <li>
+                <span className="kh-platform__mark">30 · 60</span>
+                <strong>Seguimiento claro</strong>
+                <span>Revisiones puntuales para ver adaptación, ritmo y resultados tempranos.</span>
+              </li>
+              <li>
+                <span className="kh-platform__mark">Día 90</span>
+                <strong>Riesgos a tiempo</strong>
+                <span>Detectamos brechas antes de que cuesten otra mala contratación.</span>
+              </li>
+            </ol>
+
+            <div className="kh-platform__end">
+              <p className="kh-platform__close">
+                <span className="kh-platform__close-punch">
+                  Una vacante llena no basta. Necesita un vendedor que{' '}
+                  <em>siga rindiendo</em>.
+                </span>
+              </p>
+              <a href="#contacto" className="kh-btn kh-btn--outline-lime">
+                Quiero ese acompañamiento →
+              </a>
             </div>
-            <p className="kh-platform__close">
-              El verdadero éxito no es llenar una vacante. Es que el vendedor siga generando
-              resultados <em>seis meses después</em>.
-            </p>
-            <a href="#contacto" className="kh-btn kh-btn--lime">
-              Quiero reducir el riesgo de contratación →
-            </a>
+          </div>
+        </div>
+      </section>
+
+      <section id="garantia" className="kh-section kh-guarantee">
+        <div className="kh-wrap">
+          <div className="kh-guarantee__panel">
+            <div className="kh-guarantee__badge" aria-hidden>
+              <span className="kh-guarantee__ring" />
+              <strong>6</strong>
+              <span>meses de garantía</span>
+            </div>
+            <div className="kh-guarantee__copy">
+              <div className="kh-eyebrow">
+                <span className="kh-eyebrow__dot" aria-hidden />
+                <span className="kh-eyebrow__label">Compromiso Kova</span>
+              </div>
+              <h2 className="kh-h2 kh-h2--regular">
+                Contrata con <span className="kh-accent">garantía de 6 meses</span>.
+              </h2>
+              <p className="kh-guarantee__lead">
+                Confiamos en nuestro proceso. Si la persona contratada no se consolida en
+                el rol durante los primeros 6 meses, repetimos la búsqueda sin costo
+                adicional.
+              </p>
+              <ul className="kh-guarantee__points">
+                <li>Acompañamiento durante los primeros 90 días</li>
+                <li>Reemplazo sin costo adicional</li>
+                <li>Condiciones claras desde el inicio</li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>
@@ -822,83 +965,115 @@ export default function Landing() {
       <section id="contacto" className="kh-contact">
         <div className="kh-contact__grid">
           <div className="kh-contact__copy">
-            <div className="kh-eyebrow">
-              <span className="kh-eyebrow__dot" aria-hidden />
-              <span className="kh-eyebrow__label">Conversemos</span>
-            </div>
             <h2>
-              Descubramos qué vendedor{' '}
-              <span className="kh-accent">necesita realmente</span> su empresa.
+              Encuentra el talento comercial que hará{' '}
+              <span className="kh-accent">crecer tu empresa</span>.
             </h2>
             <p className="kh-contact__lead">
-              Todo comienza con una conversación de 30 minutos. Sin compromiso.
-              Aterrizamos su modelo comercial y el perfil con más probabilidad de
-              éxito, sin partir de la hoja de vida.
+              Agenda una asesoría con nuestros especialistas. Queremos conocer tu
+              empresa, entender el perfil que buscas y mostrarte cómo encontraremos
+              al profesional que mejor encaje con tu equipo.
             </p>
-            <ul className="kh-contact__checks">
-              <li>
-                <em aria-hidden>✓</em>
-                <span>Diagnóstico inicial sin costo</span>
-              </li>
-              <li>
-                <em aria-hidden>✓</em>
-                <span>Respuesta en menos de 24 horas</span>
-              </li>
-              <li>
-                <em aria-hidden>✓</em>
-                <span>Acompañamiento los primeros 90 días</span>
-              </li>
-            </ul>
+            <p className="kh-contact__pitch">
+              Cada búsqueda comienza entendiendo tu empresa. No buscamos llenar una
+              vacante; buscamos encontrar el profesional adecuado para impulsar tus
+              resultados.
+            </p>
           </div>
 
-          <div className="kh-form">
+          <div className="kh-form kh-form--asesoria">
             <div className="kh-form-row">
               <label>
                 <span>Nombre</span>
                 <input
                   type="text"
-                  placeholder="Cómo se llama"
+                  placeholder="Tu nombre"
+                  required
+                  className={formErrors.nombre ? 'kh-input--error' : undefined}
                   value={form.nombre}
                   onChange={setField('nombre')}
                 />
               </label>
               <label>
-                <span>Teléfono / WhatsApp</span>
+                <span>WhatsApp</span>
                 <input
                   type="tel"
+                  inputMode="tel"
                   placeholder="+57"
+                  required
+                  className={formErrors.tel ? 'kh-input--error' : undefined}
                   value={form.tel}
                   onChange={setField('tel')}
                 />
               </label>
             </div>
-            <label>
-              <span>Empresa</span>
-              <input
-                type="text"
-                placeholder="Nombre de la empresa"
-                value={form.empresa}
-                onChange={setField('empresa')}
-              />
-            </label>
+            <div className="kh-form-row">
+              <label>
+                <span>Empresa</span>
+                <input
+                  type="text"
+                  placeholder="¿Cómo se llama tu empresa?"
+                  required
+                  className={formErrors.empresa ? 'kh-input--error' : undefined}
+                  value={form.empresa}
+                  onChange={setField('empresa')}
+                />
+              </label>
+              <label>
+                <span>Cargo</span>
+                <input
+                  type="text"
+                  placeholder="¿Cuál es tu cargo?"
+                  required
+                  className={formErrors.cargo ? 'kh-input--error' : undefined}
+                  value={form.cargo}
+                  onChange={setField('cargo')}
+                />
+              </label>
+            </div>
             <label>
               <span>
-                Cuéntenos su reto <span style={{ opacity: 0.6 }}>(opcional)</span>
+                Cuéntanos qué estás buscando{' '}
+                <span className="kh-form__opt">(opcional)</span>
               </span>
               <textarea
-                rows={2}
-                placeholder="Qué perfil busca o cuál es el reto de su equipo comercial"
+                rows={3}
+                placeholder="¿Qué tipo de profesional necesitas? ¿Qué retos tendrá? Cualquier contexto que nos compartas nos ayudará a orientarte mejor."
                 value={form.msg}
                 onChange={setField('msg')}
               />
             </label>
-            <button type="button" className="kh-btn kh-btn--lime" onClick={sendMail}>
-              Agendar diagnóstico comercial
+
+            <ul className="kh-form__trust">
+              <li>
+                <em aria-hidden>✓</em>
+                <span>Asesoría sin costo</span>
+              </li>
+              <li>
+                <em aria-hidden>✓</em>
+                <span>Especialistas exclusivamente en talento comercial</span>
+              </li>
+              <li>
+                <em aria-hidden>✓</em>
+                <span>Acompañamiento durante los primeros 90 días</span>
+              </li>
+            </ul>
+
+            {Object.values(formErrors).some(Boolean) && (
+              <p className="kh-form__error" role="alert">
+                Completa todos los campos obligatorios.
+              </p>
+            )}
+
+            <button type="button" className="kh-btn kh-btn--lime" onClick={goToCalendar}>
+              Quiero hablar con un especialista
             </button>
             <button type="button" className="kh-btn kh-btn--wa" onClick={sendWhatsApp}>
-              Escribir por WhatsApp
+              Prefiero hablar por WhatsApp
             </button>
-            <p className="kh-form__note">Le respondemos en menos de 24 horas hábiles.</p>
+            <p className="kh-form__note">
+              Te responderemos lo antes posible para coordinar la asesoría.
+            </p>
           </div>
         </div>
       </section>
@@ -909,14 +1084,6 @@ export default function Landing() {
             <a href="#top" className="kh-footer__brand">
               kova<span>.</span>
             </a>
-            <nav className="kh-footer__nav" aria-label="Pie de página">
-              <a href="#metodologia">Metodología</a>
-              <a href="#calculadora">Costo real</a>
-              <Link to="/guias">Blog</Link>
-              <Link to="/registro">Empleo</Link>
-              <a href="#contacto">Agendar</a>
-              <Link to="/login">Entrar</Link>
-            </nav>
             <p className="kh-footer__copy">© 2026 Kova</p>
           </div>
         </div>

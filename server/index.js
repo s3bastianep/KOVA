@@ -99,7 +99,7 @@ app.post('/api/bookings', async (req, res) => {
 // Todas las rutas servidas por el dashboard Next.js (mismas que su middleware).
 // Deben proxearse a :3001 para que el usuario nunca salga de :3000.
 const DASHBOARD_PROXY_ROUTE =
-  /^\/(?:api|_next|postular|privacidad|dev|portal|dashboard|empresas|clientes|vacantes|procesos|pipeline-comercial|crm|calendario|agenda|tareas|reportes|configuracion|candidatos|discovery|ats|entrevistas|evaluaciones|finalistas|onboarding|academia|documentos|perfil-cargo)(?:\/|$)/;
+  /^\/(?:api|_next|postular|dev|portal|dashboard|empresas|clientes|vacantes|procesos|pipeline-comercial|crm|calendario|agenda|tareas|reportes|configuracion|candidatos|discovery|ats|entrevistas|evaluaciones|finalistas|onboarding|academia|documentos|perfil-cargo)(?:\/|$)/;
 
 function mountDashboardDevProxy() {
   const dashboardPort = Number(process.env.DASHBOARD_PORT) || 3001;

@@ -119,9 +119,11 @@ export default function Login({ mode = 'candidate' }) {
           <div className="kv-login-mosaic-wrap">
             <AuthMosaic />
           </div>
-          <p className="kv-login-eyebrow">{copy.eyebrow}</p>
-          <h1 className="kv-login-title">{copy.title}</h1>
-          <p className="kv-login-lead">{copy.lead}</p>
+          <div className="kv-login-copy">
+            <p className="kv-login-eyebrow">{copy.eyebrow}</p>
+            <h1 className="kv-login-title">{copy.title}</h1>
+            <p className="kv-login-lead">{copy.lead}</p>
+          </div>
         </aside>
 
         <form onSubmit={submit} className="kv-login-card">

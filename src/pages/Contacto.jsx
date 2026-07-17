@@ -1,10 +1,6 @@
-import '@/styles/landing-wave-inner.css';
-import '@/styles/landing-wave-contact.css';
+import '@/styles/contacto-kova.css';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { Clock, MessageCircle } from 'lucide-react';
-import SiteLayout from '@/components/landing/SiteLayout';
-import InnerPageHero from '@/components/landing/InnerPageHero';
-import { CN_CTA_NOTE } from '@/theme/landingConsult';
+import { MessageCircle } from 'lucide-react';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
 const PHONE_DISPLAY = '+57 300 000 0000';
@@ -12,6 +8,12 @@ const PHONE_TEL = '+573000000000';
 const WHATSAPP_URL = 'https://wa.me/573000000000';
 
 const BookingScheduler = lazy(() => import('@/components/landing/BookingScheduler'));
+
+const PASOS = [
+  { num: '01', title: 'Agenda', desc: 'Elige el día y la hora que te convenga.' },
+  { num: '02', title: 'Diagnóstico', desc: 'Entendemos tu vacante y tu modelo comercial.' },
+  { num: '03', title: 'Propuesta', desc: 'Recibes alcance, perfil y siguiente paso.' },
+];
 
 function BookingMount() {
   const ref = useRef(null);
@@ -59,89 +61,74 @@ function BookingMount() {
   );
 }
 
-const trustChips = CN_CTA_NOTE.split('·').map((s) => s.trim());
-
-const pasos = [
-  { num: '01', title: 'Agenda', desc: 'Elija día y hora que le convenga' },
-  { num: '02', title: 'Diagnóstico', desc: 'Entendemos su vacante y modelo comercial' },
-  { num: '03', title: 'Propuesta', desc: 'Recibe alcance, perfil y siguiente paso' },
-];
-
 export default function Contacto() {
   usePageMeta({
-    title: 'Contacto',
+    title: 'Agenda una asesoría sin costo',
     description:
-      'Agende una consultoría gratuita de 30 minutos. Un especialista le explica cómo Kova puede ayudarle a contratar con criterio y evidencia.',
+      'Agenda una asesoría sin costo de 30 minutos. Un especialista entiende tu vacante y te explica cómo Kova puede ayudarte a contratar con criterio y evidencia.',
     path: '/contacto',
   });
-  return (
-    <SiteLayout>
-      <main>
-        <InnerPageHero
-          compact
-          eyebrow="Hable con un especialista"
-          title="Encuentre el"
-          highlight="talento comercial que su organización necesita"
-          subtitle="Agende una consultoría gratuita de 30 minutos. Un especialista entiende su vacante y le explica cómo Kova puede ayudarle a contratar con criterio y evidencia."
-        />
 
-        <div className="kv-contact-trust">
-          <div className="kv-wrap">
-            <div className="kv-contact-trust-bar">
-              {trustChips.map((chip) => (
-                <span key={chip} className="kv-contact-trust-chip font-mono">
-                  <Clock className="kv-contact-trust-icon" aria-hidden />
-                  {chip}
-                </span>
+  useEffect(() => {
+    document.documentElement.classList.add('kova-home-chrome', 'kova-contacto-active');
+    return () => document.documentElement.classList.remove('kova-home-chrome', 'kova-contacto-active');
+  }, []);
+
+  return (
+    <div className="kova-contacto">
+      <header className="kc-head">
+        <div className="kc-wrap">
+          <p className="kc-eyebrow">Hablemos</p>
+          <h1>
+            Agenda una <span>asesoría sin costo</span>.
+          </h1>
+          <p className="kc-head__lead">
+            En 30 minutos revisamos tu vacante, el perfil que necesitas y cómo reducir el
+            riesgo de contratar mal.
+          </p>
+          <ul className="kc-chips">
+            <li>30 minutos</li>
+            <li>Sin costo</li>
+            <li>Sin compromiso</li>
+          </ul>
+        </div>
+      </header>
+
+      <main className="kc-main">
+        <div className="kc-wrap kc-grid">
+          <aside className="kc-side">
+            <h2>Cómo funciona</h2>
+            <ol className="kc-steps">
+              {PASOS.map(({ num, title, desc }) => (
+                <li key={num}>
+                  <span className="kc-steps__n">{num}</span>
+                  <div>
+                    <strong>{title}</strong>
+                    <p>{desc}</p>
+                  </div>
+                </li>
               ))}
-            </div>
+            </ol>
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="kc-whatsapp">
+              <MessageCircle aria-hidden />
+              <span>
+                <strong>¿Prefieres escribirnos?</strong>
+                <span>{PHONE_DISPLAY} · WhatsApp</span>
+              </span>
+            </a>
+          </aside>
+
+          <div className="kc-booking kova-landing-wave" id="agendar">
+            <BookingMount />
           </div>
         </div>
-
-        <section className="kv-section kv-section--paper-2 kv-contact-section">
-          <div className="kv-wrap kv-contact-layout">
-            <div className="kv-contact-main">
-              <p className="kv-eyebrow kv-eyebrow--ink font-mono">Qué obtiene</p>
-              <h2 className="kv-contact-heading font-display">
-                Una sesión que aclara su próxima contratación comercial
-              </h2>
-              <p className="kv-contact-lead">
-                En 30 minutos revisamos su vacante, el perfil que necesita y cómo una evaluación por competencias
-                reduce el riesgo de contratar mal.
-              </p>
-
-              <div className="kv-contact-steps">
-                <p className="kv-contact-steps-label font-mono">Cómo funciona</p>
-                <ol className="kv-contact-steps-list">
-                  {pasos.map(({ num, title, desc }) => (
-                    <li key={num}>
-                      <span className="kv-contact-step-num font-mono">{num}</span>
-                      <div>
-                        <p className="font-display">{title}</p>
-                        <p>{desc}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="kv-contact-whatsapp">
-                <MessageCircle aria-hidden />
-                <span>
-                  <strong>¿Prefiere escribirnos?</strong>
-                  <span>
-                    {PHONE_DISPLAY} · WhatsApp
-                  </span>
-                </span>
-              </a>
-            </div>
-
-            <div className="kv-contact-booking" id="agendar">
-              <BookingMount />
-            </div>
-          </div>
-        </section>
       </main>
-    </SiteLayout>
+
+      <footer className="kc-footer">
+        <div className="kc-wrap">
+          <p>© 2026 Kova · Reclutamiento comercial, con evidencia</p>
+        </div>
+      </footer>
+    </div>
   );
 }

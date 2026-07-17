@@ -86,14 +86,16 @@ export default function Registro() {
           <div className="kv-login-mosaic-wrap">
             <AuthMosaic />
           </div>
-          <p className="kv-login-eyebrow">Candidatos · Kova</p>
-          <h1 className="kv-login-title">
-            Tu espacio para <span className="kv-login-accent">oportunidades</span> comerciales
-          </h1>
-          <p className="kv-login-lead">
-            Crea tu cuenta en 30 segundos. Después subes tu hoja de vida y nosotros completamos tu
-            perfil por ti.
-          </p>
+          <div className="kv-login-copy">
+            <p className="kv-login-eyebrow">Candidatos · Kova</p>
+            <h1 className="kv-login-title">
+              Encuentra la oportunidad <span className="kv-login-accent">hecha para ti</span>.
+            </h1>
+            <p className="kv-login-lead">
+              Crea tu cuenta en 30 segundos. Después subes tu hoja de vida y nosotros completamos tu
+              perfil por ti.
+            </p>
+          </div>
         </aside>
 
         {success ? (

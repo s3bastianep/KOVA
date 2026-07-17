@@ -8,67 +8,67 @@ const DIMENSIONS = [
   {
     label: 'Compatibilidad comercial',
     pct: 94,
-    desc: 'Las empresas ven de inmediato que usted vende como ellas necesitan, no un CV genérico más.',
+    desc: 'Este indicador refleja qué tan alineado está su perfil con el modelo de negocio, la forma de vender, la filosofía y las necesidades de una empresa, ayudando a identificar oportunidades donde tenga mayores probabilidades de adaptarse, generar resultados y crecer profesionalmente.',
   },
   {
     label: 'Competencias de venta',
     pct: 89,
-    desc: 'Su prospección, manejo de objeciones y cierre quedan demostrados con casos reales, no solo escritos.',
-  },
-  {
-    label: 'Adaptabilidad',
-    pct: 85,
-    desc: 'Demuestra que puede rendir con nuevos productos, ciclos de venta y tipos de cliente.',
+    desc: 'Evalúa sus habilidades comerciales demostradas — prospección, manejo de objeciones, negociación y cierre — según el tipo de venta en el que mejor se desempeña.',
   },
   {
     label: 'Comunicación',
     pct: 91,
-    desc: 'Su capacidad de convencer queda visible desde el primer contacto, no escondida en una hoja de vida.',
+    desc: 'Refleja su capacidad para construir relaciones, presentar ideas con claridad y sostener conversaciones de valor con clientes y equipos.',
   },
   {
-    label: 'Alineación cultural',
+    label: 'Alineación con la empresa',
     pct: 88,
-    desc: 'Lo conectamos con equipos donde de verdad va a querer quedarse, no solo con el primero que llame.',
+    desc: 'Mide la afinidad entre su filosofía de trabajo y la cultura, el modelo comercial y el entorno de la organización.',
   },
   {
-    label: 'Potencial a largo plazo',
+    label: 'Adaptabilidad',
+    pct: 85,
+    desc: 'Indica con qué facilidad se ajusta a nuevos productos, ciclos de venta y tipos de cliente sin perder desempeño.',
+  },
+  {
+    label: 'Potencial de desarrollo',
     pct: 82,
-    desc: 'Las empresas apuestan por su crecimiento y su carrera, no solo por lo que rinde este mes.',
+    desc: 'Proyecta su capacidad de crecer en el rol, asumir mayores responsabilidades y desarrollarse profesionalmente en el contexto adecuado.',
   },
 ];
 
 const BENEFITS = [
   {
     title: 'Gratis para siempre',
-    desc: 'No paga nada por crear su perfil ni por postularse a las vacantes.',
+    desc: 'Crear su perfil, actualizarlo y postularse a oportunidades no tiene ningún costo.',
   },
   {
     title: 'Siempre informado',
-    desc: 'Sabe en todo momento en qué va su proceso. Le contamos cada avance, sin dejarlo en el aire.',
+    desc: 'Conozca el estado de cada proceso en tiempo real. Sin incertidumbre ni falta de respuesta.',
   },
   {
-    title: 'Cree su perfil una sola vez',
-    desc: 'Sirve para todas las vacantes compatibles. Nunca más reenvíe su hoja de vida.',
+    title: 'Un solo perfil para todas las oportunidades',
+    desc: 'Cree su perfil una sola vez. Nosotros lo conectamos con las empresas donde realmente puede encajar.',
   },
   {
-    title: 'No lo dejamos solo',
-    desc: 'Si lo contratan, lo acompañamos durante sus primeros 90 días en el cargo.',
+    title: 'Lo acompañamos en sus primeros 90 días',
+    desc: 'Si es contratado, seguimos a su lado durante el proceso de integración para facilitar su adaptación y aumentar sus probabilidades de éxito.',
   },
 ];
 
 const STEPS = [
   {
-    n: '1',
+    n: '01',
     title: 'Cree su perfil',
     text: 'En 10 minutos. Cuente lo que ha logrado vendiendo, no llene otro formulario aburrido.',
   },
   {
-    n: '2',
+    n: '02',
     title: 'Muestre lo que sabe hacer',
     text: 'Recibe su Kova Score con base en casos reales. Sus fortalezas, por fin visibles.',
   },
   {
-    n: '3',
+    n: '03',
     title: 'Reciba las oportunidades',
     text: 'Las empresas que buscan su perfil lo contactan. Usted elige, con las condiciones claras.',
   },
@@ -81,8 +81,8 @@ const FEATURES = [
         <path d="M4 12h11M11 6l6 6-6 6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
-    title: 'Contacto directo con la empresa',
-    text: 'Sin intermediarios que filtran su perfil. Habla con quien realmente va a contratar.',
+    title: 'Un solo perfil para crecer',
+    text: 'Cree su perfil una sola vez. Nosotros lo conectamos con empresas donde sus habilidades, experiencia, valores y forma de trabajar tengan mayores probabilidades de generar resultados.',
   },
   {
     ico: (
@@ -91,8 +91,8 @@ const FEATURES = [
         <circle cx="12" cy="12" r="4.5" stroke="currentColor" strokeWidth="2.2" />
       </svg>
     ),
-    title: 'Usted pone las condiciones',
-    text: 'Diga cuánto quiere ganar, dónde y en qué industria. Solo verá lo que le sirve.',
+    title: 'Oportunidades alineadas con usted',
+    text: 'Defina sus expectativas salariales, ubicación, industrias de interés y tipo de empresa. Solo le mostraremos oportunidades compatibles con su perfil.',
   },
   {
     ico: (
@@ -101,16 +101,26 @@ const FEATURES = [
         <path d="M8 10h8M8 13h5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
       </svg>
     ),
-    title: 'Razones claras si no avanza',
-    text: 'Si una vacante no sigue adelante, le explicamos por qué. Nunca se queda sin respuesta.',
+    title: 'Procesos claros de principio a fin',
+    text: 'Conozca el estado de cada proceso y reciba una respuesta, incluso cuando una oportunidad no continúe. Porque el respeto también hace parte de una buena experiencia.',
+  },
+  {
+    ico: (
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+        <path d="M12 3v18M8 7h8M7 11h10M9 15h6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+        <circle cx="12" cy="20" r="1.2" fill="currentColor" />
+      </svg>
+    ),
+    title: 'Lo acompañamos en sus primeros 90 días',
+    text: 'Si es contratado, seguimos a su lado durante su integración para facilitar la adaptación al negocio, acelerar su curva de aprendizaje y ayudarle a comenzar con el pie derecho.',
   },
 ];
 
 export default function Empleo() {
   usePageMeta({
-    title: 'Encuentre el trabajo comercial hecho para usted',
+    title: 'Los buenos vendedores no persiguen oportunidades',
     description:
-      'Cree su perfil comercial gratis, muestre lo que sabe hacer y deje que las empresas que buscan su talento lo encuentren.',
+      'Crea tu perfil una vez y conecta con empresas que buscan profesionales como tú.',
     path: '/empleo',
   });
 
@@ -122,6 +132,11 @@ export default function Empleo() {
     return () => clearTimeout(t);
   }, []);
 
+  useEffect(() => {
+    document.documentElement.classList.add('kova-home-chrome');
+    return () => document.documentElement.classList.remove('kova-home-chrome');
+  }, []);
+
   const dim = DIMENSIONS[selected];
 
   return (
@@ -130,23 +145,19 @@ export default function Empleo() {
       <header id="top" className="emp-hero">
         <div className="emp-wrap emp-hero__grid">
           <div>
-            <span className="kh-pill">Para vendedores y líderes comerciales</span>
+            <span className="kh-pill">Para profesionales comerciales</span>
             <h1>
-              Encuentre el trabajo comercial <em>hecho para usted</em>.
+              Los buenos vendedores no persiguen oportunidades.{' '}
+              <em>Las oportunidades los encuentran.</em>
             </h1>
             <p className="emp-hero__lead">
-              Deje de enviar su hoja de vida al vacío. Cree su perfil una vez y deje que las
-              empresas que buscan justo su talento lo encuentren, con las condiciones claras
-              desde el inicio.
+              Crea tu perfil una vez y conecta con empresas que buscan profesionales como tú.
             </p>
             <div className="emp-hero__ctas">
               <Link to="/registro" className="kh-btn kh-btn--lime">
                 Crear mi perfil gratis
                 <span className="kh-btn__icon" aria-hidden>↗</span>
               </Link>
-              <a href="#beneficios" className="kh-btn kh-btn--outline">
-                Ver qué gano
-              </a>
             </div>
           </div>
 
@@ -229,7 +240,7 @@ export default function Empleo() {
       <section className="emp-band">
         <div className="emp-wrap">
           <h2 className="emp-band__title">
-            Condiciones claras. Procesos transparentes. <em>Seguimiento constante</em>.
+            Condiciones claras. Procesos transparentes. <em>Acompañamiento real</em>.
           </h2>
           <div className="emp-band__grid">
             {BENEFITS.map((b) => (
@@ -264,15 +275,17 @@ export default function Empleo() {
       </section>
 
       {/* INTERACTIVE SCORE EXPLORER */}
-      <section id="beneficios" className="emp-sec">
+      <section id="beneficios" className="emp-sec emp-sec--dark">
         <div className="emp-wrap">
           <div className="emp-eyebrow">Su verdadera carta de presentación</div>
           <h2 className="emp-h2 emp-head">
-            Lo ven por lo que <em>sabe hacer</em>, no por su hoja de vida.
+            Una hoja de vida cuenta su experiencia. El Kova Score muestra{' '}
+            <em>el valor que puede aportar</em> a una empresa.
           </h2>
           <p className="emp-sub">
-            Su Kova Score le muestra a cada empresa sus fortalezas comerciales reales. Toque cada
-            una para ver qué destacan de usted.
+            Cada perfil se evalúa para destacar las habilidades, conocimientos y nivel de
+            alineación que realmente influyen en el éxito de una contratación comercial.
+            Seleccione cada dimensión para ver qué representa.
           </p>
 
           <div className="emp-explorer">
@@ -298,7 +311,7 @@ export default function Empleo() {
             </div>
 
             <div className="emp-detail">
-              <span className="emp-detail__badge">Lo que ven de usted</span>
+              <span className="emp-detail__badge">Lo que representa</span>
               <div className="emp-detail__num">{dim.pct}%</div>
               <div className="emp-detail__name">{dim.label}</div>
               <p className="emp-detail__desc">{dim.desc}</p>
@@ -308,11 +321,12 @@ export default function Empleo() {
       </section>
 
       {/* FEATURE + FAN-OUT INFOGRAPHIC */}
-      <section className="emp-sec emp-sec--tight">
+      <section className="emp-sec emp-sec--tight emp-sec--light">
         <div className="emp-wrap emp-feature">
           <div>
             <h2 className="emp-h2 emp-h2--sub">
-              Deje de perseguir vacantes. Deje que <em>lo busquen a usted</em>.
+              Deje de perseguir oportunidades. Deje que{' '}
+              <em>las oportunidades correctas lo encuentren</em>.
             </h2>
             <div className="emp-feature__list">
               {FEATURES.map((f) => (
@@ -332,22 +346,68 @@ export default function Empleo() {
           <div className="emp-fan" aria-hidden>
             <div className="emp-fan__you">
               <span className="emp-fan__you-dot">JP</span>
-              <strong>Su perfil</strong>
+              <div className="emp-fan__you-meta">
+                <strong>Su perfil</strong>
+                <span>Kova Score listo</span>
+              </div>
+              <span className="emp-fan__you-check">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none">
+                  <path
+                    d="M5 12.5 10 17.5 19 7"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
             </div>
-            <svg className="emp-fan__lines" viewBox="0 0 300 40" preserveAspectRatio="none">
-              <path d="M150 0 C150 20 60 20 60 40" fill="none" stroke="#0f7a40" strokeWidth="2" opacity="0.5" />
-              <path d="M150 0 L150 40" fill="none" stroke="#0f7a40" strokeWidth="2" opacity="0.5" />
-              <path d="M150 0 C150 20 240 20 240 40" fill="none" stroke="#0f7a40" strokeWidth="2" opacity="0.5" />
+            <svg className="emp-fan__lines" viewBox="0 0 300 56" preserveAspectRatio="none">
+              <path className="emp-fan__line" d="M150 2 C150 30 52 26 52 54" />
+              <path className="emp-fan__line" d="M150 2 C150 22 150 36 150 54" />
+              <path className="emp-fan__line" d="M150 2 C150 30 248 26 248 54" />
+              <circle className="emp-fan__spark" r="3">
+                <animateMotion
+                  dur="2.6s"
+                  begin="0s"
+                  repeatCount="indefinite"
+                  path="M150 2 C150 30 52 26 52 54"
+                />
+              </circle>
+              <circle className="emp-fan__spark" r="3">
+                <animateMotion
+                  dur="2.6s"
+                  begin="0.9s"
+                  repeatCount="indefinite"
+                  path="M150 2 C150 22 150 36 150 54"
+                />
+              </circle>
+              <circle className="emp-fan__spark" r="3">
+                <animateMotion
+                  dur="2.6s"
+                  begin="1.8s"
+                  repeatCount="indefinite"
+                  path="M150 2 C150 30 248 26 248 54"
+                />
+              </circle>
             </svg>
             <div className="emp-fan__jobs">
               {[
-                { title: 'Ejecutivo B2B', pct: 92 },
+                { title: 'Ejecutivo B2B', pct: 92, top: true },
                 { title: 'Key Account', pct: 88 },
                 { title: 'Ventas técnicas', pct: 85 },
               ].map((j) => (
-                <div key={j.title} className="emp-fan__job">
-                  <span className="emp-fan__job-ring">{j.pct}%</span>
+                <div
+                  key={j.title}
+                  className={`emp-fan__job${j.top ? ' emp-fan__job--top' : ''}`}
+                  style={{ '--p': j.pct }}
+                >
+                  {j.top && <span className="emp-fan__job-badge">Mejor match</span>}
+                  <span className="emp-fan__job-ring">
+                    <b>{j.pct}%</b>
+                  </span>
                   <strong>{j.title}</strong>
+                  <span className="emp-fan__job-sub">Compatibilidad</span>
                 </div>
               ))}
             </div>
@@ -356,7 +416,7 @@ export default function Empleo() {
       </section>
 
       {/* JOURNEY INFOGRAPHIC */}
-      <section className="emp-sec emp-sec--tight" style={{ background: '#efe9dc' }}>
+      <section className="emp-sec emp-sec--tight emp-sec--dark">
         <div className="emp-wrap">
           <h2 className="emp-h2 emp-h2--sub emp-head">
             De donde está hoy a su próxima <em>gran oportunidad</em>.
@@ -374,7 +434,7 @@ export default function Empleo() {
       </section>
 
       {/* FINAL CTA */}
-      <section className="emp-sec emp-cta">
+      <section className="emp-sec emp-cta emp-sec--light">
         <div className="emp-wrap">
           <div className="emp-cta__panel">
             <div className="emp-cta__col">
@@ -417,7 +477,7 @@ export default function Empleo() {
               kova<span>.</span>
             </a>
             <nav className="kh-footer__nav" aria-label="Pie de página">
-              <Link to="/">Empresas</Link>
+              <Link to="/para-empresas">Empresas</Link>
               <a href="#beneficios">Beneficios</a>
               <Link to="/guias">Blog</Link>
               <Link to="/registro">Crear perfil</Link>

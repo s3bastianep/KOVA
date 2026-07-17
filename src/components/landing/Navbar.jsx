@@ -2,12 +2,13 @@ import { useEffect, useId, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 
 const MAIN_LINKS = [
-  { to: '/empleo', label: 'Por talento' },
-  { to: '/', label: 'Para empresas' },
+  { to: '/para-empresas', label: 'Empresas' },
+  { to: '/empleo', label: 'Talento' },
+  { to: '/#metodo', label: 'Método Kova' },
   { to: '/guias', label: 'Blog' },
 ];
 
-const ACTION_LINKS = [{ to: '/login', label: 'Iniciar sesión' }];
+const ACTION_LINKS = [{ to: '/login', label: 'Ingresar' }];
 
 export default function Navbar() {
   const { pathname, hash } = useLocation();
@@ -40,16 +41,22 @@ export default function Navbar() {
         </Link>
 
         <div className="kv-navlinks" aria-label="Secciones">
-          {MAIN_LINKS.map((item) => (
-            <NavLink
-              key={item.label}
-              to={item.to}
-              end={item.to === '/'}
-              className={({ isActive }) => (isActive ? 'is-active' : undefined)}
-            >
-              {item.label}
-            </NavLink>
-          ))}
+          {MAIN_LINKS.map((item) =>
+            item.to.includes('#') ? (
+              <Link key={item.label} to={item.to}>
+                {item.label}
+              </Link>
+            ) : (
+              <NavLink
+                key={item.label}
+                to={item.to}
+                end={item.to === '/para-empresas'}
+                className={({ isActive }) => (isActive ? 'is-active' : undefined)}
+              >
+                {item.label}
+              </NavLink>
+            ),
+          )}
         </div>
 
         <div className="kv-nav-actions">
@@ -62,8 +69,8 @@ export default function Navbar() {
               {item.label}
             </NavLink>
           ))}
-          <Link to="/registro" className="kv-cta-pill kv-cta-pill--outline">
-            Regístrate
+          <Link to="/#caminos" className="kv-cta-pill kv-cta-pill--lime">
+            Empezar
           </Link>
           <button
             type="button"
@@ -101,11 +108,11 @@ export default function Navbar() {
                 </Link>
               ))}
               <Link
-                to="/registro"
-                className="kv-cta-pill kv-cta-pill--outline kv-nav-drawer__cta"
+                to="/#caminos"
+                className="kv-cta-pill kv-cta-pill--lime kv-nav-drawer__cta"
                 onClick={() => setOpen(false)}
               >
-                Regístrate
+                Empezar
               </Link>
             </div>
           </div>

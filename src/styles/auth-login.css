@@ -1,11 +1,12 @@
-/* Login / Registro — mismo lenguaje visual que la landing home (.kova-home-plain) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap');
 
-/* Keep document chrome aligned with landing to avoid flash/jump on route change */
+/* Login / Registro — same design system as Home / Empleo (black + lime, Sora + Inter) */
+
 html:has(.kv-login),
 html:has(.kv-login) body {
-  background: #f7f5ee !important;
+  background: #050605 !important;
   background-image: none !important;
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 html:has(.kv-login) {
@@ -13,29 +14,30 @@ html:has(.kv-login) {
 }
 
 .kv-login {
-  --kv-ink: #f7f5ee;
-  --kv-surface: #ffffff;
-  --kv-surface-2: #f6f4ec;
-  --kv-lime: #0f7a40;
-  --kv-lime-bright: #16a24a;
-  --kv-indigo: #4b54e6;
-  --kv-text: #14120d;
-  --kv-muted: #6f6860;
-  --kv-body: #46403a;
-  --kv-soft: #857e74;
-  --kv-line: rgba(20, 18, 13, 0.08);
-  --kv-line-strong: rgba(20, 18, 13, 0.12);
-  --kv-login-input-fill: #f6f4ec;
-  --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
-  --font-mono-face: 'Space Mono', ui-monospace, monospace;
-  --font-serif-face: 'Instrument Serif', Georgia, serif;
+  --kv-ink: #050605;
+  --kv-paper: #f2efe7;
+  --kv-surface: #0f100e;
+  --kv-surface-2: #161714;
+  --kv-lime: #d8f24c;
+  --kv-lime-bright: #d8f24c;
+  --kv-text: #f2efe7;
+  --kv-muted: rgba(242, 239, 231, 0.55);
+  --kv-body: rgba(242, 239, 231, 0.72);
+  --kv-soft: rgba(242, 239, 231, 0.42);
+  --kv-line: rgba(242, 239, 231, 0.12);
+  --kv-line-strong: rgba(242, 239, 231, 0.18);
+  --kv-login-input-fill: #161714;
+  --font-display: Sora, Inter, "Helvetica Neue", Arial, sans-serif;
+  --font-body: Inter, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: var(--font-body);
+  --radius: 999px;
   min-height: 100vh;
   background: var(--kv-ink);
   color: var(--kv-text);
-  color-scheme: light;
+  color-scheme: dark;
   position: relative;
   overflow-x: hidden;
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -44,8 +46,8 @@ html:has(.kv-login) {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(120% 90% at 85% 0%, rgba(15, 122, 64, 0.08), transparent 55%),
-    radial-gradient(90% 80% at 10% 100%, rgba(75, 84, 230, 0.05), transparent 60%),
+    radial-gradient(ellipse 45% 50% at 78% 30%, rgba(216, 242, 76, 0.07), transparent 60%),
+    radial-gradient(ellipse 40% 40% at 15% 80%, rgba(255, 255, 255, 0.03), transparent 55%),
     var(--kv-ink);
 }
 
@@ -58,9 +60,14 @@ html:has(.kv-login) {
   display: flex;
   align-items: center;
   padding: 18px 0;
-  background: rgba(246, 244, 238, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: linear-gradient(
+    to bottom,
+    rgba(5, 6, 5, 0.96) 0%,
+    rgba(5, 6, 5, 0.78) 70%,
+    transparent 100%
+  );
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--kv-line);
 }
 
@@ -82,12 +89,12 @@ html:has(.kv-login) {
   display: inline-flex;
   align-items: baseline;
   flex-shrink: 0;
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 23px;
-  letter-spacing: -0.03em;
+  font-family: var(--font-display);
+  font-weight: 780;
+  font-size: clamp(26px, 2vw, 34px);
+  letter-spacing: -0.07em;
   line-height: 1;
-  color: var(--kv-text);
+  color: var(--kv-paper);
   text-decoration: none;
 }
 
@@ -103,19 +110,19 @@ html:has(.kv-login) {
   flex-shrink: 0;
   min-height: 34px;
   padding: 0 2px;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 560;
+  letter-spacing: 0.02em;
+  text-transform: none;
   line-height: 1;
-  color: var(--kv-muted);
+  color: rgba(242, 239, 231, 0.72);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .kv-login-back:hover {
-  color: var(--kv-text);
+  color: var(--kv-lime);
 }
 
 .kv-login-stage {
@@ -136,21 +143,25 @@ html:has(.kv-login) {
   .kv-login-stage {
     grid-template-columns: 1.15fr 0.95fr;
     gap: 3.5rem;
+    align-items: center;
+    min-height: calc(100svh - 88px);
   }
 }
 
 .kv-login-aside {
-  display: block;
-  padding-right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
 }
 
-@media (min-width: 960px) {
-  .kv-login-aside {
-    padding-right: 0.5rem;
-  }
+.kv-login-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 28rem;
 }
 
-/* Illustrated block mosaic (brand colors) */
+/* Illustrated block mosaic — small squares */
 .kv-login-mosaic-wrap {
   display: none;
 }
@@ -158,8 +169,12 @@ html:has(.kv-login) {
 @media (min-width: 960px) {
   .kv-login-mosaic-wrap {
     display: block;
-    margin-bottom: 2.5rem;
+    margin: 0 0 0.5rem;
   }
+}
+
+.kv-auth-mosaic {
+  width: 100%;
 }
 
 .kv-auth-mosaic__grid {
@@ -181,11 +196,18 @@ html:has(.kv-login) {
   justify-content: center;
 }
 
-.kv-auth-mosaic__block--dark { background: var(--kv-text); }
-.kv-auth-mosaic__block--green { background: #0f7a40; }
+.kv-auth-mosaic__block--photo {
+  object-fit: cover;
+  filter: saturate(1.05) contrast(1.04);
+}
+
+.kv-auth-mosaic__block--ink { background: #141510; }
 .kv-auth-mosaic__block--lime { background: #d8f24c; }
-.kv-auth-mosaic__block--sage { background: #cfe4d6; }
-.kv-auth-mosaic__block--cream { background: #efe9dc; }
+.kv-auth-mosaic__block--coral { background: #ff6b4a; }
+.kv-auth-mosaic__block--teal { background: #1f9b8a; }
+.kv-auth-mosaic__block--cream { background: #f2efe7; }
+.kv-auth-mosaic__block--violet { background: #6b5cff; }
+.kv-auth-mosaic__block--sky { background: #3db8ff; }
 
 .kv-auth-mosaic__shape--ring {
   width: 34px;
@@ -198,34 +220,34 @@ html:has(.kv-login) {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: #0f7a40;
+  background: #050605;
 }
 
 .kv-auth-mosaic__shape--zigzag {
   width: 40px;
   height: 40px;
-  background: repeating-linear-gradient(135deg, #fff 0 8px, transparent 8px 16px);
+  background: repeating-linear-gradient(135deg, #f2efe7 0 8px, transparent 8px 16px);
   border-radius: 8px;
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
 .kv-auth-mosaic__shape--check {
   font-size: 22px;
   font-weight: 800;
-  color: #d8f24c;
+  color: #f2efe7;
 }
 
 .kv-login-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: var(--font-sans);
-  font-size: 13px;
-  letter-spacing: 0.04em;
+  font-family: var(--font-body);
+  font-size: clamp(11px, 0.78vw, 13px);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--kv-lime);
-  margin: 0 0 1.25rem;
-  font-weight: 700;
+  color: rgba(242, 239, 231, 0.62);
+  margin: 0 0 1rem;
+  font-weight: 650;
 }
 
 .kv-login-eyebrow::before {
@@ -238,14 +260,18 @@ html:has(.kv-login) {
 }
 
 .kv-login-title {
-  font-family: var(--font-sans);
-  font-size: clamp(1.75rem, 6vw, 2.85rem);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.035em;
-  margin: 0 0 1.1rem;
-  color: var(--kv-text);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.6vw, 3.15rem);
+  font-weight: 750;
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+  margin: 0 0 0.85rem;
+  color: var(--kv-paper);
   max-width: 16ch;
+}
+
+.kv-login-title .kv-login-accent {
+  color: var(--kv-lime);
 }
 
 @media (max-width: 959px) {
@@ -307,16 +333,16 @@ html:has(.kv-login) {
 }
 
 .kv-login-accent {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-style: normal;
-  font-weight: 800;
+  font-weight: 750;
   color: var(--kv-lime);
-  letter-spacing: -0.035em;
+  letter-spacing: -0.055em;
 }
 
 .kv-login-lead {
-  font-size: 1.05rem;
-  line-height: 1.65;
+  font-size: clamp(16px, 1.15vw, 19px);
+  line-height: 1.55;
   color: var(--kv-body);
   margin: 0;
   max-width: 32rem;
@@ -327,9 +353,9 @@ html:has(.kv-login) {
 .kv-login-card {
   background: var(--kv-surface);
   border: 1px solid var(--kv-line-strong);
-  border-radius: 18px;
-  padding: clamp(1.35rem, 3.5vw, 1.85rem);
-  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.35);
+  border-radius: 22px;
+  padding: clamp(1.5rem, 3.5vw, 2rem);
+  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.55);
   position: relative;
   overflow: hidden;
 }
@@ -341,7 +367,7 @@ html:has(.kv-login) {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(15, 122, 64, 0.4), transparent);
+  background: linear-gradient(90deg, transparent, rgba(216, 242, 76, 0.55), transparent);
 }
 
 .kv-login-card-head {
@@ -349,12 +375,12 @@ html:has(.kv-login) {
 }
 
 .kv-login-card-title {
-  font-family: var(--font-sans);
-  font-size: 1.375rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2vw, 1.65rem);
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
   margin: 0 0 0.4rem;
-  color: var(--kv-text);
+  color: var(--kv-paper);
 }
 
 .kv-login-success {
@@ -373,10 +399,10 @@ html:has(.kv-login) {
   height: 3.5rem;
   border-radius: 999px;
   background: var(--kv-lime);
-  color: var(--kv-ink);
+  color: #050605;
   margin-bottom: 1.25rem;
   animation: kv-login-success-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-  box-shadow: 0 0 0 rgba(15, 122, 64, 0.4);
+  box-shadow: 0 0 0 rgba(216, 242, 76, 0.4);
 }
 
 .kv-login-success-check svg {
@@ -391,12 +417,12 @@ html:has(.kv-login) {
   0% {
     transform: scale(0.7);
     opacity: 0;
-    box-shadow: 0 0 0 10px rgba(15, 122, 64, 0.16);
+    box-shadow: 0 0 0 10px rgba(216, 242, 76, 0.16);
   }
   100% {
     transform: scale(1);
     opacity: 1;
-    box-shadow: 0 0 0 0 rgba(15, 122, 64, 0);
+    box-shadow: 0 0 0 0 rgba(216, 242, 76, 0);
   }
 }
 
@@ -458,10 +484,10 @@ html:has(.kv-login) {
 
 .kv-login-label {
   display: block;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--kv-muted);
   margin-bottom: 0.5rem;
@@ -473,7 +499,7 @@ html:has(.kv-login) {
   gap: 0.65rem;
   padding: 0 0.9rem;
   min-height: 3rem;
-  border-radius: 8px;
+  border-radius: 14px;
   background: var(--kv-login-input-fill);
   border: 1px solid var(--kv-line-strong);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -481,12 +507,12 @@ html:has(.kv-login) {
 }
 
 .kv-login-input-wrap:focus-within {
-  border-color: rgba(15, 122, 64, 0.45);
-  box-shadow: 0 0 0 3px rgba(15, 122, 64, 0.12);
+  border-color: rgba(216, 242, 76, 0.55);
+  box-shadow: 0 0 0 3px rgba(216, 242, 76, 0.14);
 }
 
 .kv-login-input-wrap svg {
-  color: var(--kv-soft);
+  color: var(--kv-lime);
   flex-shrink: 0;
 }
 
@@ -494,8 +520,8 @@ html:has(.kv-login) {
   flex: 1;
   border: none;
   background: transparent;
-  color: var(--kv-text);
-  font-family: var(--font-sans);
+  color: var(--kv-paper);
+  font-family: var(--font-body);
   font-size: 0.9375rem;
   outline: none;
   padding: 0.7rem 0;
@@ -507,12 +533,12 @@ html:has(.kv-login) {
 }
 
 .kv-login-input::placeholder {
-  color: rgba(20, 18, 13, 0.3);
+  color: rgba(242, 239, 231, 0.35);
 }
 
 .kv-login-hint {
   margin: 0.4rem 0 0;
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   font-size: 12px;
   letter-spacing: 0;
   color: var(--kv-muted);
@@ -531,7 +557,7 @@ html:has(.kv-login) {
 }
 
 .kv-login-toggle-visibility:hover {
-  color: var(--kv-text);
+  color: var(--kv-lime);
 }
 
 @keyframes kv-login-autofill {
@@ -584,8 +610,8 @@ html:has(.kv-login) {
   flex-shrink: 0;
   margin-top: 0.15rem;
   border-radius: 0.35rem;
-  border: 1.5px solid rgba(20, 18, 13, 0.2);
-  background: #ffffff;
+  border: 1.5px solid rgba(242, 239, 231, 0.28);
+  background: #161714;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -594,7 +620,7 @@ html:has(.kv-login) {
 }
 
 .kv-login-remember input:hover {
-  border-color: rgba(20, 18, 13, 0.4);
+  border-color: rgba(216, 242, 76, 0.55);
 }
 
 .kv-login-inline-link {
@@ -604,7 +630,7 @@ html:has(.kv-login) {
 }
 
 .kv-login-inline-link:hover {
-  color: var(--kv-text);
+  color: var(--kv-lime-bright);
 }
 
 .kv-login-remember input:checked {
@@ -616,14 +642,14 @@ html:has(.kv-login) {
   content: '';
   width: 0.3rem;
   height: 0.55rem;
-  border: solid var(--kv-ink);
+  border: solid #050605;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg) translate(-1px, -1px);
 }
 
 .kv-login-remember input:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(15, 122, 64, 0.25);
+  box-shadow: 0 0 0 3px rgba(216, 242, 76, 0.25);
 }
 
 .kv-login-submit {
@@ -632,11 +658,11 @@ html:has(.kv-login) {
   justify-content: center;
   gap: 9px;
   width: 100%;
-  min-height: 3rem;
-  padding: 0.75rem 1.25rem;
-  border: none;
-  border-radius: 12px;
-  font-family: var(--font-sans);
+  min-height: 3.1rem;
+  padding: 0.75rem 1.35rem;
+  border: 1px solid var(--kv-lime);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -644,13 +670,16 @@ html:has(.kv-login) {
   line-height: 1.2;
   cursor: pointer;
   background: var(--kv-lime);
-  color: var(--kv-ink);
-  transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+  color: #050605;
+  box-shadow: 0 12px 36px rgba(216, 242, 76, 0.16);
+  transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease, opacity 0.15s ease;
 }
 
 .kv-login-submit:hover:not(:disabled) {
-  background: var(--kv-text);
-  color: var(--kv-ink);
+  transform: translateY(-2px);
+  background: var(--kv-lime-bright);
+  color: #050605;
+  box-shadow: 0 16px 42px rgba(216, 242, 76, 0.24);
 }
 
 .kv-login-submit:active:not(:disabled) {
@@ -685,7 +714,7 @@ html:has(.kv-login) {
 }
 
 .kv-login-footer a:hover {
-  color: var(--kv-text);
+  color: var(--kv-lime-bright);
 }
 
 .kv-login-mobile-back {

@@ -4,9 +4,11 @@ import ScrollToTop from './components/ScrollToTop';
 import DashboardPathEscape from './components/DashboardPathEscape';
 import ErrorBoundary from './components/ErrorBoundary';
 import Navbar from './components/landing/Navbar';
+import HomeDark from './pages/HomeDark';
 import Landing from './pages/Landing';
 import Empleo from './pages/Empleo';
 import Contacto from './pages/Contacto';
+import Privacidad from './pages/Privacidad';
 import Guias from './pages/Guias';
 import Login from './pages/Login';
 import Registro from './pages/Registro';
@@ -24,23 +26,29 @@ const AUTH_PATHS = new Set(['/login', '/registro', '/acceso']);
 function AppShell() {
   const { pathname } = useLocation();
   const isAuth = AUTH_PATHS.has(pathname);
+  const isHome = pathname === '/';
 
   return (
     <ErrorBoundary>
-      {!isAuth ? <Navbar /> : null}
-      <div className={isAuth ? undefined : 'kova-route-shell'}>
-        <Suspense fallback={isAuth ? null : <div className="kova-route-shell__fallback" aria-hidden />}>
+      {!isAuth && !isHome ? <Navbar /> : null}
+      <div className={isAuth || isHome ? undefined : 'kova-route-shell'}>
+        <Suspense fallback={isAuth || isHome ? null : <div className="kova-route-shell__fallback" aria-hidden />}>
           <Routes>
-            <Route path="/" element={<Landing />} />
+            <Route path="/" element={<HomeDark />} />
+            <Route path="/dark" element={<Navigate to="/" replace />} />
+            <Route path="/claro" element={<Navigate to="/" replace />} />
+            <Route path="/para-empresas" element={<Landing />} />
             <Route path="/empleo" element={<Empleo />} />
             <Route path="/guias" element={<Guias />} />
+            <Route path="/blog" element={<Navigate to="/guias" replace />} />
             <Route path="/guia-contratar-comercial" element={<GuiaContratarComercial />} />
             <Route path="/guia-evaluacion-comercial" element={<GuiaEvaluacionComercial />} />
             <Route path="/guia-psicometricas-vs-comercial" element={<GuiaPsicometricasVsComercial />} />
             <Route path="/guia-rotacion-comercial" element={<GuiaRotacionComercial />} />
             <Route path="/guia-habilidades-blandas-comercial" element={<GuiaHabilidadesBlandasComercial />} />
             <Route path="/contacto" element={<Contacto />} />
-            <Route path="/servicios" element={<Navigate to="/" replace />} />
+            <Route path="/privacidad" element={<Privacidad />} />
+            <Route path="/servicios" element={<Navigate to="/para-empresas" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
             <Route path="/acceso" element={<Acceso />} />

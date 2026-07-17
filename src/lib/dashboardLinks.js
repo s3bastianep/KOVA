@@ -24,7 +24,6 @@ const DASHBOARD_PREFIXES = [
   '/academia',
   '/documentos',
   '/perfil-cargo',
-  '/privacidad',
 ];
 
 export function isDashboardPath(path) {

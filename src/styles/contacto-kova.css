@@ -1,0 +1,547 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;700;800&display=swap');
+
+/*
+  Contacto — dark minimal, mismo sistema que la landing principal:
+  Manrope · #0d0f0f / #fafaf8 · acento #d8f24c · radio 20px
+  Scoped bajo .kova-contacto.
+*/
+
+html.kova-contacto-active body,
+html.kova-home-chrome.kova-contacto-active .kova-route-shell,
+html.kova-contacto-active .kova-route-shell,
+html.kova-contacto-active .kova-route-shell__fallback {
+  background: #0d0f0f !important;
+}
+
+.kova-contacto {
+  --kc-dark: #0d0f0f;
+  --kc-dark-2: #121514;
+  --kc-text: #f5f5f5;
+  --kc-muted: #8b8b8b;
+  --kc-lime: #d8f24c;
+  --kc-border: #2b2b2b;
+  --kc-radius: 20px;
+  --kc-page: min(1160px, calc(100% - 48px));
+
+  box-sizing: border-box;
+  min-height: 100vh;
+  background: var(--kc-dark);
+  color: var(--kc-text);
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.kova-contacto *,
+.kova-contacto *::before,
+.kova-contacto *::after {
+  box-sizing: border-box;
+}
+
+.kova-contacto .kc-wrap {
+  width: var(--kc-page);
+  margin: 0 auto;
+}
+
+/* ── Header ── */
+.kova-contacto .kc-head {
+  padding: clamp(150px, 17vw, 210px) 0 clamp(48px, 6vw, 72px);
+  text-align: center;
+}
+
+.kova-contacto .kc-eyebrow {
+  margin: 0 0 26px;
+  color: var(--kc-lime);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.kova-contacto .kc-head h1 {
+  margin: 0 auto;
+  max-width: 18ch;
+  font-size: clamp(38px, 4.2vw, 58px);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  color: var(--kc-text);
+}
+
+.kova-contacto .kc-head h1 span {
+  color: var(--kc-lime);
+}
+
+.kova-contacto .kc-head__lead {
+  max-width: 46ch;
+  margin: 26px auto 0;
+  color: var(--kc-muted);
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.kova-contacto .kc-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 30px;
+  margin: 30px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kova-contacto .kc-chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(245, 245, 245, 0.7);
+}
+
+.kova-contacto .kc-chips li::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--kc-lime);
+}
+
+/* ── Main grid ── */
+.kova-contacto .kc-main {
+  padding: clamp(20px, 3vw, 40px) 0 clamp(100px, 11vw, 150px);
+}
+
+.kova-contacto .kc-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(40px, 6vw, 90px);
+  align-items: start;
+}
+
+/* Left column — minimal step list */
+.kova-contacto .kc-side h2 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--kc-muted);
+}
+
+.kova-contacto .kc-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kova-contacto .kc-steps li {
+  display: flex;
+  gap: 20px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--kc-border);
+}
+
+.kova-contacto .kc-steps__n {
+  flex: 0 0 auto;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--kc-lime);
+  padding-top: 2px;
+}
+
+.kova-contacto .kc-steps strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--kc-text);
+}
+
+.kova-contacto .kc-steps p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--kc-muted);
+}
+
+.kova-contacto .kc-whatsapp {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 28px;
+  text-decoration: none;
+  color: var(--kc-text);
+  transition: opacity 0.25s ease;
+}
+
+.kova-contacto .kc-whatsapp:hover {
+  opacity: 0.75;
+}
+
+.kova-contacto .kc-whatsapp svg {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--kc-lime);
+}
+
+.kova-contacto .kc-whatsapp strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.kova-contacto .kc-whatsapp span span {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--kc-muted);
+}
+
+/* Right column — booking calendar stage */
+.kova-contacto .kc-booking {
+  min-height: 420px;
+}
+
+.kova-contacto .kv-booking-stage {
+  width: 100%;
+}
+
+/* ── Calendario de agendamiento — rediseño Manrope/minimal ── */
+.kova-contacto .kova-landing-wave {
+  --kv-lime: #d8f24c;
+  --kv-ink: #171717;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark {
+  background: var(--kc-dark-2);
+  border: 1px solid var(--kc-border);
+  border-top: 1px solid var(--kc-border);
+  border-radius: var(--kc-radius);
+  overflow: hidden;
+  box-shadow: none;
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .font-mono {
+  font-family: inherit !important;
+}
+
+/* Header */
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-header {
+  padding: 26px 28px 22px;
+  border-bottom: 1px solid var(--kc-border);
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-header-top {
+  align-items: center;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-header h2 {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-meta {
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--kc-muted);
+}
+
+/* Pasos: pills horizontales */
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-step-pills {
+  flex-direction: row;
+  gap: 6px;
+  font-size: 12px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-step-pills span {
+  padding: 6px 14px;
+  border-radius: 100px;
+  border: 1px solid var(--kc-border);
+  color: var(--kc-muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-step-pills span.is-active {
+  background: var(--kc-lime);
+  border-color: var(--kc-lime);
+  color: var(--kv-ink);
+  font-weight: 700;
+}
+
+/* Alerta más sobria */
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-alert {
+  margin: 22px 28px 0;
+  padding: 13px 16px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(245, 245, 245, 0.78);
+  background: rgba(216, 242, 76, 0.05);
+  border: 1px solid rgba(216, 242, 76, 0.2);
+  border-radius: 12px;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-alert a {
+  color: var(--kc-lime);
+  font-weight: 600;
+}
+
+/* Cuerpo */
+.kova-contacto .kova-landing-wave .kv-booking-body {
+  padding: 26px 28px 30px;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-panel-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--kc-muted);
+  margin-bottom: 16px;
+}
+
+/* Calendario (react-day-picker) */
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar.rdp {
+  --rdp-cell-size: 2.6rem;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-caption_label {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-nav_button {
+  border: 1px solid var(--kc-border);
+  border-radius: 12px;
+  color: rgba(245, 245, 245, 0.75);
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-nav_button:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-head_cell {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: rgba(245, 245, 245, 0.35);
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-button,
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_button {
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: rgba(245, 245, 245, 0.88);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-button:hover:not(:disabled),
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_selected .rdp-button,
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_selected .rdp-button:hover,
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_selected .rdp-day_button,
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_selected .rdp-day_button:hover {
+  background: var(--kc-lime);
+  color: var(--kv-ink);
+  font-weight: 800;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_today:not(.rdp-day_selected) .rdp-button,
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_today:not(.rdp-day_selected) .rdp-day_button {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgba(216, 242, 76, 0.5);
+  color: var(--kc-lime);
+  font-weight: 700;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_disabled .rdp-button,
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_disabled .rdp-day_button {
+  color: rgba(245, 245, 245, 0.16);
+  font-weight: 400;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-row {
+  margin-top: 6px;
+}
+
+/* shadcn/Tailwind: hoy = bg-accent, seleccionado = aria-selected */
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar td {
+  background: transparent !important;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar button.rdp-button.bg-accent:not([aria-selected='true']) {
+  background: transparent !important;
+  box-shadow: inset 0 0 0 1px rgba(216, 242, 76, 0.55);
+  color: var(--kc-lime) !important;
+  font-weight: 700;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar button.rdp-button[aria-selected='true'] {
+  background: var(--kc-lime) !important;
+  color: var(--kv-ink) !important;
+  font-weight: 800;
+}
+
+/* Panel de horarios */
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-slots-panel {
+  border-color: var(--kc-border);
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-slot {
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  border-color: var(--kc-border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-slot:hover {
+  border-color: rgba(216, 242, 76, 0.5);
+  background: rgba(216, 242, 76, 0.07);
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-slot.is-selected {
+  background: var(--kc-lime);
+  border-color: var(--kc-lime);
+  color: var(--kv-ink);
+  font-weight: 700;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-empty {
+  font-size: 13px;
+  color: var(--kc-muted);
+}
+
+/* Botones continuar / confirmar */
+.kova-contacto .kova-landing-wave .kv-btn-solid {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 14px;
+  background: var(--kc-lime);
+  color: var(--kv-ink);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.kova-contacto .kova-landing-wave .kv-btn-solid:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+/* Formulario (paso datos) */
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-input {
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--kc-border);
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-selected-slot {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* Pie del card */
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-footer {
+  padding: 14px 28px;
+  font-size: 12.5px;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--kc-muted);
+  background: transparent;
+  border-top: 1px solid var(--kc-border);
+}
+
+/* ── Página legal (privacidad) ── */
+.kova-contacto .kc-head--left {
+  text-align: left;
+  padding-bottom: clamp(20px, 3vw, 36px);
+}
+
+.kova-contacto .kc-head--left h1 {
+  margin: 0;
+  max-width: 22ch;
+}
+
+.kova-contacto .kc-head--left .kc-head__lead {
+  margin: 18px 0 0;
+}
+
+.kova-contacto .kc-legal {
+  max-width: 720px;
+  margin-left: 0;
+}
+
+.kova-contacto .kc-legal__block {
+  padding: 28px 0;
+  border-bottom: 1px solid var(--kc-border);
+}
+
+.kova-contacto .kc-legal__block:last-child {
+  border-bottom: none;
+}
+
+.kova-contacto .kc-legal__block h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--kc-text);
+}
+
+.kova-contacto .kc-legal__block p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--kc-muted);
+}
+
+/* ── Footer ── */
+.kova-contacto .kc-footer {
+  padding: 36px 0 44px;
+  border-top: 1px solid var(--kc-border);
+  background: var(--kc-dark);
+  text-align: center;
+}
+
+.kova-contacto .kc-footer p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--kc-muted);
+}
+
+@media (max-width: 900px) {
+  .kova-contacto .kc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kova-contacto .kc-booking {
+    order: -1;
+  }
+
+  .kova-contacto .kc-head {
+    padding-top: 140px;
+  }
+}
