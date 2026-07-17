@@ -156,7 +156,6 @@ export default function Empleo() {
             <div className="emp-hero__ctas">
               <Link to="/registro" className="kh-btn kh-btn--lime">
                 Crear mi perfil gratis
-                <span className="kh-btn__icon" aria-hidden>↗</span>
               </Link>
             </div>
           </div>
