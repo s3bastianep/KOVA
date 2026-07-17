@@ -19,6 +19,13 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     async ({ user, candidate }) => {
       const { id: vacancyId } = await params;
       const body = await req.json().catch(() => ({}));
+
+      // OWASP A04: mismo tope que la postulación pública. Las respuestas quedan
+      // guardadas en metadata; sin límite, una cuenta podía inflar la DB.
+      if (JSON.stringify(body.answers ?? {}).length > 20_000) {
+        return Response.json({ message: 'Las respuestas son demasiado largas.' }, { status: 400 });
+      }
+
       const extraAnswers = (body.answers ?? {}) as Record<string, string | number | string[]>;
 
   if (isMockMode()) {

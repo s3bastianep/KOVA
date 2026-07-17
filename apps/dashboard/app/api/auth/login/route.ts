@@ -5,7 +5,8 @@ import { signToken, type AuthUser } from '../../../../lib/auth';
 import { issueRefreshToken, refreshCookie } from '../../../../lib/session';
 import { getCandidateForUser } from '../../../../lib/candidate-auth';
 import { isMockMode, MOCK_USER, getMockPortalCandidateByEmail, verifyMockPortalPassword } from '../../../../lib/mock';
-import { isRateLimited, isKeyRateLimited } from '../../../../lib/rate-limit';
+import { isRateLimited, isKeyRateLimited, clientIp } from '../../../../lib/rate-limit';
+import { logSecurityEvent } from '../../../../lib/security-log';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,6 +41,7 @@ export async function POST(req: NextRequest) {
   // Límite por IP además del bloqueo por cuenta: frena fuerza bruta distribuida
   // sobre muchas cuentas distintas desde una misma dirección.
   if (isRateLimited(req, 'login', 15, 60_000)) {
+    logSecurityEvent('login_rate_limited', { ip: clientIp(req) });
     return Response.json(
       { message: 'Demasiados intentos. Espera un minuto e intenta de nuevo.' },
       { status: 429 },
@@ -62,6 +64,7 @@ export async function POST(req: NextRequest) {
   // Límite por CUENTA además del de IP: un ataque distribuido (muchas IPs contra el
   // mismo correo) también queda frenado. In-memory: suficiente como capa extra gratuita.
   if (isKeyRateLimited(`login-email:${String(email).toLowerCase()}`, 10, 60_000)) {
+    logSecurityEvent('login_rate_limited', { email: String(email), ip: clientIp(req) });
     return Response.json(
       { message: 'Demasiados intentos para esta cuenta. Espera un minuto e intenta de nuevo.' },
       { status: 429 },
@@ -125,11 +128,13 @@ export async function POST(req: NextRequest) {
       // Mismo costo de bcrypt que un intento real: la duración de la respuesta no
       // revela si el correo existe.
       await bcrypt.compare(password, DUMMY_HASH).catch(() => false);
+      logSecurityEvent('login_failed', { email: String(email), ip: clientIp(req) });
       await sleep(failureDelayMs(1));
       return Response.json({ message: 'Correo o contraseña incorrectos' }, { status: 401 });
     }
 
     if (user.lockedUntil && user.lockedUntil > new Date()) {
+      logSecurityEvent('login_locked', { email: user.email, ip: clientIp(req), userId: user.id });
       return Response.json(
         { message: 'Cuenta bloqueada temporalmente. Intente más tarde.' },
         { status: 403 },
@@ -146,6 +151,7 @@ export async function POST(req: NextRequest) {
           lockedUntil: attempts >= MAX_FAILED_ATTEMPTS ? new Date(Date.now() + LOCK_DURATION_MS) : null,
         },
       });
+      logSecurityEvent('login_failed', { email: user.email, ip: clientIp(req), userId: user.id });
       // Espera progresiva: cada fallo consecutivo responde más lento (0.5s → 4s),
       // lo que vuelve inviable probar un diccionario aun rotando IPs.
       await sleep(failureDelayMs(attempts));

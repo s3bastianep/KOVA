@@ -8,6 +8,7 @@ const isDev = process.argv.includes('--dev');
 const PORT = Number(process.env.PORT) || 3000;
 
 const app = express();
+app.disable('x-powered-by');
 app.use(express.json({ limit: '32kb' }));
 
 // Todas las rutas de API y del dashboard viven en Next.js (apps/dashboard), incluida

@@ -41,6 +41,8 @@ const immutableCache = {
 const nextConfig = {
   ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
   reactStrictMode: true,
+  // OWASP A05: no anunciar el framework en cada respuesta (X-Powered-By).
+  poweredByHeader: false,
   outputFileTracingRoot: path.join(__dirname),
   eslint: { ignoreDuringBuilds: true },
   serverExternalPackages: ['pdf-parse', 'pdfjs-dist', '@napi-rs/canvas', 'mammoth', 'word-extractor', 'exceljs'],

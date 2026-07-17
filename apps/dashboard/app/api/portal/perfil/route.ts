@@ -58,6 +58,16 @@ export async function PATCH(req: NextRequest) {
     req,
     async ({ user, candidate }) => {
       const body = await req.json().catch(() => ({}));
+
+      // OWASP A04: mismo tope que el funnel público (/api/registro). Sin esto, una
+      // cuenta autenticada podía inflar el JSON de perfil sin límite en la DB.
+      if (JSON.stringify(body.profile ?? {}).length > 20_000) {
+        return Response.json({ message: 'El perfil es demasiado grande.' }, { status: 400 });
+      }
+      if (Array.isArray(body.onboardingReviewed) && body.onboardingReviewed.length > 100) {
+        return Response.json({ message: 'Datos de onboarding inválidos.' }, { status: 400 });
+      }
+
       const patch = (body.profile ?? {}) as Partial<CommercialProfile>;
       const onboardingStep = body.onboardingStep as string | undefined;
       const onboardingSubStep =

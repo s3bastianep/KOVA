@@ -1,6 +1,8 @@
 import { NextRequest } from 'next/server';
 import { getUserFromRequest, unauthorized, forbidden, isInternalRole } from '../../../lib/auth';
 import { isRateLimited } from '../../../lib/rate-limit';
+import { isSlotAvailable } from '../../../lib/booking-slots';
+import { generateTimeSlots, isBookableDateKey } from '../../../../../shared/schedule.js';
 import {
   createAgendaRequest,
   listAgendaRequests,
@@ -64,6 +66,29 @@ export async function POST(req: NextRequest) {
     String(empresa).length > 160
   ) {
     return Response.json({ message: 'Datos demasiado largos.' }, { status: 400, headers: CORS_HEADERS });
+  }
+
+  // OWASP A04: mismas reglas de negocio que /api/bookings. Sin esto, cualquier
+  // fecha/hora con formato válido (domingos, 3 a.m., fechas pasadas) se guardaba
+  // como solicitud basura en la agenda del staff.
+  if (!isBookableDateKey(date)) {
+    return Response.json(
+      { message: 'La fecha seleccionada no está disponible.' },
+      { status: 400, headers: CORS_HEADERS },
+    );
+  }
+  if (!generateTimeSlots(date).includes(time)) {
+    return Response.json(
+      { message: 'El horario seleccionado no está disponible.' },
+      { status: 400, headers: CORS_HEADERS },
+    );
+  }
+  const available = await isSlotAvailable(date, time);
+  if (!available) {
+    return Response.json(
+      { message: 'Ese horario acaba de ser reservado. Elige otro.' },
+      { status: 409, headers: CORS_HEADERS },
+    );
   }
 
   try {

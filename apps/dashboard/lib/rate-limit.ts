@@ -9,7 +9,7 @@ import type { NextRequest } from 'next/server';
  */
 const buckets = new Map<string, number[]>();
 
-function clientIp(req: NextRequest): string {
+export function clientIp(req: NextRequest): string {
   const forwarded = req.headers.get('x-forwarded-for');
   if (forwarded) return forwarded.split(',')[0].trim();
   return req.headers.get('x-real-ip') ?? 'unknown';

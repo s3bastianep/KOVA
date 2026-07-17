@@ -24,9 +24,6 @@ async function validateSession(tenantId: string, candidateId: string, resumeToke
 }
 
 export async function POST(req: NextRequest) {
-  // No auth exists yet at this point in the signup flow (the candidate is uploading a CV
-  // before an account is created), so this endpoint can't require a session. It does run
-  // expensive PDF/Word parsing, so cap abuse with a per-IP rate limit instead.
   if (isRateLimited(req, 'registro-cv', 10, 60_000)) {
     return Response.json({ message: 'Demasiados intentos. Espera un minuto e inténtalo de nuevo.' }, { status: 429 });
   }
@@ -34,6 +31,30 @@ export async function POST(req: NextRequest) {
   const formData = await req.formData().catch(() => null);
   if (!formData) {
     return Response.json({ message: 'Solicitud inválida.' }, { status: 400 });
+  }
+
+  // OWASP A04: el parseo de PDF/Word es costoso (CPU). Antes se ejecutaba para
+  // cualquier anónimo; ahora exigimos una sesión de registro válida (candidateId +
+  // resumeToken emitidos por /api/registro) ANTES de tocar el archivo, así el
+  // trabajo caro solo se hace para usuarios reales del funnel.
+  const candidateId = String(formData.get('candidateId') ?? '').trim();
+  const resumeToken = String(formData.get('resumeToken') ?? '').trim();
+
+  let sessionCandidate: Awaited<ReturnType<typeof validateSession>> = null;
+  let tenantId: string | null = null;
+
+  if (!isMockMode()) {
+    if (!candidateId || !resumeToken) {
+      return Response.json(
+        { message: 'Crea tu cuenta primero para poder subir tu hoja de vida.' },
+        { status: 401 },
+      );
+    }
+    tenantId = await getPublicTenantId();
+    sessionCandidate = await validateSession(tenantId, candidateId, resumeToken);
+    if (!sessionCandidate) {
+      return Response.json({ message: 'Tu sesión de registro expiró. Vuelve a empezar.' }, { status: 401 });
+    }
   }
 
   const file = formData.get('file');
@@ -69,24 +90,17 @@ export async function POST(req: NextRequest) {
     return Response.json({ message }, { status: 422 });
   }
 
-  const candidateId = String(formData.get('candidateId') ?? '').trim();
-  const resumeToken = String(formData.get('resumeToken') ?? '').trim();
-
-  if (candidateId && resumeToken && !isMockMode()) {
+  if (sessionCandidate && tenantId) {
     try {
-      const tenantId = await getPublicTenantId();
-      const candidate = await validateSession(tenantId, candidateId, resumeToken);
-      if (candidate) {
-        await persistCandidateCvFile({
-          tenantId,
-          candidateId,
-          fileName,
-          buffer,
-          extractedText,
-          extraction,
-          mime,
-        });
-      }
+      await persistCandidateCvFile({
+        tenantId,
+        candidateId,
+        fileName,
+        buffer,
+        extractedText,
+        extraction,
+        mime,
+      });
     } catch {
       /* extracción sigue disponible aunque falle el guardado */
     }
