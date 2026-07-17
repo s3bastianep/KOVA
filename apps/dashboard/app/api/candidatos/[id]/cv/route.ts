@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized, isStaffRole } from '../../../../../lib/auth';
+import { getUserFromRequest, unauthorized, isStaffRole, candidateWhereForUser } from '../../../../../lib/auth';
 import { prisma } from '../../../../../lib/prisma';
 import { isMockMode } from '../../../../../lib/mock';
 import { readCandidateCvBuffer } from '../../../../../lib/cv-storage';
@@ -19,7 +19,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   }
 
   const candidate = await prisma.candidate.findFirst({
-    where: { id, tenantId: user.tenantId },
+    where: { id, ...candidateWhereForUser(user) },
     select: { id: true },
   });
   if (!candidate) {

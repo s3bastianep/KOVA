@@ -1,5 +1,12 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized, isStaffRole } from '../../../lib/auth';
+import {
+  getUserFromRequest,
+  unauthorized,
+  forbidden,
+  isStaffRole,
+  isInternalRole,
+  candidateWhereForUser,
+} from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode, MOCK_CANDIDATES } from '../../../lib/mock';
 import { normalizeSkillList } from '../../../lib/candidate-skills';
@@ -108,6 +115,13 @@ export async function GET(req: NextRequest) {
   const vacancyId = req.nextUrl.searchParams.get('vacancyId') ?? undefined;
   const excludeVacancyId = req.nextUrl.searchParams.get('excludeVacancyId') ?? undefined;
   const search = req.nextUrl.searchParams.get('q')?.trim().toLowerCase();
+  // Paginación por cursor (opcional, no rompe el consumo actual como array):
+  // ?cursor=<id del último candidato recibido>&limit=<n>. El siguiente cursor
+  // viaja en el header X-Next-Cursor cuando hay más resultados.
+  const cursor = req.nextUrl.searchParams.get('cursor') ?? undefined;
+  const limitParam = Number(req.nextUrl.searchParams.get('limit'));
+  const defaultLimit = search || excludeVacancyId ? 25 : 200;
+  const limit = Number.isFinite(limitParam) && limitParam > 0 ? Math.min(limitParam, 200) : defaultLimit;
 
   if (isMockMode()) {
     let list = MOCK_CANDIDATES.map((c) => mapCandidate(c));
@@ -127,18 +141,26 @@ export async function GET(req: NextRequest) {
     return Response.json(list);
   }
 
+  // AND explícito: el scoping por rol (candidateWhereForUser) y los filtros de vacante
+  // usan ambos la clave `vacancies`, y un spread plano dejaría solo el último.
   const candidates = await prisma.candidate.findMany({
     where: {
-      tenantId: user.tenantId,
-      ...(vacancyId && { vacancies: { some: { vacancyId } } }),
-      ...(excludeVacancyId && { vacancies: { none: { vacancyId: excludeVacancyId } } }),
-      ...(search && {
-        OR: [
-          { firstName: { contains: search, mode: 'insensitive' } },
-          { lastName: { contains: search, mode: 'insensitive' } },
-          { email: { contains: search, mode: 'insensitive' } },
-        ],
-      }),
+      AND: [
+        candidateWhereForUser(user),
+        ...(vacancyId ? [{ vacancies: { some: { vacancyId } } }] : []),
+        ...(excludeVacancyId ? [{ vacancies: { none: { vacancyId: excludeVacancyId } } }] : []),
+        ...(search
+          ? [
+              {
+                OR: [
+                  { firstName: { contains: search, mode: 'insensitive' as const } },
+                  { lastName: { contains: search, mode: 'insensitive' as const } },
+                  { email: { contains: search, mode: 'insensitive' as const } },
+                ],
+              },
+            ]
+          : []),
+      ],
     },
     include: {
       vacancies: {
@@ -151,22 +173,26 @@ export async function GET(req: NextRequest) {
       },
       assessments: { select: { title: true }, take: 20 },
     },
-    orderBy: { updatedAt: 'desc' },
-    // Always capped, not just when searching: without this, an unfiltered request loads every
-    // candidate in the tenant (with nested vacancy + assessment fan-out) into one response.
-    // 200 is generous enough not to change today's behavior for any real tenant size while
-    // capping the worst case. A real paginated list (cursor + total count) is the proper fix
-    // if a tenant ever needs to browse past this many candidates.
-    take: search || excludeVacancyId ? 25 : 200,
+    // Orden estable (updatedAt + id) requerido para que el cursor no salte ni repita filas.
+    orderBy: [{ updatedAt: 'desc' }, { id: 'desc' }],
+    take: limit + 1,
+    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
   });
 
-  return Response.json(candidates.map((c) => mapCandidate(c)));
+  const hasMore = candidates.length > limit;
+  const page = hasMore ? candidates.slice(0, limit) : candidates;
+  const nextCursor = hasMore ? page[page.length - 1]?.id : undefined;
+
+  return Response.json(page.map((c) => mapCandidate(c)), {
+    headers: nextCursor ? { 'X-Next-Cursor': nextCursor } : undefined,
+  });
 }
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
-  if (!isStaffRole(user.role)) return unauthorized();
+  // Crear/vincular candidatos es tarea interna; un CLIENT no gestiona la base de talento.
+  if (!isInternalRole(user.role)) return forbidden();
 
   const body = await req.json().catch(() => ({}));
   const {

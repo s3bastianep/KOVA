@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { getStoredUser, clearSession, authApi, type AuthUser } from '@/lib/api';
-import { NAV_MAIN } from '@/lib/navigation';
+import { navItemsForRole } from '@/lib/navigation';
 import { cn } from '@/lib/utils';
 import { LogOut, Search, Menu, X, Sparkles } from 'lucide-react';
 
@@ -24,10 +24,11 @@ export function Topbar() {
   }, [pathname]);
 
   const initials = user ? `${user.firstName?.[0] ?? ''}${user.lastName?.[0] ?? ''}`.toUpperCase() : '';
+  const navItems = navItemsForRole(user?.role);
+  const isClient = user?.role === 'CLIENT';
 
   const logout = async () => {
-    const refresh = localStorage.getItem('kova_refresh_token') ?? undefined;
-    try { await authApi.logout(refresh); } catch { /* ignore */ }
+    try { await authApi.logout(); } catch { /* ignore */ }
     clearSession();
     router.push('/acceso');
   };
@@ -126,7 +127,7 @@ export function Topbar() {
 
             <nav className="flex-1 overflow-y-auto px-3 py-4">
               <div className="space-y-1">
-                {NAV_MAIN.map(({ href, label, icon: Icon }) => {
+                {navItems.map(({ href, label, icon: Icon }) => {
                   const active = pathname === href || pathname.startsWith(`${href}/`);
                   return (
                     <Link
@@ -142,14 +143,16 @@ export function Topbar() {
                 })}
               </div>
 
-              <Link
-                href="/procesos/nuevo"
-                onClick={() => setMenuOpen(false)}
-                className="kova-sidebar-quick mt-4 flex items-center gap-3 px-3 py-3 rounded-2xl border"
-              >
-                <Sparkles className="w-4 h-4" style={{ color: 'var(--kova-lime)' }} />
-                <span className="kova-sidebar-quick-title text-sm font-semibold">Nuevo proceso</span>
-              </Link>
+              {!isClient && (
+                <Link
+                  href="/procesos/nuevo"
+                  onClick={() => setMenuOpen(false)}
+                  className="kova-sidebar-quick mt-4 flex items-center gap-3 px-3 py-3 rounded-2xl border"
+                >
+                  <Sparkles className="w-4 h-4" style={{ color: 'var(--kova-lime)' }} />
+                  <span className="kova-sidebar-quick-title text-sm font-semibold">Nuevo proceso</span>
+                </Link>
+              )}
             </nav>
 
             <div className="kova-sidebar-footer p-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>

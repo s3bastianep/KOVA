@@ -1,19 +1,27 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { LogOut, Sparkles } from 'lucide-react';
-import { NAV_MAIN } from '@/lib/navigation';
-import { clearSession, authApi } from '@/lib/api';
+import { navItemsForRole } from '@/lib/navigation';
+import { clearSession, authApi, getStoredUser } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
 export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [role, setRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    setRole(getStoredUser()?.role ?? null);
+  }, []);
+
+  const navItems = navItemsForRole(role);
+  const isClient = role === 'CLIENT';
 
   const logout = async () => {
-    const refresh = localStorage.getItem('kova_refresh_token') ?? undefined;
-    try { await authApi.logout(refresh); } catch { /* ignore */ }
+    try { await authApi.logout(); } catch { /* ignore */ }
     clearSession();
     router.push('/acceso');
   };
@@ -37,7 +45,7 @@ export function Sidebar() {
           Navegación
         </p>
         <div className="space-y-1">
-          {NAV_MAIN.map(({ href, label, icon: Icon }) => {
+          {navItems.map(({ href, label, icon: Icon }) => {
             const active = pathname === href || pathname.startsWith(`${href}/`);
             return (
               <Link
@@ -53,6 +61,8 @@ export function Sidebar() {
           })}
         </div>
 
+        {!isClient && (
+        <>
         <p className="kova-sidebar-section-label px-3 pt-6 pb-2 text-[10px] font-bold uppercase tracking-[0.14em]">
           Acceso rápido
         </p>
@@ -71,6 +81,8 @@ export function Sidebar() {
             <p className="kova-sidebar-quick-sub text-[11px]">Abrir solicitud de búsqueda</p>
           </div>
         </Link>
+        </>
+        )}
       </nav>
 
       <div className="kova-sidebar-footer p-3 mx-3 mb-4 rounded-2xl border">

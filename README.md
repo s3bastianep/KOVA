@@ -17,7 +17,7 @@ Sin Calendly ni servicios externos. Flujo:
 
 1. El visitante elige **fecha y hora** en el calendario Kova
 2. Completa **nombre, correo, teléfono y empresa**
-3. La cita se guarda en `data/bookings.json` vía `POST /api/bookings`
+3. La cita se guarda en **Postgres** (vía el dashboard Next.js) con `POST /api/bookings`
 
 ### API
 
@@ -29,7 +29,7 @@ Sin Calendly ni servicios externos. Flujo:
 
 ### Configurar horarios
 
-Edita `server/schedule.js`: días laborables, franja horaria (9:00–17:00), duración de slot (30 min), zona horaria.
+Edita `shared/schedule.js`: días laborables, franja horaria (9:00–17:00), duración de slot (30 min), zona horaria. Las citas se guardan en Postgres a través del dashboard (`/api/bookings`).
 
 ## Deploy en Railway
 
@@ -38,7 +38,7 @@ Edita `server/schedule.js`: días laborables, franja horaria (9:00–17:00), dur
 3. **Start command:** `npm run start`
 4. Genera un dominio en **Settings → Networking**.
 
-Cada push redeploya la app. Las citas persisten en el volumen/archivo `data/bookings.json` del contenedor (para producción seria recomendable un volumen persistente o base de datos).
+Cada push redeploya la app. Las citas y todos los datos persisten en la base de datos Postgres de Railway (variable `DATABASE_URL`); no se pierden al redeployar.
 
 ## Scripts
 

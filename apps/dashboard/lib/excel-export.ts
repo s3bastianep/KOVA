@@ -194,6 +194,10 @@ async function gatherSheets(user: AuthUser): Promise<SheetDef[]> {
     consultants.map((u) => [u.id, `${u.firstName} ${u.lastName}`.trim()]),
   );
 
+  // Tope por hoja: sin límite, un tenant grande carga TODA su base en memoria en
+  // una sola request y puede tumbar el proceso. Se exportan los más recientes.
+  const EXPORT_ROW_CAP = 5000;
+
   const candidates = await prisma.candidate.findMany({
     where: { tenantId: user.tenantId },
     include: {
@@ -204,9 +208,11 @@ async function gatherSheets(user: AuthUser): Promise<SheetDef[]> {
           },
         },
         orderBy: { updatedAt: 'desc' },
+        take: 20,
       },
     },
     orderBy: { updatedAt: 'desc' },
+    take: EXPORT_ROW_CAP,
   });
 
   const assessments = await prisma.assessment.findMany({
@@ -216,12 +222,14 @@ async function gatherSheets(user: AuthUser): Promise<SheetDef[]> {
       vacancy: { select: { title: true, company: { select: { name: true } } } },
     },
     orderBy: { completedAt: 'desc' },
+    take: EXPORT_ROW_CAP,
   });
 
   const interviews = await prisma.interview.findMany({
     where: { tenantId: user.tenantId },
     include: { candidate: { select: { firstName: true, lastName: true } } },
     orderBy: { scheduledAt: 'desc' },
+    take: EXPORT_ROW_CAP,
   });
 
   const tasks = await prisma.task.findMany({
@@ -234,6 +242,7 @@ async function gatherSheets(user: AuthUser): Promise<SheetDef[]> {
       vacancy: { select: { title: true } },
     },
     orderBy: { dueDate: 'asc' },
+    take: EXPORT_ROW_CAP,
   });
 
   const activeStatuses = new Set(['SEARCH_ACTIVE', 'EVALUATION', 'FINALISTS', 'OFFER', 'PROFILE_BUILDING', 'DISCOVERY', 'DISCOVERY_PENDING', 'APPROVAL_PENDING']);

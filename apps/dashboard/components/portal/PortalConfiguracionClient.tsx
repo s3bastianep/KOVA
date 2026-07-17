@@ -109,9 +109,8 @@ export function PortalConfiguracionClient() {
   };
 
   const logout = async () => {
-    const refresh = localStorage.getItem('kova_refresh_token') ?? undefined;
     try {
-      await authApi.logout(refresh);
+      await authApi.logout();
     } catch {
       /* ignore */
     }

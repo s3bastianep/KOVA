@@ -4,6 +4,7 @@ import { compatibilityFromVacancyAndAnswers } from '../../../../../lib/compatibi
 import { prisma } from '../../../../../lib/prisma';
 import { isMockMode } from '../../../../../lib/mock';
 import { runCandidateAddedAutomation } from '../../../../../lib/automations';
+import { isRateLimited } from '../../../../../lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -70,6 +71,14 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 }
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  // Endpoint público: cap defensivo por IP contra bots que creen candidatos en masa.
+  if (isRateLimited(req, 'postulacion', 5, 60_000)) {
+    return Response.json(
+      { message: 'Demasiadas postulaciones seguidas. Espera un minuto e intenta de nuevo.' },
+      { status: 429 },
+    );
+  }
+
   const { id } = await params;
   const body = await req.json().catch(() => ({}));
   const { firstName, lastName, email, phone, answers } = body;

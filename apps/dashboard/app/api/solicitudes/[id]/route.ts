@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized, isStaffRole } from '../../../../lib/auth';
+import { getUserFromRequest, unauthorized, forbidden, isInternalRole } from '../../../../lib/auth';
 import {
   acceptAgendaRequest,
   rejectAgendaRequest,
@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
-  if (!isStaffRole(user.role)) return unauthorized();
+  if (!isInternalRole(user.role)) return forbidden();
 
   const { id } = await params;
   const body = await req.json().catch(() => ({}));

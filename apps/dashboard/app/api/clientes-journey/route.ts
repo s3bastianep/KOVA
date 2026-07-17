@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized, isStaffRole } from '../../../lib/auth';
+import { getUserFromRequest, unauthorized, forbidden, isInternalRole } from '../../../lib/auth';
 import { listClientJourneys, updateClientJourney } from '../../../lib/client-journey-service';
 
 export const dynamic = 'force-dynamic';
@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
-  if (!isStaffRole(user.role)) return unauthorized();
+  if (!isInternalRole(user.role)) return forbidden();
 
   const clients = await listClientJourneys(user.tenantId);
   return Response.json({ clients });
@@ -16,10 +16,7 @@ export async function GET(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
-  if (!isStaffRole(user.role)) return unauthorized();
-  if (user.role === 'CLIENT') {
-    return Response.json({ message: 'No autorizado' }, { status: 403 });
-  }
+  if (!isInternalRole(user.role)) return forbidden();
 
   const body = await req.json().catch(() => ({}));
   const { companyId, action, reason } = body as { companyId?: string; action?: string; reason?: string };

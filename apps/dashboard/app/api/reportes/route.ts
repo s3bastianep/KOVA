@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized, isStaffRole } from '../../../lib/auth';
+import { getUserFromRequest, unauthorized, forbidden, isInternalRole } from '../../../lib/auth';
 import { isMockMode, MOCK_REPORTS } from '../../../lib/mock';
 
 export const dynamic = 'force-dynamic';
@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
-  if (!isStaffRole(user.role)) return unauthorized();
+  if (!isInternalRole(user.role)) return forbidden();
 
   if (isMockMode()) return Response.json(MOCK_REPORTS);
 

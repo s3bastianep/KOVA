@@ -2,14 +2,6 @@ import express from 'express';
 import path from 'node:path';
 import http from 'node:http';
 import { fileURLToPath } from 'node:url';
-import { randomUUID } from 'node:crypto';
-import {
-  SCHEDULE,
-  filterBookedSlots,
-  generateTimeSlots,
-  isBookableDateKey,
-} from './schedule.js';
-import { addBooking, findBookingConflict, readBookings } from './store.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isDev = process.argv.includes('--dev');
@@ -18,86 +10,10 @@ const PORT = Number(process.env.PORT) || 3000;
 const app = express();
 app.use(express.json({ limit: '32kb' }));
 
-app.get('/api/health', (_req, res) => {
-  res.json({ ok: true, service: 'kova-booking' });
-});
-
-app.get('/api/schedule-config', (_req, res) => {
-  res.json({
-    slotMinutes: SCHEDULE.slotMinutes,
-    daysAhead: SCHEDULE.daysAhead,
-    timezone: SCHEDULE.timezone,
-    eventTitle: 'Consultoría comercial Kova',
-    eventDuration: `${SCHEDULE.slotMinutes} min`,
-  });
-});
-
-app.get('/api/availability', async (req, res) => {
-  const date = String(req.query.date || '');
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    return res.status(400).json({ error: 'Fecha inválida.' });
-  }
-  if (!isBookableDateKey(date)) {
-    return res.json({ date, slots: [] });
-  }
-
-  const bookings = await readBookings();
-  const allSlots = generateTimeSlots(date);
-  const slots = filterBookedSlots(date, allSlots, bookings);
-  res.json({ date, slots });
-});
-
-function validateBookingBody(body) {
-  const { date, time, nombre, correo, telefono, empresa } = body ?? {};
-  if (!date || !time || !nombre?.trim() || !correo?.trim() || !telefono?.trim() || !empresa?.trim()) {
-    return 'Completa fecha, hora, nombre, correo, teléfono y empresa.';
-  }
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return 'Fecha inválida.';
-  if (!/^\d{2}:\d{2}$/.test(time)) return 'Hora inválida.';
-  if (!correo.includes('@')) return 'Correo inválido.';
-  if (!isBookableDateKey(date)) return 'La fecha seleccionada no está disponible.';
-  const slots = generateTimeSlots(date);
-  if (!slots.includes(time)) return 'El horario seleccionado no está disponible.';
-  return null;
-}
-
-app.post('/api/bookings', async (req, res) => {
-  const error = validateBookingBody(req.body);
-  if (error) return res.status(400).json({ error });
-
-  const { date, time, nombre, correo, telefono, empresa } = req.body;
-  const conflict = await findBookingConflict(date, time);
-  if (conflict) {
-    return res.status(409).json({ error: 'Ese horario acaba de ser reservado. Elige otro.' });
-  }
-
-  const booking = {
-    id: randomUUID(),
-    date,
-    time,
-    nombre: nombre.trim(),
-    correo: correo.trim().toLowerCase(),
-    telefono: telefono.trim(),
-    empresa: empresa.trim(),
-    status: 'pending',
-    createdAt: new Date().toISOString(),
-  };
-
-  await addBooking(booking);
-  res.status(201).json({
-    ok: true,
-    booking: {
-      id: booking.id,
-      date: booking.date,
-      time: booking.time,
-      nombre: booking.nombre,
-    },
-    message: 'Solicitud enviada. Te confirmaremos pronto.',
-  });
-});
-
-// Todas las rutas servidas por el dashboard Next.js (mismas que su middleware).
-// Deben proxearse a :3001 para que el usuario nunca salga de :3000.
+// Todas las rutas de API y del dashboard viven en Next.js (apps/dashboard), incluida
+// la agenda de citas (/api/bookings, /api/availability), que persiste en Postgres.
+// Este servidor solo sirve la SPA de la landing y, en dev, proxea al dashboard.
+// En Railway este archivo no se usa: `npm run start` arranca Next directamente.
 const DASHBOARD_PROXY_ROUTE =
   /^\/(?:api|_next|postular|dev|portal|dashboard|empresas|clientes|vacantes|procesos|pipeline-comercial|crm|calendario|agenda|tareas|reportes|configuracion|candidatos|discovery|ats|entrevistas|evaluaciones|finalistas|onboarding|academia|documentos|perfil-cargo)(?:\/|$)/;
 
@@ -143,7 +59,7 @@ function mountDashboardDevProxy() {
         res
           .status(502)
           .type('text/plain')
-          .send('El registro requiere el dashboard en ejecución: cd apps/dashboard && npm run dev');
+          .send('Esta ruta requiere el dashboard en ejecución: cd apps/dashboard && npm run dev');
       }
     });
 

@@ -33,6 +33,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       candidates: {
         include: { candidate: true, stageHistory: { orderBy: { createdAt: 'desc' }, take: 5 } },
         orderBy: { ranking: 'asc' },
+        // Tope defensivo: una vacante con cientos de postulantes no debe cargar todos de golpe.
+        take: 300,
       },
       pipelineStages: { orderBy: { order: 'asc' } },
       tasks: { orderBy: { dueDate: 'asc' }, take: 10 },

@@ -12,7 +12,9 @@ if (!process.env.JWT_SECRET) {
 }
 
 const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN ?? '7d';
+// Access token corto: si lo roban (p. ej. vía XSS en localStorage) vale máximo 1 hora.
+// La sesión larga vive en el refresh token HttpOnly con revocación en DB (lib/session.ts).
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN ?? '1h';
 
 export interface AuthUser {
   id: string;
@@ -108,12 +110,44 @@ export function unauthorized() {
 }
 
 /**
+ * 403 para usuarios autenticados sin permiso (p. ej. CLIENT en rutas internas).
+ * Debe ser 403 y no 401: el cliente interpreta 401 como sesión expirada y cierra sesión.
+ */
+export function forbidden() {
+  return Response.json({ message: 'No tienes permiso para acceder a esta sección' }, { status: 403 });
+}
+
+/**
  * True for every role except CANDIDATE. Self-registered portal candidates share a tenant with
  * ATS staff/clients, so every internal (non-portal) route MUST reject CANDIDATE explicitly —
  * tenantId scoping alone does not separate them. Use as: `if (!isStaffRole(user.role)) return unauthorized();`
  */
 export function isStaffRole(role: UserRole): boolean {
   return role !== 'CANDIDATE';
+}
+
+/**
+ * Roles internos de Kova (excluye CLIENT y CANDIDATE). Las herramientas operativas
+ * (CRM, agenda, tareas, reportes, etc.) contienen datos de TODOS los clientes del tenant,
+ * así que un usuario CLIENT (empresa cliente) no debe poder consultarlas.
+ * Usar como: `if (!isInternalRole(user.role)) return unauthorized();`
+ */
+export function isInternalRole(role: UserRole): boolean {
+  return role !== 'CANDIDATE' && role !== 'CLIENT';
+}
+
+/**
+ * Fragmento `where` de Prisma para queries sobre Candidate. Un usuario CLIENT solo puede
+ * ver candidatos vinculados a vacantes de SU empresa; los roles internos ven todo el tenant.
+ */
+export function candidateWhereForUser(user: AuthUser) {
+  if (user.role === 'CLIENT') {
+    return {
+      tenantId: user.tenantId,
+      vacancies: { some: { vacancy: { companyId: user.companyId ?? 'none' } } },
+    };
+  }
+  return { tenantId: user.tenantId };
 }
 
 export function companyWhereForUser(user: AuthUser) {

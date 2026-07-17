@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { createAgendaRequest } from '../../../lib/agenda-request-service';
 import { isSlotAvailable } from '../../../lib/booking-slots';
 import { generateTimeSlots, isBookableDateKey } from '../../../../../shared/schedule.js';
+import { isRateLimited } from '../../../lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,6 +31,13 @@ function validateBody(body: Record<string, unknown> | null) {
 }
 
 export async function POST(req: NextRequest) {
+  if (isRateLimited(req, 'bookings', 5, 60_000)) {
+    return Response.json(
+      { error: 'Demasiadas solicitudes seguidas. Espera un minuto e intenta de nuevo.' },
+      { status: 429, headers: CORS_HEADERS },
+    );
+  }
+
   const body = await req.json().catch(() => null);
   const error = validateBody(body);
   if (error) {

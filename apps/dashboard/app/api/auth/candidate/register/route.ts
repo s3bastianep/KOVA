@@ -1,9 +1,10 @@
 import { NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { randomBytes } from 'crypto';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
-import { signToken } from '@/lib/auth';
+import { signToken, type AuthUser } from '@/lib/auth';
+import { issueRefreshToken, refreshCookie } from '@/lib/session';
+import { isRateLimited } from '@/lib/rate-limit';
 import { getPublicTenantId } from '@/lib/public-tenant';
 import { isMockMode, upsertMockPortalCandidate, getMockPortalCandidateByEmail } from '@/lib/mock';
 import { splitFullName } from '@/lib/candidate-commercial-profile';
@@ -22,7 +23,23 @@ type RegisterBody = {
   consentimientoDatos?: boolean;
 };
 
+async function sessionResponse(authUser: AuthUser) {
+  const refresh = await issueRefreshToken(authUser);
+  return Response.json(
+    { user: authUser, accessToken: signToken(authUser) },
+    { headers: { 'Set-Cookie': refreshCookie(refresh) } },
+  );
+}
+
 export async function POST(req: NextRequest) {
+  // Registro público: cap por IP contra creación masiva de cuentas.
+  if (isRateLimited(req, 'candidate-register', 5, 60_000)) {
+    return Response.json(
+      { message: 'Demasiados registros seguidos. Espera un minuto e intenta de nuevo.' },
+      { status: 429 },
+    );
+  }
+
   const body = (await req.json().catch(() => ({}))) as RegisterBody;
 
   const nombre = String(body.nombre ?? '').trim();
@@ -88,11 +105,7 @@ export async function POST(req: NextRequest) {
         consentimientoDatos: true,
       },
     });
-    return Response.json({
-      user: authUser,
-      accessToken: signToken(authUser),
-      refreshToken: randomBytes(32).toString('hex'),
-    });
+    return sessionResponse(authUser);
   }
 
   try {
@@ -183,11 +196,7 @@ export async function POST(req: NextRequest) {
       candidateId: result.candidate.id,
     };
 
-    return Response.json({
-      user: authUser,
-      accessToken: signToken(authUser),
-      refreshToken: randomBytes(32).toString('hex'),
-    });
+    return sessionResponse(authUser);
   } catch (err) {
     console.error('[auth/candidate/register]', err);
 

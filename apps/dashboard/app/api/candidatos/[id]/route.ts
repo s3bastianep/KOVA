@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized, isStaffRole } from '../../../../lib/auth';
+import { getUserFromRequest, unauthorized, isStaffRole, candidateWhereForUser } from '../../../../lib/auth';
 import { prisma } from '../../../../lib/prisma';
 import { isMockMode, getMockCandidate, MOCK_ASSESSMENTS } from '../../../../lib/mock';
 import { mapCandidateProcessHistory } from '../../../../lib/candidate-process-history';
@@ -65,7 +65,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   }
 
   const candidate = await prisma.candidate.findFirst({
-    where: { id, tenantId: user.tenantId },
+    where: { id, ...candidateWhereForUser(user) },
     include: {
       experiences: { orderBy: { startDate: 'desc' } },
       educations: true,

@@ -50,7 +50,8 @@ export const authApi = {
 
 export function saveSession(data) {
   localStorage.setItem('kova_access_token', data.accessToken);
-  localStorage.setItem('kova_refresh_token', data.refreshToken);
+  // El refresh token ya no viaja en el body: vive en una cookie HttpOnly.
+  localStorage.removeItem('kova_refresh_token');
   localStorage.setItem('kova_user', JSON.stringify(data.user));
 }
 

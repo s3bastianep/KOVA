@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { handlePortalRoute } from '@/lib/portal-api';
+import { revokeAllRefreshTokens } from '@/lib/session';
 import { invalidateCandidateAuthCache } from '@/lib/candidate-auth';
 import { invalidatePortalCandidateCaches } from '@/lib/portal-server-cache';
 import {
@@ -181,6 +182,9 @@ export async function PATCH(req: NextRequest) {
         where: { id: user.id },
         data: { passwordHash },
       });
+
+      // Cerrar todas las sesiones abiertas: un token robado deja de servir al cambiar la clave.
+      await revokeAllRefreshTokens(user.id);
 
       invalidate(user.id, candidate.id);
       return Response.json({

@@ -1,10 +1,11 @@
 import { NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { randomBytes } from 'crypto';
 import { prisma } from '../../../../lib/prisma';
-import { signToken } from '../../../../lib/auth';
+import { signToken, type AuthUser } from '../../../../lib/auth';
+import { issueRefreshToken, refreshCookie } from '../../../../lib/session';
 import { getCandidateForUser } from '../../../../lib/candidate-auth';
 import { isMockMode, MOCK_USER, getMockPortalCandidateByEmail, verifyMockPortalPassword } from '../../../../lib/mock';
+import { isRateLimited } from '../../../../lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,7 +13,25 @@ const MAX_FAILED_ATTEMPTS = 5;
 const LOCK_DURATION_MS = 15 * 60 * 1000;
 const DEMO_PASSWORD = 'Kova2026!';
 
+/** Sesión completa: access token en el body + refresh token en cookie HttpOnly. */
+async function sessionResponse(authUser: AuthUser) {
+  const refresh = await issueRefreshToken(authUser);
+  return Response.json(
+    { user: authUser, accessToken: signToken(authUser) },
+    { headers: { 'Set-Cookie': refreshCookie(refresh) } },
+  );
+}
+
 export async function POST(req: NextRequest) {
+  // Límite por IP además del bloqueo por cuenta: frena fuerza bruta distribuida
+  // sobre muchas cuentas distintas desde una misma dirección.
+  if (isRateLimited(req, 'login', 15, 60_000)) {
+    return Response.json(
+      { message: 'Demasiados intentos. Espera un minuto e intenta de nuevo.' },
+      { status: 429 },
+    );
+  }
+
   const { email, password } = await req.json().catch(() => ({}));
 
   if (!email || !password) {
@@ -37,11 +56,7 @@ export async function POST(req: NextRequest) {
         companyId: null,
         candidateId: portalCandidate.id,
       };
-      return Response.json({
-        user: authUser,
-        accessToken: signToken(authUser),
-        refreshToken: randomBytes(32).toString('hex'),
-      });
+      return sessionResponse(authUser);
     }
 
     if (normalizedEmail !== MOCK_USER.email || password !== DEMO_PASSWORD) {
@@ -62,11 +77,7 @@ export async function POST(req: NextRequest) {
       tenantId: MOCK_USER.tenantId,
       companyId: MOCK_USER.companyId,
     };
-    return Response.json({
-      user: authUser,
-      accessToken: signToken(authUser),
-      refreshToken: randomBytes(32).toString('hex'),
-    });
+    return sessionResponse(authUser);
   }
 
   try {
@@ -124,11 +135,7 @@ export async function POST(req: NextRequest) {
         : {}),
     };
 
-    return Response.json({
-      user: authUser,
-      accessToken: signToken(authUser),
-      refreshToken: randomBytes(32).toString('hex'),
-    });
+    return sessionResponse(authUser);
   } catch (err) {
     console.error('[auth/login] DB error:', err);
     // Fail closed: a DB outage must never hand out a valid session, even a "demo" one.

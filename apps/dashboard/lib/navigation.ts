@@ -69,3 +69,11 @@ export const NAV_MAIN: NavItem[] = [
   { href: '/documentos', label: 'Documentos', icon: FileText },
   { href: '/configuracion', label: 'Configuración', icon: Settings },
 ];
+
+/** Rutas visibles para usuarios CLIENT (empresas cliente): solo lo relativo a sus procesos. */
+const CLIENT_NAV_HREFS = new Set(['/dashboard', '/procesos', '/candidatos', '/configuracion']);
+
+export function navItemsForRole(role?: string | null): NavItem[] {
+  if (role === 'CLIENT') return NAV_MAIN.filter((item) => CLIENT_NAV_HREFS.has(item.href));
+  return NAV_MAIN;
+}

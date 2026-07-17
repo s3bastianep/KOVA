@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUserFromRequest, unauthorized, isStaffRole } from '../../../lib/auth';
+import { getUserFromRequest, unauthorized, forbidden, isInternalRole } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { isMockMode, MOCK_CALENDAR } from '../../../lib/mock';
 
@@ -75,7 +75,7 @@ function mapEvent(e: {
 export async function GET(req: NextRequest) {
   const user = await getUserFromRequest(req);
   if (!user) return unauthorized();
-  if (!isStaffRole(user.role)) return unauthorized();
+  if (!isInternalRole(user.role)) return forbidden();
 
   if (isMockMode()) {
     const items = [...MOCK_CALENDAR].sort(
@@ -103,6 +103,7 @@ export async function GET(req: NextRequest) {
         vacancy: { select: { title: true } },
       },
       orderBy: { startAt: 'asc' },
+      take: 500,
     }).catch(() => []),
     prisma.followUp.findMany({
       where: {
@@ -122,6 +123,7 @@ export async function GET(req: NextRequest) {
         },
       },
       orderBy: { scheduledAt: 'asc' },
+      take: 500,
     }).catch(() => []),
   ]);
 
