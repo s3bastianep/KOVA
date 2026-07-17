@@ -34,6 +34,10 @@ type AgendaRequestDb = {
 };
 
 function agendaRequestDb(): AgendaRequestDb | null {
+  // En modo mock no hay DATABASE_URL: aunque el cliente generado tenga el modelo,
+  // cualquier query lanzaría PrismaClientInitializationError. Forzar el fallback
+  // in-memory mantiene la agenda funcional en dev sin DB (y en tests).
+  if (isMockMode()) return null;
   const client = prisma as unknown as { agendaRequest?: AgendaRequestDb };
   return client.agendaRequest ?? null;
 }
