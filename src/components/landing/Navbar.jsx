@@ -4,7 +4,6 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 const MAIN_LINKS = [
   { to: '/para-empresas', label: 'Empresas' },
   { to: '/empleo', label: 'Talento' },
-  { to: '/#metodo', label: 'Método Kova' },
   { to: '/guias', label: 'Blog' },
 ];
 
