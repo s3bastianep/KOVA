@@ -5,13 +5,27 @@ import { signToken, type AuthUser } from '../../../../lib/auth';
 import { issueRefreshToken, refreshCookie } from '../../../../lib/session';
 import { getCandidateForUser } from '../../../../lib/candidate-auth';
 import { isMockMode, MOCK_USER, getMockPortalCandidateByEmail, verifyMockPortalPassword } from '../../../../lib/mock';
-import { isRateLimited } from '../../../../lib/rate-limit';
+import { isRateLimited, isKeyRateLimited } from '../../../../lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCK_DURATION_MS = 15 * 60 * 1000;
 const DEMO_PASSWORD = 'Kova2026!';
+
+// Hash real generado al arrancar (contraseña aleatoria descartada) para gastar el mismo
+// tiempo de bcrypt cuando el correo NO existe: sin esto, la respuesta rápida delata qué
+// correos están registrados (enumeración por timing).
+const DUMMY_HASH = bcrypt.hashSync(`dummy-${Date.now()}-${Math.random()}`, 12);
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/** Espera creciente tras fallos: 0.5s, 1s, 2s, 4s (tope). Encarece el diccionario. */
+function failureDelayMs(attempts: number) {
+  return Math.min(500 * 2 ** Math.max(0, attempts - 1), 4000);
+}
 
 /** Sesión completa: access token en el body + refresh token en cookie HttpOnly. */
 async function sessionResponse(authUser: AuthUser) {
@@ -43,6 +57,15 @@ export async function POST(req: NextRequest) {
     typeof password !== 'string' || password.length > 128
   ) {
     return Response.json({ message: 'Correo o contraseña incorrectos' }, { status: 401 });
+  }
+
+  // Límite por CUENTA además del de IP: un ataque distribuido (muchas IPs contra el
+  // mismo correo) también queda frenado. In-memory: suficiente como capa extra gratuita.
+  if (isKeyRateLimited(`login-email:${String(email).toLowerCase()}`, 10, 60_000)) {
+    return Response.json(
+      { message: 'Demasiados intentos para esta cuenta. Espera un minuto e intenta de nuevo.' },
+      { status: 429 },
+    );
   }
 
   if (isMockMode()) {
@@ -99,6 +122,10 @@ export async function POST(req: NextRequest) {
       orderBy: { createdAt: 'asc' },
     });
     if (!user) {
+      // Mismo costo de bcrypt que un intento real: la duración de la respuesta no
+      // revela si el correo existe.
+      await bcrypt.compare(password, DUMMY_HASH).catch(() => false);
+      await sleep(failureDelayMs(1));
       return Response.json({ message: 'Correo o contraseña incorrectos' }, { status: 401 });
     }
 
@@ -119,6 +146,9 @@ export async function POST(req: NextRequest) {
           lockedUntil: attempts >= MAX_FAILED_ATTEMPTS ? new Date(Date.now() + LOCK_DURATION_MS) : null,
         },
       });
+      // Espera progresiva: cada fallo consecutivo responde más lento (0.5s → 4s),
+      // lo que vuelve inviable probar un diccionario aun rotando IPs.
+      await sleep(failureDelayMs(attempts));
       return Response.json({ message: 'Correo o contraseña incorrectos' }, { status: 401 });
     }
 

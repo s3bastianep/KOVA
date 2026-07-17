@@ -16,7 +16,15 @@ function clientIp(req: NextRequest): string {
 }
 
 export function isRateLimited(req: NextRequest, key: string, limit: number, windowMs: number): boolean {
-  const bucketKey = `${key}:${clientIp(req)}`;
+  return isKeyRateLimited(`${key}:${clientIp(req)}`, limit, windowMs);
+}
+
+/**
+ * Variante sin IP: limita por una clave arbitraria (p. ej. el correo en login),
+ * de modo que un ataque distribuido desde muchas IPs contra la misma cuenta
+ * también quede frenado. Mismo trade-off in-memory que isRateLimited.
+ */
+export function isKeyRateLimited(bucketKey: string, limit: number, windowMs: number): boolean {
   const now = Date.now();
   const hits = (buckets.get(bucketKey) ?? []).filter((t) => now - t < windowMs);
   if (hits.length >= limit) {
