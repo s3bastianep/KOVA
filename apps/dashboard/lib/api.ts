@@ -300,6 +300,32 @@ export const portalApi = {
     }
     return res.blob();
   },
+  cuenta: () =>
+    apiFetch<{
+      email: string;
+      firstName: string;
+      lastName: string;
+      nombre: string;
+      profileHref: string;
+    }>('/portal/cuenta'),
+  updateCuenta: async (body: {
+    action: 'email' | 'password';
+    currentPassword: string;
+    newEmail?: string;
+    newPassword?: string;
+  }) => {
+    const res = await apiFetch<{
+      ok: boolean;
+      action: 'email' | 'password';
+      email?: string;
+      message: string;
+    }>('/portal/cuenta', {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    });
+    portalCacheInvalidate('portal:');
+    return res;
+  },
 };
 
 export const dashboardApi = {
