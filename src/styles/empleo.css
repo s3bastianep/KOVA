@@ -437,18 +437,22 @@
   flex: none;
 }
 
+/* Mismo patrón que la tarjeta del Kova Score: etiqueta arriba, dato en lima. */
 .kova-empleo .emp-float--stat strong {
   display: block;
-  font-size: 13px;
+  font-size: 10.5px;
   font-weight: 700;
-  color: #f5f1e8;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(245, 241, 232, 0.62);
 }
 
 .kova-empleo .emp-float--stat span {
   display: block;
-  font-size: 11px;
-  color: rgba(245, 241, 232, 0.55);
-  margin-top: 1px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #d8f24c;
+  margin-top: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {

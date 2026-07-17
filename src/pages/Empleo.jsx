@@ -228,8 +228,8 @@ export default function Empleo() {
                 </svg>
               </span>
               <div>
-                <strong>+47% este mes</strong>
-                <span>Visibilidad del perfil</span>
+                <strong>Visibilidad del perfil</strong>
+                <span>+47% este mes</span>
               </div>
             </div>
           </div>
