@@ -475,13 +475,6 @@ export default function Empleo() {
             <a href="#top" className="kh-footer__brand">
               kova<span>.</span>
             </a>
-            <nav className="kh-footer__nav" aria-label="Pie de página">
-              <Link to="/para-empresas">Empresas</Link>
-              <a href="#beneficios">Beneficios</a>
-              <Link to="/guias">Blog</Link>
-              <Link to="/registro">Crear perfil</Link>
-              <Link to="/login">Entrar</Link>
-            </nav>
             <p className="kh-footer__copy">© 2026 Kova</p>
           </div>
         </div>

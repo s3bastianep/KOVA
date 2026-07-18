@@ -251,8 +251,7 @@ export default function HomeDark() {
             <span>Una conexión.</span>
           </h2>
           <p>
-            Todo lo que empresas y profesionales comerciales necesitan para encontrarse
-            mejor.
+            Redefinimos cómo el talento comercial y las grandes empresas se encuentran.
           </p>
         </div>
 
@@ -266,27 +265,13 @@ export default function HomeDark() {
             </span>
             <span className="kd-door__body">
               <span className="kd-door__tag">01 · Empresas</span>
-              <h3>Contrata con más contexto</h3>
-              <p>Encuentra talento alineado con la forma de vender de tu empresa.</p>
+              <h3>Contrata para generar resultados</h3>
+              <p>
+                Antes de recomendar un profesional, entendemos tu negocio, tu proceso
+                comercial y el perfil que realmente necesita tu empresa para crecer.
+              </p>
               <span className="kd-door__link">
-                Conocer más <i aria-hidden>→</i>
-              </span>
-            </span>
-          </Link>
-
-          <Link className="kd-door" to="/empleo">
-            <span className="kd-door__icon">
-              <svg viewBox="0 0 24 24" aria-hidden>
-                <circle cx="12" cy="8" r="3.6" />
-                <path d="M5.5 20c.8-3.6 3.4-5.4 6.5-5.4s5.7 1.8 6.5 5.4" />
-              </svg>
-            </span>
-            <span className="kd-door__body">
-              <span className="kd-door__tag">02 · Talento</span>
-              <h3>Encuentra dónde crecer</h3>
-              <p>Haz visible tu experiencia y conecta con oportunidades que tienen sentido.</p>
-              <span className="kd-door__link">
-                Ver oportunidades <i aria-hidden>→</i>
+                Conoce cómo lo hacemos <i aria-hidden>→</i>
               </span>
             </span>
           </Link>
@@ -299,16 +284,41 @@ export default function HomeDark() {
               </svg>
             </span>
             <span className="kd-door__body">
-              <span className="kd-door__tag">03 · Método</span>
-              <h3>Alineación antes de entrevistar</h3>
-              <p>Leemos negocio, cultura y forma de trabajar antes de recomendar a alguien.</p>
+              <span className="kd-door__tag">02 · Empresas</span>
+              <h3>Mucho más que un currículo</h3>
+              <p>
+                Evaluamos habilidades, personalidad, motivaciones, cultura y objetivos
+                para identificar profesionales con una verdadera alineación con tu
+                organización.
+              </p>
               <span className="kd-door__link">
-                Así funciona <i aria-hidden>→</i>
+                Descubrir el método <i aria-hidden>→</i>
               </span>
             </span>
           </a>
 
-          <Link className="kd-door kd-door--lime" to="/registro">
+          <Link className="kd-door" to="/registro">
+            <span className="kd-door__icon">
+              <svg viewBox="0 0 24 24" aria-hidden>
+                <circle cx="12" cy="8" r="3.6" />
+                <path d="M5.5 20c.8-3.6 3.4-5.4 6.5-5.4s5.7 1.8 6.5 5.4" />
+              </svg>
+            </span>
+            <span className="kd-door__body">
+              <span className="kd-door__tag">03 · Profesionales</span>
+              <h3>Tu experiencia merece una evaluación más completa</h3>
+              <p>
+                No nos quedamos con tu hoja de vida. Entendemos tus habilidades, tu forma
+                de trabajar y tus objetivos para conectarte con empresas donde realmente
+                puedas aportar valor.
+              </p>
+              <span className="kd-door__link">
+                Crear mi perfil <i aria-hidden>→</i>
+              </span>
+            </span>
+          </Link>
+
+          <Link className="kd-door kd-door--lime" to="/empleo">
             <span className="kd-door__icon">
               <svg viewBox="0 0 24 24" aria-hidden>
                 <rect x="6" y="3" width="12" height="18" rx="2" />
@@ -316,11 +326,14 @@ export default function HomeDark() {
               </svg>
             </span>
             <span className="kd-door__body">
-              <span className="kd-door__tag">04 · Vacantes</span>
-              <h3>Todo el universo comercial</h3>
-              <p>Roles en ventas, cuentas, operaciones y liderazgo comercial.</p>
+              <span className="kd-door__tag">04 · Profesionales</span>
+              <h3>Crece donde realmente puedas destacar</h3>
+              <p>
+                Conecta con empresas que buscan profesionales alineados con su cultura,
+                su forma de vender y sus objetivos de negocio.
+              </p>
               <span className="kd-door__link">
-                Crear mi perfil <i aria-hidden>→</i>
+                Explorar oportunidades <i aria-hidden>→</i>
               </span>
             </span>
           </Link>
@@ -404,9 +417,6 @@ export default function HomeDark() {
         </div>
         <div className="kd-method-close" data-reveal>
           <p>Convertimos esa información en un perfil de éxito específico para cada organización.</p>
-          <a className="kd-btn kd-btn--ink" href="#alineacion">
-            Descubre el método Kova <i aria-hidden>→</i>
-          </a>
         </div>
       </section>
 
@@ -437,7 +447,7 @@ export default function HomeDark() {
               <span className="kd-score-num">94</span>
               <i>%</i>
             </p>
-            <p className="kd-dashboard__caption">Ejemplo ilustrativo de alineación</p>
+            <p className="kd-dashboard__reco">Perfil altamente recomendado</p>
             <ul className="kd-dashboard__bars">
               {PANEL_BARS.map((bar) => (
                 <li key={bar.label} className="kd-bar" style={{ '--w': `${bar.value}%` }}>
@@ -485,8 +495,7 @@ export default function HomeDark() {
         <div className="kd-final-inner" data-reveal>
           <p className="kd-final-eyebrow">Dos caminos. Un criterio.</p>
           <h2 id="kd-final-title">
-            El talento correcto necesita el{' '}
-            <span>entorno correcto</span>.
+            El talento <span>correcto</span> necesita el entorno <span>correcto</span>.
           </h2>
           <p>
             Cuando una empresa encuentra a la persona adecuada y un profesional encuentra
@@ -507,7 +516,6 @@ export default function HomeDark() {
         <Link className="kd-brand" to="/">
           kova<span>.</span>
         </Link>
-        <p>Especialistas en talento comercial.</p>
         <p>© {new Date().getFullYear()} Kova</p>
       </footer>
     </main>
