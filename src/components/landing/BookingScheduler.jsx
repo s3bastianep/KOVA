@@ -10,6 +10,8 @@ import {
   addDaysToDateKey,
   bogotaNowParts,
   bogotaTodayDate,
+  dateKeyToLocalDate,
+  findNextBookableDateKey,
   isBookableDateKey,
   localDateToKey,
 } from '@/lib/schedule';
@@ -27,6 +29,11 @@ function bookingDayLabel(date, activeModifiers = {}) {
   return `Seleccionar ${human}`;
 }
 
+function initialBookableDate() {
+  const key = findNextBookableDateKey();
+  return key ? dateKeyToLocalDate(key) : null;
+}
+
 export default function BookingScheduler({ alternateContact = null }) {
   const todayKey = useMemo(() => bogotaNowParts().dateKey, []);
   const today = useMemo(() => bogotaTodayDate(), [todayKey]);
@@ -39,7 +46,7 @@ export default function BookingScheduler({ alternateContact = null }) {
     [todayKey],
   );
 
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(initialBookableDate);
   const [selectedTime, setSelectedTime] = useState(null);
   const [slots, setSlots] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
@@ -84,6 +91,14 @@ export default function BookingScheduler({ alternateContact = null }) {
           setSlots([]);
           return;
         }
+        // Si el día elegido ya no tiene cupos (p. ej. hoy tarde), saltar al próximo con horarios.
+        if (nextSlots.length === 0) {
+          const nextKey = findNextBookableDateKey(addDaysToDateKey(selectedDateKey, 1));
+          if (nextKey && nextKey !== selectedDateKey) {
+            setSelectedDate(dateKeyToLocalDate(nextKey));
+            return;
+          }
+        }
         setSlots(nextSlots);
       })
       .finally(() => {
@@ -94,6 +109,20 @@ export default function BookingScheduler({ alternateContact = null }) {
       cancelled = true;
     };
   }, [selectedDateKey]);
+
+  const goToNextOpenDay = () => {
+    const from = selectedDateKey
+      ? addDaysToDateKey(selectedDateKey, 1)
+      : bogotaNowParts().dateKey;
+    const nextKey = findNextBookableDateKey(from);
+    if (!nextKey) {
+      setError('No hay más días disponibles en el calendario. Escríbenos por WhatsApp.');
+      return;
+    }
+    setSelectedDate(dateKeyToLocalDate(nextKey));
+    setSelectedTime(null);
+    setError('');
+  };
 
   const handleSelectDate = (day) => {
     if (!day || !isSelectableDay(day)) return;
@@ -144,14 +173,15 @@ export default function BookingScheduler({ alternateContact = null }) {
         <div className="kv-booking-success-icon">
           <Check strokeWidth={2.5} aria-hidden />
         </div>
-        <h2 className="font-display">Solicitud enviada</h2>
+        <h2 className="font-display">Cita apartada</h2>
         <p className="kv-booking-success-date capitalize">
           {format(new Date(`${confirmed.date}T12:00:00`), "EEEE d 'de' MMMM", { locale: es })}
           {' · '}
           {confirmed.time}
         </p>
         <p className="kv-booking-success-note">
-          Revisaremos tu solicitud y te confirmaremos por correo. Un consultor de Kova te acompañará en la sesión.
+          Tu horario quedó reservado. Nos contactaremos contigo pronto por correo o WhatsApp
+          para confirmar los detalles de la asesoría.
         </p>
       </div>
     );
@@ -169,7 +199,7 @@ export default function BookingScheduler({ alternateContact = null }) {
             </p>
           </div>
           <div className="kv-booking-step-pills font-mono" aria-hidden>
-            <span className={step === 'schedule' ? 'is-active' : ''}>1. Fecha</span>
+            <span className={step === 'schedule' ? 'is-active' : ''}>1. Fecha y hora</span>
             <span className={step === 'details' ? 'is-active' : ''}>2. Datos</span>
           </div>
         </div>
@@ -209,7 +239,7 @@ export default function BookingScheduler({ alternateContact = null }) {
               {selectedDate ? (
                 <>
                   <p className="kv-booking-panel-label font-mono capitalize">
-                    {format(selectedDate, 'EEEE d MMM', { locale: es })}
+                    Seleccione una hora · {format(selectedDate, 'EEEE d MMM', { locale: es })}
                   </p>
                   {loadingSlots ? (
                     <div className="kv-booking-loading">
@@ -261,7 +291,20 @@ export default function BookingScheduler({ alternateContact = null }) {
                       )}
                     </>
                   ) : (
-                    <p className="kv-booking-empty">Sin horarios. Prueba otro día laboral.</p>
+                    <div className="kv-booking-empty-block">
+                      <p className="kv-booking-empty">
+                        {selectedDateKey === todayKey
+                          ? 'Hoy ya no hay horarios disponibles (9:00–17:00, hora Colombia).'
+                          : 'Este día ya no tiene horarios libres.'}
+                      </p>
+                      <button
+                        type="button"
+                        className="kv-btn-solid kv-booking-continue"
+                        onClick={goToNextOpenDay}
+                      >
+                        Ver próximo día disponible
+                      </button>
+                    </div>
                   )}
                 </>
               ) : (
@@ -379,9 +422,9 @@ export default function BookingScheduler({ alternateContact = null }) {
             id="booking-submit"
             disabled={submitting}
             className="kv-btn-solid kv-booking-submit"
-            aria-label="Enviar solicitud de consultoría"
+            aria-label="Apartar esta cita"
           >
-            {submitting ? 'Enviando...' : 'Enviar solicitud'}
+            {submitting ? 'Apartando cita...' : 'Apartar esta cita'}
           </button>
         </form>
       )}
@@ -389,10 +432,8 @@ export default function BookingScheduler({ alternateContact = null }) {
       {alternateContact && step === 'schedule' && (
         <div className="kv-booking-footer font-mono">
           ¿Prefieres escribirnos?{' '}
-          <a href={`tel:${alternateContact.phoneTel}`}>{alternateContact.phoneDisplay}</a>
-          {' · '}
-          <a href={alternateContact.whatsAppUrl} target="_blank" rel="noopener noreferrer">
-            WhatsApp
+          <a href={alternateContact.emailMailto || `mailto:${alternateContact.emailDisplay}`}>
+            {alternateContact.emailDisplay}
           </a>
         </div>
       )}

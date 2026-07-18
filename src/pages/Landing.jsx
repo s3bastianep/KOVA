@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useMotionValue, useSpring } from 'framer-motion';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useLandingPremiumMotion } from '@/hooks/useLandingPremiumMotion';
 import CandidateSearchMorph from '@/components/landing/CandidateSearchMorph';
+import { CONTACT_BOOKING_PATH, buildContactMailto } from '@/lib/contact';
 import '@/styles/landing-home-plain.css';
 import '@/styles/landing-home-premium.css';
-
-const WHATSAPP_NUMERO = '573000000000';
 
 const DIMS = [
   { label: 'Compatibilidad comercial', pct: 94, color: '#c5de4e' },
@@ -221,6 +220,7 @@ function CalcSlider({ label, value, display, min, max, step, onChange, minLabel,
 }
 
 export default function Landing() {
+  const navigate = useNavigate();
   usePageMeta({
     title: 'Contrata talento comercial alineado con tu estrategia de ventas',
     description:
@@ -324,17 +324,22 @@ export default function Landing() {
 
   const goToCalendar = () => {
     if (!validateForm()) return;
-    window.location.assign('/contacto#agendar');
+    navigate(CONTACT_BOOKING_PATH);
   };
 
-  const sendWhatsApp = () => {
+  const sendEmail = () => {
     if (!validateForm()) return;
-    const txt = `Hola Kova, soy ${form.nombre.trim() || '...'}${
+    const body = `Hola Kova, soy ${form.nombre.trim() || '...'}${
       form.cargo.trim() ? `, ${form.cargo.trim()}` : ''
     }${
       form.empresa.trim() ? ` de ${form.empresa.trim()}` : ''
-    }. Quiero hablar de mi próxima contratación.${form.msg.trim() ? ` ${form.msg.trim()}` : ''}`;
-    window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(txt)}`, '_blank');
+    }.${form.tel.trim() ? ` Tel: ${form.tel.trim()}.` : ''} Quiero hablar de mi próxima contratación.${
+      form.msg.trim() ? ` ${form.msg.trim()}` : ''
+    }`;
+    window.location.href = buildContactMailto({
+      subject: 'Asesoría comercial Kova',
+      body,
+    });
   };
 
   return (
@@ -1068,8 +1073,8 @@ export default function Landing() {
             <button type="button" className="kh-btn kh-btn--lime" onClick={goToCalendar}>
               Quiero hablar con un especialista
             </button>
-            <button type="button" className="kh-btn kh-btn--wa" onClick={sendWhatsApp}>
-              Prefiero hablar por WhatsApp
+            <button type="button" className="kh-btn kh-btn--wa" onClick={sendEmail}>
+              Prefiero escribir por correo
             </button>
             <p className="kh-form__note">
               Te responderemos lo antes posible para coordinar la asesoría.
@@ -1089,20 +1094,18 @@ export default function Landing() {
         </div>
       </footer>
 
-      <a
+      <Link
         className="kh-wa-float"
-        href={`https://wa.me/${WHATSAPP_NUMERO}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Escríbenos por WhatsApp"
+        to={CONTACT_BOOKING_PATH}
+        aria-label="Agenda una asesoría"
       >
         <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden focusable="false">
           <path
             fill="currentColor"
-            d="M16.003 3.2c-7.06 0-12.8 5.74-12.8 12.8 0 2.257.59 4.46 1.71 6.402L3.2 28.8l6.57-1.723a12.74 12.74 0 006.233 1.588h.005c7.06 0 12.8-5.74 12.8-12.8s-5.74-12.8-12.805-12.665zM16.01 26.49h-.004a10.63 10.63 0 01-5.42-1.486l-.389-.231-4.028 1.057 1.075-3.928-.253-.403a10.6 10.6 0 01-1.626-5.7c0-5.867 4.774-10.64 10.646-10.64 2.842 0 5.514 1.108 7.523 3.12a10.57 10.57 0 013.117 7.526c-.003 5.867-4.777 10.638-10.644 10.638zm5.834-7.968c-.32-.16-1.892-.933-2.185-1.04-.293-.107-.507-.16-.72.16-.213.32-.826 1.04-1.013 1.253-.187.213-.373.24-.693.08-.32-.16-1.35-.498-2.571-1.587-.95-.848-1.592-1.895-1.779-2.215-.187-.32-.02-.493.14-.652.144-.143.32-.373.48-.56.16-.187.213-.32.32-.533.107-.213.053-.4-.027-.56-.08-.16-.72-1.735-.986-2.375-.26-.624-.524-.539-.72-.549l-.613-.011c-.213 0-.56.08-.853.4-.293.32-1.12 1.093-1.12 2.667 0 1.573 1.146 3.093 1.306 3.307.16.213 2.253 3.44 5.46 4.827.763.33 1.36.527 1.824.674.767.244 1.464.21 2.016.127.615-.092 1.892-.773 2.159-1.52.267-.747.267-1.387.187-1.52-.08-.133-.293-.213-.613-.373z"
+            d="M8 6h16a2 2 0 012 2v16a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2zm2 4v2h12v-2H10zm0 5v2h12v-2H10zm0 5v2h8v-2h-8z"
           />
         </svg>
-      </a>
+      </Link>
     </div>
   );
 }

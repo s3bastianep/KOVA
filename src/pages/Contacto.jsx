@@ -1,11 +1,8 @@
 import '@/styles/contacto-kova.css';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { MessageCircle } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import { usePageMeta } from '@/hooks/usePageMeta';
-
-const PHONE_DISPLAY = '+57 300 000 0000';
-const PHONE_TEL = '+573000000000';
-const WHATSAPP_URL = 'https://wa.me/573000000000';
+import { CONTACT_EMAIL, CONTACT_MAILTO } from '@/lib/contact';
 
 const BookingScheduler = lazy(() => import('@/components/landing/BookingScheduler'));
 
@@ -48,9 +45,8 @@ function BookingMount() {
         <Suspense fallback={<div className="kv-booking-loading" aria-busy="true" aria-label="Cargando calendario" />}>
           <BookingScheduler
             alternateContact={{
-              phoneDisplay: PHONE_DISPLAY,
-              phoneTel: PHONE_TEL,
-              whatsAppUrl: WHATSAPP_URL,
+              emailDisplay: CONTACT_EMAIL,
+              emailMailto: CONTACT_MAILTO,
             }}
           />
         </Suspense>
@@ -109,11 +105,11 @@ export default function Contacto() {
                 </li>
               ))}
             </ol>
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="kc-whatsapp">
-              <MessageCircle aria-hidden />
+            <a href={CONTACT_MAILTO} className="kc-whatsapp">
+              <Mail aria-hidden />
               <span>
                 <strong>¿Prefieres escribirnos?</strong>
-                <span>{PHONE_DISPLAY} · WhatsApp</span>
+                <span>{CONTACT_EMAIL}</span>
               </span>
             </a>
           </aside>

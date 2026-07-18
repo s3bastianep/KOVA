@@ -1,7 +1,9 @@
 import {
   SCHEDULE,
+  addDaysToDateKey as addDaysToDateKeyBogota,
   bogotaNowParts,
   filterBookedSlots,
+  findNextBookableDateKey,
   formatDateKey,
   formatDateKeyFromParts,
   generateTimeSlots,
@@ -12,11 +14,17 @@ export {
   SCHEDULE,
   bogotaNowParts,
   filterBookedSlots,
+  findNextBookableDateKey,
   formatDateKey,
   formatDateKeyFromParts,
   generateTimeSlots,
   isBookableDateKey,
 };
+
+/** Prefer Bogotá calendar math (same as the API) over the browser local TZ. */
+export function addDaysToDateKey(dateKey, days) {
+  return addDaysToDateKeyBogota(dateKey, days);
+}
 
 export function dateKeyToLocalDate(dateKey) {
   const [y, m, d] = dateKey.split('-').map(Number);
@@ -25,12 +33,6 @@ export function dateKeyToLocalDate(dateKey) {
 
 export function localDateToKey(date) {
   return formatDateKeyFromParts(date.getFullYear(), date.getMonth() + 1, date.getDate());
-}
-
-export function addDaysToDateKey(dateKey, days) {
-  const next = dateKeyToLocalDate(dateKey);
-  next.setDate(next.getDate() + days);
-  return formatDateKeyFromParts(next.getFullYear(), next.getMonth() + 1, next.getDate());
 }
 
 export function bogotaTodayDate() {

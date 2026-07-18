@@ -21,6 +21,7 @@
 html {
   scrollbar-gutter: stable;
   background: #0d0f0f;
+  scroll-padding-top: 88px;
 }
 
 body {

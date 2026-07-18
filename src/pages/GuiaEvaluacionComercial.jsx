@@ -268,7 +268,7 @@ export default function GuiaEvaluacionComercial() {
           primaryLabel="Contáctenos"
           primaryTo="/contacto"
           secondaryLabel="Ver cómo funciona Kova"
-          secondaryTo="/#proceso"
+          secondaryTo="/#metodo"
         />
 
     </GuiaPageLayout>

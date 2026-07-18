@@ -52,7 +52,7 @@ function weekdayFromDateKey(dateKey) {
   return js === 0 ? 7 : js;
 }
 
-function addDaysToDateKey(dateKey, days) {
+export function addDaysToDateKey(dateKey, days) {
   const base = new Date(`${dateKey}T12:00:00${SCHEDULE.utcOffset}`);
   base.setUTCDate(base.getUTCDate() + days);
   const parts = new Intl.DateTimeFormat('en-CA', {
@@ -63,6 +63,16 @@ function addDaysToDateKey(dateKey, days) {
   }).formatToParts(base);
   const get = (type) => parts.find((p) => p.type === type)?.value ?? '';
   return `${get('year')}-${get('month')}-${get('day')}`;
+}
+
+/** Primer día laborable (desde fromDateKey) que aún tiene al menos un slot libre teórico. */
+export function findNextBookableDateKey(fromDateKey) {
+  const start = fromDateKey || bogotaNowParts().dateKey;
+  for (let i = 0; i <= SCHEDULE.daysAhead; i += 1) {
+    const key = addDaysToDateKey(start, i);
+    if (generateTimeSlots(key).length > 0) return key;
+  }
+  return null;
 }
 
 export function isBookableDateKey(dateKey) {

@@ -44,3 +44,5 @@ data/bookings.json
 apps/dashboard/storage/
 apps/dashboard/.mock-data/
 .claude/
+.agents/
+skills-lock.json

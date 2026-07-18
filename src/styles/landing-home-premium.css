@@ -1372,7 +1372,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 /* Hero — photographic studio depth
-   !important: main.jsx loads landing-home-plain.css globally and can win
+   !important: Landing imports plain before premium so cascade order stays correct
    the cascade over this file depending on chunk order. */
 .kova-home-plain .kh-hero {
   position: relative;

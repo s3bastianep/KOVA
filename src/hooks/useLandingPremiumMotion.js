@@ -1,9 +1,4 @@
 import { useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Lenis from 'lenis';
-
-gsap.registerPlugin(ScrollTrigger);
 
 function parseCountable(text) {
   const t = String(text || '').trim();
@@ -16,6 +11,7 @@ function parseCountable(text) {
  * Cinematic boutique motion — trust over spectacle.
  * Spec: blur+fade reveals, subtle parallax, Linear-like spotlight,
  * micro button magnetism, glass depth — never bounce / typewriter / neon.
+ * GSAP + Lenis load on demand so they stay out of the initial route chunk.
  */
 export function useLandingPremiumMotion(rootSelector = '.kova-home-plain') {
   useEffect(() => {
@@ -42,6 +38,19 @@ export function useLandingPremiumMotion(rootSelector = '.kova-home-plain') {
         root.classList.remove('is-reduced-motion', 'kh-cinematic');
       };
     }
+
+    let cancelled = false;
+    let disposeMotion = () => {};
+
+    (async () => {
+      const [{ default: gsap }, { ScrollTrigger }, { default: Lenis }] = await Promise.all([
+        import('gsap'),
+        import('gsap/ScrollTrigger'),
+        import('lenis'),
+      ]);
+      if (cancelled) return;
+
+      gsap.registerPlugin(ScrollTrigger);
 
     const prefersFine = window.matchMedia('(pointer: fine)').matches;
     const cleanups = [];
@@ -462,15 +471,21 @@ export function useLandingPremiumMotion(rootSelector = '.kova-home-plain') {
     const onResize = () => ScrollTrigger.refresh();
     window.addEventListener('resize', onResize);
 
-    return () => {
+    disposeMotion = () => {
       window.removeEventListener('resize', onResize);
-      window.removeEventListener('scroll', onNavScroll);
-      nav?.classList.remove('is-scrolled');
       cleanups.forEach((fn) => fn());
       ctx.revert();
       gsap.ticker.remove(ticker);
       lenis.destroy();
       ScrollTrigger.getAll().forEach((t) => t.kill());
+    };
+    })();
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener('scroll', onNavScroll);
+      nav?.classList.remove('is-scrolled');
+      disposeMotion();
       document.documentElement.classList.remove('kova-home-chrome');
       root.classList.remove('kh-cinematic', 'is-reduced-motion');
     };

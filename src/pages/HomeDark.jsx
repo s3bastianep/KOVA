@@ -308,7 +308,7 @@ export default function HomeDark() {
             </span>
           </a>
 
-          <Link className="kd-door kd-door--lime" to="/empleo">
+          <Link className="kd-door kd-door--lime" to="/registro">
             <span className="kd-door__icon">
               <svg viewBox="0 0 24 24" aria-hidden>
                 <rect x="6" y="3" width="12" height="18" rx="2" />
@@ -320,7 +320,7 @@ export default function HomeDark() {
               <h3>Todo el universo comercial</h3>
               <p>Roles en ventas, cuentas, operaciones y liderazgo comercial.</p>
               <span className="kd-door__link">
-                Explorar vacantes <i aria-hidden>→</i>
+                Crear mi perfil <i aria-hidden>→</i>
               </span>
             </span>
           </Link>
@@ -481,14 +481,19 @@ export default function HomeDark() {
 
       {/* 06 · CIERRE EMOCIONAL */}
       <section className="kd-final" id="contacto" aria-labelledby="kd-final-title">
+        <div className="kd-final-glow" aria-hidden />
         <div className="kd-final-inner" data-reveal>
-          <h2 id="kd-final-title">El talento correcto necesita el entorno correcto.</h2>
+          <p className="kd-final-eyebrow">Dos caminos. Un criterio.</p>
+          <h2 id="kd-final-title">
+            El talento correcto necesita el{' '}
+            <span>entorno correcto</span>.
+          </h2>
           <p>
             Cuando una empresa encuentra a la persona adecuada y un profesional encuentra
             dónde desarrollar su potencial, ambos crecen.
           </p>
           <div className="kd-final-actions">
-            <Link className="kd-btn kd-btn--ink" to="/para-empresas">
+            <Link className="kd-btn kd-btn--lime" to="/para-empresas">
               Quiero construir mi equipo
             </Link>
             <Link className="kd-btn kd-btn--ghost-ink" to="/empleo">
