@@ -16,7 +16,9 @@ import {
   normalizeCvText,
   parseSpanishMonthToken,
   toLineArray,
+  formatWorkDescription,
 } from './cv-text-pipeline';
+import { suggestSkillsFromText } from './candidate-skills';
 
 export const CV_MAX_BYTES = 5 * 1024 * 1024;
 
@@ -41,6 +43,8 @@ export type CvExtractionSuggestions = {
   historialLaboral?: WorkHistoryEntry[];
   formacion?: EducationEntry[];
   idiomas?: LanguageEntry[];
+  /** Skills detected in CV text (catalog matches). */
+  herramientas?: string[];
 };
 
 export type CvExtractionResult = {
@@ -161,6 +165,8 @@ export function normalizeWorkHistoryEntry(entry: WorkHistoryEntry): WorkHistoryE
     if (!descripcion) descripcion = empresa;
     empresa = '';
   }
+
+  descripcion = formatWorkDescription(descripcion);
 
   return { ...entry, cargo, empresa, descripcion };
 }
@@ -673,7 +679,7 @@ function extractWorkHistory(lines: string[]): WorkHistoryEntry[] {
     entry.fechaInicio = current.fechaInicio ?? '';
     entry.fechaFin = current.fechaFin;
     entry.trabajoActual = Boolean(current.trabajoActual);
-    entry.descripcion = descLines.join(' ').trim().slice(0, 500);
+    entry.descripcion = formatWorkDescription(descLines.join('\n'), 1200);
     const normalized = normalizeWorkHistoryEntry(entry);
     if (
       normalized.cargo ||
@@ -1205,6 +1211,10 @@ export function extractCvFromText(text: string, fileName = 'cv.pdf'): CvExtracti
   const idiomas = extractLanguages(lines);
   const nivelRol = inferRoleLevel(normalized) ?? inferRoleLevel(historialLaboral[0]?.cargo ?? '');
   const anios = estimateYears(historialLaboral);
+  const workCorpus = historialLaboral
+    .map((e) => [e.cargo, e.empresa, e.descripcion].filter(Boolean).join(' '))
+    .join('\n');
+  const herramientas = suggestSkillsFromText(`${normalized}\n${workCorpus}`, 8);
 
   const suggestions: CvExtractionSuggestions = {
     nombre: contact.nombre,
@@ -1216,6 +1226,7 @@ export function extractCvFromText(text: string, fileName = 'cv.pdf'): CvExtracti
     historialLaboral: historialLaboral.length ? historialLaboral : undefined,
     formacion: formacion.length ? formacion : undefined,
     idiomas: idiomas.length ? idiomas : undefined,
+    herramientas: herramientas.length ? herramientas : undefined,
   };
 
   const reviewFields = buildReviewFields(suggestions);

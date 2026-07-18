@@ -53,18 +53,19 @@ export function PortalOnboardingCvAnalyzing({
             </div>
           ) : (
             <div className="ob-build__ring-wrap">
-              <PortalOnboardingProgressRing percent={displayProgress} size={88} />
+              <PortalOnboardingProgressRing percent={displayProgress} size={96} />
+              <p className="ob-build__ring-caption">Completado</p>
             </div>
           )}
           <div className="ob-build__hero-text">
-            {complete ? <p className="ob-build__eyebrow">Proceso completado</p> : null}
+            {complete ? <p className="ob-build__eyebrow">Listo para revisar</p> : null}
             <h2 className="ob-build__title">
-              {complete ? '¡Perfil estructurado!' : `${activeLabel}…`}
+              {complete ? 'Datos listos para confirmar' : `${activeLabel}…`}
             </h2>
             <p className="ob-build__sub">
               {complete
-                ? 'Hemos organizado tu trayectoria para hacer el mejor matching comercial.'
-                : 'Estamos organizando tu trayectoria para el matching comercial.'}
+                ? 'Organizamos tu CV. En el siguiente paso confirmas que todo esté bien.'
+                : 'Estamos leyendo tu hoja de vida. No cierres esta ventana.'}
             </p>
           </div>
         </div>

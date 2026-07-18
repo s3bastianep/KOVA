@@ -2,6 +2,7 @@ import type { CommercialProfile } from './candidate-commercial-profile';
 import type { CvExtractionResult } from './cv-extract';
 import { applyCvSuggestions, normalizeEducation, normalizeWorkHistory } from './cv-extract';
 import { isCertificationComplete } from './commercial-profile-builder';
+import { MAX_PORTAL_SKILLS } from './candidate-skills';
 
 export type OnboardingStep =
   | 'welcome'
@@ -116,16 +117,21 @@ export function applyFullCvExtraction(
     next = { ...next, formacion: normalizeEducation([...existing, ...additions]) };
   }
 
+  // Pre-fill up to MAX skills from CV when the profile still has none.
+  if (!(profile.herramientas?.length) && s.herramientas?.length) {
+    next = { ...next, herramientas: s.herramientas.slice(0, MAX_PORTAL_SKILLS) };
+  }
+
   return next;
 }
 
 export const CV_ANALYSIS_STEPS = [
-  'Extrayendo experiencia',
+  'Leyendo experiencia',
   'Leyendo formación',
   'Detectando habilidades',
-  'Extrayendo idiomas',
+  'Leyendo idiomas',
   'Detectando empresas',
-  'Organizando información',
+  'Organizando tu perfil',
 ] as const;
 
 export type SmartQuestion = {

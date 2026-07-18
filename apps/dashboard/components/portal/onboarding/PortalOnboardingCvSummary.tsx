@@ -110,7 +110,6 @@ export function PortalOnboardingCvSummary({
     { label: 'Experiencia laboral', done: counts.experiencias > 0, section: 'experiencia' },
     { label: 'Formación académica', done: counts.estudios > 0, section: 'educacion' },
     { label: 'Idiomas', done: counts.idiomas > 0, section: 'idiomas' },
-    { label: 'Certificaciones', done: counts.certificaciones > 0, section: 'certificaciones' },
   ];
 
   const pending = pendingItems(profile);
@@ -228,6 +227,7 @@ export function PortalOnboardingCvSummary({
           <aside className="ob-cv-summary__aside">
             <div className="ob-cv-summary__ring-card">
               <PortalOnboardingProgressRing percent={percent} size={112} />
+              <p className="ob-cv-summary__ring-caption">Completado</p>
               <p className="ob-cv-summary__encourage">
                 <strong>¡Vas muy bien!</strong> Tu perfil ya tiene lo esencial para empezar a
                 conectar con oportunidades.
@@ -268,7 +268,8 @@ export function PortalOnboardingCvSummary({
                 <section className="ob-panel ob-panel--pending">
                   <h2 className="ob-panel__sidebar-title">Información pendiente</h2>
                   <p className="ob-panel__pending-note">
-                    Completa estos datos en los próximos pasos para mejorar tu compatibilidad.
+                    Puedes completarlos o editarlos antes de finalizar. No hay más preguntas
+                    después de este paso.
                   </p>
                   <ul className="ob-pending-list">
                     {pending.map((label) => (

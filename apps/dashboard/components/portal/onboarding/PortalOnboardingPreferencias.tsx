@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { Check, Languages, Loader2 } from 'lucide-react';
 import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
+import { suggestIndustriesFromProfile } from '@/lib/candidate-industries';
 import {
   PREFERENCIAS_BLOCK_LABELS,
   SALARY_SLIDER_LABELS,
@@ -12,6 +13,7 @@ import {
 import { LANGUAGE_LEVEL_OPTIONS } from '@/lib/commercial-profile-builder';
 import { microFeedbackForPrefStep } from '@/lib/portal-onboarding-unified';
 import { PortalOnboardingStepHero } from './PortalOnboardingStepHero';
+import { PortalIndustryPicker } from './PortalIndustryPicker';
 
 type Props = {
   firstName: string;
@@ -29,6 +31,8 @@ type Props = {
   /** Free-text value typed after checking an "Otra"/"Otro" option, so what the candidate actually
    * sells or does in that "other" case gets captured instead of the bare placeholder word. */
   onCustomOptionText?: (stepId: string, placeholder: string, text: string) => void;
+  /** Replace the full selection list for tag-picker steps (industrias, etc.). */
+  onSetAnswers?: (stepId: string, values: string[]) => void;
 };
 
 const OTHER_OPTION = /^otr[oa]$/i;
@@ -47,9 +51,14 @@ export function PortalOnboardingPreferencias({
   onSkip,
   onAutoAdvance,
   onCustomOptionText,
+  onSetAnswers,
 }: Props) {
   const activeSteps = useMemo(() => getActiveSteps(profile), [profile]);
   const currentStep = activeSteps[stepIndex] as PreferenciasWizardStep | undefined;
+  const industryCvSuggestions = useMemo(
+    () => suggestIndustriesFromProfile(profile, 6),
+    [profile],
+  );
 
   if (!currentStep) {
     return (
@@ -181,6 +190,13 @@ export function PortalOnboardingPreferencias({
             ),
           )}
         </div>
+      ) : currentStep.kind === 'tag-picker' && currentStep.id === 'industrias' ? (
+        <PortalIndustryPicker
+          selected={selected.slice(0, currentStep.maxSelections ?? 3)}
+          max={currentStep.maxSelections ?? 3}
+          cvSuggestions={industryCvSuggestions}
+          onChange={(values) => onSetAnswers?.(currentStep.id, values)}
+        />
       ) : (
         <div className="portal-onboarding-chip-list">
           {currentStep.options.map((option) => {

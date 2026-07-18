@@ -13,11 +13,10 @@ import type { OnboardingStep } from '@/lib/portal-onboarding';
  */
 
 const PHASE_MESSAGES: Record<number, string> = {
-  0: 'Construyamos tu perfil profesional. Te guío en cada paso.',
-  1: 'Revisa la información de tu CV. Tú confirmas cada dato.',
-  2: 'Definamos tu perfil comercial. Esto determina con qué empresas te conectamos.',
-  3: 'Unos detalles más para afinar tu compatibilidad.',
-  4: 'Perfil completo. Ya estás visible para las empresas.',
+  0: 'Sube tu CV y lo organizamos por ti.',
+  1: 'Revisa que los datos estén bien. Tú confirmas.',
+  2: 'Unas preferencias cortas para avisarte de vacantes que te encajan.',
+  3: 'Listo. Activa tu perfil y empieza a recibir matches.',
 };
 
 /**
@@ -31,22 +30,22 @@ export function guideMessageForStep(
 ): string | undefined {
   switch (step) {
     case 'welcome':
-      return 'Construyamos tu perfil profesional. Te guío en cada paso.';
+      return 'Vamos a crear tu perfil comercial. Te acompaño paso a paso.';
     case 'cv_upload':
-      return 'Sube tu hoja de vida y yo extraigo tu experiencia. Sin formularios largos.';
+      return 'Sube tu hoja de vida. Extraemos la información automáticamente.';
     case 'cv_analyzing':
-      return 'Estoy organizando tu trayectoria. Dame un momento.';
+      return 'Estoy organizando tu experiencia. Un momento…';
     case 'review_hub':
     case 'cv_review':
-      return 'Revisa lo que leí de tu CV. Tú confirmas cada dato.';
+      return 'Abre cada sección y revisa los datos. Solo así se marca como revisado.';
     case 'preferencias':
-      if (prefBlock === 'vendes') return 'Lo clave: cómo vendes. Aquí se define tu compatibilidad con cada empresa.';
-      if (prefBlock === 'cierras') return 'Cómo cierras y negocias. Esto perfila tu estilo comercial.';
-      return 'Cuéntame qué buscas. Con esto sé a qué empresas conectarte.';
+      if (prefBlock === 'vendes') return 'Cómo vendes: esto define tu compatibilidad con cada vacante.';
+      if (prefBlock === 'cierras') return 'Tus condiciones: salario, viaje y disponibilidad.';
+      return 'Qué buscas: así sabemos a qué vacantes avisarte.';
     case 'cv_summary':
-      return 'Este es tu perfil comercial. Revísalo antes de activarlo.';
+      return 'Así quedó tu perfil. Si todo está bien, actívalo.';
     case 'complete':
-      return 'Perfil completo. Ya estás visible para las empresas.';
+      return 'Perfil activo. Ya puedes ver vacantes y matches.';
     default:
       return undefined;
   }

@@ -1,85 +1,91 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import { MAX_PORTAL_SKILLS, normalizeSkillName, SKILL_SUGGESTIONS } from '@/lib/candidate-skills';
-
-export { MAX_PORTAL_SKILLS };
+import {
+  MAX_PORTAL_INDUSTRIES,
+  normalizeIndustryName,
+  PORTAL_INDUSTRY_OPTIONS,
+} from '@/lib/candidate-industries';
 
 type Props = {
-  skills: string[];
-  onChange: (skills: string[]) => void;
+  selected: string[];
+  onChange: (industries: string[]) => void;
   max?: number;
-  /** Skills inferred from the CV / experience — shown first. */
   cvSuggestions?: string[];
 };
 
-export function PortalSkillPicker({
-  skills,
+export function PortalIndustryPicker({
+  selected,
   onChange,
-  max = MAX_PORTAL_SKILLS,
+  max = MAX_PORTAL_INDUSTRIES,
   cvSuggestions = [],
 }: Props) {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const atLimit = skills.length >= max;
-  const selected = useMemo(
-    () => new Set(skills.map((skill) => skill.toLowerCase())),
-    [skills],
+  const atLimit = selected.length >= max;
+  const selectedSet = useMemo(
+    () => new Set(selected.map((item) => item.toLowerCase())),
+    [selected],
   );
 
   const fromCv = useMemo(() => {
     if (atLimit) return [];
     return cvSuggestions
-      .map(normalizeSkillName)
-      .filter((skill) => skill && !selected.has(skill.toLowerCase()))
-      .filter((skill, i, arr) => arr.findIndex((s) => s.toLowerCase() === skill.toLowerCase()) === i)
+      .map(normalizeIndustryName)
+      .filter((item) => item && !selectedSet.has(item.toLowerCase()))
+      .filter((item, i, arr) => arr.findIndex((s) => s.toLowerCase() === item.toLowerCase()) === i)
       .slice(0, 6);
-  }, [atLimit, cvSuggestions, selected]);
+  }, [atLimit, cvSuggestions, selectedSet]);
 
   const fromCvSet = useMemo(() => new Set(fromCv.map((s) => s.toLowerCase())), [fromCv]);
 
-  const availableSuggestions = useMemo(
+  const available = useMemo(
     () =>
-      SKILL_SUGGESTIONS.filter(
-        (skill) => !selected.has(skill.toLowerCase()) && !fromCvSet.has(skill.toLowerCase()),
+      PORTAL_INDUSTRY_OPTIONS.filter(
+        (item) => !selectedSet.has(item.toLowerCase()) && !fromCvSet.has(item.toLowerCase()),
       ),
-    [selected, fromCvSet],
+    [selectedSet, fromCvSet],
   );
 
-  const filteredSuggestions = useMemo(() => {
+  const filtered = useMemo(() => {
     if (atLimit) return [];
     const q = query.trim().toLowerCase();
-    const pool = [...fromCv, ...availableSuggestions];
+    const pool = [...fromCv, ...available];
     if (!q) return pool.slice(0, 6);
-    return pool.filter((skill) => skill.toLowerCase().includes(q)).slice(0, 6);
-  }, [availableSuggestions, atLimit, fromCv, query]);
+    return pool.filter((item) => item.toLowerCase().includes(q)).slice(0, 6);
+  }, [available, atLimit, fromCv, query]);
 
   const morePicks = useMemo(
-    () => (atLimit ? [] : availableSuggestions.slice(0, 8)),
-    [availableSuggestions, atLimit],
+    () => (atLimit ? [] : available.filter((item) => item !== 'Otra').slice(0, 8)),
+    [available, atLimit],
   );
 
-  const addSkill = (raw: string) => {
+  const add = (raw: string) => {
     if (atLimit) return;
-    const normalized = normalizeSkillName(raw);
-    if (!normalized || selected.has(normalized.toLowerCase())) return;
-    onChange([...skills, normalized].slice(0, max));
+    const normalized = normalizeIndustryName(raw);
+    if (!normalized || selectedSet.has(normalized.toLowerCase())) return;
+    onChange([...selected, normalized].slice(0, max));
     setQuery('');
     setOpen(false);
     inputRef.current?.focus();
   };
 
-  const removeSkill = (skill: string) => {
-    onChange(skills.filter((item) => item !== skill));
+  const remove = (item: string) => {
+    onChange(selected.filter((value) => value !== item));
   };
 
   const handleSubmit = () => {
     const trimmed = query.trim();
     if (!trimmed || atLimit) return;
-    const exact = filteredSuggestions.find((item) => item.toLowerCase() === trimmed.toLowerCase());
-    addSkill(exact ?? trimmed);
+    const exact = filtered.find((item) => item.toLowerCase() === trimmed.toLowerCase());
+    if (exact) {
+      add(exact);
+      return;
+    }
+    // Free text → store as "Otra: …" so it stays useful for matching.
+    add(`Otra: ${trimmed}`);
   };
 
   return (
@@ -87,30 +93,30 @@ export function PortalSkillPicker({
       <div className="portal-onboarding-skill-picker__head">
         <p className="portal-onboarding-skill-picker__count" aria-live="polite">
           <strong>
-            {skills.length} de {max}
+            {selected.length} de {max}
           </strong>{' '}
-          habilidades
+          industrias
         </p>
         <p className="portal-onboarding-skill-picker__hint">
           {atLimit
             ? 'Llegaste al máximo. Quita una si quieres cambiar.'
             : fromCv.length > 0
               ? 'Elige hasta 3. Abajo van sugerencias según tu hoja de vida.'
-              : 'Elige hasta 3. Escribe una o toca una sugerencia.'}
+              : 'Escribe para buscar, o toca una sugerencia.'}
         </p>
       </div>
 
       <div className="portal-onboarding-skill-picker__selected-block">
-        <p className="portal-onboarding-skill-picker__block-label">Tus habilidades</p>
-        {skills.length > 0 ? (
-          <ul className="portal-onboarding-skill-picker__selected" aria-label="Habilidades agregadas">
-            {skills.map((skill) => (
-              <li key={skill} className="portal-onboarding-skill-picker__tag">
-                <span>{skill}</span>
+        <p className="portal-onboarding-skill-picker__block-label">Tus industrias</p>
+        {selected.length > 0 ? (
+          <ul className="portal-onboarding-skill-picker__selected" aria-label="Industrias elegidas">
+            {selected.map((item) => (
+              <li key={item} className="portal-onboarding-skill-picker__tag">
+                <span>{item}</span>
                 <button
                   type="button"
                   className="portal-onboarding-skill-picker__remove"
-                  onClick={() => removeSkill(skill)}
+                  onClick={() => remove(item)}
                 >
                   Quitar
                 </button>
@@ -119,21 +125,21 @@ export function PortalSkillPicker({
           </ul>
         ) : (
           <p className="portal-onboarding-skill-picker__empty">
-            Todavía no agregaste ninguna. Empieza con las sugerencias de abajo.
+            Todavía no elegiste ninguna. Empieza con las sugerencias de abajo.
           </p>
         )}
       </div>
 
       {!atLimit ? (
         <div className="portal-onboarding-skill-picker__composer">
-          <p className="portal-onboarding-skill-picker__block-label">Agregar otra</p>
+          <p className="portal-onboarding-skill-picker__block-label">Buscar industria</p>
           <div className="portal-onboarding-skill-picker__input-wrap">
             <input
               ref={inputRef}
               className="portal-onboarding-field"
               value={query}
-              placeholder="Ej. negociación, Salesforce…"
-              aria-label="Escribe una habilidad"
+              placeholder="Ej. tecnología, salud, retail…"
+              aria-label="Buscar industria"
               onChange={(e) => {
                 setQuery(e.target.value);
                 setOpen(true);
@@ -145,7 +151,7 @@ export function PortalSkillPicker({
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   e.preventDefault();
-                  if (filteredSuggestions[0]) addSkill(filteredSuggestions[0]);
+                  if (filtered[0]) add(filtered[0]);
                   else handleSubmit();
                 }
               }}
@@ -160,17 +166,17 @@ export function PortalSkillPicker({
             </button>
           </div>
 
-          {open && filteredSuggestions.length > 0 ? (
+          {open && filtered.length > 0 ? (
             <ul className="portal-onboarding-skill-picker__suggestions" role="listbox">
-              {filteredSuggestions.map((skill) => (
-                <li key={skill}>
+              {filtered.map((item) => (
+                <li key={item}>
                   <button
                     type="button"
                     className="portal-onboarding-skill-picker__suggestion"
                     onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => addSkill(skill)}
+                    onClick={() => add(item)}
                   >
-                    {skill}
+                    {item}
                   </button>
                 </li>
               ))}
@@ -183,14 +189,14 @@ export function PortalSkillPicker({
         <div className="portal-onboarding-skill-picker__quick">
           <p className="portal-onboarding-skill-picker__block-label">Según tu hoja de vida</p>
           <div className="portal-onboarding-chips portal-onboarding-chips--inline">
-            {fromCv.map((skill) => (
+            {fromCv.map((item) => (
               <button
-                key={skill}
+                key={item}
                 type="button"
                 className="portal-onboarding-chip portal-onboarding-chip--cv"
-                onClick={() => addSkill(skill)}
+                onClick={() => add(item)}
               >
-                {skill}
+                {item}
               </button>
             ))}
           </div>
@@ -200,17 +206,17 @@ export function PortalSkillPicker({
       {morePicks.length > 0 ? (
         <div className="portal-onboarding-skill-picker__quick">
           <p className="portal-onboarding-skill-picker__block-label">
-            {fromCv.length > 0 ? 'Otras sugerencias' : 'Sugerencias (toca para agregar)'}
+            {fromCv.length > 0 ? 'Otras industrias' : 'Sugerencias (toca para agregar)'}
           </p>
           <div className="portal-onboarding-chips portal-onboarding-chips--inline">
-            {morePicks.map((skill) => (
+            {morePicks.map((item) => (
               <button
-                key={skill}
+                key={item}
                 type="button"
                 className="portal-onboarding-chip"
-                onClick={() => addSkill(skill)}
+                onClick={() => add(item)}
               >
-                {skill}
+                {item}
               </button>
             ))}
           </div>

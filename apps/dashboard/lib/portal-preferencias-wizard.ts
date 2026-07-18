@@ -5,9 +5,10 @@ import {
   LANGUAGE_OPTIONS,
 } from './commercial-profile-builder';
 import { isLanguageComplete } from './commercial-profile-builder';
+import { MAX_PORTAL_INDUSTRIES, PORTAL_INDUSTRY_OPTIONS } from './candidate-industries';
 
 export type PreferenciasBlock = 'buscas' | 'vendes' | 'cierras';
-export type PreferenciasStepKind = 'chips' | 'slider' | 'idiomas-review' | 'idiomas-levels';
+export type PreferenciasStepKind = 'chips' | 'slider' | 'idiomas-review' | 'idiomas-levels' | 'tag-picker';
 
 export type PreferenciasWizardStep = {
   id: string;
@@ -17,6 +18,8 @@ export type PreferenciasWizardStep = {
   subtitle?: string;
   options: readonly string[];
   multi: boolean;
+  /** Cap for multi / tag-picker steps (e.g. industrias = 3). */
+  maxSelections?: number;
   optional?: boolean;
   skipIf?: (profile: CommercialProfile) => boolean;
   apply: (selected: string[], profile: CommercialProfile) => Partial<CommercialProfile>;
@@ -24,15 +27,15 @@ export type PreferenciasWizardStep = {
 };
 
 export const PREFERENCIAS_BLOCK_LABELS: Record<PreferenciasBlock, string> = {
-  buscas: 'El trabajo que quieres',
-  vendes: 'Tu experiencia vendiendo',
-  cierras: 'Lo que buscas en un trabajo',
+  buscas: 'Lo que buscas',
+  vendes: 'Cómo vendes',
+  cierras: 'Tus condiciones',
 };
 
 export const PREFERENCIAS_BLOCK_HINTS: Record<PreferenciasBlock, string> = {
-  buscas: 'Para mostrarte solo vacantes que te interesan',
-  vendes: 'Esto es lo que las empresas buscan al abrir una vacante comercial',
-  cierras: 'Para que el match también encaje con tus condiciones',
+  buscas: 'Para avisarte solo de vacantes que te interesan',
+  vendes: 'Así medimos tu compatibilidad con cada vacante comercial',
+  cierras: 'Salario, viaje y disponibilidad — para un match realista',
 };
 
 export const PREFERENCIAS_BLOCKS: PreferenciasBlock[] = ['buscas', 'vendes', 'cierras'];
@@ -92,7 +95,7 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
     id: 'areas-interes',
     block: 'buscas',
     title: '¿Qué tipo de trabajo estás buscando?',
-    subtitle: 'Puedes escoger varios.',
+    subtitle: 'Elige los roles que te interesan (puedes marcar varios).',
     multi: true,
     options: [
       'Ventas',
@@ -101,20 +104,17 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
       'Auxiliar servicio al cliente',
       'Director comercial',
       'Gerente comercial',
-      'Hunter',
-      'Farmer',
+      'Ejecutivo comercial',
+      'Representante de ventas',
     ],
     apply: (selected, profile) => {
       const equipo = profile.tamanoEquipo ?? '';
-      const patch: Partial<CommercialProfile> = {
+      return {
         objetivoProfesional: join(selected),
         rol: selected[0] ?? profile.rol,
         rolOtro: selected.length > 1 ? join(selected.slice(1)) : profile.rolOtro,
         nivelRol: inferNivelRol(selected, equipo) ?? profile.nivelRol,
       };
-      if (selected.some((s) => /^hunter$/i.test(s))) patch.enfoque = 'Hunter';
-      else if (selected.some((s) => /^farmer$/i.test(s))) patch.enfoque = 'Farmer';
-      return patch;
     },
     read: (p) => {
       const fromObjective = split(p.objetivoProfesional);
@@ -165,37 +165,17 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
   {
     id: 'industrias',
     block: 'buscas',
-    title: '¿En qué industrias has trabajado?',
-    subtitle: 'Selecciona todas las que apliquen.',
+    kind: 'tag-picker',
+    title: '¿En qué industrias quieres trabajar?',
+    subtitle: 'Elige hasta 3 — las que más te interesen ahora.',
     multi: true,
-    options: [
-      'Tecnología',
-      'Software / SaaS',
-      'Fintech',
-      'Construcción',
-      'Industrial',
-      'Manufactura',
-      'Salud',
-      'Farmacéutica',
-      'Consumo masivo',
-      'Alimentos y bebidas',
-      'Educación',
-      'Servicios B2B',
-      'Retail',
-      'Logística',
-      'Automotriz',
-      'Financiero / Seguros',
-      'Agro',
-      'Energía',
-      'Telecomunicaciones',
-      'Gobierno',
-      'Otra',
-    ],
+    maxSelections: MAX_PORTAL_INDUSTRIES,
+    options: [...PORTAL_INDUSTRY_OPTIONS],
     apply: (selected) => ({
-      industrias: selected,
+      industrias: selected.slice(0, MAX_PORTAL_INDUSTRIES),
       industriaPrincipal: selected[0],
     }),
-    read: (p) => p.industrias ?? [],
+    read: (p) => (p.industrias ?? []).slice(0, MAX_PORTAL_INDUSTRIES),
   },
   {
     id: 'modalidad',
@@ -252,6 +232,7 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
     id: 'tipo-venta',
     block: 'vendes',
     title: '¿Cómo es normalmente tu venta?',
+    subtitle: 'Puedes marcar estilo y enfoque (Hunter / Farmer).',
     multi: true,
     options: [
       'Venta consultiva',
@@ -262,9 +243,26 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
       'Venta por proyectos',
       'Venta recurrente',
       'Venta de alto ticket',
+      'Hunter (prospección)',
+      'Farmer (cartera)',
     ],
-    apply: (selected) => ({ tipoVenta: join(selected) }),
-    read: (p) => split(p.tipoVenta),
+    apply: (selected, profile) => {
+      const patch: Partial<CommercialProfile> = { tipoVenta: join(selected) };
+      if (selected.some((s) => /hunter/i.test(s))) patch.enfoque = 'Hunter';
+      else if (selected.some((s) => /farmer/i.test(s))) patch.enfoque = 'Farmer';
+      else if (profile.enfoque) patch.enfoque = profile.enfoque;
+      return patch;
+    },
+    read: (p) => {
+      const items = split(p.tipoVenta);
+      if (p.enfoque === 'Hunter' && !items.some((s) => /hunter/i.test(s))) {
+        items.push('Hunter (prospección)');
+      }
+      if (p.enfoque === 'Farmer' && !items.some((s) => /farmer/i.test(s))) {
+        items.push('Farmer (cartera)');
+      }
+      return items;
+    },
   },
   {
     id: 'tipo-cliente',
@@ -392,8 +390,9 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
   },
   {
     id: 'liderazgo',
-    block: 'cierras',
+    block: 'vendes',
     title: '¿Has tenido personas a cargo?',
+    subtitle: 'Cuéntanos tu experiencia liderando equipo comercial.',
     multi: false,
     options: ['No', '1-5', '6-10', '11-20', '20+'],
     apply: (selected, profile) => {
@@ -412,9 +411,9 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
   },
   {
     id: 'crm',
-    block: 'cierras',
+    block: 'vendes',
     title: '¿Qué CRM has usado?',
-    subtitle: 'Selecciona todos los que conozcas.',
+    subtitle: 'Opcional. Marca los que conozcas.',
     multi: true,
     optional: true,
     options: [
@@ -460,10 +459,11 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
     block: 'cierras',
     kind: 'idiomas-review',
     title: '¿Tus idiomas están correctos?',
-    subtitle: 'Los leímos de tu hoja de vida. Confirma o edítalos en Formación.',
+    subtitle: 'Los leímos de tu hoja de vida.',
     multi: false,
     options: ['Sí, están correctos', 'Quiero revisarlos'],
-    skipIf: (p) => !hasCompleteLanguages(p),
+    // Already confirmed in the CV review hub — skip to avoid asking twice.
+    skipIf: () => true,
     apply: () => ({}),
     read: (p) => (hasCompleteLanguages(p) ? ['Sí, están correctos'] : []),
   },
@@ -472,7 +472,7 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
     block: 'cierras',
     kind: 'chips',
     title: '¿Qué idiomas hablas?',
-    subtitle: 'Selecciona los que dominas para trabajar.',
+    subtitle: 'Solo si no los confirmaste al revisar tu CV.',
     multi: true,
     options: [...LANGUAGE_OPTIONS.filter((l) => l !== 'Otro')],
     skipIf: (p) => hasCompleteLanguages(p),
@@ -500,7 +500,7 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
   {
     id: 'viajar',
     block: 'cierras',
-    title: '¿Estás dispuesto a viajar?',
+    title: '¿Estás dispuesto a viajar por trabajo?',
     multi: false,
     options: ['Sí', 'No', 'Ocasionalmente'],
     apply: (selected) => ({ disponibilidadViajar: selected[0] }),
@@ -509,7 +509,7 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
   {
     id: 'reubicacion',
     block: 'cierras',
-    title: '¿Puedes cambiar de ciudad?',
+    title: '¿Estarías dispuesto a cambiar de ciudad?',
     multi: false,
     options: ['Sí', 'No', 'A evaluar'],
     apply: (selected) => ({ disponibilidadReubicacion: selected[0] }),

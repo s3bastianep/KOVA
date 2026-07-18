@@ -50,8 +50,10 @@ export function PortalOnboardingExitConfirm({ onCancel, onConfirm, busy }: Props
     <div className="ob-exit-confirm" role="alertdialog" aria-modal="true" aria-labelledby="ob-exit-confirm-title" aria-describedby="ob-exit-confirm-body">
       <div className="ob-exit-confirm__backdrop" onClick={onCancel} aria-hidden />
       <div className="ob-exit-confirm__card" ref={cardRef}>
-        <h2 id="ob-exit-confirm-title">¿Salir de Kova?</h2>
-        <p id="ob-exit-confirm-body">Tu progreso se guarda automáticamente, pero saldrás de la aplicación.</p>
+        <h2 id="ob-exit-confirm-title">¿Salir del registro?</h2>
+        <p id="ob-exit-confirm-body">
+          Guardamos tu progreso. Puedes volver después y continuar donde lo dejaste.
+        </p>
         <div className="ob-exit-confirm__actions">
           <button
             type="button"

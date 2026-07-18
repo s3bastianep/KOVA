@@ -1,6 +1,8 @@
 /** Normalización y conversión de texto crudo de HV (sin dependencias de Node). */
 
-const BULLET_CHARS = /^[\s•●▪▫◦‣⁃\-–—*·]+\s*/;
+const BULLET_CHARS = /^[\s•●▪▫◦‣⁃\-–—*·■□▪︎]+\s*/;
+
+const INLINE_BULLET_SPLIT = /[\u25A0\u25AA\u25AB\u25CF\u25E6\u2022\u2023\u2043●▪▫◦‣⁃■□]+/g;
 
 const SPANISH_MONTHS: Record<string, string> = {
   enero: '01',
@@ -55,7 +57,8 @@ export function normalizeCvText(raw: string): string {
   let text = raw
     .replace(/\r\n/g, '\n')
     .replace(/\u00a0/g, ' ')
-    .replace(/\u2022/g, '\n• ')
+    // Convert any bullet glyph into a real line break — never keep ■ / • inside the text.
+    .replace(INLINE_BULLET_SPLIT, '\n')
     .replace(/\u2013|\u2014/g, '-')
     .replace(/[\t\f\v]+/g, ' ');
 
@@ -110,6 +113,39 @@ export function toLineArray(text: string): string[] {
     .split('\n')
     .map((l) => l.trim())
     .filter(Boolean);
+}
+
+/**
+ * Limpia descripciones de experiencia: sin iconos/viñetas, una idea por línea,
+ * legible en el textarea del candidato.
+ */
+export function formatWorkDescription(raw: string, maxLen = 1200): string {
+  if (!raw?.trim()) return '';
+
+  const cleaned = raw
+    .replace(/\r\n/g, '\n')
+    .replace(INLINE_BULLET_SPLIT, '\n')
+    .replace(/^[ \t]*[-–—*·]+[ \t]*/gm, '')
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+
+  const lines = cleaned
+    .split(/\n+/)
+    .map((line) => line.replace(/\s+/g, ' ').trim())
+    .filter((line) => line.length > 1);
+
+  // If everything was one long paragraph without breaks, split on sentence ends
+  // that look like consecutive achievements (". " + capital letter).
+  const expanded =
+    lines.length <= 1 && cleaned.length > 180
+      ? cleaned
+          .split(/(?<=[.!?])\s+(?=[A-ZÁÉÍÓÚÑ¡¿])/)
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : lines;
+
+  return expanded.join('\n\n').slice(0, maxLen).trim();
 }
 
 export function parseSpanishMonthToken(token: string): string | null {

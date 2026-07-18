@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { Trash2 } from 'lucide-react';
 import type {
   CommercialProfile,
@@ -18,7 +19,9 @@ import {
   newLanguageEntry,
   newWorkHistoryEntry,
 } from '@/lib/commercial-profile-builder';
-import { PortalSkillPicker } from './PortalSkillPicker';
+import { formatWorkDescription } from '@/lib/cv-text-pipeline';
+import { MAX_PORTAL_SKILLS, PortalSkillPicker } from './PortalSkillPicker';
+import { suggestSkillsFromProfile } from '@/lib/candidate-skills';
 import { MonthYearPicker } from '@/components/portal/MonthYearPicker';
 
 type Props = {
@@ -136,6 +139,24 @@ function PersonalSection({ profile, onChange }: Props) {
 
 function ExperienceSection({ profile, onChange }: Props) {
   const work = profile.historialLaboral ?? [];
+  const cleanedRef = useRef(false);
+
+  // One-time cleanup when opening this screen: strip ■ bullets and split into readable lines.
+  useEffect(() => {
+    if (cleanedRef.current) return;
+    cleanedRef.current = true;
+    let changed = false;
+    const next = work.map((entry) => {
+      const cleaned = formatWorkDescription(entry.descripcion ?? '');
+      if (cleaned !== (entry.descripcion ?? '').trim()) {
+        changed = true;
+        return { ...entry, descripcion: cleaned };
+      }
+      return entry;
+    });
+    if (changed) onChange({ ...profile, historialLaboral: next });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only on mount of this section
+  }, []);
 
   const updateWork = (id: string, patch: Partial<WorkHistoryEntry>) => {
     onChange({
@@ -232,11 +253,16 @@ function ExperienceSection({ profile, onChange }: Props) {
             <label className="portal-onboarding-work-field">
               <span className="portal-onboarding-work-field__label">Qué hiciste en este cargo</span>
               <textarea
-                className="portal-onboarding-field portal-onboarding-field--textarea"
+                className="portal-onboarding-field portal-onboarding-field--textarea portal-onboarding-field--work-desc"
                 value={entry.descripcion}
-                placeholder="Describe tus responsabilidades y logros en esta empresa"
-                rows={4}
+                placeholder={
+                  'Ejemplo:\nLideré el equipo comercial en la región.\nImplementé CRM y mejoré el seguimiento de oportunidades.'
+                }
+                rows={6}
                 onChange={(e) => updateWork(entry.id, { descripcion: e.target.value })}
+                onBlur={(e) =>
+                  updateWork(entry.id, { descripcion: formatWorkDescription(e.target.value) })
+                }
               />
             </label>
           </article>
@@ -497,20 +523,17 @@ function CertificationsSection({ profile, onChange }: Props) {
 }
 
 function SkillsSection({ profile, onChange }: Props) {
-  const skills = profile.herramientas ?? [];
+  const skills = (profile.herramientas ?? []).slice(0, MAX_PORTAL_SKILLS);
+  const cvSuggestions = suggestSkillsFromProfile(profile, 8);
 
   return (
-    <div className="space-y-3">
-      <p className="portal-onboarding-section-title">Habilidades y herramientas</p>
-      <p className="portal-onboarding-muted">
-        Elige de la lista de sugerencias mientras escribes, o toca uno de los chips de abajo.
-        Cuantas más agregues, mejor te podemos ubicar en las vacantes correctas.
-      </p>
-      <PortalSkillPicker
-        skills={skills}
-        onChange={(herramientas) => onChange({ ...profile, herramientas })}
-      />
-    </div>
+    <PortalSkillPicker
+      skills={skills}
+      cvSuggestions={cvSuggestions}
+      onChange={(herramientas) =>
+        onChange({ ...profile, herramientas: herramientas.slice(0, MAX_PORTAL_SKILLS) })
+      }
+    />
   );
 }
 

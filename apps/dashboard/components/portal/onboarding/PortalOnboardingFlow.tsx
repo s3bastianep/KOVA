@@ -382,6 +382,10 @@ export function PortalOnboardingFlow({
     });
   };
 
+  const setPrefStepAnswers = (stepId: string, values: string[]) => {
+    setPrefAnswers((prev) => ({ ...prev, [stepId]: values }));
+  };
+
   const handleCustomOptionText = (stepId: string, placeholder: string, text: string) => {
     setPrefAnswers((prev) => {
       const current = prev[stepId] ?? [];
@@ -674,7 +678,12 @@ export function PortalOnboardingFlow({
               }
             }}
             continueDisabled={!canContinue}
-            continueLabel="Continuar"
+            continueLabel="Continuar a preferencias"
+            hint={
+              canContinue
+                ? undefined
+                : 'Revisa las 5 secciones (abre cada una y pulsa Guardar) para continuar.'
+            }
             busy={busy}
           />
         }
@@ -689,7 +698,6 @@ export function PortalOnboardingFlow({
             setReviewEditOrigin('review_hub');
             void saveStep('cv_review', undefined, prefStepIndex);
           }}
-          onMarkReviewed={markReviewed}
         />
         {error ? <p className="portal-onboarding-error">{error}</p> : null}
       </PortalOnboardingShell>,
@@ -710,6 +718,7 @@ export function PortalOnboardingFlow({
         footer={
           <PortalOnboardingFooter
             onBack={() => void saveStep(reviewEditOrigin)}
+            backLabel="Volver"
             onContinue={async () => {
               const nextReviewed = Array.from(
                 new Set<ReviewSectionId>([...reviewed, reviewEditSection]),
@@ -731,13 +740,7 @@ export function PortalOnboardingFlow({
                 setBusy(false);
               }
             }}
-            continueLabel={
-              reviewEditOrigin === 'cv_summary'
-                ? 'Volver al resumen del CV'
-                : reviewEditOrigin === 'preferencias'
-                  ? 'Volver a preferencias'
-                  : 'Volver al resumen'
-            }
+            continueLabel="Guardar"
             busy={busy}
           />
         }
@@ -750,9 +753,9 @@ export function PortalOnboardingFlow({
               : `Ajustar ${editSectionMeta?.label.toLowerCase() ?? 'información'}`
           }
           subtitle={
-            reviewEditSection === 'experiencia'
-              ? 'Documenta tu experiencia comercial con precisión.'
-              : 'Los cambios se reflejan en tiempo real en tu perfil.'
+            reviewEditSection === 'skills'
+              ? 'Agrega hasta 3 habilidades. Pulsa Guardar para guardar y volver, o Volver si no quieres cambiar nada.'
+              : 'Revisa o corrige los datos. Pulsa Guardar para guardar y volver, o Volver si no quieres cambiar nada.'
           }
         />
         <section className="ob-panel ob-question-panel">
@@ -779,7 +782,7 @@ export function PortalOnboardingFlow({
             onContinue={() => void goPrefNext()}
             continueDisabled={!canContinuePreferenciasStep(currentPrefStep, prefAnswers, languageLevels)}
             continueLabel={
-              prefStepIndex >= activePrefSteps.length - 1 ? 'Continuar a logros' : 'Continuar'
+              prefStepIndex >= activePrefSteps.length - 1 ? 'Ver mi perfil' : 'Continuar'
             }
             busy={busy}
           />
@@ -794,6 +797,7 @@ export function PortalOnboardingFlow({
           salaryIdx={salaryIdx}
           languageLevels={languageLevels}
           onToggle={togglePrefAnswer}
+          onSetAnswers={setPrefStepAnswers}
           onCustomOptionText={handleCustomOptionText}
           onSalaryChange={handleSalaryChange}
           onLanguageLevel={handleLanguageLevel}

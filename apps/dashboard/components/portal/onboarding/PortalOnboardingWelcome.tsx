@@ -5,7 +5,7 @@ import { formatFirstName } from '@/lib/portal-onboarding-unified';
 import { PortalOnboardingChrome } from './PortalOnboardingChrome';
 
 const WELCOME_BENEFITS = [
-  { icon: Clock, label: 'Unos 4 minutos' },
+  { icon: Clock, label: 'Unos 8 minutos' },
   { icon: BellRing, label: 'Te avisamos del match' },
   { icon: ShieldCheck, label: 'Tus datos, seguros' },
 ] as const;
@@ -31,8 +31,8 @@ export function PortalOnboardingWelcome({ firstName, minutesLeft, onStart, onSav
         <header className="ob-welcome__intro">
           <h1>Hola, {formatFirstName(firstName)}</h1>
           <p className="ob-welcome__lead">
-            Construye tu perfil una sola vez y te avisamos apenas se abra una
-            vacante hecha para ti. Sin volver a buscar.
+            Sube tu CV, confirma tus datos y dinos qué buscas. Te avisamos cuando haya una
+            vacante hecha para ti.
           </p>
         </header>
 

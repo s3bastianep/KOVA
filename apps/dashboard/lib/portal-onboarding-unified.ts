@@ -14,11 +14,10 @@ import {
 import type { OnboardingStep } from './portal-onboarding';
 
 export const ONBOARDING_JOURNEY_STEPS = [
-  { id: 'info', label: 'Tu información' },
-  { id: 'experiencia', label: 'Tu experiencia' },
-  { id: 'comercial', label: 'Perfil comercial' },
-  { id: 'habilidades', label: 'Habilidades' },
-  { id: 'listo', label: '¡Perfil listo!' },
+  { id: 'info', label: 'Tu CV' },
+  { id: 'experiencia', label: 'Revisión' },
+  { id: 'preferencias', label: 'Preferencias' },
+  { id: 'listo', label: 'Listo' },
 ] as const;
 
 export type OnboardingJourneyId = (typeof ONBOARDING_JOURNEY_STEPS)[number]['id'];
@@ -27,10 +26,9 @@ export function onboardingJourneyIndex(step: OnboardingStep): number {
   const s = normalizeOnboardingStep(step);
   if (s === 'welcome' || s === 'cv_upload' || s === 'cv_analyzing') return 0;
   if (s === 'review_hub' || s === 'cv_review') return 1;
-  if (s === 'preferencias' || s === 'evidence') return 2;
-  if (s === 'competencies') return 3;
-  // cv_summary is now the final profile reveal shown right before 'complete', not an early step.
-  if (s === 'cv_summary' || s === 'complete') return 4;
+  // Legacy evidence/competencies resume into preferencias chrome (no phantom "Habilidades" step).
+  if (s === 'preferencias' || s === 'evidence' || s === 'competencies') return 2;
+  if (s === 'cv_summary' || s === 'complete') return 3;
   return 0;
 }
 
@@ -62,11 +60,11 @@ export const ONBOARDING_MACRO_LABELS = [
   'Hoja de vida',
   'Análisis',
   'Revisión',
-  'Qué buscas',
+  'Preferencias',
   'Tu experiencia',
   'Preferencias',
-  'Tus logros',
-  'Competencias',
+  'Preferencias',
+  'Preferencias',
   'Perfil listo',
 ] as const;
 
@@ -85,10 +83,9 @@ export const REVIEW_SECTIONS: {
 }[] = [
   { id: 'personal', label: 'Información personal', required: true },
   { id: 'experiencia', label: 'Experiencia laboral', required: true },
-  { id: 'educacion', label: 'Formación académica', required: false },
-  { id: 'idiomas', label: 'Idiomas', required: false },
-  { id: 'certificaciones', label: 'Certificaciones', required: false },
-  { id: 'skills', label: 'Habilidades', required: false },
+  { id: 'educacion', label: 'Formación académica', required: true },
+  { id: 'idiomas', label: 'Idiomas', required: true },
+  { id: 'skills', label: 'Habilidades', required: true },
 ];
 
 export function normalizeOnboardingStep(step?: OnboardingStep | null): OnboardingStep {
@@ -306,18 +303,20 @@ export function transitionAfterStep(
   switch (from) {
     case 'cv_analyzing':
       return {
-        headline: 'Experiencia agregada',
-        detail: dataCount ? `+${dataCount} datos encontrados` : 'Tu trayectoria ya está organizada',
+        headline: 'Listo para revisar',
+        detail: dataCount
+          ? `Encontramos ${dataCount} datos. Ahora confirmas que estén bien.`
+          : 'Organizamos tu CV. Ahora confirmas que esté bien.',
       };
     case 'review_hub':
       return {
-        headline: 'Trayectoria confirmada',
-        detail: 'Ahora unas preguntas para saber a qué vacantes avisarte.',
+        headline: 'CV confirmado',
+        detail: 'Siguiente: unas preguntas cortas para avisarte de vacantes que te encajan.',
       };
     case 'preferencias':
       return {
-        headline: 'Preferencias registradas',
-        detail: 'Con esto ya podemos avisarte apenas se abra una vacante para ti.',
+        headline: 'Preferencias guardadas',
+        detail: 'Ya casi. Mira cómo quedó tu perfil y actívalo.',
       };
   }
   return null;
@@ -405,8 +404,9 @@ export function reviewSectionSummary(
     }
     case 'skills': {
       const items = profile.herramientas ?? [];
-      if (!items.length) return 'Sin habilidades listadas. Puedes agregarlas al editar.';
-      return items.slice(0, 4).join(' · ');
+      if (!items.length) return 'Agrega hasta 3 habilidades.';
+      const shown = items.slice(0, 3).join(' · ');
+      return `${items.length}/3 · ${shown}`;
     }
     default:
       return '';
@@ -440,7 +440,7 @@ export function canContinueFromReviewHub(
   const requiredReviewed = required.every((s) => reviewed.has(s.id));
   const hasPersonal = isReviewSectionReady('personal', profile);
   const hasExperience = isReviewSectionReady('experiencia', profile);
-  return requiredReviewed && hasPersonal && (hasExperience || reviewed.has('experiencia'));
+  return requiredReviewed && hasPersonal && hasExperience;
 }
 
 export function profileCompletenessScore(

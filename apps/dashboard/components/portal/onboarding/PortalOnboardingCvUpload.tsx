@@ -25,7 +25,7 @@ const STEPS = [
   {
     icon: FileSearch,
     title: 'Extraemos la información',
-    detail: 'De tu experiencia, formación, habilidades y logros.',
+    detail: 'Experiencia, formación, habilidades e idiomas.',
   },
   {
     icon: ListChecks,

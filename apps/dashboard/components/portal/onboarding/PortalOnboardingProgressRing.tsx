@@ -6,18 +6,21 @@ type Props = {
 };
 
 export function PortalOnboardingProgressRing({ percent, size = 88 }: Props) {
-  const stroke = 5;
+  const stroke = Math.max(4, Math.round(size * 0.055));
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
-  const clamped = Math.min(100, Math.max(0, percent));
+  const clamped = Math.min(100, Math.max(0, Math.round(percent)));
   const offset = circumference - (clamped / 100) * circumference;
-
-  const isComplete = percent >= 100;
+  const isComplete = clamped >= 100;
+  // Keep the number well inside the stroke; never compete with a long label.
+  const valueSize = Math.round(size * 0.28);
 
   return (
     <div
       className={`ob-ring${isComplete ? ' ob-ring--complete' : ''}`}
       style={{ width: size, height: size }}
+      role="img"
+      aria-label={`${clamped}% completado`}
     >
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden>
         <circle
@@ -44,8 +47,7 @@ export function PortalOnboardingProgressRing({ percent, size = 88 }: Props) {
         />
       </svg>
       <div className="ob-ring__label">
-        <strong>{percent}%</strong>
-        <span>Completado</span>
+        <strong style={{ fontSize: valueSize }}>{clamped}%</strong>
       </div>
     </div>
   );
