@@ -233,7 +233,7 @@ export function ApplyMatchWizard({
         }
         .apply-wizard-title {
           margin: 0;
-          font-family: var(--font-heading, inherit);
+          font-family: var(--font-manrope), Manrope, sans-serif;
           font-size: 0.8125rem;
           font-weight: 500;
           line-height: 1.35;

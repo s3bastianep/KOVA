@@ -45,7 +45,7 @@ export default function PrivacidadPage() {
           política definitiva de Kova.
         </div>
 
-        <h1 style={{ fontFamily: 'var(--font-sora, Sora, sans-serif)', fontSize: '1.75rem', marginBottom: '0.5rem' }}>
+        <h1 style={{ fontFamily: 'var(--font-manrope), Manrope, sans-serif', fontSize: '1.75rem', marginBottom: '0.5rem' }}>
           Política de privacidad
         </h1>
         <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '2rem' }}>

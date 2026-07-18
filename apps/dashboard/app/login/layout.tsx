@@ -7,7 +7,7 @@ export default function LoginLayout({ children }: { children: ReactNode }) {
       <style
         dangerouslySetInnerHTML={{
           __html:
-            'html,body{background:#0a0b0a!important;background-image:none!important;scrollbar-gutter:stable}',
+            'html,body{background:#0d0f0f!important;background-image:none!important;scrollbar-gutter:stable}',
         }}
       />
       {children}

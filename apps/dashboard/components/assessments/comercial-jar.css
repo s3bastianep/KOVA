@@ -59,7 +59,7 @@
 }
 
 .jar-intro-title {
-  font-family: var(--font-heading, inherit);
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 2.25rem;
   font-weight: 900;
   color: #12140f;
@@ -211,7 +211,7 @@
 }
 
 .jar-arena-title {
-  font-family: var(--font-heading, inherit);
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 2rem;
   font-weight: 900;
   color: #fff;
@@ -779,7 +779,7 @@
 }
 
 .jar-feedback-title {
-  font-family: var(--font-heading, inherit);
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 1.6rem;
   font-weight: 900;
   color: #fff;

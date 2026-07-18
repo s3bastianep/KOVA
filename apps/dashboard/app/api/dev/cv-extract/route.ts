@@ -1,8 +1,7 @@
 import { NextRequest } from 'next/server';
 import { withApiErrors } from '@/lib/api-handler';
-import { CV_MAX_BYTES } from '@/lib/cv-extract';
 import { CvFileReadError, extractCvFromFileBuffer } from '@/lib/cv-extract-server';
-import { detectCvFileFormat } from '@/lib/cv-file-formats';
+import { parseCvUploadForm } from '@/lib/cv-upload-form';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -20,29 +19,12 @@ async function handlePOST(req: NextRequest) {
     return Response.json({ message: 'Not found' }, { status: 404 });
   }
 
-  const formData = await req.formData().catch(() => null);
-  if (!formData) {
-    return Response.json({ message: 'Solicitud inválida.' }, { status: 400 });
+  const parsedForm = await parseCvUploadForm(req);
+  if (!parsedForm.ok) {
+    return Response.json({ message: parsedForm.message }, { status: parsedForm.status });
   }
 
-  const file = formData.get('file');
-  if (!file || typeof file === 'string') {
-    return Response.json({ message: 'Sube tu hoja de vida en PDF o Word.' }, { status: 400 });
-  }
-
-  const fileName = String(file.name || 'cv.pdf');
-  const mime = String(file.type || '').toLowerCase();
-  if (!detectCvFileFormat(fileName, mime)) {
-    return Response.json({ message: 'Solo aceptamos PDF, DOC o DOCX.' }, { status: 400 });
-  }
-
-  const buffer = Buffer.from(await file.arrayBuffer());
-  if (buffer.byteLength === 0) {
-    return Response.json({ message: 'El archivo está vacío.' }, { status: 400 });
-  }
-  if (buffer.byteLength > CV_MAX_BYTES) {
-    return Response.json({ message: 'El archivo no puede superar 5 MB.' }, { status: 400 });
-  }
+  const { fileName, mime, buffer } = parsedForm.file;
 
   try {
     const parsed = await extractCvFromFileBuffer(buffer, fileName, mime);

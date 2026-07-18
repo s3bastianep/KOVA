@@ -9,7 +9,16 @@ const PORT = Number(process.env.PORT) || 3000;
 
 const app = express();
 app.disable('x-powered-by');
-app.use(express.json({ limit: '32kb' }));
+
+// JSON parsing must never touch multipart uploads (CV PDF/Word) — otherwise the
+// stream is consumed/rewritten and Next's req.formData() fails with "Solicitud inválida".
+app.use((req, res, next) => {
+  const ct = String(req.headers['content-type'] || '').toLowerCase();
+  if (ct.includes('multipart/form-data') || ct.includes('application/octet-stream')) {
+    return next();
+  }
+  return express.json({ limit: '32kb' })(req, res, next);
+});
 
 // Todas las rutas de API y del dashboard viven en Next.js (apps/dashboard), incluida
 // la agenda de citas (/api/bookings, /api/availability), que persiste en Postgres.
@@ -25,19 +34,37 @@ function mountDashboardDevProxy() {
   app.use((req, res, next) => {
     if (!DASHBOARD_PROXY_ROUTE.test(req.path)) return next();
 
+    const contentType = String(req.headers['content-type'] || '').toLowerCase();
+    const isMultipart = contentType.includes('multipart/form-data');
     const headers = { ...req.headers, host: `${dashboardHost}:${dashboardPort}` };
+
+    // Hop-by-hop headers must not be forwarded; they break multipart boundaries/length.
+    delete headers.connection;
+    delete headers['keep-alive'];
+    delete headers['proxy-connection'];
+    delete headers['proxy-authenticate'];
+    delete headers['proxy-authorization'];
+    delete headers.te;
+    delete headers.trailer;
+    delete headers.upgrade;
+
     const hasParsedJsonBody =
+      !isMultipart &&
       req.body &&
       typeof req.body === 'object' &&
       req.method !== 'GET' &&
       req.method !== 'HEAD' &&
-      !Buffer.isBuffer(req.body);
+      !Buffer.isBuffer(req.body) &&
+      Object.keys(req.body).length > 0;
 
     let bodyBuffer = null;
     if (hasParsedJsonBody) {
       bodyBuffer = Buffer.from(JSON.stringify(req.body), 'utf8');
       headers['content-type'] = headers['content-type'] ?? 'application/json';
       headers['content-length'] = String(bodyBuffer.length);
+      delete headers['transfer-encoding'];
+    } else if (isMultipart) {
+      // Keep original content-type (with boundary) and content-length; pipe raw bytes.
       delete headers['transfer-encoding'];
     }
 

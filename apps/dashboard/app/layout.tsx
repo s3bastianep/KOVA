@@ -1,35 +1,13 @@
 import type { Metadata } from 'next';
-import { Hanken_Grotesk, Instrument_Serif, Space_Mono } from 'next/font/google';
+import { Manrope } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 
-// Mismas fuentes que la landing home: Hanken Grotesk + Space Mono + Instrument Serif.
-const hanken = Hanken_Grotesk({
+/** Tipografía única de marca en todo Kova (landing + dashboard + portal). */
+const manrope = Manrope({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-inter',
-  display: 'swap',
-});
-
-const sora = Hanken_Grotesk({
-  subsets: ['latin'],
-  weight: ['600', '700', '800'],
-  variable: '--font-sora',
-  display: 'swap',
-});
-
-const spaceMono = Space_Mono({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  variable: '--font-mono',
-  display: 'swap',
-});
-
-const instrumentSerif = Instrument_Serif({
-  subsets: ['latin'],
-  weight: ['400'],
-  style: ['normal', 'italic'],
-  variable: '--font-serif',
+  weight: ['300', '400', '500', '600', '700', '800'],
+  variable: '--font-manrope',
   display: 'swap',
 });
 
@@ -40,10 +18,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="es"
-      className={`${hanken.variable} ${sora.variable} ${spaceMono.variable} ${instrumentSerif.variable}`}
-    >
+    <html lang="es" className={`${manrope.variable} ${manrope.className}`}>
       <body>
         <Providers>{children}</Providers>
       </body>

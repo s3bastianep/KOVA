@@ -72,12 +72,21 @@ export function normalizeCvText(raw: string): string {
     }
 
     const prev = merged[merged.length - 1];
+    // Never glue a name/header line onto contact rows (email, phone, urls) or section titles —
+    // PDFs often put the name on its own line and the email right below in lowercase.
+    const looksLikeContactOrSection =
+      /@|https?:\/\//i.test(line) ||
+      /\d{3,}[\s.-]?\d{3,}/.test(line) ||
+      /^(experiencia|formaci[oó]n|educaci[oó]n|idiomas?|habilidades|perfil|resumen|contacto|datos)\b/i.test(
+        line,
+      );
     const continues =
       prev &&
       prev !== '' &&
       !/[.!?:;]$/.test(prev) &&
       line.length < 90 &&
       /^[a-záéíóúñ(]/.test(line) &&
+      !looksLikeContactOrSection &&
       !/^\d{4}/.test(line) &&
       !/^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)\b/i.test(
         line,

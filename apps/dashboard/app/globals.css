@@ -41,11 +41,13 @@
   --kova-radius-sm: 12px;
   --kova-radius-lg: 22px;
 
-  /* Font tokens. --font-heading is referenced by some components (ApplyMatchWizard, assessments)
-     that were written against the landing's variable naming; define it here so those headings
-     resolve to Sora like everything else instead of silently falling back to the body font. */
-  --font-heading: var(--font-sora), 'Sora', 'Inter', sans-serif;
-  --font-body: var(--font-inter), 'Inter', system-ui, sans-serif;
+  /* Tipografía única — Manrope (--font-manrope lo inyecta next/font en layout) */
+  --font-inter: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --font-sora: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --font-heading: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --font-body: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
 }
 
 html {
@@ -66,7 +68,7 @@ html.portal-onboarding-immersive body {
 }
 
 body {
-  font-family: var(--font-inter), 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
   background-color: var(--kova-surface);
   background-image:
     radial-gradient(900px 480px at 0% -5%, rgba(51, 65, 196, 0.07), transparent 55%),
@@ -78,7 +80,7 @@ body {
 }
 
 .font-heading {
-  font-family: var(--font-sora), var(--font-inter), 'Sora', 'Inter', sans-serif;
+  font-family: var(--font-manrope);
   letter-spacing: -0.03em;
 }
 
@@ -100,7 +102,7 @@ body {
 }
 
 .kova-portal-title {
-  font-family: var(--font-sora), 'Sora', 'Inter', sans-serif;
+  font-family: var(--font-manrope);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.15;
@@ -120,7 +122,7 @@ body {
 }
 
 .kova-portal-stat {
-  font-family: var(--font-sora), 'Sora', 'Inter', sans-serif;
+  font-family: var(--font-manrope);
   font-weight: 700;
   font-size: clamp(1.75rem, 4vw, 2.25rem);
   letter-spacing: -0.04em;
@@ -439,7 +441,7 @@ body {
   justify-content: center;
   background: var(--kova-lime);
   color: var(--kv-ink);
-  font-family: var(--font-sora), 'Sora', ui-sans-serif, sans-serif;
+  font-family: var(--font-manrope);
   font-weight: 700;
   font-size: 1rem;
   flex-shrink: 0;

@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
 
-/* Login / Registro — same design system as Home / Empleo (black + lime, Sora + Inter) */
+/* Login / Registro — same design system as Home (black + lime, Manrope) */
 
 html:has(.kv-login),
 html:has(.kv-login) body {
-  background: #050605 !important;
+  background: #0d0f0f !important;
   background-image: none !important;
   color-scheme: dark;
 }
@@ -14,12 +14,13 @@ html:has(.kv-login) {
 }
 
 .kv-login {
-  --kv-ink: #050605;
+  --kv-ink: #0d0f0f;
   --kv-paper: #f2efe7;
-  --kv-surface: #0f100e;
+  --kv-surface: #121514;
   --kv-surface-2: #161714;
   --kv-lime: #c5de4e;
-  --kv-lime-bright: #c5de4e;
+  --kv-lime-soft: #b7c95a;
+  --kv-lime-ink: #08754c;
   --kv-text: #f2efe7;
   --kv-muted: rgba(242, 239, 231, 0.55);
   --kv-body: rgba(242, 239, 231, 0.72);
@@ -27,9 +28,9 @@ html:has(.kv-login) {
   --kv-line: rgba(242, 239, 231, 0.12);
   --kv-line-strong: rgba(242, 239, 231, 0.18);
   --kv-login-input-fill: #161714;
-  --font-display: Sora, Inter, "Helvetica Neue", Arial, sans-serif;
-  --font-body: Inter, "Helvetica Neue", Arial, sans-serif;
-  --font-sans: var(--font-body);
+  --font-display: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --font-body: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: Manrope, 'Helvetica Neue', Arial, sans-serif;
   --radius: 999px;
   min-height: 100vh;
   background: var(--kv-ink);
@@ -45,10 +46,7 @@ html:has(.kv-login) {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse 45% 50% at 78% 30%, rgba(197, 222, 78, 0.07), transparent 60%),
-    radial-gradient(ellipse 40% 40% at 15% 80%, rgba(255, 255, 255, 0.03), transparent 55%),
-    var(--kv-ink);
+  background: var(--kv-ink);
 }
 
 .kv-login-nav {
@@ -220,7 +218,7 @@ html:has(.kv-login) {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: #050605;
+  background: #0d0f0f;
 }
 
 .kv-auth-mosaic__shape--zigzag {
@@ -367,7 +365,7 @@ html:has(.kv-login) {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(197, 222, 78, 0.55), transparent);
+  background: linear-gradient(90deg, transparent, rgba(197, 222, 78, 0.28), transparent);
 }
 
 .kv-login-card-head {
@@ -402,7 +400,7 @@ html:has(.kv-login) {
   color: #050605;
   margin-bottom: 1.25rem;
   animation: kv-login-success-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-  box-shadow: 0 0 0 rgba(197, 222, 78, 0.4);
+  box-shadow: none;
 }
 
 .kv-login-success-check svg {
@@ -417,12 +415,10 @@ html:has(.kv-login) {
   0% {
     transform: scale(0.7);
     opacity: 0;
-    box-shadow: 0 0 0 10px rgba(197, 222, 78, 0.16);
   }
   100% {
     transform: scale(1);
     opacity: 1;
-    box-shadow: 0 0 0 0 rgba(197, 222, 78, 0);
   }
 }
 
@@ -507,12 +503,12 @@ html:has(.kv-login) {
 }
 
 .kv-login-input-wrap:focus-within {
-  border-color: rgba(197, 222, 78, 0.55);
-  box-shadow: 0 0 0 3px rgba(197, 222, 78, 0.14);
+  border-color: rgba(197, 222, 78, 0.4);
+  box-shadow: none;
 }
 
 .kv-login-input-wrap svg {
-  color: var(--kv-lime);
+  color: var(--kv-lime-soft);
   flex-shrink: 0;
 }
 
@@ -624,13 +620,13 @@ html:has(.kv-login) {
 }
 
 .kv-login-inline-link {
-  color: var(--kv-lime);
+  color: var(--kv-lime-soft);
   text-decoration: underline;
   text-underline-offset: 0.15em;
 }
 
 .kv-login-inline-link:hover {
-  color: var(--kv-lime-bright);
+  color: var(--kv-lime);
 }
 
 .kv-login-remember input:checked {
@@ -648,8 +644,9 @@ html:has(.kv-login) {
 }
 
 .kv-login-remember input:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(197, 222, 78, 0.25);
+  outline: 2px solid var(--kv-lime-soft);
+  outline-offset: 2px;
+  box-shadow: none;
 }
 
 .kv-login-submit {
@@ -671,19 +668,21 @@ html:has(.kv-login) {
   cursor: pointer;
   background: var(--kv-lime);
   color: #050605;
-  box-shadow: 0 12px 36px rgba(197, 222, 78, 0.16);
-  transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease, opacity 0.15s ease;
+  box-shadow: none;
+  filter: none;
+  transition: transform 160ms ease, background 160ms ease, opacity 0.15s ease;
 }
 
 .kv-login-submit:hover:not(:disabled) {
-  transform: translateY(-2px);
-  background: var(--kv-lime-bright);
+  transform: translateY(-1px);
+  background: var(--kv-lime-soft);
   color: #050605;
-  box-shadow: 0 16px 42px rgba(197, 222, 78, 0.24);
+  box-shadow: none;
 }
 
 .kv-login-submit:active:not(:disabled) {
   opacity: 0.92;
+  transform: none;
 }
 
 .kv-login-submit svg {
@@ -708,13 +707,13 @@ html:has(.kv-login) {
 }
 
 .kv-login-footer a {
-  color: var(--kv-lime);
+  color: var(--kv-lime-soft);
   font-weight: 600;
   text-decoration: none;
 }
 
 .kv-login-footer a:hover {
-  color: var(--kv-lime-bright);
+  color: var(--kv-lime);
 }
 
 .kv-login-mobile-back {

@@ -12,7 +12,7 @@ const csp = [
   "frame-ancestors 'self'",
   "form-action 'self'",
   "img-src 'self' data: blob: https:",
-  // Google Fonts: la landing y el dashboard cargan Manrope/Sora vía <link> y @import.
+  // Google Fonts: landing y dashboard cargan Manrope vía <link> / next/font / @import.
   "font-src 'self' data: https://fonts.gstatic.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   `script-src 'self' 'unsafe-inline'${isProd ? '' : " 'unsafe-eval'"}`,
@@ -46,6 +46,13 @@ const nextConfig = {
   outputFileTracingRoot: path.join(__dirname),
   eslint: { ignoreDuringBuilds: true },
   serverExternalPackages: ['pdf-parse', 'pdfjs-dist', '@napi-rs/canvas', 'mammoth', 'word-extractor', 'exceljs'],
+  // HV uploads are up to 5 MB; keep headroom for multipart overhead.
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '6mb',
+    },
+    middlewareClientMaxBodySize: '6mb',
+  },
   async headers() {
     return [
       {

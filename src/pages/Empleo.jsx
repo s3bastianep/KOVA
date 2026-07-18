@@ -164,25 +164,25 @@ export default function Empleo() {
             <div className="emp-mosaic__grid">
               <img
                 className="emp-mosaic__photo emp-mosaic__photo--1"
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=500&auto=format&fit=crop"
+                src="/landing/people/pro-woman-3.jpg"
                 alt=""
                 loading="eager"
               />
               <img
                 className="emp-mosaic__photo emp-mosaic__photo--2"
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=700&auto=format&fit=crop"
+                src="/landing/people/pro-woman-1.jpg"
                 alt=""
                 loading="eager"
               />
               <img
                 className="emp-mosaic__photo emp-mosaic__photo--3"
-                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=500&auto=format&fit=crop"
+                src="/landing/people/pro-man-2.jpg"
                 alt=""
                 loading="eager"
               />
               <img
                 className="emp-mosaic__photo emp-mosaic__photo--4"
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=500&auto=format&fit=crop"
+                src="/landing/people/pro-man-1.jpg"
                 alt=""
                 loading="eager"
               />

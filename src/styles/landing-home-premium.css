@@ -1,13 +1,12 @@
 /**
- * KOVA landing — premium visual layer
- * Yellow-green accent + Sora (titles) / Inter (body)
+ * KOVA landing ? premium visual layer
+ * Yellow-green accent + Manrope (?nica tipograf?a de marca)
  * Content, structure, and functionality untouched.
  */
 
-/* Sora — display | Inter — body */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
 
-/* ── Shared yellow-green system ── */
+/* ?? Shared yellow-green system ?? */
 html.kova-home-chrome {
   --kh-gold: #c5de4e;
   --kh-gold-bright: #c5de4e;
@@ -19,8 +18,8 @@ html.kova-home-chrome {
   --kh-ink: #16140f;
   --kh-ink-body: #4a453c;
   --kh-ink-muted: #6f685c;
-  --kh-dark: #0c0b0a;
-  --kh-dark-2: #121110;
+  --kh-dark: #0d0f0f;
+  --kh-dark-2: #121514;
 
   background: var(--kh-bone);
   color-scheme: light;
@@ -32,9 +31,9 @@ html.kova-home-chrome .kova-route-shell__fallback {
   background: var(--kh-bone);
 }
 
-/* Nav — usa el estilo unificado global de landing-nav.css (oscuro + lima) */
+/* Nav ? usa el estilo unificado global de landing-nav.css (oscuro + lima) */
 
-/* ── Page tokens (defaults lean dark for hero; light bands override) ── */
+/* ?? Page tokens (defaults lean dark for hero; light bands override) ?? */
 .kova-home-plain {
   --kv-ink: #f5f1e8;
   --kv-text: #f5f1e8;
@@ -84,14 +83,14 @@ html.kova-home-chrome .kova-route-shell__fallback {
   --kv-radius-lg: 24px;
   --kv-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
-  --font-display: 'Sora', ui-sans-serif, system-ui, sans-serif;
-  --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-body);
-  --font-mono: 'Space Mono', ui-monospace, monospace;
+  --font-display: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --font-body: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: Manrope, 'Helvetica Neue', Arial, sans-serif;
   --kh-mx: 50%;
   --kh-my: 28%;
 
-  /* Type scale — Sora display / Inter body */
+  /* Type scale ? Sora display / Inter body */
   --kv-fs-hero: clamp(2.5rem, 5.2vw, 64px);
   --kv-fs-h2: clamp(1.75rem, 3.6vw, 42px);
   --kv-fs-h3: clamp(1.35rem, 2.2vw, 28px);
@@ -165,11 +164,11 @@ html.kova-home-chrome .kova-route-shell__fallback {
   }
 }
 
-/* ═══════════════════════════════════════════
-   LIGHT BANDS — blanco hueso (estudio editorial)
-   Regla: crema cálida, tinta carbón, acento contenido,
-   featured = wash suave + borde fino, resto = solo líneas.
-   ═══════════════════════════════════════════ */
+/* ???????????????????????????????????????????
+   LIGHT BANDS ? blanco hueso (estudio editorial)
+   Regla: crema c?lida, tinta carb?n, acento contenido,
+   featured = wash suave + borde fino, resto = solo l?neas.
+   ??????????????????????????????????????????? */
 .kova-home-plain .kh-trust,
 .kova-home-plain .kh-section--tight,
 .kova-home-plain #metodologia,
@@ -181,7 +180,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   --kv-muted: #4a453c;
   --kv-soft: #5c564c;
   --kv-faint: #6f685c;
-  /* Amarillo verdoso / oliva (no fluorescente) — solo bandas claras */
+  /* Amarillo verdoso / oliva (no fluorescente) ? solo bandas claras */
   --kv-lime: #08754c;
   --kv-lime-bright: #0a9b63;
   --kv-lime-deep: #065a3b;
@@ -337,7 +336,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   background: #f7f4ec;
 }
 
-/* Platform — editorial open layout, equal pillars */
+/* Platform ? editorial open layout, equal pillars */
 .kova-home-plain .kh-platform-band .kh-platform,
 .kova-home-plain .kh-section:has(.kh-platform) .kh-platform {
   border: none !important;
@@ -585,7 +584,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   }
 }
 
-/* Contacto — banda negra (antes crema) */
+/* Contacto ? banda negra (antes crema) */
 .kova-home-plain .kh-contact {
   --kv-ink: #f5f1e8;
   --kv-text: #f5f1e8;
@@ -596,7 +595,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   --kv-lime-bright: #c5de4e;
   --kv-line: rgba(255, 255, 255, 0.1);
   --kv-line-strong: rgba(255, 255, 255, 0.14);
-  background: #000000 !important;
+  background: #0d0f0f !important;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   color: #f5f1e8;
 }
@@ -696,7 +695,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   border-color: rgba(197, 222, 78, 0.65) !important;
 }
 
-/* Verde oliva sobre crema — mismo tono del “04” (no lima fluorescente) */
+/* Verde oliva sobre crema ? mismo tono del ?04? (no lima fluorescente) */
 .kova-home-plain .kh-trust .kh-accent,
 .kova-home-plain .kh-section--tight .kh-accent,
 .kova-home-plain #metodologia .kh-accent,
@@ -728,7 +727,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   box-shadow: none;
 }
 
-/* Dolores — layout de referencia: head + rail + 4 cols + footer */
+/* Dolores ? layout de referencia: head + rail + 4 cols + footer */
 .kova-home-plain .kh-dolores-band {
   background: #f7f4ec !important;
 }
@@ -1086,7 +1085,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   -webkit-text-fill-color: #08754c !important;
 }
 
-/* Light bands — CTA sólido en lima amarillo (el resto del acento va verdoso) */
+/* Light bands ? CTA s?lido en lima amarillo (el resto del acento va verdoso) */
 .kova-home-plain .kh-trust .kh-btn--lime,
 .kova-home-plain .kh-section--tight .kh-btn--lime,
 .kova-home-plain #metodologia .kh-btn--lime,
@@ -1119,7 +1118,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   color: #14120e !important;
 }
 
-/* Light secondary outline — kept distinct from solid CTA */
+/* Light secondary outline ? kept distinct from solid CTA */
 .kova-home-plain .kh-trust .kh-btn--outline,
 .kova-home-plain .kh-section--tight .kh-btn--outline,
 .kova-home-plain #metodologia .kh-btn--outline,
@@ -1141,7 +1140,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 
 /* platform grid cells styled in platform-band block above */
 
-/* Luz de cursor en claro: más tenue, sin brillo blanco fuerte */
+/* Luz de cursor en claro: m?s tenue, sin brillo blanco fuerte */
 .kova-home-plain .kh-trust .kh-card-light::after,
 .kova-home-plain .kh-section--tight .kh-card-light::after,
 .kova-home-plain #metodologia .kh-card-light::after,
@@ -1154,9 +1153,9 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 
-/* ═══════════════════════════════════════════
-   DARK BANDS — hero / calc / artifact / footer
-   ═══════════════════════════════════════════ */
+/* ???????????????????????????????????????????
+   DARK BANDS ? hero / calc / artifact / footer
+   ??????????????????????????????????????????? */
 .kova-home-plain .kh-hero,
 .kova-home-plain #calculadora,
 .kova-home-plain #metodo,
@@ -1174,7 +1173,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   color: var(--kv-text);
 }
 
-/* Case card inside dark #metodo — black panel, light text, yellow stats */
+/* Case card inside dark #metodo ? black panel, light text, yellow stats */
 .kova-home-plain #metodo .kh-case-panel,
 .kova-home-plain .kh-artifact .kh-case-panel {
   --kv-ink: #f5f1e8;
@@ -1267,7 +1266,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   letter-spacing: -0.038em;
 }
 
-/* Buttons — base + dark bands (light bands override above) */
+/* Buttons ? base + dark bands (light bands override above) */
 .kova-home-plain .kh-btn {
   border-radius: 12px;
   transition:
@@ -1279,7 +1278,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
     filter 0.22s ease;
 }
 
-/* Dark bands — previous solid lime CTA + glass outline */
+/* Dark bands ? previous solid lime CTA + glass outline */
 .kova-home-plain .kh-hero .kh-btn--lime,
 .kova-home-plain #calculadora .kh-btn--lime,
 .kova-home-plain #metodo .kh-btn--lime,
@@ -1371,14 +1370,14 @@ html.kova-home-chrome .kova-route-shell__fallback {
   filter: brightness(0.98);
 }
 
-/* Hero — photographic studio depth
+/* Hero ? photographic studio depth
    !important: Landing imports plain before premium so cascade order stays correct
    the cascade over this file depending on chunk order. */
 .kova-home-plain .kh-hero {
   position: relative;
   padding-top: clamp(72px, 10vw, 120px);
   padding-bottom: clamp(80px, 12vw, 140px);
-  background: #000000 !important;
+  background: #0d0f0f !important;
   overflow: hidden;
 }
 
@@ -1518,9 +1517,9 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 .kova-home-plain .kh-score__avatar {
-  background: linear-gradient(145deg, #c5de4e, #08754c);
+  background: #c5de4e;
   color: #16140f;
-  box-shadow: 0 0 24px -4px rgba(197, 222, 78, 0.5);
+  box-shadow: none;
 }
 
 .kova-home-plain .kh-score__badge {
@@ -1551,13 +1550,13 @@ html.kova-home-chrome .kova-route-shell__fallback {
   color: var(--kv-muted);
 }
 
-/* Calculator — dark band */
+/* Calculator ? dark band */
 .kova-home-plain #calculadora {
   background:
     radial-gradient(ellipse 55% 45% at 80% 10%, rgba(197, 222, 78, 0.16), transparent 55%),
     radial-gradient(ellipse 40% 50% at 15% 70%, rgba(255, 255, 255, 0.06), transparent 50%),
     radial-gradient(ellipse 30% 35% at 55% 40%, rgba(197, 222, 78, 0.08), transparent 60%),
-    linear-gradient(180deg, #100f0d 0%, #0c0b0a 100%);
+    linear-gradient(180deg, #0d0f0f 0%, #121514 100%);
 }
 
 .kova-home-plain .kh-costos {
@@ -1699,7 +1698,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   border: 1px solid rgba(255, 255, 255, 0.14) !important;
 }
 
-/* Range slider — visible track on dark calc card */
+/* Range slider ? visible track on dark calc card */
 .kova-home-plain #calculadora .kh-calc input[type='range'],
 .kova-home-plain .kh-calc input[type='range'] {
   -webkit-appearance: none;
@@ -1762,9 +1761,9 @@ html.kova-home-chrome .kova-route-shell__fallback {
   color: rgba(245, 241, 232, 0.55);
 }
 
-/* Method stages — light band already handles; dark defaults unused */
+/* Method stages ? light band already handles; dark defaults unused */
 
-/* Artifact — dark */
+/* Artifact ? dark */
 .kova-home-plain #metodo,
 .kova-home-plain .kh-artifact {
   background:
@@ -1898,7 +1897,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 
 /* Footer */
 .kova-home-plain .kh-footer {
-  background: #000000 !important;
+  background: #0d0f0f !important;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -1961,7 +1960,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   outline-offset: 3px;
 }
 
-/* ── Typography: Sora titles / Inter body ── */
+/* ?? Typography: Manrope ?? */
 .kova-home-plain h1,
 .kova-home-plain h2,
 .kova-home-plain h3,
@@ -2066,9 +2065,9 @@ html.kova-home-chrome .kova-navbar .kv-logo {
   letter-spacing: -0.06em;
 }
 
-/* ═══════════════════════════════════════════════════
-   Boutique refine — trust, air, subtle craft
-   ═══════════════════════════════════════════════════ */
+/* ???????????????????????????????????????????????????
+   Boutique refine ? trust, air, subtle craft
+   ??????????????????????????????????????????????????? */
 
 /* Softer elevation (no hard shadows) */
 .kova-home-plain {
@@ -2077,7 +2076,7 @@ html.kova-home-chrome .kova-navbar .kv-logo {
   --kv-shadow-lg: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 28px 56px -24px rgba(0, 0, 0, 0.5);
 }
 
-/* Nav — glass un poco más profundo al hacer scroll */
+/* Nav ? glass un poco m?s profundo al hacer scroll */
 html.kova-home-chrome .kova-navbar.kv-nav {
   transition:
     background 0.35s cubic-bezier(0.22, 1, 0.36, 1),
@@ -2097,7 +2096,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   padding-bottom: 14px;
 }
 
-/* Hero type — Sora 700 / up to 64px */
+/* Hero type ? Sora 700 / up to 64px */
 .kova-home-plain .kh-hero h1 {
   font-size: var(--kv-fs-hero) !important;
   font-weight: 700 !important;
@@ -2176,14 +2175,14 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   gap: clamp(22px, 3vw, 36px);
 }
 
-/* Dark bands — photographic studio, not flat black */
+/* Dark bands ? photographic studio, not flat black */
 .kova-home-plain #calculadora,
 .kova-home-plain #metodo,
 .kova-home-plain .kh-artifact {
   background-image:
     radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255, 255, 255, 0.03), transparent 55%),
     radial-gradient(ellipse 40% 35% at 85% 70%, rgba(197, 222, 78, 0.04), transparent 50%),
-    linear-gradient(180deg, #110f0d 0%, #0c0b0a 50%, #0e0d0b 100%);
+    linear-gradient(180deg, #0d0f0f 0%, #121514 50%, #0d0f0f 100%);
 }
 
 .kova-home-plain #calculadora::before,
@@ -2208,7 +2207,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   z-index: 1;
 }
 
-/* Buttons — 120ms, scale 1.02, depth */
+/* Buttons ? 120ms, scale 1.02, depth */
 .kova-home-plain .kh-btn {
   transition:
     transform 120ms ease,
@@ -2224,7 +2223,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   transform: scale(1.02) translateY(-1px);
 }
 
-/* Cards — lift / shadow / border light / top sheen */
+/* Cards ? lift / shadow / border light / top sheen */
 .kova-home-plain .kh-dolor,
 .kova-home-plain .kh-mock,
 .kova-home-plain .kh-calc,
@@ -2361,7 +2360,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 
 
 
-/* ── Hero particle morph: world → silhouette → profile ── */
+/* ?? Hero particle morph: world ? silhouette ? profile ?? */
 .kova-home-plain .kh-hero__collage {
   min-height: 420px;
 }
@@ -2467,7 +2466,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   }
 }
 
-/* Evaluation report card — dark glass + lime accents (matches hero) */
+/* Evaluation report card ? dark glass + lime accents (matches hero) */
 .kova-home-plain .kh-hero__collage.is-report .kh-score-shell {
   background: linear-gradient(
     145deg,
@@ -2510,10 +2509,10 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 }
 
 .kova-home-plain .kh-hero__collage.is-report .kh-score__avatar {
-  background: linear-gradient(145deg, #c5de4e, #08754c);
+  background: #c5de4e;
   color: #14120e;
   font-weight: 800;
-  box-shadow: 0 0 24px -4px rgba(197, 222, 78, 0.45);
+  box-shadow: none;
 }
 
 .kova-home-plain .kh-hero__collage.is-report .kh-score__name {
@@ -2576,7 +2575,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   color: #f5f1e8;
   box-shadow: 0 12px 28px -14px rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(16px);
-  /* Lightly kiss the score card bottom — stay clear of stats labels */
+  /* Lightly kiss the score card bottom ? stay clear of stats labels */
   right: 24px;
   bottom: 22px;
   top: auto;
@@ -2603,7 +2602,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   display: none !important;
 }
 
-/* Dashboard expand — profile docks, app chrome unfolds */
+/* Dashboard expand ? profile docks, app chrome unfolds */
 .kova-home-plain .kh-dash {
   position: absolute;
   inset: 8px 4px 8px;
@@ -3051,9 +3050,9 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   }
 }
 
-/* ═══════════════════════════════════════════════════
-   Lectura senior — tipografía más gruesa y contraste alto
-   ═══════════════════════════════════════════════════ */
+/* ???????????????????????????????????????????????????
+   Lectura senior ? tipograf?a m?s gruesa y contraste alto
+   ??????????????????????????????????????????????????? */
 .kova-home-plain {
   font-weight: 500;
   -webkit-font-smoothing: antialiased;
@@ -3164,9 +3163,9 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   font-weight: 600;
 }
 
-/* ═══════════════════════════════════════════════════
-   Cinematic system — micro-response, not spectacle
-   ═══════════════════════════════════════════════════ */
+/* ???????????????????????????????????????????????????
+   Cinematic system ? micro-response, not spectacle
+   ??????????????????????????????????????????????????? */
 
 .kova-home-plain.kh-cinematic {
   --kh-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -3227,7 +3226,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   position: relative;
 }
 
-/* Cursor spotlight — Linear soft halo */
+/* Cursor spotlight ? Linear soft halo */
 .kova-home-plain .kh-spotlight {
   position: fixed;
   inset: 0;
@@ -3264,7 +3263,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   animation-delay: -5s;
 }
 
-/* Glass depth hover — border / shadow / bg only */
+/* Glass depth hover ? border / shadow / bg only */
 .kova-home-plain .kh-card-depth {
   transition:
     border-color 0.45s var(--kh-ease-out, ease-out),
@@ -3287,7 +3286,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   background-color: rgba(255, 255, 255, 0.04);
 }
 
-/* Buttons — scale + shadow + border in 180ms */
+/* Buttons ? scale + shadow + border in 180ms */
 .kova-home-plain .kh-btn {
   transition:
     transform 180ms var(--kh-ease-out, ease-out),
@@ -3330,7 +3329,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   border-color: rgba(8, 117, 76, 0.22);
 }
 
-/* Reduced motion — everything visible, no loops */
+/* Reduced motion ? everything visible, no loops */
 @media (prefers-reduced-motion: reduce) {
   .kova-home-plain.kh-cinematic .kh-float,
   .kova-home-plain.kh-cinematic .kh-collage__photo {
@@ -3357,9 +3356,9 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   }
 }
 
-/* ═══════════════════════════════════════════
-   BODY GLASS — visible frost outside hero
-   ═══════════════════════════════════════════ */
+/* ???????????????????????????????????????????
+   BODY GLASS ? visible frost outside hero
+   ??????????????????????????????????????????? */
 
 /* Soft atmosphere so light-glass has something to blur */
 .kova-home-plain .kh-dolores-band,
@@ -3391,7 +3390,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   z-index: 1;
 }
 
-/* —— Light frost: dolores —— */
+/* ?? Light frost: dolores ?? */
 .kova-home-plain .kh-dolores-band .kh-dolor,
 .kova-home-plain .kh-section--tight .kh-dolor {
   background: rgba(255, 255, 255, 0.42) !important;
@@ -3423,7 +3422,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   -webkit-backdrop-filter: blur(20px) saturate(1.4);
 }
 
-/* —— Light frost: metodología —— */
+/* ?? Light frost: metodolog?a ?? */
 .kova-home-plain #metodologia .kh-stage-btn {
   background: rgba(255, 255, 255, 0.48) !important;
   border: 1px solid rgba(255, 255, 255, 0.7) !important;
@@ -3473,7 +3472,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
     0 16px 40px -24px rgba(20, 18, 13, 0.2);
 }
 
-/* —— Light frost: platform cells —— */
+/* ?? Light frost: platform cells ?? */
 .kova-home-plain .kh-platform-band .kh-platform__grid > div,
 .kova-home-plain .kh-section:has(.kh-platform) .kh-platform__grid > div {
   background: rgba(255, 255, 255, 0.48) !important;
@@ -3517,7 +3516,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   display: none !important;
 }
 
-/* —— Dark frost: calculadora —— */
+/* ?? Dark frost: calculadora ?? */
 .kova-home-plain #calculadora .kh-costos {
   backdrop-filter: blur(20px) saturate(1.25);
   -webkit-backdrop-filter: blur(20px) saturate(1.25);
@@ -3578,7 +3577,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   -webkit-backdrop-filter: blur(18px) saturate(1.3);
 }
 
-/* —— Dark frost: método / artifact —— */
+/* ?? Dark frost: m?todo / artifact ?? */
 .kova-home-plain #metodo .kh-mock,
 .kova-home-plain .kh-artifact .kh-mock {
   background: rgba(255, 255, 255, 0.06) !important;
@@ -3688,7 +3687,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* —— Dark frost: contacto —— */
+/* ?? Dark frost: contacto ?? */
 .kova-home-plain .kh-contact {
   background:
     radial-gradient(ellipse 50% 45% at 75% 20%, rgba(197, 222, 78, 0.1), transparent 55%),
@@ -3745,10 +3744,10 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   }
 }
 
-/* ═══════════════════════════════════════════
-   BOUTIQUE PASS — quieter craft, less SaaS
+/* ???????????????????????????????????????????
+   BOUTIQUE PASS ? quieter craft, less SaaS
    Restore: versions/lima (say "vuelve a version lima")
-   ═══════════════════════════════════════════ */
+   ??????????????????????????????????????????? */
 
 .kova-boutique {
   --kv-lime: #c5de4e;
@@ -3802,7 +3801,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   color: rgba(245, 241, 232, 0.7) !important;
 }
 
-/* CTA: solid but quieter — less neon glow */
+/* CTA: solid but quieter ? less neon glow */
 .kova-boutique .kh-hero .kh-btn--lime,
 .kova-boutique .kh-btn--lime {
   background: #c5de4e !important;
@@ -3855,7 +3854,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   color: #14120e !important;
 }
 
-/* Light bands: quieter glass → paper cards */
+/* Light bands: quieter glass ? paper cards */
 .kova-boutique .kh-dolores-band::before,
 .kova-boutique #metodologia::before,
 .kova-boutique .kh-platform-band::before {
@@ -3917,7 +3916,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   opacity: 0.7;
 }
 
-/* Metodología: frosted → solid paper */
+/* Metodolog?a: frosted ? solid paper */
 .kova-boutique #metodologia .kh-stage-btn {
   background: #fffcf7 !important;
   border: 1px solid rgba(26, 23, 18, 0.1) !important;
@@ -3983,7 +3982,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   -webkit-text-fill-color: #14120e !important;
 }
 
-/* Platform slim — timeline, no card grid */
+/* Platform slim ? timeline, no card grid */
 .kova-home-plain .kh-platform--slim .kh-platform__intro {
   max-width: 52rem;
 }
@@ -4178,7 +4177,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   box-shadow: none !important;
 }
 
-/* Método mocks: quiet */
+/* M?todo mocks: quiet */
 .kova-boutique #metodo .kh-mock,
 .kova-boutique #metodo .kh-case-panel,
 .kova-boutique #metodo .kh-method-qa__item {
@@ -4364,3 +4363,82 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   font-weight: 700;
   letter-spacing: -0.04em;
 }
+
+/* ???????????????????????????????????????????????????
+   B2B motion ? precise, quiet, no spectacle
+   ??????????????????????????????????????????????????? */
+
+.kova-home-plain.kh-cinematic .kh-float {
+  animation: none;
+}
+
+.kova-home-plain .kh-stage-panel {
+  animation: kh-b2b-panel-in 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes kh-b2b-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.kova-home-plain .kh-btn:hover {
+  transform: translateY(-1px);
+}
+
+.kova-home-plain .kh-btn:active {
+  transform: translateY(0) scale(0.985);
+}
+
+.kova-home-plain .kh-dim__fill {
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kova-home-plain .kh-score__live .kh-pill__dot {
+  animation: kh-b2b-live 1.8s ease-in-out infinite;
+}
+
+@keyframes kh-b2b-live {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.85);
+  }
+}
+
+.kova-home-plain .kh-dolor,
+.kova-home-plain .kh-perfil-card,
+.kova-home-plain .kh-guide-card {
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.kova-home-plain .kh-dolor:hover,
+.kova-home-plain .kh-perfil-card:hover,
+.kova-home-plain .kh-guide-card:hover {
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kova-home-plain .kh-stage-panel,
+  .kova-home-plain .kh-score__live .kh-pill__dot,
+  .kova-home-plain .kh-dolor,
+  .kova-home-plain .kh-perfil-card,
+  .kova-home-plain .kh-guide-card {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
+

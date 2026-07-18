@@ -52,7 +52,7 @@
 
 .ob-exit-confirm__card h2 {
   margin: 0 0 0.5rem;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 1.125rem;
   font-weight: 700;
   color: #ffffff;
@@ -97,7 +97,7 @@
   padding: 2.25rem 2rem 2rem;
   box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.55);
   color: var(--kv-paper-2);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-shell__header {
@@ -116,7 +116,7 @@
 }
 
 .portal-onboarding-shell__header h1 {
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: clamp(1.75rem, 3.5vw, 2.125rem);
   font-weight: 700;
   line-height: 1.12;
@@ -131,7 +131,7 @@
   font-size: 0.9375rem;
   line-height: 1.65;
   color: rgba(237, 239, 234, 0.78);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-time {
@@ -162,7 +162,7 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-progress-head strong {
@@ -180,7 +180,7 @@
 }
 
 .portal-onboarding-hero h1 {
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: clamp(1.75rem, 4vw, 2.25rem);
   font-weight: 700;
   margin: 0.5rem 0;
@@ -230,7 +230,7 @@
 .portal-onboarding-muted {
   font-size: 0.875rem;
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-link {
@@ -241,7 +241,7 @@
   border: none;
   cursor: pointer;
   padding: 0;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-field,
@@ -255,7 +255,7 @@
   color: #ffffff;
   padding: 0.625rem 0.75rem;
   font-size: 0.875rem;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-field::placeholder,
@@ -314,7 +314,7 @@
   font-size: 0.9375rem;
   font-weight: 600;
   color: #ffffff;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-upload-or {
@@ -338,7 +338,7 @@
   margin: 1rem 0 0;
   font-size: 0.75rem;
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-error {
@@ -346,7 +346,7 @@
   font-size: 0.875rem;
   color: #ff8a8a;
   text-align: center;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-busy {
@@ -357,7 +357,7 @@
   gap: 0.5rem;
   font-size: 0.875rem;
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-drop {
@@ -387,7 +387,7 @@
   border-radius: 999px;
   font-size: 0.9375rem;
   font-weight: 600;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   cursor: pointer;
   background: var(--kova-lime);
   color: var(--kv-ink);
@@ -427,7 +427,7 @@
 }
 
 .portal-onboarding-analyze h2 {
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 1.35rem;
   margin: 0 0 0.35rem;
   letter-spacing: -0.01em;
@@ -436,7 +436,7 @@
 
 .portal-onboarding-analyze p {
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-progress {
@@ -468,7 +468,7 @@
   gap: 0.65rem;
   font-size: 0.875rem;
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-steps li.is-done {
@@ -484,7 +484,7 @@
   border-bottom: 1px solid rgba(237, 239, 234, 0.12);
   font-size: 0.95rem;
   color: #ffffff;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-summary-item:last-child {
@@ -517,7 +517,7 @@
 
 .portal-onboarding-cv-summary__hero h1 {
   margin: 0 0 0.35rem;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 1.35rem;
   font-weight: 600;
   color: #ffffff;
@@ -529,7 +529,7 @@
   font-size: 0.9375rem;
   line-height: 1.5;
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-cv-summary__section {
@@ -549,7 +549,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-cv-summary__fields {
@@ -569,7 +569,7 @@
   margin: 0;
   font-size: 0.8125rem;
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-cv-summary__field dd {
@@ -578,7 +578,7 @@
   font-weight: 500;
   color: #ffffff;
   word-break: break-word;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-cv-summary__stats {
@@ -602,7 +602,7 @@
 }
 
 .portal-onboarding-cv-summary__stat-count {
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 1.5rem;
   font-weight: 600;
   line-height: 1;
@@ -612,7 +612,7 @@
 .portal-onboarding-cv-summary__stat-label {
   font-size: 0.8125rem;
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-cv-summary__empty {
@@ -641,7 +641,7 @@
   color: #ffffff;
   font-size: 0.8125rem;
   font-weight: 500;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-skill-picker__remove {
@@ -712,7 +712,7 @@
   padding: 0.65rem 0.75rem;
   border-radius: 0.5rem;
   font-size: 0.875rem;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   cursor: pointer;
 }
 
@@ -727,7 +727,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-review-card {
@@ -742,14 +742,14 @@
   font-weight: 600;
   margin: 0 0 0.2rem;
   color: #ffffff;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-review-card p {
   margin: 0;
   font-size: 0.875rem;
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-review-card button {
@@ -770,7 +770,7 @@
   letter-spacing: 0.14em;
   color: rgba(237, 239, 234, 0.72);
   margin: 1.5rem 0 0.75rem;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-work-card {
@@ -790,7 +790,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--kova-lime);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-work-card__head {
@@ -809,7 +809,7 @@
   color: rgba(255, 138, 138, 0.9);
   font-size: 0.75rem;
   font-weight: 600;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   cursor: pointer;
   padding: 0.2rem 0;
   white-space: nowrap;
@@ -828,13 +828,13 @@
   font-size: 0.75rem;
   font-weight: 600;
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-work-field__hint {
   font-size: 0.6875rem;
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-work-period {
@@ -850,7 +850,7 @@
   font-size: 0.75rem;
   font-weight: 600;
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-work-period__dates {
@@ -875,7 +875,7 @@
   color: var(--kova-lime);
   font-size: 0.875rem;
   font-weight: 600;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   max-width: 11rem;
 }
 
@@ -895,7 +895,7 @@
   padding: 0.35rem 0.85rem;
   font-size: 0.75rem;
   font-weight: 600;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   cursor: pointer;
   transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
   text-align: center;
@@ -968,7 +968,7 @@
   background: rgba(255, 255, 255, 0.03);
   font-size: 0.8125rem;
   font-weight: 600;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   color: #ffffff;
   cursor: pointer;
   transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
@@ -1035,12 +1035,12 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-question-title {
   margin: 0;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.3;
@@ -1053,7 +1053,7 @@
   font-size: 0.8125rem;
   line-height: 1.5;
   color: rgba(237, 239, 234, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-question-actions {
@@ -1070,7 +1070,7 @@
   color: rgba(237, 239, 234, 0.72);
   font-size: 0.75rem;
   font-weight: 600;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   cursor: pointer;
   padding: 0.15rem 0.25rem;
   text-decoration: underline;
@@ -1128,7 +1128,7 @@
   font-size: 0.875rem;
   color: rgba(237, 239, 234, 0.72);
   border-bottom: 1px solid rgba(237, 239, 234, 0.12);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-checklist li:first-child {
@@ -1190,7 +1190,7 @@
   font-weight: 500;
   color: rgba(237, 239, 234, 0.72);
   margin: 0.75rem 0 0;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 html.portal-onboarding-active .kova-sidebar nav,
@@ -1244,7 +1244,7 @@ html.portal-onboarding-active .kova-topbar {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--kova-navy-muted);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-topbar__label {
@@ -1287,7 +1287,7 @@ html.portal-onboarding-active .kova-topbar {
   text-underline-offset: 0.2em;
   cursor: pointer;
   padding: 0.25rem 0;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-topbar__exit:hover {
@@ -1304,7 +1304,7 @@ html.portal-onboarding-active .kova-topbar {
   font-weight: 500;
   color: var(--kv-ink);
   text-align: center;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-shell--flow {
@@ -1361,7 +1361,7 @@ html.portal-onboarding-active .kova-topbar {
   font-size: 0.9375rem;
   font-weight: 600;
   color: #ffffff;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-review-card p {
@@ -1416,7 +1416,7 @@ html.portal-onboarding-active .kova-topbar {
   font-weight: 600;
   cursor: pointer;
   padding: 0;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-review-card__edit {
@@ -1470,7 +1470,7 @@ html.portal-onboarding-active .kova-topbar {
 
 .portal-onboarding-salary__value {
   text-align: center;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 1.125rem;
   font-weight: 700;
   color: #ffffff;
@@ -1655,7 +1655,7 @@ html.portal-onboarding-active .kova-topbar {
 
 .portal-onboarding-complete-score__value {
   display: block;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--kova-lime);
@@ -2081,7 +2081,7 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .portal-onboarding-preview-strip__stat strong {
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 0.9375rem;
   font-weight: 700;
   color: #ffffff;
@@ -2144,7 +2144,7 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .portal-onboarding--fullscreen .portal-onboarding-question-title {
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: clamp(1.375rem, 4vw, 1.875rem);
   font-weight: 700;
   line-height: 1.2;
@@ -2303,7 +2303,7 @@ html.portal-onboarding-immersive .kova-topbar {
   background: rgba(255, 255, 255, 0.04);
   color: #ffffff;
   font-size: 0.875rem;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
 .portal-onboarding-chip-row__other-input::placeholder {
@@ -2402,7 +2402,7 @@ html.portal-onboarding-immersive .kova-topbar {
 .portal-onboarding--fullscreen .portal-onboarding-cv-summary__hero h1,
 .portal-onboarding--fullscreen .portal-onboarding-analyze h2,
 .portal-onboarding--fullscreen .portal-onboarding-exp-conv__done h2 {
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 700;
   color: #ffffff;
@@ -2566,7 +2566,7 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .portal-onboarding-welcome__title {
   margin: 0 0 0.5rem;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 700;
   line-height: 1.08;
@@ -2676,7 +2676,7 @@ html.portal-onboarding-immersive .kova-topbar {
   font-size: 0.9375rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.72);
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   animation: portal-onboarding-fade-in 0.5s ease both;
 }
 
@@ -2765,13 +2765,13 @@ html.portal-onboarding-immersive .kova-topbar {
   justify-content: center;
   font-size: 0.75rem;
   font-weight: 700;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   margin-bottom: 0.625rem;
 }
 
 .portal-onboarding-preview__name {
   margin: 0 0 0.15rem;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 0.9375rem;
   font-weight: 700;
   color: #ffffff;
@@ -2899,7 +2899,7 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .portal-onboarding-preview__stats dd {
   margin: 0;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--kv-ink);
@@ -2956,7 +2956,7 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .portal-onboarding-transition__card h2 {
   margin: 0 0 0.5rem;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
   color: #ffffff;
@@ -3017,7 +3017,7 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .portal-onboarding-complete__hero h1 {
   margin: 0 0 0.5rem;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: clamp(1.75rem, 4vw, 2.5rem);
   font-weight: 700;
   color: var(--kv-ink);
@@ -3074,7 +3074,7 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .portal-onboarding-complete__stat strong {
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 700;
   color: var(--kv-ink);
@@ -3188,7 +3188,7 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .portal-onboarding-exp-conv__done h2 {
   margin: 0 0 0.5rem;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 1.25rem;
   color: #fff;
 }
@@ -3362,8 +3362,11 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 /* CV upload step — wide two-column layout: pitch + trust note on the left, the actual dropzone
-   on the right. Reads as a considered B2B product page rather than a single centered mobile
-   card stretched across a desktop screen. */
+   on the right. Tipografía alineada a la landing (Manrope + escalas kd-*). */
+.ob-cv-upload {
+  font-family: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+}
+
 .ob-cv-upload__top {
   display: grid;
   grid-template-columns: 1fr;
@@ -3380,29 +3383,33 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .ob-cv-upload__hero h1 {
-  margin: 0 0 0.75rem;
-  font-family: var(--font-sora), 'Sora', sans-serif;
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin: 0 0 1.25rem;
+  font-family: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+  /* Mismo scale de títulos de la landing (hero / section-head) */
+  font-size: clamp(40px, 4.2vw, 62px);
   font-weight: 800;
-  line-height: 1.12;
-  letter-spacing: -0.03em;
+  line-height: 1;
+  letter-spacing: -0.04em;
   color: var(--ob-text);
+  text-wrap: balance;
 }
 
 .ob-cv-upload__accent {
-  font-family: var(--font-serif), 'Instrument Serif', Georgia, serif;
-  font-style: italic;
-  font-weight: 400;
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 800;
   color: var(--kv-lime);
-  letter-spacing: -0.01em;
+  letter-spacing: inherit;
 }
 
 .ob-cv-upload__lead {
   margin: 0;
-  font-size: 15px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.6);
-  max-width: 30rem;
+  font-family: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(245, 245, 245, 0.66);
+  max-width: 36ch;
 }
 
 .ob-cv-upload__note {
@@ -3410,14 +3417,15 @@ html.portal-onboarding-immersive .kova-topbar {
   align-items: center;
   flex-wrap: wrap;
   gap: 8px 10px;
-  margin: 1.35rem 0 0;
+  margin: 1.5rem 0 0;
   padding: 0;
   border: none;
   background: none;
   border-radius: 0;
-  font-family: var(--font-mono), 'Space Mono', ui-monospace, monospace;
-  font-size: 11px;
-  letter-spacing: 0.08em;
+  font-family: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   line-height: 1.4;
   color: var(--kv-nav-muted);
@@ -3493,23 +3501,30 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .ob-cv-upload__prompt {
   margin: 0 0 1.4rem;
+  font-family: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   line-height: 1.4;
   color: var(--ob-text);
 }
 
 .ob-cv-upload__prompt span {
   display: block;
-  margin-top: 0.2rem;
-  font-size: 13px;
+  margin-top: 0.25rem;
+  font-size: 14px;
   font-weight: 400;
+  letter-spacing: 0;
   color: var(--kv-nav-muted);
 }
 
 .ob-cv-upload__btn {
   max-width: 16rem;
-  min-height: 3rem;
+  min-height: 52px;
+  padding: 0 26px;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 700;
 }
 
 /* Staged-file confirmation — gives a rescue point between picking a file and committing to
@@ -3575,7 +3590,8 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .ob-cv-upload__hint {
   margin: 1rem 0 0;
-  font-size: 11px;
+  font-family: inherit;
+  font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.02em;
   color: var(--kv-slate);
@@ -3616,7 +3632,17 @@ html.portal-onboarding-immersive .kova-topbar {
 
   .ob-cv-upload__note {
     gap: 6px 8px;
-    font-size: 10px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+  }
+
+  .ob-cv-upload__hero h1 {
+    font-size: clamp(34px, 8vw, 44px);
+  }
+
+  .ob-cv-upload__lead {
+    font-size: 17px;
+    max-width: 100%;
   }
 
   .ob-cv-upload__note-sep {
@@ -3664,14 +3690,18 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .ob-cv-upload__step strong {
   display: block;
-  font-size: 13px;
+  font-family: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 15px;
   font-weight: 700;
+  letter-spacing: -0.01em;
   color: #ffffff;
 }
 
 .ob-cv-upload__step p {
-  margin: 0.2rem 0 0;
-  font-size: 12.5px;
+  margin: 0.25rem 0 0;
+  font-family: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
   line-height: 1.5;
   color: var(--kv-nav-muted);
 }
@@ -3683,8 +3713,9 @@ html.portal-onboarding-immersive .kova-topbar {
   margin-top: 1.25rem;
   padding-top: 1.25rem;
   border-top: 1px solid var(--ob-border);
-  font-size: 12px;
-  line-height: 1.4;
+  font-family: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
   color: var(--kv-nav-muted);
 }
 
@@ -3775,7 +3806,7 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .ob-build__title {
   margin: 0 0 0.5rem;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: clamp(1.25rem, 4vw, 1.5rem);
   font-weight: 700;
   line-height: 1.2;
@@ -3937,7 +3968,7 @@ html.portal-onboarding-immersive .kova-topbar {
   border-radius: 0.625rem;
   background: var(--kv-lime);
   color: var(--kv-ink);
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
@@ -4048,7 +4079,7 @@ html.portal-onboarding-immersive .kova-topbar {
   display: inline-flex;
   align-items: center;
   gap: 0.625rem;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-weight: 700;
   font-size: 1.125rem;
   letter-spacing: -0.02em;
@@ -4100,11 +4131,12 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .ob-stepper__count {
-  font-size: 0.6875rem;
+  font-family: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--kv-lime);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -4112,13 +4144,14 @@ html.portal-onboarding-immersive .kova-topbar {
 .ob-stepper__count::after {
   content: '·';
   margin-left: 0.5rem;
-  color: rgba(255, 255, 255, 0.28);
+  color: rgba(197, 222, 78, 0.45);
 }
 
 .ob-stepper__label {
-  font-size: 0.6875rem;
+  font-family: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--kv-lime);
   white-space: nowrap;
@@ -4254,7 +4287,7 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .ob-ring__label strong {
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 1.25rem;
   font-weight: 800;
   color: #ffffff;
@@ -4310,7 +4343,7 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .ob-cv-summary__hero-text h1 {
   margin: 0 0 0.5rem;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: clamp(1.375rem, 4vw, 1.625rem);
   font-weight: 700;
   line-height: 1.2;
@@ -4493,26 +4526,26 @@ html.portal-onboarding-immersive .kova-topbar {
   color: var(--kv-lime-hover) !important;
 }
 
-/* Primary CTA — same as login / landing */
+/* Primary CTA — same as login / landing (.kd-btn) */
 .ob-btn-solid {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.375rem;
   width: 100%;
-  min-height: 2.75rem;
-  padding: 0.625rem 1rem;
+  min-height: 52px;
+  padding: 0 26px;
   border: none;
-  border-radius: 0.625rem;
-  font-family: var(--font-sora), 'Sora', ui-sans-serif, sans-serif;
-  font-size: 0.875rem;
-  font-weight: 600;
+  border-radius: 16px;
+  font-family: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1.2;
   cursor: pointer;
   background: var(--kv-lime);
   color: var(--kv-ink);
-  transition: background-color 0.15s ease, opacity 0.15s ease;
+  transition: background-color 0.15s ease, opacity 0.15s ease, transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .ob-btn-solid:hover:not(:disabled) {
@@ -5056,7 +5089,7 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .ob-stat-chip strong {
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
   color: #ffffff;
@@ -5163,7 +5196,7 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .ob-cv-canvas__identity h2 {
   margin: 0;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 20px;
   font-weight: 600;
   line-height: 1.25;
@@ -5208,7 +5241,7 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .ob-vacancy-metrics strong {
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 15px;
   font-weight: 700;
   line-height: 1;
@@ -5312,7 +5345,7 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .ob-complete__stat strong {
   display: block;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 18px;
   font-weight: 700;
   color: #ffffff;
@@ -5482,7 +5515,7 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .ob-step-hero h1 {
   margin: 0 0 0.625rem;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: clamp(1.625rem, 4vw, 2.25rem);
   font-weight: 800;
   line-height: 1.15;
@@ -5582,7 +5615,7 @@ html.portal-onboarding-immersive .kova-topbar {
 }
 
 .ob-review-hub__ring-inner strong {
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: 0.9375rem;
   font-weight: 800;
   color: #ffffff;
@@ -5917,7 +5950,7 @@ html.portal-onboarding-immersive .kova-topbar {
 
 .ob-welcome__intro h1 {
   margin: 0 0 0.625rem;
-  font-family: var(--font-sora), 'Sora', sans-serif;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   font-size: clamp(1.75rem, 5vw, 2.25rem);
   font-weight: 700;
   line-height: 1.15;

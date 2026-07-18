@@ -45,10 +45,10 @@
   --kv-radius-lg: 28px;
   --kv-ease: cubic-bezier(0.32, 0.72, 0, 1);
 
-  --font-display: 'Sora', ui-sans-serif, system-ui, sans-serif;
-  --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-body);
-  --font-mono: 'Space Mono', ui-monospace, monospace;
+  --font-display: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --font-body: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: Manrope, 'Helvetica Neue', Arial, sans-serif;
   --kv-fs-hero: clamp(2.5rem, 5.2vw, 64px);
   --kv-fs-h2: clamp(1.75rem, 3.6vw, 42px);
   --kv-fs-h3: clamp(1.35rem, 2.2vw, 28px);
@@ -643,6 +643,7 @@
   font-size: 14px;
   color: #fff;
   flex: none;
+  object-fit: cover;
 }
 
 .kova-home-plain .kh-score__person > div:not(.kh-score__avatar):not(.kh-score__num) {
@@ -2582,7 +2583,7 @@
 /* CONTACTO */
 .kova-home-plain .kh-contact {
   padding: 64px 0 48px;
-  background: #000000;
+  background: #0d0f0f;
   border-top: 1px solid var(--kv-line);
 }
 
@@ -2757,7 +2758,7 @@
 }
 
 .kova-home-plain .kh-guarantee__badge strong {
-  font-family: var(--font-display, 'Sora', sans-serif);
+  font-family: var(--font-display, Manrope, sans-serif);
   font-size: 64px;
   font-weight: 800;
   letter-spacing: -0.04em;

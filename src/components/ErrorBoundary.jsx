@@ -40,7 +40,7 @@ export default class ErrorBoundary extends Component {
             textAlign: 'center',
             background: '#0a0b0a',
             color: '#f4f5f0',
-            fontFamily: "'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif",
+            fontFamily: "Manrope, 'Helvetica Neue', Arial, sans-serif",
           }}
         >
           <h1 style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>
@@ -53,7 +53,7 @@ export default class ErrorBoundary extends Component {
             type="button"
             onClick={this.handleReload}
             style={{
-              fontFamily: "'Space Mono', ui-monospace, monospace",
+              fontFamily: "Manrope, 'Helvetica Neue', Arial, sans-serif",
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '0.04em',

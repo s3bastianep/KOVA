@@ -249,7 +249,7 @@
 
 .kv-registro-cv-confidence {
   font-size: 0.72rem;
-  font-family: var(--font-mono), monospace;
+  font-family: var(--font-manrope), Manrope, sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   padding: 0.2rem 0.45rem;

@@ -10,16 +10,16 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
-      '/portal': { target: 'http://localhost:3001', changeOrigin: true },
-      '/postular': { target: 'http://localhost:3001', changeOrigin: true },
-      '/_next': { target: 'http://localhost:3001', changeOrigin: true },
+      // More specific API routes first — a catch-all `/api` → :3000 used to steal
+      // portal/registro CV uploads and break multipart parsing.
       '/api/auth': { target: 'http://localhost:3001', changeOrigin: true },
       '/api/portal': { target: 'http://localhost:3001', changeOrigin: true },
       '/api/registro': { target: 'http://localhost:3001', changeOrigin: true },
+      '/api/dev': { target: 'http://localhost:3001', changeOrigin: true },
+      '/api': { target: 'http://localhost:3001', changeOrigin: true },
+      '/portal': { target: 'http://localhost:3001', changeOrigin: true },
+      '/postular': { target: 'http://localhost:3001', changeOrigin: true },
+      '/_next': { target: 'http://localhost:3001', changeOrigin: true },
     },
   },
   resolve: {

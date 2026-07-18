@@ -4,7 +4,7 @@ import { useMotionValue, useSpring } from 'framer-motion';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useLandingPremiumMotion } from '@/hooks/useLandingPremiumMotion';
 import CandidateSearchMorph from '@/components/landing/CandidateSearchMorph';
-import { CONTACT_BOOKING_PATH, buildContactMailto } from '@/lib/contact';
+import { CONTACT_BOOKING_PATH, buildWhatsAppUrl } from '@/lib/contact';
 import '@/styles/landing-home-plain.css';
 import '@/styles/landing-home-premium.css';
 
@@ -327,19 +327,14 @@ export default function Landing() {
     navigate(CONTACT_BOOKING_PATH);
   };
 
-  const sendEmail = () => {
+  const sendWhatsApp = () => {
     if (!validateForm()) return;
-    const body = `Hola Kova, soy ${form.nombre.trim() || '...'}${
+    const txt = `Hola Kova, soy ${form.nombre.trim() || '...'}${
       form.cargo.trim() ? `, ${form.cargo.trim()}` : ''
     }${
       form.empresa.trim() ? ` de ${form.empresa.trim()}` : ''
-    }.${form.tel.trim() ? ` Tel: ${form.tel.trim()}.` : ''} Quiero hablar de mi próxima contratación.${
-      form.msg.trim() ? ` ${form.msg.trim()}` : ''
-    }`;
-    window.location.href = buildContactMailto({
-      subject: 'Asesoría comercial Kova',
-      body,
-    });
+    }. Quiero hablar de mi próxima contratación.${form.msg.trim() ? ` ${form.msg.trim()}` : ''}`;
+    window.open(buildWhatsAppUrl(txt), '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -396,13 +391,13 @@ export default function Landing() {
             ) : null}
             <img
               className="kh-collage__photo kh-collage__photo--a"
-              src="https://randomuser.me/api/portraits/women/44.jpg"
+              src="/landing/people/pro-woman-3.jpg"
               alt="Ejecutiva comercial"
               loading="eager"
             />
             <img
               className="kh-collage__photo kh-collage__photo--b"
-              src="https://randomuser.me/api/portraits/men/32.jpg"
+              src="/landing/people/pro-man-2.jpg"
               alt="Ejecutivo comercial"
               loading="eager"
             />
@@ -423,7 +418,12 @@ export default function Landing() {
                 </span>
               </div>
               <div className="kh-score__person">
-                <div className="kh-score__avatar">ML</div>
+                <img
+                  className="kh-score__avatar"
+                  src="/landing/people/pro-woman-1.jpg"
+                  alt=""
+                  loading="lazy"
+                />
                 <div>
                   <div className="kh-score__name-row">
                     <span className="kh-score__name">Candidato ejemplo</span>
@@ -695,7 +695,7 @@ export default function Landing() {
                 </button>
               ))}
             </div>
-            <div className="kh-stage-panel" role="tabpanel">
+            <div className="kh-stage-panel" role="tabpanel" key={activeStage}>
               <div className="kh-stage-panel__head">
                 {stage.num} · {stage.title}
               </div>
@@ -1073,8 +1073,8 @@ export default function Landing() {
             <button type="button" className="kh-btn kh-btn--lime" onClick={goToCalendar}>
               Quiero hablar con un especialista
             </button>
-            <button type="button" className="kh-btn kh-btn--wa" onClick={sendEmail}>
-              Prefiero escribir por correo
+            <button type="button" className="kh-btn kh-btn--wa" onClick={sendWhatsApp}>
+              Prefiero hablar por WhatsApp
             </button>
             <p className="kh-form__note">
               Te responderemos lo antes posible para coordinar la asesoría.

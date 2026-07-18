@@ -22,13 +22,16 @@ function assertReadableText(text: string, format: CvFileFormat): string {
   const normalized = normalizeCvText(text);
   if (normalized.length < 40) {
     throw new CvFileReadError(
-      `El ${cvFormatLabel(format)} tiene muy poco texto legible. Exporta tu hoja de vida con texto seleccionable (formato ATS).`,
+      `El ${cvFormatLabel(format)} tiene muy poco texto legible. Exporta tu hoja de vida con texto seleccionable (no como imagen escaneada).`,
     );
   }
   return normalized;
 }
 
-function joinPdfPages(textResult: { text?: string; pages?: Array<{ text?: string }> }): string {
+function joinPdfPages(textResult: {
+  text?: string;
+  pages?: Array<{ text?: string }>;
+}): string {
   const pageTexts = (textResult.pages ?? [])
     .map((page) => page.text?.trim())
     .filter((t): t is string => Boolean(t));
@@ -67,7 +70,9 @@ export async function extractCvFromDocxBuffer(
   fileName: string,
 ): Promise<{ result: CvExtractionResult; text: string }> {
   if (buffer.length < 4 || buffer[0] !== 0x50 || buffer[1] !== 0x4b) {
-    throw new CvFileReadError('El archivo DOCX no parece válido. Guarda de nuevo desde Word como .docx.');
+    throw new CvFileReadError(
+      'El archivo DOCX no parece válido. Guarda de nuevo desde Word como .docx.',
+    );
   }
 
   try {
@@ -80,6 +85,8 @@ export async function extractCvFromDocxBuffer(
           "p[style-name='Heading 2'] => h2",
           "p[style-name='Título 1'] => h1",
           "p[style-name='Título 2'] => h2",
+          "p[style-name='Heading 3'] => h3",
+          "p[style-name='Título 3'] => h3",
         ],
       },
     );
@@ -96,7 +103,9 @@ export async function extractCvFromDocxBuffer(
     return { result: extractCvFromText(text, fileName), text };
   } catch (err) {
     if (err instanceof CvFileReadError) throw err;
-    throw new CvFileReadError('No pudimos leer el Word (.docx). Verifica que no esté dañado o protegido.');
+    throw new CvFileReadError(
+      'No pudimos leer el Word (.docx). Verifica que no esté dañado o protegido.',
+    );
   }
 }
 
@@ -115,9 +124,46 @@ export async function extractCvFromDocBuffer(
     return { result: extractCvFromText(text, fileName), text };
   } catch (err) {
     if (err instanceof CvFileReadError) throw err;
-    throw new CvFileReadError('No pudimos leer el Word (.doc). Prueba guardar el archivo como .docx o PDF.');
+    throw new CvFileReadError(
+      'No pudimos leer el Word (.doc). Prueba guardar el archivo como .docx o PDF.',
+    );
   } finally {
     await unlink(tempPath).catch(() => undefined);
+  }
+}
+
+async function extractPdfTextPrimary(buffer: Buffer): Promise<string> {
+  const { PDFParse } = await import('pdf-parse');
+  const parser = new PDFParse({ data: new Uint8Array(buffer) });
+  try {
+    const textResult = await parser.getText({
+      lineThreshold: 4,
+      cellThreshold: 7,
+      pageJoiner: '\n\n',
+    });
+    return joinPdfPages(textResult);
+  } finally {
+    await parser.destroy().catch(() => undefined);
+  }
+}
+
+/** Fallback: API node de pdf-parse / getText sin opciones finas. */
+async function extractPdfTextFallback(buffer: Buffer): Promise<string> {
+  try {
+    const mod = await import('pdf-parse/node');
+    const PDFParse =
+      (mod as { PDFParse?: unknown }).PDFParse ?? (mod as { default?: unknown }).default;
+    if (typeof PDFParse !== 'function') return '';
+    // @ts-expect-error — constructor tipado de forma distinta entre builds
+    const parser = new PDFParse({ data: new Uint8Array(buffer) });
+    try {
+      const textResult = await parser.getText();
+      return joinPdfPages(textResult);
+    } finally {
+      await parser.destroy?.().catch(() => undefined);
+    }
+  } catch {
+    return '';
   }
 }
 
@@ -126,27 +172,41 @@ export async function extractCvFromPdfBuffer(
   fileName: string,
 ): Promise<{ result: CvExtractionResult; text: string }> {
   if (buffer.length < 5 || buffer.subarray(0, 4).toString('utf8') !== '%PDF') {
-    throw new CvFileReadError('El archivo no parece un PDF válido. Exporta tu HV como PDF desde Word o Google Docs.');
+    throw new CvFileReadError(
+      'El archivo no parece un PDF válido. Exporta tu HV como PDF desde Word o Google Docs.',
+    );
+  }
+
+  let text = '';
+  let primaryError: unknown;
+
+  try {
+    text = await extractPdfTextPrimary(buffer);
+  } catch (err) {
+    primaryError = err;
+    console.error('[cv-extract-server] pdf primary failed:', err);
+  }
+
+  if (normalizeCvText(text).length < 40) {
+    const fallback = await extractPdfTextFallback(buffer);
+    if (normalizeCvText(fallback).length > normalizeCvText(text).length) {
+      text = fallback;
+    }
   }
 
   try {
-    const { PDFParse } = await import('pdf-parse');
-    const parser = new PDFParse({ data: new Uint8Array(buffer) });
-    try {
-      const textResult = await parser.getText({
-        lineThreshold: 4,
-        cellThreshold: 7,
-        pageJoiner: '\n\n',
-      });
-      const text = assertReadableText(joinPdfPages(textResult), 'pdf');
-      return { result: extractCvFromText(text, fileName), text };
-    } finally {
-      await parser.destroy();
-    }
+    text = assertReadableText(text, 'pdf');
   } catch (err) {
-    if (err instanceof CvFileReadError) throw err;
-    throw new CvFileReadError(
-      'No pudimos leer el PDF. Verifica que no esté protegido, dañado o guardado solo como imagen.',
-    );
+    if (err instanceof CvFileReadError) {
+      if (primaryError) {
+        throw new CvFileReadError(
+          'No pudimos leer el PDF. Verifica que tenga texto seleccionable (no solo imagen escaneada) y que no esté protegido.',
+        );
+      }
+      throw err;
+    }
+    throw err;
   }
+
+  return { result: extractCvFromText(text, fileName), text };
 }

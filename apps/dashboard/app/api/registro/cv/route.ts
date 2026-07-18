@@ -1,7 +1,5 @@
 import { NextRequest } from 'next/server';
-import { CV_MAX_BYTES } from '../../../../lib/cv-extract';
 import { CvFileReadError, extractCvFromFileBuffer } from '../../../../lib/cv-extract-server';
-import { detectCvFileFormat } from '../../../../lib/cv-file-formats';
 import { getPublicTenantId } from '../../../../lib/public-tenant';
 import { isMockMode } from '../../../../lib/mock';
 import { persistCandidateCvFile } from '../../../../lib/persist-candidate-cv';
@@ -9,6 +7,7 @@ import { readRegistroMetadata } from '../../../../lib/registro-session';
 import { prisma } from '../../../../lib/prisma';
 import { isRateLimited } from '../../../../lib/rate-limit';
 import { withApiErrors } from '../../../../lib/api-handler';
+import { parseCvUploadForm } from '../../../../lib/cv-upload-form';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -28,20 +27,24 @@ export const POST = withApiErrors('registro/cv', handlePOST);
 
 async function handlePOST(req: NextRequest) {
   if (isRateLimited(req, 'registro-cv', 10, 60_000)) {
-    return Response.json({ message: 'Demasiados intentos. Espera un minuto e inténtalo de nuevo.' }, { status: 429 });
+    return Response.json(
+      { message: 'Demasiados intentos. Espera un minuto e inténtalo de nuevo.' },
+      { status: 429 },
+    );
   }
 
-  const formData = await req.formData().catch(() => null);
-  if (!formData) {
-    return Response.json({ message: 'Solicitud inválida.' }, { status: 400 });
+  const parsedForm = await parseCvUploadForm(req);
+  if (!parsedForm.ok) {
+    return Response.json({ message: parsedForm.message }, { status: parsedForm.status });
   }
 
   // OWASP A04: el parseo de PDF/Word es costoso (CPU). Antes se ejecutaba para
   // cualquier anónimo; ahora exigimos una sesión de registro válida (candidateId +
   // resumeToken emitidos por /api/registro) ANTES de tocar el archivo, así el
   // trabajo caro solo se hace para usuarios reales del funnel.
-  const candidateId = String(formData.get('candidateId') ?? '').trim();
-  const resumeToken = String(formData.get('resumeToken') ?? '').trim();
+  const candidateId = String(parsedForm.fields.candidateId ?? '').trim();
+  const resumeToken = String(parsedForm.fields.resumeToken ?? '').trim();
+  const { fileName, mime, buffer } = parsedForm.file;
 
   let sessionCandidate: Awaited<ReturnType<typeof validateSession>> = null;
   let tenantId: string | null = null;
@@ -56,27 +59,11 @@ async function handlePOST(req: NextRequest) {
     tenantId = await getPublicTenantId();
     sessionCandidate = await validateSession(tenantId, candidateId, resumeToken);
     if (!sessionCandidate) {
-      return Response.json({ message: 'Tu sesión de registro expiró. Vuelve a empezar.' }, { status: 401 });
+      return Response.json(
+        { message: 'Tu sesión de registro expiró. Vuelve a empezar.' },
+        { status: 401 },
+      );
     }
-  }
-
-  const file = formData.get('file');
-  if (!file || typeof file === 'string') {
-    return Response.json({ message: 'Sube tu hoja de vida en PDF o Word.' }, { status: 400 });
-  }
-
-  const fileName = String(file.name || 'cv.pdf');
-  const mime = String(file.type || '').toLowerCase();
-  if (!detectCvFileFormat(fileName, mime)) {
-    return Response.json({ message: 'Solo aceptamos PDF, DOC o DOCX.' }, { status: 400 });
-  }
-
-  const buffer = Buffer.from(await file.arrayBuffer());
-  if (buffer.byteLength === 0) {
-    return Response.json({ message: 'El archivo está vacío.' }, { status: 400 });
-  }
-  if (buffer.byteLength > CV_MAX_BYTES) {
-    return Response.json({ message: 'El archivo no puede superar 5 MB.' }, { status: 400 });
   }
 
   let extraction;

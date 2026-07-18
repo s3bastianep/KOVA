@@ -29,7 +29,7 @@ export default function Error({
         gap: 16,
         background: '#0b0d0a',
         color: '#f4f6f0',
-        fontFamily: "'Manrope', system-ui, sans-serif",
+        fontFamily: "'Manrope', 'Helvetica Neue', Arial, sans-serif",
         padding: 24,
         textAlign: 'center',
       }}

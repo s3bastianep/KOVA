@@ -32,8 +32,10 @@ module.exports = {
         },
       },
       fontFamily: {
-        heading: ['var(--font-sora)', 'Sora', 'Inter', 'sans-serif'],
-        body: ['var(--font-inter)', 'Inter', 'sans-serif'],
+        heading: ['var(--font-manrope)', 'Manrope', 'sans-serif'],
+        body: ['var(--font-manrope)', 'Manrope', 'sans-serif'],
+        sans: ['var(--font-manrope)', 'Manrope', 'sans-serif'],
+        mono: ['var(--font-manrope)', 'Manrope', 'sans-serif'],
       },
     },
   },

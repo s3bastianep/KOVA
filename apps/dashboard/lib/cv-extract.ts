@@ -251,7 +251,7 @@ function extractEmail(text: string): string | undefined {
 
   const filtered = matches
     .map((m) => m.toLowerCase())
-    .filter((m) => !/(noreply|no-reply|example\.com|email\.com|correo\.com)/.test(m));
+    .filter((m) => !/(noreply|no-reply|example\.com|correo\.com|test@test)/.test(m));
 
   return (filtered[0] ?? matches[0])?.toLowerCase();
 }
@@ -313,22 +313,35 @@ function extractCity(text: string): string | undefined {
 }
 
 function extractName(text: string, email?: string): string | undefined {
-  const headerLines = toLineArray(text.slice(0, 2200)).slice(0, 12);
+  // Prefer the very top of the CV — real names almost always sit in the first few lines.
+  // Scanning too deep into experience/description text produces false positives like
+  // "Gestion De Cartera." from bullet lines.
+  const headerLines = toLineArray(text.slice(0, 1200)).slice(0, 8);
   const skip =
-    /^(curriculum|hoja\s+de\s+vida|cv|resume|perfil|contacto|datos\s+personales|email|correo|tel[eé]fono|linkedin|portafolio|resumen)/i;
+    /^(curriculum|hoja\s+de\s+vida|cv|resume|perfil|contacto|datos\s+personales|email|correo|tel[eé]fono|linkedin|portafolio|resumen|experiencia|formaci[oó]n|educaci[oó]n|idiomas?)/i;
+  const notAName =
+    /^(responsable|encargad|l[ií]der|gesti[oó]n|desarroll|implement|coordin|administr|asegur|logr|definir|ejecutar|liderar|apoyo|apoyar|manejo|ventas|pipeline)/i;
 
   for (const line of headerLines) {
     if (skip.test(line)) continue;
+    if (notAName.test(line)) continue;
     if (/@|https?:\/\//i.test(line)) continue;
     if (/\d{3,}/.test(line)) continue;
+    if (/[|•·]/.test(line)) continue;
+    if (/\.$/.test(line.trim())) continue; // sentences / descriptions, not names
     if (DATE_RANGE.test(line) || YEAR_ONLY_RANGE.test(line) || SPANISH_MONTH_RANGE.test(line)) continue;
     if (JOB_TITLE_HINT.test(line) && line.split(/\s+/).length <= 6) continue;
     if (SECTION_STOP.test(line) && line.length < 40) continue;
+    if (looksLikeDescription(line)) continue;
 
-    const words = line.split(/\s+/).filter(Boolean);
-    const NAME_WORD = /^[A-Za-zÁÉÍÓÚáéíóúñÑ'.-]+$/;
+    // Strip separators that often stick to the name line ("Juan Pérez -", "Ana,")
+    const cleaned = line.replace(/[,;:]+$/g, '').replace(/\s+[-–—|].*$/, '').trim();
+    const words = cleaned.split(/\s+/).filter(Boolean);
+    const NAME_WORD = /^[A-Za-zÁÉÍÓÚáéíóúñÑ']+([.-][A-Za-zÁÉÍÓÚáéíóúñÑ']+)*\.?$/;
     if (words.length >= 2 && words.length <= 5 && words.every((w) => NAME_WORD.test(w))) {
+      // Reject if every word is a common verb/noun start of a bullet (already partially covered).
       return words
+        .map((w) => w.replace(/\.$/, ''))
         .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
         .join(' ');
     }
@@ -820,9 +833,12 @@ function parseEducationLine(line: string): {
   const cleaned = line.trim();
   if (!cleaned || cleaned.length < 4) return {};
 
-  const yearMatch = cleaned.match(/\b((?:19|20)\d{2})\b/);
-  const anioGraduacion = yearMatch?.[1];
+  // Prefer the end year of a range ("2012 - 2016" → graduation 2016).
+  const yearRange = cleaned.match(/\b((?:19|20)\d{2})\s*[-–—]\s*((?:19|20)\d{2})\b/);
+  const yearMatch = yearRange ?? cleaned.match(/\b((?:19|20)\d{2})\b/);
+  const anioGraduacion = yearRange ? yearRange[2] : yearMatch?.[1];
   let text = cleaned
+    .replace(/\b(?:19|20)\d{2}\s*[-–—]\s*(?:(?:19|20)\d{2}|actual(?:idad)?|presente?|hoy|current)\b/gi, '')
     .replace(/\b(?:19|20)\d{2}\b/g, '')
     .replace(/[,\-|•]\s*$/g, '')
     .trim();
