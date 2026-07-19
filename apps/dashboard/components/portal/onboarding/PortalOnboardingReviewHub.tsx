@@ -37,7 +37,6 @@ type Props = {
   profile: CommercialProfile;
   reviewed: Set<ReviewSectionId>;
   onEdit: (section: ReviewSectionId) => void;
-  onMarkReviewed: (section: ReviewSectionId) => void;
 };
 
 function SectionCard({

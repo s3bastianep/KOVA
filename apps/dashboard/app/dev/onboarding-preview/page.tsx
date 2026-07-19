@@ -206,7 +206,6 @@ export default function OnboardingPreviewPage() {
             profile={profile}
             reviewed={reviewed}
             onEdit={() => {}}
-            onMarkReviewed={(id) => setReviewed((prev) => new Set([...prev, id]))}
           />
         </PortalOnboardingShell>
       ) : null}
