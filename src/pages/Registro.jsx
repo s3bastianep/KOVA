@@ -92,8 +92,9 @@ export default function Registro() {
               Encuentra la oportunidad <span className="kv-login-accent">hecha para ti</span>.
             </h1>
             <p className="kv-login-lead">
-              Crea tu cuenta en 30 segundos. Después subes tu hoja de vida y nosotros completamos tu
-              perfil por ti.
+              Crea tu cuenta en 30 segundos. Completa tu perfil para que podamos entender tus
+              habilidades, tu forma de trabajar y el tipo de empresa donde puedes desarrollarte
+              mejor.
             </p>
           </div>
         </aside>

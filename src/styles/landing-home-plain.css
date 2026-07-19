@@ -85,8 +85,8 @@
 }
 
 .kova-home-plain ::selection {
-  background: var(--kv-lime);
-  color: #ffffff;
+  background: #c5de4e;
+  color: #0a0b0a;
 }
 
 .kova-home-plain .kh-accent {

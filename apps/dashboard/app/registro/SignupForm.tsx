@@ -105,8 +105,9 @@ export function SignupForm() {
             Tu espacio para <span className="kv-login-accent">oportunidades</span> comerciales
           </h1>
           <p className="kv-login-lead">
-            Crea tu cuenta en 30 segundos. Después subes tu hoja de vida y nosotros completamos tu
-            perfil por ti.
+            Crea tu cuenta en 30 segundos. Completa tu perfil para que podamos entender tus
+            habilidades, tu forma de trabajar y el tipo de empresa donde puedes desarrollarte
+            mejor.
           </p>
         </aside>
 

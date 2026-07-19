@@ -138,8 +138,8 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 .kova-home-plain ::selection {
-  background: rgba(197, 222, 78, 0.4);
-  color: #16140f;
+  background: #c5de4e;
+  color: #0a0b0a;
 }
 
 .kova-home-plain .kh-accent {

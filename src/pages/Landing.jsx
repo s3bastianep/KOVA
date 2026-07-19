@@ -356,7 +356,7 @@ export default function Landing() {
               <span className="kh-accent">tu estrategia de ventas</span>.
             </h1>
             <p className="kh-hero__lead">
-              No somos una agencia generalista. Buscamos solo perfiles comerciales:
+              No somos una agencia tradicional. Buscamos solo perfiles comerciales:
               entendemos cómo vende su empresa y le presentamos candidatos que
               encajan de verdad.
             </p>

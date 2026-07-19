@@ -42,6 +42,11 @@ html:has(.kv-login) {
   -webkit-font-smoothing: antialiased;
 }
 
+.kv-login ::selection {
+  background: #c5de4e;
+  color: #0a0b0a;
+}
+
 .kv-login-bg {
   position: fixed;
   inset: 0;
