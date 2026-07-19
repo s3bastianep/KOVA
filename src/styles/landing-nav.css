@@ -170,44 +170,45 @@ body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  padding: 12px 22px;
-  border-radius: 16px;
-  border: 1px solid transparent !important;
+  padding: 0;
+  border-radius: 0;
+  border: none !important;
   box-shadow: none !important;
-  background: #c5de4e !important;
-  color: #171717 !important;
+  background: transparent !important;
+  color: #c5de4e !important;
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   line-height: 1;
   text-decoration: none;
   white-space: nowrap;
-  transition: transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition: color 0.25s ease, opacity 0.25s ease;
 }
 
 .kova-navbar .kv-cta-pill:hover {
-  transform: translateY(-2px);
-  color: #171717 !important;
+  transform: none;
+  color: #d4eb6a !important;
+  background: transparent !important;
   box-shadow: none !important;
 }
 
 .kova-navbar .kv-cta-pill--outline,
 .kova-navbar .kv-cta-pill--lime {
-  background: #c5de4e !important;
-  border: 1px solid transparent !important;
+  background: transparent !important;
+  border: none !important;
   box-shadow: none !important;
-  color: #171717 !important;
+  color: #c5de4e !important;
   font-weight: 700;
 }
 
 .kova-navbar .kv-cta-pill--outline:hover,
 .kova-navbar .kv-cta-pill--lime:hover {
-  transform: translateY(-2px);
-  background: #c5de4e !important;
+  transform: none;
+  background: transparent !important;
   box-shadow: none !important;
-  color: #171717 !important;
+  color: #d4eb6a !important;
 }
 
 .kova-navbar .kv-nav-toggle {
@@ -358,9 +359,10 @@ body {
 
   .kova-navbar .kv-nav-drawer__cta {
     margin-top: 12px;
-    width: 100%;
-    justify-content: center;
-    padding: 14px 18px;
+    width: auto;
+    justify-content: flex-start;
+    padding: 14px 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 }
 
@@ -391,9 +393,9 @@ body {
   }
 
   .kova-navbar .kv-cta-pill {
-    padding: 10px 14px;
-    font-size: 11px;
-    letter-spacing: 0.03em;
+    padding: 0;
+    font-size: 14px;
+    letter-spacing: 0.06em;
   }
 
   .kova-navbar .kv-logo {
@@ -407,7 +409,7 @@ body {
   }
 
   .kova-navbar .kv-cta-pill {
-    padding: 9px 12px;
-    font-size: 10px;
+    padding: 0;
+    font-size: 13px;
   }
 }

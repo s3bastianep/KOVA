@@ -118,8 +118,8 @@ export default function HomeDark() {
         <svg className="kd-thread" viewBox="0 0 1320 780" preserveAspectRatio="none" aria-hidden>
           <path pathLength="1" d="M77 121 C115 142 166 154 226 154 C316 155 456 154 560 154 C624 154 672 192 672 244 V765" />
           <path pathLength="1" d="M50 94 L96 111 L77 121 L86 143 Z M50 94 L77 121" />
-          <path pathLength="1" className="kd-thread__actions" d="M672 715 V636 C672 597 645 574 598 574 H256" />
-          <path pathLength="1" className="kd-thread__pointer" d="M265 565 L256 574 L265 583" />
+          <path pathLength="1" className="kd-thread__actions" d="M672 715 V644 C672 608 645 582 598 582 H256" />
+          <path pathLength="1" className="kd-thread__pointer" d="M265 573 L256 582 L265 591" />
         </svg>
 
         <div className="kd-hero-content">

@@ -52,15 +52,20 @@
 /* ---- Botones ---- */
 
 .kd-btn {
+  box-sizing: border-box;
+  height: 52px;
   min-height: 52px;
   padding: 0 26px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid transparent;
   border-radius: 16px;
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.01em;
+  line-height: 1;
+  vertical-align: middle;
   transition: transform 400ms var(--kd-ease), background 400ms ease, box-shadow 400ms ease,
     border-color 400ms ease;
 }
@@ -70,6 +75,7 @@
 }
 
 .kd-btn--sm {
+  height: 44px;
   min-height: 44px;
   padding: 0 22px;
   font-size: 13.5px;
@@ -78,16 +84,18 @@
 .kova-dark .kd-btn--lime {
   color: var(--kd-ink);
   background: var(--kd-lime);
+  border-color: var(--kd-lime);
   box-shadow: 0 10px 30px rgba(197, 222, 78, 0.12);
 }
 
 .kova-dark .kd-btn--lime:hover {
   background: #c5de4e;
+  border-color: #c5de4e;
 }
 
 .kova-dark .kd-btn--ghost {
   color: var(--kd-text);
-  border: 1px solid var(--kd-border);
+  border-color: var(--kd-border);
   background: transparent;
 }
 
@@ -128,9 +136,7 @@
   position: relative;
   min-height: 780px;
   overflow: hidden;
-  /* La barra ahora vive fuera del hero (Navbar compartida); este padding
-     reserva la franja que antes ocupaba el header interno para que el hilo
-     SVG y la burbuja (posicionados en %) conserven su geometría. */
+  /* Reserva franja bajo la navbar para que el copy no choque con el hilo SVG. */
   padding-top: 96px;
   background: var(--kd-dark);
   border-radius: 0 0 88px 0;
@@ -221,10 +227,15 @@
 }
 
 .kd-hero-actions {
-  margin-top: 38px;
+  margin-top: 28px;
   display: flex;
   align-items: center;
   gap: 18px;
+}
+
+.kd-hero-actions .kd-btn {
+  flex: 0 0 auto;
+  align-self: center;
 }
 
 /* La línea: identidad de Kova, se dibuja al cargar */
@@ -232,11 +243,11 @@
 .kd-thread {
   position: absolute;
   z-index: 2;
-  top: 0;
+  top: -22px;
   bottom: 0;
   left: 50%;
   width: var(--kd-page);
-  height: 100%;
+  height: calc(100% + 22px);
   transform: translateX(-50%);
   pointer-events: none;
 }
