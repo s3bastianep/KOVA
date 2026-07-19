@@ -86,7 +86,7 @@ function parseMultipartManual(
     }
 
     const headerEnd = indexOfHeaderBodySplit(part);
-    if (headerEnd < 0) {
+    if (!headerEnd) {
       start = next + sep.length;
       continue;
     }

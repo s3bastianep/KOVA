@@ -1119,7 +1119,8 @@ function buildReviewFields(
 ): CvReviewField[] {
   const fields: CvReviewField[] = [];
 
-  const scalar: Array<{ key: keyof CvExtractionSuggestions; label: string }> = [
+  type ScalarKey = 'nombre' | 'email' | 'telefono' | 'ciudad' | 'anios' | 'nivelRol';
+  const scalar: Array<{ key: ScalarKey; label: string }> = [
     { key: 'nombre', label: 'Nombre' },
     { key: 'email', label: 'Correo' },
     { key: 'telefono', label: 'Teléfono' },
