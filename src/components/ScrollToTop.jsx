@@ -19,6 +19,19 @@ function scrollWindowTo(top) {
   html.style.scrollBehavior = previous;
 }
 
+function scrollToElement(el) {
+  const lenis = window.__kovaLenis;
+  if (lenis) {
+    lenis.scrollTo(el, { offset: -88, immediate: true });
+    return;
+  }
+  const html = document.documentElement;
+  const previous = html.style.scrollBehavior;
+  html.style.scrollBehavior = 'auto';
+  el.scrollIntoView({ behavior: 'auto', block: 'start' });
+  html.style.scrollBehavior = previous;
+}
+
 export default function ScrollToTop() {
   const { pathname, hash } = useLocation();
   const navigationType = useNavigationType();
@@ -26,33 +39,43 @@ export default function ScrollToTop() {
   useLayoutEffect(() => {
     if (navigationType === 'POP') return undefined;
 
-    // Reset before paint so the new page never appears mid-scroll.
-    scrollWindowTo(0);
-
-    if (!hash) return undefined;
+    if (!hash) {
+      scrollWindowTo(0);
+      return undefined;
+    }
 
     const id = getHashId(hash);
     let cancelled = false;
     let attempts = 0;
+    const maxAttempts = 40;
 
     const tryScrollToHash = () => {
       if (cancelled) return;
       const el = document.getElementById(id);
       if (el) {
-        const html = document.documentElement;
-        const previous = html.style.scrollBehavior;
-        html.style.scrollBehavior = 'auto';
-        el.scrollIntoView({ behavior: 'auto', block: 'start' });
-        html.style.scrollBehavior = previous;
+        scrollToElement(el);
+        // Lenis may init after the first hit — re-apply once ready.
+        window.setTimeout(() => {
+          if (!cancelled) {
+            const again = document.getElementById(id);
+            if (again) scrollToElement(again);
+          }
+        }, 120);
+        window.setTimeout(() => {
+          if (!cancelled) {
+            const again = document.getElementById(id);
+            if (again) scrollToElement(again);
+          }
+        }, 450);
         return;
       }
-      if (attempts < 12) {
+      if (attempts < maxAttempts) {
         attempts += 1;
-        window.requestAnimationFrame(tryScrollToHash);
+        window.setTimeout(tryScrollToHash, 50);
       }
     };
 
-    window.requestAnimationFrame(tryScrollToHash);
+    tryScrollToHash();
     return () => {
       cancelled = true;
     };

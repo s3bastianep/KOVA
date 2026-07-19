@@ -27,6 +27,7 @@ type Props = {
   /** Dark onboarding surfaces vs light portal forms */
   tone?: 'dark' | 'light';
   disabled?: boolean;
+  invalid?: boolean;
 };
 
 function parseYearMonth(value: string): { year: number; month: number } | null {
@@ -67,6 +68,7 @@ export function MonthYearPicker({
   className,
   tone = 'light',
   disabled = false,
+  invalid = false,
 }: Props) {
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -107,10 +109,12 @@ export function MonthYearPicker({
           isDark && 'kova-month-picker__trigger--dark',
           open && 'is-open',
           !label && 'is-empty',
+          invalid && 'is-invalid',
         )}
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls={panelId}
+        aria-invalid={invalid || undefined}
         disabled={disabled}
         onClick={() => setOpen((v) => !v)}
       >

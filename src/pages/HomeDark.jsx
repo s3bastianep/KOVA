@@ -349,7 +349,7 @@ export default function HomeDark() {
           <article className="kd-compare__card kd-compare__card--cv">
             <header>
               <span className="kd-compare__tag">Hoja de vida</span>
-              <span className="kd-compare__caption">Lo que alguien hizo</span>
+              <span className="kd-compare__caption">Lo que los otros ven</span>
             </header>
             <ul>
               <li>Cargos anteriores</li>
@@ -371,7 +371,7 @@ export default function HomeDark() {
           <article className="kd-compare__card kd-compare__card--kova">
             <header>
               <span className="kd-compare__tag">Alineación Kova</span>
-              <span className="kd-compare__caption">Lo que hace que funcione</span>
+              <span className="kd-compare__caption">Lo que nosotros vemos</span>
             </header>
             <ul>
               <li style={{ '--d': '0ms' }}>Cómo vende y negocia</li>
@@ -478,7 +478,7 @@ export default function HomeDark() {
         </div>
       </section>
 
-      {/* 06 · CIERRE EMOCIONAL — mock alineación */}
+      {/* 06 · CIERRE */}
       <section className="kd-final" id="contacto" aria-labelledby="kd-final-title">
         <div className="kd-final-shell" data-reveal>
           <span className="kd-final-dots kd-final-dots--tl" aria-hidden />
@@ -486,7 +486,7 @@ export default function HomeDark() {
 
           <div className="kd-final-grid">
             <figure className="kd-final-shot kd-final-shot--left">
-              <img src="/landing/people/align-empresas.jpg" alt="" loading="lazy" />
+              <img src="/landing/people/final-empresas-pro.jpg" alt="" loading="lazy" />
             </figure>
 
             <div className="kd-final-copy">
@@ -504,68 +504,17 @@ export default function HomeDark() {
               </p>
               <div className="kd-final-actions">
                 <Link className="kd-final-btn kd-final-btn--primary" to="/para-empresas">
-                  Quiero construir mi equipo <span aria-hidden>→</span>
+                  Para empresas
                 </Link>
                 <Link className="kd-final-btn kd-final-btn--ghost" to="/empleo">
-                  Quiero encontrar mi lugar <span aria-hidden>→</span>
+                  Para talento
                 </Link>
               </div>
             </div>
 
             <figure className="kd-final-shot kd-final-shot--right">
-              <img src="/landing/people/align-talento.jpg" alt="" loading="lazy" />
+              <img src="/landing/people/final-talento-pro.jpg" alt="" loading="lazy" />
             </figure>
-
-            <div className="kd-align__side kd-align__side--left">
-              <span className="kd-align__icon" aria-hidden>
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M3.5 20.5h17M5 20.5V8.5h5.5V20.5M10.5 20.5V4.5H19v16"
-                    stroke="currentColor"
-                    strokeWidth="1.55"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M7.2 11.2h1.15M7.2 14.2h1.15M13.2 8h1.15M16.2 8h1.15M13.2 11.2h1.15M16.2 11.2h1.15M13.2 14.2h1.15M16.2 14.2h1.15"
-                    stroke="currentColor"
-                    strokeWidth="1.45"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </span>
-              <strong>Empresas</strong>
-              <p>Buscan talento que impulse sus resultados.</p>
-            </div>
-
-            <div className="kd-align__mid" aria-hidden>
-              <svg className="kd-align__arc" viewBox="0 0 640 110" preserveAspectRatio="none">
-                <path d="M20 34 C 160 34, 210 92, 320 92 C 430 92, 480 34, 620 34" />
-              </svg>
-              <span className="kd-align__node">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.5" />
-                  <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.5" />
-                  <circle cx="12" cy="12" r="1.35" fill="currentColor" />
-                </svg>
-              </span>
-              <span className="kd-align__label">Alineación</span>
-            </div>
-
-            <div className="kd-align__side kd-align__side--right">
-              <span className="kd-align__icon" aria-hidden>
-                <svg viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="8" r="3.35" stroke="currentColor" strokeWidth="1.55" />
-                  <path
-                    d="M5.4 19.6c.85-3.35 3.35-5 6.6-5s5.75 1.65 6.6 5"
-                    stroke="currentColor"
-                    strokeWidth="1.55"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </span>
-              <strong>Profesionales</strong>
-              <p>Buscan el entorno ideal para desarrollar su potencial.</p>
-            </div>
           </div>
         </div>
       </section>

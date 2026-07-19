@@ -18,6 +18,8 @@ import {
   EDUCATION_LEVEL_OPTIONS,
   LANGUAGE_LEVEL_OPTIONS,
   LANGUAGE_OPTIONS,
+  DATE_FIELDS_REQUIRED_MESSAGE,
+  missingEducationDateFields,
   newEducationEntry,
   newLanguageEntry,
   type CommercialProfile,
@@ -51,7 +53,7 @@ function formacionCompleteness(profile: CommercialProfile): number {
   const idiomas = profile.idiomas ?? [];
   let score = 0;
   if (formacion.length > 0) score += 50;
-  if (formacion.some((e) => e.titulo && e.institucion && e.nivel)) score += 25;
+  if (formacion.some((e) => e.titulo && e.institucion && e.nivel && e.anioGraduacion)) score += 25;
   if (idiomas.length > 0) score += 15;
   if (idiomas.some((l) => l.idioma && l.nivel)) score += 10;
   return Math.min(100, score);
@@ -110,12 +112,16 @@ function FieldInput({
   value,
   onChange,
   placeholder,
+  invalid,
+  errorText,
 }: {
   label: string;
   hint?: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  invalid?: boolean;
+  errorText?: string;
 }) {
   return (
     <label className="block space-y-1.5">
@@ -124,9 +130,14 @@ function FieldInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className={inputClass}
+        aria-invalid={invalid || undefined}
+        className={`${inputClass}${invalid ? ' border-[var(--kova-coral)] ring-1 ring-[var(--kova-coral)]/30' : ''}`}
       />
-      {hint ? <span className="text-xs text-[var(--kova-navy-muted)]">{hint}</span> : null}
+      {invalid && errorText ? (
+        <span className="text-xs text-[var(--kova-coral)]">{errorText}</span>
+      ) : hint ? (
+        <span className="text-xs text-[var(--kova-navy-muted)]">{hint}</span>
+      ) : null}
     </label>
   );
 }
@@ -162,12 +173,16 @@ function EducationCard({
   index,
   onChange,
   onRemove,
+  highlightMissingDates,
 }: {
   entry: EducationEntry;
   index: number;
   onChange: (patch: Partial<EducationEntry>) => void;
   onRemove: () => void;
+  highlightMissingDates?: boolean;
 }) {
+  const missingYear =
+    Boolean(highlightMissingDates) && missingEducationDateFields(entry).includes('anioGraduacion');
   return (
     <article className="rounded-lg border border-[var(--kova-border)] bg-[var(--kova-surface-2)]/25">
       <div className="flex items-start justify-between gap-3 border-b border-[var(--kova-border)] px-4 py-3">
@@ -203,9 +218,11 @@ function EducationCard({
           <FieldInput
             label="Año de graduación"
             value={entry.anioGraduacion ?? ''}
-            onChange={(value) => onChange({ anioGraduacion: value })}
+            onChange={(value) => onChange({ anioGraduacion: value.replace(/\D/g, '').slice(0, 4) })}
             placeholder="Ej. 2020"
             hint="Solo el año, no la fecha completa"
+            invalid={missingYear}
+            errorText="Indica el año de graduación (AAAA)"
           />
         </div>
         <FieldInput
@@ -310,6 +327,7 @@ export function PortalFormacionForm() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
+  const [highlightMissingDates, setHighlightMissingDates] = useState(false);
 
   useEffect(() => {
     portalApi
@@ -332,6 +350,8 @@ export function PortalFormacionForm() {
 
   const updateEducacion = (id: string, patch: Partial<EducationEntry>) => {
     setSaved(false);
+    setHighlightMissingDates(false);
+    if (error === DATE_FIELDS_REQUIRED_MESSAGE) setError('');
     setProfile((prev) => {
       if (!prev) return prev;
       const formacion = (prev.formacion ?? []).map((item) => (item.id === id ? { ...item, ...patch } : item));
@@ -377,6 +397,15 @@ export function PortalFormacionForm() {
   const submit = async (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!profile) return;
+    const datesMissing = (profile.formacion ?? []).some(
+      (entry) => missingEducationDateFields(entry).length > 0,
+    );
+    if (datesMissing) {
+      setHighlightMissingDates(true);
+      setError(DATE_FIELDS_REQUIRED_MESSAGE);
+      return;
+    }
+    setHighlightMissingDates(false);
     setSaving(true);
     setError('');
     try {
@@ -490,6 +519,7 @@ export function PortalFormacionForm() {
               key={item.id}
               entry={item}
               index={index}
+              highlightMissingDates={highlightMissingDates}
               onChange={(patch) => updateEducacion(item.id, patch)}
               onRemove={() => removeEducacion(item.id)}
             />

@@ -242,13 +242,15 @@ export function PortalOnboardingPreferencias({
       )}
 
       {microFeedback ? (
-        <p className="portal-onboarding-micro-feedback">
+        <p className="portal-onboarding-micro-feedback" aria-live="polite">
           <span className="portal-onboarding-micro-feedback__icon" aria-hidden>
             <Check className="w-3.5 h-3.5" strokeWidth={3} />
           </span>
           {microFeedback}
         </p>
-      ) : null}
+      ) : (
+        <div className="portal-onboarding-micro-feedback portal-onboarding-micro-feedback--spacer" aria-hidden />
+      )}
 
       {currentStep.optional ? (
         <p className="portal-onboarding-optional">

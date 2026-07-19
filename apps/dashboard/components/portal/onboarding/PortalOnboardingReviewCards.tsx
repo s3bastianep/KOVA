@@ -14,6 +14,8 @@ import {
   EDUCATION_LEVEL_OPTIONS,
   LANGUAGE_LEVEL_OPTIONS,
   LANGUAGE_OPTIONS,
+  missingEducationDateFields,
+  missingWorkDateFields,
   newCertificationEntry,
   newEducationEntry,
   newLanguageEntry,
@@ -28,6 +30,8 @@ type Props = {
   profile: CommercialProfile;
   section: ReviewSectionId;
   onChange: (profile: CommercialProfile) => void;
+  /** When true, empty date fields are highlighted after a failed save. */
+  highlightMissingDates?: boolean;
 };
 
 function ordinalLabel(index: number, kind: 'experiencia' | 'formación' | 'idioma' | 'certificación'): string {
@@ -137,7 +141,7 @@ function PersonalSection({ profile, onChange }: Props) {
   );
 }
 
-function ExperienceSection({ profile, onChange }: Props) {
+function ExperienceSection({ profile, onChange, highlightMissingDates }: Props) {
   const work = profile.historialLaboral ?? [];
   const cleanedRef = useRef(false);
 
@@ -175,7 +179,11 @@ function ExperienceSection({ profile, onChange }: Props) {
       {work.length === 0 ? (
         <p className="portal-onboarding-muted">No detectamos experiencia en tu hoja de vida. Agrega tu primera experiencia.</p>
       ) : (
-        work.map((entry, index) => (
+        work.map((entry, index) => {
+          const missingDates = highlightMissingDates ? missingWorkDateFields(entry) : [];
+          const missingInicio = missingDates.includes('fechaInicio');
+          const missingFin = missingDates.includes('fechaFin');
+          return (
           <article key={entry.id} className="portal-onboarding-work-card">
             <CardHeader label={ordinalLabel(index, 'experiencia')} onDelete={() => removeWork(entry.id)} />
 
@@ -225,8 +233,12 @@ function ExperienceSection({ profile, onChange }: Props) {
                     tone="dark"
                     value={entry.fechaInicio}
                     placeholder="Elegir mes"
+                    invalid={missingInicio}
                     onChange={(fechaInicio) => updateWork(entry.id, { fechaInicio })}
                   />
+                  {missingInicio ? (
+                    <span className="portal-onboarding-work-field__hint--error">Falta la fecha de inicio</span>
+                  ) : null}
                 </div>
 
                 {entry.trabajoActual ? (
@@ -241,10 +253,14 @@ function ExperienceSection({ profile, onChange }: Props) {
                       tone="dark"
                       value={entry.fechaFin ?? ''}
                       placeholder="Elegir mes"
+                      invalid={missingFin}
                       onChange={(fechaFin) =>
                         updateWork(entry.id, { fechaFin, trabajoActual: false })
                       }
                     />
+                    {missingFin ? (
+                      <span className="portal-onboarding-work-field__hint--error">Falta la fecha de fin</span>
+                    ) : null}
                   </div>
                 )}
               </div>
@@ -266,7 +282,8 @@ function ExperienceSection({ profile, onChange }: Props) {
               />
             </label>
           </article>
-        ))
+          );
+        })
       )}
 
       <button
@@ -283,7 +300,7 @@ function ExperienceSection({ profile, onChange }: Props) {
   );
 }
 
-function EducationSection({ profile, onChange }: Props) {
+function EducationSection({ profile, onChange, highlightMissingDates }: Props) {
   const edu = profile.formacion ?? [];
 
   const updateEdu = (id: string, patch: Partial<EducationEntry>) => {
@@ -303,7 +320,10 @@ function EducationSection({ profile, onChange }: Props) {
       {edu.length === 0 ? (
         <p className="portal-onboarding-muted">No detectamos estudios en tu hoja de vida. Agrega tu primera formación.</p>
       ) : (
-        edu.map((entry, index) => (
+        edu.map((entry, index) => {
+          const missingYear =
+            highlightMissingDates && missingEducationDateFields(entry).includes('anioGraduacion');
+          return (
           <article key={entry.id} className="portal-onboarding-work-card">
             <CardHeader label={ordinalLabel(index, 'formación')} onDelete={() => removeEdu(entry.id)} />
 
@@ -346,15 +366,28 @@ function EducationSection({ profile, onChange }: Props) {
               <label className="portal-onboarding-work-field">
                 <span className="portal-onboarding-work-field__label">Año de graduación</span>
                 <input
-                  className="portal-onboarding-field"
+                  className={`portal-onboarding-field${missingYear ? ' is-invalid' : ''}`}
                   value={entry.anioGraduacion ?? ''}
                   placeholder="AAAA"
-                  onChange={(e) => updateEdu(entry.id, { anioGraduacion: e.target.value })}
+                  inputMode="numeric"
+                  maxLength={4}
+                  aria-invalid={missingYear || undefined}
+                  onChange={(e) =>
+                    updateEdu(entry.id, {
+                      anioGraduacion: e.target.value.replace(/\D/g, '').slice(0, 4),
+                    })
+                  }
                 />
+                {missingYear ? (
+                  <span className="portal-onboarding-work-field__hint--error">
+                    Indica el año de graduación (AAAA)
+                  </span>
+                ) : null}
               </label>
             </div>
           </article>
-        ))
+          );
+        })
       )}
 
       <button
@@ -537,14 +570,33 @@ function SkillsSection({ profile, onChange }: Props) {
   );
 }
 
-export function PortalOnboardingReviewCards({ profile, section, onChange }: Props) {
+export function PortalOnboardingReviewCards({
+  profile,
+  section,
+  onChange,
+  highlightMissingDates = false,
+}: Props) {
   switch (section) {
     case 'personal':
       return <PersonalSection profile={profile} section={section} onChange={onChange} />;
     case 'experiencia':
-      return <ExperienceSection profile={profile} section={section} onChange={onChange} />;
+      return (
+        <ExperienceSection
+          profile={profile}
+          section={section}
+          onChange={onChange}
+          highlightMissingDates={highlightMissingDates}
+        />
+      );
     case 'educacion':
-      return <EducationSection profile={profile} section={section} onChange={onChange} />;
+      return (
+        <EducationSection
+          profile={profile}
+          section={section}
+          onChange={onChange}
+          highlightMissingDates={highlightMissingDates}
+        />
+      );
     case 'idiomas':
       return <LanguagesSection profile={profile} section={section} onChange={onChange} />;
     case 'certificaciones':

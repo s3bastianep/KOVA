@@ -19,7 +19,11 @@ import {
   X,
 } from 'lucide-react';
 import type { CommercialProfile, WorkHistoryEntry } from '@/lib/candidate-commercial-profile';
-import { newWorkHistoryEntry } from '@/lib/candidate-commercial-profile';
+import {
+  DATE_FIELDS_REQUIRED_MESSAGE,
+  missingWorkDateFields,
+  newWorkHistoryEntry,
+} from '@/lib/candidate-commercial-profile';
 import { portalApi, type PortalPerfilResponse } from '@/lib/api';
 import { PORTAL_CACHE_KEYS, portalCacheGet } from '@/lib/portal-cache';
 import { formatMonthYearDisplay } from '@/app/registro/registro-utils';
@@ -188,6 +192,7 @@ type ExperienceCardProps = {
   total: number;
   isEditing: boolean;
   expanded: boolean;
+  highlightMissingDates?: boolean;
   onToggleExpand: () => void;
   onEdit: () => void;
   onCancel: () => void;
@@ -201,6 +206,7 @@ function ExperienceCard({
   total,
   isEditing,
   expanded,
+  highlightMissingDates,
   onToggleExpand,
   onEdit,
   onCancel,
@@ -218,6 +224,9 @@ function ExperienceCard({
   const company = entry.empresa?.trim() || 'Empresa sin nombre';
   const accent = companyAccent(company);
   const isLatest = index === 0;
+  const missingDates = highlightMissingDates ? missingWorkDateFields(entry) : [];
+  const missingInicio = missingDates.includes('fechaInicio');
+  const missingFin = missingDates.includes('fechaFin');
 
   return (
     <article
@@ -388,9 +397,15 @@ function ExperienceCard({
                     <MonthYearPicker
                       value={entry.fechaInicio}
                       placeholder="Elegir mes"
+                      invalid={missingInicio}
                       onChange={(fechaInicio) => onChange({ fechaInicio })}
                       className="!max-w-none"
                     />
+                    {missingInicio ? (
+                      <span className="mt-1 block text-xs text-[var(--kova-coral)]">
+                        Falta la fecha de inicio
+                      </span>
+                    ) : null}
                   </Field>
                   {entry.trabajoActual ? (
                     <Field label="Hasta">
@@ -403,9 +418,15 @@ function ExperienceCard({
                       <MonthYearPicker
                         value={entry.fechaFin ?? ''}
                         placeholder="Elegir mes"
+                        invalid={missingFin}
                         onChange={(fechaFin) => onChange({ fechaFin, trabajoActual: false })}
                         className="!max-w-none"
                       />
+                      {missingFin ? (
+                        <span className="mt-1 block text-xs text-[var(--kova-coral)]">
+                          Falta la fecha de fin
+                        </span>
+                      ) : null}
                     </Field>
                   )}
                 </div>
@@ -490,6 +511,7 @@ export function PortalExperienciaClient() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
+  const [highlightMissingDates, setHighlightMissingDates] = useState(false);
 
   useEffect(() => {
     portalApi
@@ -512,6 +534,8 @@ export function PortalExperienciaClient() {
   const updateEntry = (id: string, patch: Partial<WorkHistoryEntry>) => {
     setSaved(false);
     setDirty(true);
+    setHighlightMissingDates(false);
+    if (error === DATE_FIELDS_REQUIRED_MESSAGE) setError('');
     setEntries((prev) => prev.map((entry) => (entry.id === id ? { ...entry, ...patch } : entry)));
   };
 
@@ -542,6 +566,15 @@ export function PortalExperienciaClient() {
 
   const save = async () => {
     if (!profile) return;
+    const datesMissing = entries.some((entry) => missingWorkDateFields(entry).length > 0);
+    if (datesMissing) {
+      setHighlightMissingDates(true);
+      setError(DATE_FIELDS_REQUIRED_MESSAGE);
+      const firstIncomplete = entries.find((entry) => missingWorkDateFields(entry).length > 0);
+      if (firstIncomplete) setEditingId(firstIncomplete.id);
+      return;
+    }
+    setHighlightMissingDates(false);
     setSaving(true);
     setError('');
     try {
@@ -687,6 +720,7 @@ export function PortalExperienciaClient() {
                   total={entries.length}
                   isEditing={editingId === entry.id}
                   expanded={expandedIds.has(entry.id)}
+                  highlightMissingDates={highlightMissingDates}
                   onToggleExpand={() => toggleExpand(entry.id)}
                   onEdit={() => setEditingId(entry.id)}
                   onCancel={() => setEditingId(null)}

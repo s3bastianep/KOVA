@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import '@/styles/landing-home-plain.css';
@@ -126,6 +126,8 @@ export default function Empleo() {
 
   const [lit, setLit] = useState(false);
   const [selected, setSelected] = useState(0);
+  const [fanIn, setFanIn] = useState(false);
+  const fanRef = useRef(null);
 
   useEffect(() => {
     const t = setTimeout(() => setLit(true), 200);
@@ -135,6 +137,26 @@ export default function Empleo() {
   useEffect(() => {
     document.documentElement.classList.add('kova-home-chrome');
     return () => document.documentElement.classList.remove('kova-home-chrome');
+  }, []);
+
+  useEffect(() => {
+    const el = fanRef.current;
+    if (!el) return undefined;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setFanIn(true);
+      return undefined;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setFanIn(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.35, rootMargin: '0px 0px -8% 0px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   const dim = DIMENSIONS[selected];
@@ -164,25 +186,25 @@ export default function Empleo() {
             <div className="emp-mosaic__grid">
               <img
                 className="emp-mosaic__photo emp-mosaic__photo--1"
-                src="/landing/people/pro-woman-3.jpg"
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=500&auto=format&fit=crop"
                 alt=""
                 loading="eager"
               />
               <img
                 className="emp-mosaic__photo emp-mosaic__photo--2"
-                src="/landing/people/pro-woman-1.jpg"
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=700&auto=format&fit=crop"
                 alt=""
                 loading="eager"
               />
               <img
                 className="emp-mosaic__photo emp-mosaic__photo--3"
-                src="/landing/people/pro-man-2.jpg"
+                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=500&auto=format&fit=crop"
                 alt=""
                 loading="eager"
               />
               <img
                 className="emp-mosaic__photo emp-mosaic__photo--4"
-                src="/landing/people/pro-man-1.jpg"
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=500&auto=format&fit=crop"
                 alt=""
                 loading="eager"
               />
@@ -342,15 +364,19 @@ export default function Empleo() {
             </div>
           </div>
 
-          <div className="emp-fan" aria-hidden>
+          <div
+            ref={fanRef}
+            className={`emp-fan${fanIn ? ' is-in' : ''}`}
+            aria-hidden="true"
+          >
             <div className="emp-fan__you">
               <span className="emp-fan__you-dot">JP</span>
               <div className="emp-fan__you-meta">
                 <strong>Su perfil</strong>
                 <span>Kova Score listo</span>
               </div>
-              <span className="emp-fan__you-check">
-                <svg viewBox="0 0 24 24" width="12" height="12" fill="none">
+              <span className="emp-fan__you-check" aria-hidden>
+                <svg viewBox="0 0 24 24" width="11" height="11" fill="none">
                   <path
                     d="M5 12.5 10 17.5 19 7"
                     stroke="currentColor"
@@ -361,32 +387,33 @@ export default function Empleo() {
                 </svg>
               </span>
             </div>
-            <svg className="emp-fan__lines" viewBox="0 0 300 56" preserveAspectRatio="none">
-              <path className="emp-fan__line" d="M150 2 C150 30 52 26 52 54" />
-              <path className="emp-fan__line" d="M150 2 C150 22 150 36 150 54" />
-              <path className="emp-fan__line" d="M150 2 C150 30 248 26 248 54" />
-              <circle className="emp-fan__spark" r="3">
+            <svg className="emp-fan__lines" viewBox="0 0 300 64" preserveAspectRatio="none">
+              <path className="emp-fan__line" d="M150 4 C150 34 50 30 50 60" />
+              <path className="emp-fan__line" d="M150 4 C150 26 150 42 150 60" />
+              <path className="emp-fan__line" d="M150 4 C150 34 250 30 250 60" />
+              <circle cx="150" cy="4" r="2.5" className="emp-fan__hub" />
+              <circle className="emp-fan__spark" r="2.5">
                 <animateMotion
-                  dur="2.6s"
+                  dur="3s"
                   begin="0s"
                   repeatCount="indefinite"
-                  path="M150 2 C150 30 52 26 52 54"
+                  path="M150 4 C150 34 50 30 50 60"
                 />
               </circle>
-              <circle className="emp-fan__spark" r="3">
+              <circle className="emp-fan__spark" r="2.5">
                 <animateMotion
-                  dur="2.6s"
-                  begin="0.9s"
+                  dur="3s"
+                  begin="1s"
                   repeatCount="indefinite"
-                  path="M150 2 C150 22 150 36 150 54"
+                  path="M150 4 C150 26 150 42 150 60"
                 />
               </circle>
-              <circle className="emp-fan__spark" r="3">
+              <circle className="emp-fan__spark" r="2.5">
                 <animateMotion
-                  dur="2.6s"
-                  begin="1.8s"
+                  dur="3s"
+                  begin="2s"
                   repeatCount="indefinite"
-                  path="M150 2 C150 30 248 26 248 54"
+                  path="M150 4 C150 34 250 30 250 60"
                 />
               </circle>
             </svg>
@@ -395,15 +422,18 @@ export default function Empleo() {
                 { title: 'Ejecutivo B2B', pct: 92, top: true },
                 { title: 'Key Account', pct: 88 },
                 { title: 'Ventas técnicas', pct: 85 },
-              ].map((j) => (
+              ].map((j, i) => (
                 <div
                   key={j.title}
                   className={`emp-fan__job${j.top ? ' emp-fan__job--top' : ''}`}
-                  style={{ '--p': j.pct }}
+                  style={{ '--p': j.pct, '--i': i }}
                 >
-                  {j.top && <span className="emp-fan__job-badge">Mejor match</span>}
+                  {j.top ? <span className="emp-fan__job-badge">Mejor match</span> : null}
                   <span className="emp-fan__job-ring">
-                    <b>{j.pct}%</b>
+                    <span className="emp-fan__job-ring-face">
+                      <b>{j.pct}</b>
+                      <small>%</small>
+                    </span>
                   </span>
                   <strong>{j.title}</strong>
                   <span className="emp-fan__job-sub">Compatibilidad</span>

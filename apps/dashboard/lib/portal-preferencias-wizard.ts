@@ -191,7 +191,7 @@ export const PREFERENCIAS_WIZARD_STEPS: PreferenciasWizardStep[] = [
     block: 'buscas',
     title: '¿Cuándo podrías empezar?',
     multi: false,
-    options: ['Inmediata', '15 días', '30 días', '60 días'],
+    options: ['Inmediata', '7 días', '15 días'],
     apply: (selected) => ({ disponibilidad: selected[0] }),
     read: (p) => (p.disponibilidad ? [p.disponibilidad] : []),
   },

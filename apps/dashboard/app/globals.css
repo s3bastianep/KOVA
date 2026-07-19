@@ -759,6 +759,16 @@ a:focus-visible {
   font-weight: 400;
 }
 
+.kova-month-picker__trigger.is-invalid {
+  border-color: #e07070 !important;
+  box-shadow: 0 0 0 1px rgba(224, 112, 112, 0.35);
+}
+
+.kova-month-picker__trigger--dark.is-invalid {
+  border-color: #ff8a8a !important;
+  box-shadow: 0 0 0 1px rgba(255, 138, 138, 0.28);
+}
+
 .kova-month-picker__trigger:hover,
 .kova-month-picker__trigger.is-open,
 .kova-month-picker__trigger:focus-visible {

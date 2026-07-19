@@ -114,7 +114,6 @@ export function PortalPreferenciasWizard({ fromOnboarding = false, initialBlock 
   const persist = useCallback((nextAnswers: Record<string, string[]>, nextProfile: CommercialProfile) => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
-      setSaveStatus('saving');
       const merged = applyPreferenciasAnswers(nextAnswers, nextProfile);
       portalApi
         .updatePerfil(merged as Record<string, unknown>)
@@ -123,7 +122,7 @@ export function PortalPreferenciasWizard({ fromOnboarding = false, initialBlock 
           setSaveStatus('saved');
         })
         .catch(() => setSaveStatus('error'));
-    }, 400);
+    }, 500);
   }, []);
 
   const setAnswer = (stepId: string, value: string[]) => {
@@ -522,8 +521,7 @@ export function PortalPreferenciasWizard({ fromOnboarding = false, initialBlock 
         ) : null}
 
         <div className="mt-5 min-h-[1.25rem] text-xs text-[var(--kova-navy-muted)]">
-          {saveStatus === 'saving' ? 'Guardando...' : null}
-          {saveStatus === 'saved' ? '✓ Guardado automáticamente' : null}
+          {saveStatus === 'saved' ? '✓ Guardado' : null}
           {saveStatus === 'error' ? 'No pudimos guardar. Reintentaremos al continuar.' : null}
         </div>
 

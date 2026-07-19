@@ -6,6 +6,10 @@ import type { CommercialProfile } from '@/lib/candidate-commercial-profile';
 import {
   stripIncompleteCertifications,
   stripIncompleteLanguages,
+  profileHasMissingDateFields,
+  DATE_FIELDS_REQUIRED_MESSAGE,
+  missingWorkDateFields,
+  missingEducationDateFields,
 } from '@/lib/commercial-profile-builder';
 import { portalApi } from '@/lib/api';
 import { getStoredUser } from '@/lib/api';
@@ -152,6 +156,7 @@ export function PortalOnboardingFlow({
     () => new Set(initialReviewed as ReviewSectionId[]),
   );
   const [error, setError] = useState('');
+  const [highlightMissingDates, setHighlightMissingDates] = useState(false);
   const [busy, setBusy] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [overlayTransition, setOverlayTransition] = useState<StepTransition | null>(null);
@@ -254,14 +259,20 @@ export function PortalOnboardingFlow({
   );
 
   const saveStep = useCallback(
-    async (next: OnboardingStep, profilePatch?: Partial<CommercialProfile>, subStep?: number) => {
-      setSaveStatus('saving');
+    async (
+      next: OnboardingStep,
+      profilePatch?: Partial<CommercialProfile>,
+      subStep?: number,
+      opts?: { quiet?: boolean },
+    ) => {
+      if (!opts?.quiet) setSaveStatus('saving');
       try {
         await persist({ nextStep: next, profilePatch, subStep });
         if (STEPS_WITH_VACANCY_STATS.has(next) || profilePatch) {
           setVacancyStatsKey((key) => key + 1);
         }
-        setSaveStatus('saved');
+        if (!opts?.quiet) setSaveStatus('saved');
+        else setSaveStatus('idle');
       } catch (err) {
         setSaveStatus('error');
         throw err;
@@ -412,7 +423,7 @@ export function PortalOnboardingFlow({
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(() => {
       if (finishedRef.current) return;
-      setSaveStatus('saving');
+      // Silent background persist — never flash "Guardando..." on chip toggles.
       const merged = buildMergedProfile();
       portalApi
         .updateOnboarding({
@@ -422,12 +433,12 @@ export function PortalOnboardingFlow({
           profile: merged as Record<string, unknown>,
         })
         .then(() => {
-          if (!finishedRef.current) setSaveStatus('saved');
+          // Stay quiet on success so the UI doesn't jump.
         })
         .catch(() => {
           if (!finishedRef.current) setSaveStatus('error');
         });
-    }, 420);
+    }, 600);
     return () => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     };
@@ -502,17 +513,17 @@ export function PortalOnboardingFlow({
 
     const next = prefStepIndex + 1;
     setPrefStepIndex(next);
-    await saveStep('preferencias', merged, next);
+    await saveStep('preferencias', merged, next, { quiet: true });
   };
 
   const goPrefBack = async () => {
     if (prefStepIndex <= 0) {
-      await saveStep('review_hub');
+      await saveStep('review_hub', undefined, undefined, { quiet: true });
       return;
     }
     const prev = prefStepIndex - 1;
     setPrefStepIndex(prev);
-    await saveStep('preferencias', undefined, prev);
+    await saveStep('preferencias', undefined, prev, { quiet: true });
   };
 
   const finishOnboarding = async () => {
@@ -720,6 +731,23 @@ export function PortalOnboardingFlow({
             onBack={() => void saveStep(reviewEditOrigin)}
             backLabel="Volver"
             onContinue={async () => {
+              const sectionNeedsDates =
+                reviewEditSection === 'experiencia' || reviewEditSection === 'educacion';
+              const datesMissing =
+                reviewEditSection === 'experiencia'
+                  ? (profile.historialLaboral ?? []).some((e) => missingWorkDateFields(e).length > 0)
+                  : reviewEditSection === 'educacion'
+                    ? (profile.formacion ?? []).some((e) => missingEducationDateFields(e).length > 0)
+                    : profileHasMissingDateFields(profile);
+
+              if (sectionNeedsDates && datesMissing) {
+                setHighlightMissingDates(true);
+                setError(DATE_FIELDS_REQUIRED_MESSAGE);
+                return;
+              }
+
+              setHighlightMissingDates(false);
+              setError('');
               const nextReviewed = Array.from(
                 new Set<ReviewSectionId>([...reviewed, reviewEditSection]),
               );
@@ -759,8 +787,18 @@ export function PortalOnboardingFlow({
           }
         />
         <section className="ob-panel ob-question-panel">
-        <PortalOnboardingReviewCards profile={profile} section={reviewEditSection} onChange={setProfile} />
+        <PortalOnboardingReviewCards
+          profile={profile}
+          section={reviewEditSection}
+          onChange={(next) => {
+            setProfile(next);
+            if (highlightMissingDates) setHighlightMissingDates(false);
+            if (error === DATE_FIELDS_REQUIRED_MESSAGE) setError('');
+          }}
+          highlightMissingDates={highlightMissingDates}
+        />
         </section>
+        {error ? <p className="portal-onboarding-error">{error}</p> : null}
       </PortalOnboardingShell>,
     );
   }

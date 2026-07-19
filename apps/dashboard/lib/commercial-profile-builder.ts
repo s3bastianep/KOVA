@@ -68,7 +68,7 @@ export const ROLE_FUNCTION_OPTIONS = [
   'Liderazgo de equipo sin venta directa',
 ] as const;
 
-export const AVAILABILITY_OPTIONS = ['Inmediata', 'Con aviso'] as const;
+export const AVAILABILITY_OPTIONS = ['Inmediata', '7 días', '15 días'] as const;
 export const TRAVEL_OPTIONS = ['Sí', 'No', 'Ocasionalmente'] as const;
 export const RELOCATION_OPTIONS = ['Sí', 'No', 'A evaluar'] as const;
 
@@ -208,8 +208,51 @@ export function newLanguageEntry(): LanguageEntry {
 }
 
 export function isEducationComplete(entry: EducationEntry): boolean {
-  return Boolean(entry.nivel.trim() && entry.titulo.trim() && entry.institucion.trim());
+  return Boolean(
+    entry.nivel.trim() &&
+      entry.titulo.trim() &&
+      entry.institucion.trim() &&
+      isGraduationYearValid(entry.anioGraduacion),
+  );
 }
+
+/** Año de graduación: 4 dígitos en un rango razonable. */
+export function isGraduationYearValid(value: string | undefined): boolean {
+  const year = value?.trim() ?? '';
+  if (!/^\d{4}$/.test(year)) return false;
+  const n = Number(year);
+  const max = new Date().getFullYear() + 1;
+  return n >= 1950 && n <= max;
+}
+
+export type WorkDateField = 'fechaInicio' | 'fechaFin';
+
+export function missingWorkDateFields(entry: WorkHistoryEntry): WorkDateField[] {
+  const missing: WorkDateField[] = [];
+  if (!entry.fechaInicio?.trim()) missing.push('fechaInicio');
+  if (!entry.trabajoActual && !entry.fechaFin?.trim()) missing.push('fechaFin');
+  return missing;
+}
+
+export function missingEducationDateFields(entry: EducationEntry): Array<'anioGraduacion'> {
+  return isGraduationYearValid(entry.anioGraduacion) ? [] : ['anioGraduacion'];
+}
+
+export function profileHasMissingDateFields(profile: {
+  historialLaboral?: WorkHistoryEntry[];
+  formacion?: EducationEntry[];
+}): boolean {
+  const workMissing = (profile.historialLaboral ?? []).some(
+    (entry) => missingWorkDateFields(entry).length > 0,
+  );
+  const eduMissing = (profile.formacion ?? []).some(
+    (entry) => missingEducationDateFields(entry).length > 0,
+  );
+  return workMissing || eduMissing;
+}
+
+export const DATE_FIELDS_REQUIRED_MESSAGE =
+  'Completa todas las fechas antes de guardar (inicio, fin o año de graduación).';
 
 export function isLanguageComplete(entry: LanguageEntry): boolean {
   return Boolean(entry.idioma.trim() && entry.nivel.trim());

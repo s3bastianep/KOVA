@@ -1259,9 +1259,7 @@
 .kd-final-grid {
   display: grid;
   grid-template-columns: minmax(210px, 0.95fr) minmax(300px, 1.15fr) minmax(210px, 0.95fr);
-  grid-template-areas:
-    "shotL copy shotR"
-    "sideL mid sideR";
+  grid-template-areas: "shotL copy shotR";
   column-gap: clamp(24px, 3vw, 44px);
   row-gap: 8px;
   align-items: start;
@@ -1270,9 +1268,6 @@
 .kd-final-shot--left { grid-area: shotL; }
 .kd-final-copy { grid-area: copy; }
 .kd-final-shot--right { grid-area: shotR; }
-.kd-align__side--left { grid-area: sideL; }
-.kd-align__mid { grid-area: mid; }
-.kd-align__side--right { grid-area: sideR; }
 
 .kd-final-shot {
   margin: 0;
@@ -1350,24 +1345,25 @@
 .kd-final-actions {
   margin-top: 28px;
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .kd-final-btn {
-  min-height: 46px;
-  padding: 0 18px;
+  min-height: 48px;
+  padding: 0 22px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   border-radius: 999px;
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.01em;
+  line-height: 1.2;
   white-space: nowrap;
   transition: transform 400ms var(--kd-ease), background 300ms ease, border-color 300ms ease, color 300ms ease;
 }
@@ -1375,14 +1371,15 @@
 .kd-final-btn:hover { transform: translateY(-2px); }
 
 .kd-final-btn--primary {
-  color: #fff;
-  background: var(--kd-lime-ink);
-  border: 1px solid var(--kd-lime-ink);
+  color: var(--kd-ink);
+  background: var(--kd-lime);
+  border: 1px solid var(--kd-lime);
 }
 
 .kd-final-btn--primary:hover {
-  background: #065f3e;
-  border-color: #065f3e;
+  background: #d4e86a;
+  border-color: #d4e86a;
+  color: var(--kd-ink);
 }
 
 .kd-final-btn--ghost {
@@ -1395,101 +1392,6 @@
   border-color: var(--kd-lime-ink);
   color: var(--kd-lime-ink);
 }
-
-.kd-align__side {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 8px;
-  padding-top: 28px;
-}
-
-.kd-align__icon {
-  width: 52px;
-  height: 52px;
-  display: grid;
-  place-items: center;
-  border-radius: 14px;
-  background: #e8e6df;
-  color: var(--kd-lime-ink);
-}
-
-.kd-align__icon svg { width: 24px; height: 24px; }
-
-.kd-align__side strong {
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--kd-lime-ink);
-}
-
-.kd-align__side p {
-  margin: 0;
-  max-width: 20ch;
-  color: #7a7a7a;
-  font-size: 13.5px;
-  line-height: 1.45;
-}
-
-.kd-align__mid {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  min-height: 118px;
-  padding-bottom: 4px;
-}
-
-.kd-align__arc {
-  position: absolute;
-  left: -42%;
-  right: -42%;
-  top: 8px;
-  width: auto;
-  height: 88px;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.kd-align__arc path {
-  fill: none;
-  stroke: var(--kd-lime-ink);
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  opacity: 0.75;
-}
-
-.kd-align__node {
-  position: relative;
-  z-index: 1;
-  width: 48px;
-  height: 48px;
-  display: grid;
-  place-items: center;
-  margin-bottom: 8px;
-  border-radius: 50%;
-  background: #fff;
-  border: 1.5px solid rgba(8, 117, 76, 0.3);
-  color: var(--kd-lime-ink);
-  box-shadow: 0 8px 22px rgba(8, 117, 76, 0.08);
-}
-
-.kd-align__node svg { width: 22px; height: 22px; }
-
-.kd-align__label {
-  position: relative;
-  z-index: 1;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--kd-lime-ink);
-}
-
-
 
 .kova-dark .kd-btn--ghost-light {
   color: rgba(245, 245, 245, 0.9);
@@ -1590,9 +1492,7 @@
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
       "copy copy"
-      "shotL shotR"
-      "sideL sideR"
-      "mid mid";
+      "shotL shotR";
     column-gap: 14px;
     row-gap: 18px;
   }
@@ -1625,20 +1525,6 @@
   .kd-final-btn {
     width: 100%;
     font-size: 14px;
-  }
-
-  .kd-align__side {
-    padding-top: 8px;
-  }
-
-  .kd-align__mid {
-    min-height: 96px;
-  }
-
-  .kd-align__arc {
-    left: 8%;
-    right: 8%;
-    height: 70px;
   }
 
   .kd-paths {

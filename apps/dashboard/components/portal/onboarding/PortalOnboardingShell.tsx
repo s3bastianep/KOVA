@@ -69,10 +69,9 @@ export function PortalOnboardingShell({
           {!hidePreview && preview}
           {motivation ? <p className="portal-onboarding-motivation">{motivation}</p> : null}
           <div className="portal-onboarding-stage">{children}</div>
-          {saveStatus === 'saving' || saveStatus === 'error' ? (
-            <p className="portal-onboarding-save-state" aria-live="polite">
-              {saveStatus === 'saving' ? 'Guardando...' : null}
-              {saveStatus === 'error' ? 'Error al guardar' : null}
+          {saveStatus === 'error' ? (
+            <p className="portal-onboarding-save-state portal-onboarding-save-state--toast" role="alert">
+              Error al guardar. Reintentaremos en segundo plano.
             </p>
           ) : null}
         </main>
@@ -124,7 +123,6 @@ export function PortalOnboardingFooter({
           <span />
         )}
         <p className="portal-onboarding-footer__save" aria-live="polite">
-          {saveStatus === 'saving' ? 'Guardando…' : null}
           {saveStatus === 'error' ? 'Error al guardar' : null}
         </p>
         <button

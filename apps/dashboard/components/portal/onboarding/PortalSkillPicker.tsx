@@ -68,7 +68,7 @@ export function PortalSkillPicker({
     onChange([...skills, normalized].slice(0, max));
     setQuery('');
     setOpen(false);
-    inputRef.current?.focus();
+    inputRef.current?.focus({ preventScroll: true });
   };
 
   const removeSkill = (skill: string) => {
@@ -95,8 +95,8 @@ export function PortalSkillPicker({
           {atLimit
             ? 'Llegaste al máximo. Quita una si quieres cambiar.'
             : fromCv.length > 0
-              ? 'Elige hasta 3. Abajo van sugerencias según tu hoja de vida.'
-              : 'Elige hasta 3. Escribe una o toca una sugerencia.'}
+              ? `Máximo ${max}. Abajo: sugerencia según tu hoja de vida.`
+              : `Máximo ${max}. Escribe una o toca una sugerencia.`}
         </p>
       </div>
 
@@ -181,7 +181,9 @@ export function PortalSkillPicker({
 
       {fromCv.length > 0 ? (
         <div className="portal-onboarding-skill-picker__quick">
-          <p className="portal-onboarding-skill-picker__block-label">Según tu hoja de vida</p>
+          <p className="portal-onboarding-skill-picker__block-label">
+            Sugerencia según tu hoja de vida
+          </p>
           <div className="portal-onboarding-chips portal-onboarding-chips--inline">
             {fromCv.map((skill) => (
               <button

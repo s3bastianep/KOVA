@@ -12,4 +12,5 @@ interface ImportMeta {
 
 interface Window {
   __kovaPortalWarmed?: boolean;
+  __kovaLenis?: { scrollTo: (target: Element | string | number, options?: object) => void };
 }

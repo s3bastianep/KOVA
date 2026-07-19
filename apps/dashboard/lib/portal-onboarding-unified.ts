@@ -160,8 +160,8 @@ export function unifiedProgressPercent(
     return Math.min(98, Math.round(macroBase + ((competencyIndex + 1) / total) * 8));
   }
   if (s === 'complete') return 100;
-  // cv_summary is the final reveal right before 'complete' — the profile is fully built by now.
-  if (s === 'cv_summary') return 99;
+  // Final reveal: profile is ready — show 100% with the "Completado" caption.
+  if (s === 'cv_summary') return 100;
 
   const stepWeights: Partial<Record<OnboardingStep, number>> = {
     welcome: 4,

@@ -117,7 +117,7 @@ export function toLineArray(text: string): string[] {
 
 /**
  * Limpia descripciones de experiencia: sin iconos/viñetas, una idea por línea,
- * legible en el textarea del candidato.
+ * respetando el texto original de la hoja de vida.
  */
 export function formatWorkDescription(raw: string, maxLen = 1200): string {
   if (!raw?.trim()) return '';

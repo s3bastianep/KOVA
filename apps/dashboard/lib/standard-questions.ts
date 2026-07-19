@@ -223,7 +223,7 @@ export const STANDARD_QUESTIONS: StandardQuestionDef[] = [
     category: 'Disponibilidad',
     inputType: 'select',
     matchType: 'contains',
-    options: ['Inmediata', '15 días', '30 días', '60 días'],
+    options: ['Inmediata', '7 días', '15 días'],
     defaultWeight: 5,
   },
   {

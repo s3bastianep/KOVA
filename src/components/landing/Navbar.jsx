@@ -7,7 +7,12 @@ const MAIN_LINKS = [
   { to: '/guias', label: 'Blog' },
 ];
 
-const ACTION_LINKS = [{ to: '/login', label: 'Ingresar' }];
+const CONTACT_CTA = { to: '/para-empresas#contacto', label: 'Contáctanos' };
+
+const ACTION_LINKS = [
+  { to: '/login', label: 'Ingresar' },
+  { to: '/registro', label: 'Crear cuenta' },
+];
 
 export default function Navbar() {
   const { pathname, hash } = useLocation();
@@ -71,8 +76,21 @@ export default function Navbar() {
               {item.label}
             </NavLink>
           ))}
-          <Link to="/#caminos" className="kv-cta-pill kv-cta-pill--lime">
-            Empezar
+          <Link
+            to={CONTACT_CTA.to}
+            className="kv-cta-pill kv-cta-pill--lime"
+            onClick={() => {
+              if (pathname !== '/para-empresas') return;
+              window.setTimeout(() => {
+                const el = document.getElementById('contacto');
+                if (!el) return;
+                const lenis = window.__kovaLenis;
+                if (lenis) lenis.scrollTo(el, { offset: -88 });
+                else el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }, 0);
+            }}
+          >
+            {CONTACT_CTA.label}
           </Link>
           <button
             type="button"
@@ -110,11 +128,21 @@ export default function Navbar() {
                 </Link>
               ))}
               <Link
-                to="/#caminos"
+                to={CONTACT_CTA.to}
                 className="kv-cta-pill kv-cta-pill--lime kv-nav-drawer__cta"
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setOpen(false);
+                  if (pathname !== '/para-empresas') return;
+                  window.setTimeout(() => {
+                    const el = document.getElementById('contacto');
+                    if (!el) return;
+                    const lenis = window.__kovaLenis;
+                    if (lenis) lenis.scrollTo(el, { offset: -88 });
+                    else el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }, 0);
+                }}
               >
-                Empezar
+                {CONTACT_CTA.label}
               </Link>
             </div>
           </div>

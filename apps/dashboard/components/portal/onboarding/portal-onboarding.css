@@ -349,6 +349,20 @@
   font-family: var(--font-manrope), Manrope, sans-serif;
 }
 
+.portal-onboarding-field.is-invalid,
+.portal-onboarding-field--select.is-invalid {
+  border-color: #ff8a8a !important;
+  box-shadow: 0 0 0 1px rgba(255, 138, 138, 0.28);
+}
+
+.portal-onboarding-work-field__hint--error {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  color: #ff8a8a;
+  font-family: var(--font-manrope), Manrope, sans-serif;
+}
+
 .portal-onboarding-busy {
   margin: 1rem 0 0;
   display: flex;
@@ -2179,12 +2193,20 @@ html.portal-onboarding-immersive .kova-topbar {
   width: 100%;
 }
 
-.portal-onboarding-save-state {
-  margin: 1rem 0 0;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: rgba(197, 222, 78, 0.7);
-  text-align: center;
+.portal-onboarding-save-state--toast {
+  position: fixed;
+  left: 50%;
+  bottom: 5.5rem;
+  z-index: 40;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(40, 18, 18, 0.92);
+  border: 1px solid rgba(255, 138, 138, 0.35);
+  color: #ffb4b4;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 /* Question */
@@ -2382,6 +2404,15 @@ html.portal-onboarding-immersive .kova-topbar {
   background: var(--ob-surface);
   color: rgba(255, 255, 255, 0.85);
   font-size: 0.8125rem;
+  min-height: 2.85rem;
+  box-sizing: border-box;
+}
+
+.portal-onboarding--fullscreen .portal-onboarding-micro-feedback--spacer {
+  visibility: hidden;
+  border-color: transparent;
+  background: transparent;
+  border-left-color: transparent;
 }
 
 .portal-onboarding-micro-feedback__icon {
@@ -3168,7 +3199,15 @@ html.portal-onboarding-immersive .kova-topbar {
   font-size: 0.8125rem;
   font-weight: 500;
   color: rgba(237, 239, 234, 0.9);
-  animation: portal-onboarding-fade-in 0.3s ease;
+  min-height: 2.75rem;
+  box-sizing: border-box;
+}
+
+.portal-onboarding-micro-feedback--spacer {
+  visibility: hidden;
+  background: transparent;
+  border-color: transparent;
+  pointer-events: none;
 }
 
 @keyframes portal-onboarding-slide-up {
