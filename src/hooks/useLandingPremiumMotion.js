@@ -21,18 +21,9 @@ export function useLandingPremiumMotion(rootSelector = '.kova-home-plain') {
     document.documentElement.classList.add('kova-home-chrome');
     root.classList.add('kh-cinematic');
 
-    const nav = document.querySelector('.kova-navbar');
-    const onNavScroll = () => {
-      nav?.classList.toggle('is-scrolled', window.scrollY > 12);
-    };
-    onNavScroll();
-    window.addEventListener('scroll', onNavScroll, { passive: true });
-
     if (reduced) {
       root.classList.add('is-reduced-motion');
       return () => {
-        window.removeEventListener('scroll', onNavScroll);
-        nav?.classList.remove('is-scrolled');
         document.documentElement.classList.remove('kova-home-chrome');
         root.classList.remove('is-reduced-motion', 'kh-cinematic');
       };
@@ -389,8 +380,6 @@ export function useLandingPremiumMotion(rootSelector = '.kova-home-plain') {
 
     return () => {
       cancelled = true;
-      window.removeEventListener('scroll', onNavScroll);
-      nav?.classList.remove('is-scrolled');
       disposeMotion();
       document.documentElement.classList.remove('kova-home-chrome');
       root.classList.remove('kh-cinematic', 'is-reduced-motion');

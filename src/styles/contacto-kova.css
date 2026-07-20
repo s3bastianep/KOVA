@@ -535,6 +535,7 @@ html.kova-contacto-active .kova-route-shell__fallback {
 @media (max-width: 900px) {
   .kova-contacto .kc-grid {
     grid-template-columns: 1fr;
+    gap: 28px;
   }
 
   .kova-contacto .kc-booking {
@@ -542,6 +543,80 @@ html.kova-contacto-active .kova-route-shell__fallback {
   }
 
   .kova-contacto .kc-head {
-    padding-top: 140px;
+    padding-top: 112px;
+    padding-bottom: 36px;
+  }
+
+  .kova-contacto .kc-head h1 {
+    font-size: clamp(1.85rem, 8vw, 2.4rem);
+    max-width: none;
+  }
+
+  .kova-contacto .kc-head__lead {
+    max-width: none;
+    font-size: 15.5px;
+  }
+
+  .kova-contacto .kc-chips {
+    flex-wrap: wrap;
+    gap: 8px 14px;
+  }
+
+  .kova-contacto .kc-main {
+    padding-bottom: 48px;
+  }
+
+  .kova-contacto .kc-side h2 {
+    font-size: 13px;
+  }
+
+  .kova-contacto .kc-steps li {
+    padding: 14px 0;
+  }
+
+  .kova-contacto .kc-whatsapp {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 14px;
+    border: 1px solid var(--kc-border);
+    background: var(--kc-dark-2);
+  }
+
+  .kova-contacto .kova-landing-wave .kv-booking-card--dark {
+    border-radius: 16px;
+  }
+
+  .kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-header {
+    padding: 20px 16px 18px;
+  }
+
+  .kova-contacto .kova-landing-wave .kv-booking-body {
+    padding: 18px 16px 22px;
+  }
+
+  .kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-step-pills {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-step-pills span {
+    flex: 1 1 auto;
+    text-align: center;
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+  }
+
+  .kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-alert {
+    margin: 16px 16px 0;
+    padding: 12px 14px;
+  }
+
+  .kova-contacto .kc-page {
+    --kc-page: calc(100% - 32px);
+  }
+
+  .kova-contacto {
+    --kc-page: calc(100% - 32px);
   }
 }

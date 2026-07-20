@@ -102,18 +102,6 @@ export default function Login({ mode = 'candidate' }) {
     <div className="kv-login">
       <div className="kv-login-bg" aria-hidden />
 
-      <header className="kv-login-nav">
-        <div className="kv-login-nav-inner">
-          <Link to="/" className="kv-login-logo">
-            kova<span className="kv-login-logo-dot">.</span>
-          </Link>
-          <Link to="/" className="kv-login-back">
-            <ArrowLeft size={16} aria-hidden />
-            Volver al inicio
-          </Link>
-        </div>
-      </header>
-
       <div className="kv-login-stage">
         <aside className="kv-login-aside">
           <div className="kv-login-mosaic-wrap">

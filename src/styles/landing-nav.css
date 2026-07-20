@@ -6,6 +6,7 @@
   --kv-page-gutter: 6vw;
   /* Negro unificado — navbar + heroes + shell */
   --kv-black: #0d0f0f;
+  --kv-lime: #c5de4e;
   /* Shared type scale — Manrope */
   --kv-fs-hero: clamp(2.5rem, 5.2vw, 64px);
   --kv-fs-h2: clamp(1.75rem, 3.6vw, 42px);
@@ -82,7 +83,7 @@ body {
 }
 
 .kova-navbar .kv-logo-dot {
-  color: #c5de4e;
+  color: var(--kv-lime);
 }
 
 .kova-navbar .kv-navlinks {
@@ -118,11 +119,11 @@ body {
 }
 
 .kova-navbar .kv-nav-quiet:hover {
-  color: #c5de4e !important;
+  color: var(--kv-lime) !important;
 }
 
 .kova-navbar .kv-nav-quiet.is-active {
-  color: #c5de4e !important;
+  color: var(--kv-lime) !important;
 }
 
 @media (min-width: 960px) {
@@ -158,11 +159,11 @@ body {
 
 .kova-navbar .kv-navlinks a:hover,
 .kova-navbar .kv-navlinks button:hover {
-  color: #c5de4e !important;
+  color: var(--kv-lime) !important;
 }
 
 .kova-navbar .kv-navlinks a.is-active {
-  color: #c5de4e !important;
+  color: var(--kv-lime) !important;
 }
 
 .kova-navbar .kv-cta-pill {
@@ -175,7 +176,7 @@ body {
   border: none !important;
   box-shadow: none !important;
   background: transparent !important;
-  color: #c5de4e !important;
+  color: var(--kv-lime) !important;
   font-family: inherit;
   font-size: 14px;
   font-weight: 700;
@@ -199,7 +200,7 @@ body {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  color: #c5de4e !important;
+  color: var(--kv-lime) !important;
   font-weight: 700;
 }
 
@@ -354,7 +355,7 @@ body {
 
   .kova-navbar .kv-nav-drawer__links a:hover,
   .kova-navbar .kv-nav-drawer__actions a:not(.kv-cta-pill):hover {
-    color: #c5de4e !important;
+    color: var(--kv-lime) !important;
   }
 
   .kova-navbar .kv-nav-drawer__cta {

@@ -2727,54 +2727,12 @@
 }
 
 .kova-home-plain .kh-guarantee__panel {
-  display: flex;
-  align-items: center;
-  gap: clamp(36px, 5vw, 80px);
+  display: block;
   padding: clamp(40px, 5vw, 64px);
   background: #fff;
   border: 1px solid var(--kv-line-strong, rgba(26, 23, 18, 0.11));
   border-radius: 24px;
   box-shadow: var(--kv-shadow-md);
-}
-
-.kova-home-plain .kh-guarantee__badge {
-  position: relative;
-  flex: 0 0 180px;
-  height: 180px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  border: 2px solid #08754c;
-  border-radius: 50%;
-  text-align: center;
-}
-
-.kova-home-plain .kh-guarantee__ring {
-  position: absolute;
-  inset: 9px;
-  border: 1px dashed rgba(8, 117, 76, 0.35);
-  border-radius: 50%;
-}
-
-.kova-home-plain .kh-guarantee__badge strong {
-  font-family: var(--font-display, Manrope, sans-serif);
-  font-size: 64px;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  color: #08754c;
-}
-
-.kova-home-plain .kh-guarantee__badge > span:last-child {
-  max-width: 110px;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  line-height: 1.35;
-  color: #6f685c;
 }
 
 .kova-home-plain .kh-guarantee__copy .kh-h2 {
@@ -2819,18 +2777,7 @@
 
 @media (max-width: 860px) {
   .kova-home-plain .kh-guarantee__panel {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .kova-home-plain .kh-guarantee__badge {
-    flex: 0 0 auto;
-    width: 140px;
-    height: 140px;
-  }
-
-  .kova-home-plain .kh-guarantee__badge strong {
-    font-size: 48px;
+    padding: clamp(28px, 5vw, 40px);
   }
 }
 
@@ -2949,6 +2896,14 @@
 
   .kova-home-plain .kh-hero {
     padding: 36px 0 40px !important;
+  }
+
+  .kova-home-plain .kh-hero__visual-m {
+    display: block;
+  }
+
+  .kova-home-plain .kh-hero__collage--desk {
+    display: none !important;
   }
 
   .kova-home-plain .kh-hero__grid,
@@ -3190,20 +3145,54 @@
   .kova-home-plain .kh-flow {
     flex-direction: column;
     align-items: stretch;
+    gap: 0;
+    margin-top: 28px;
+    max-width: 100%;
   }
 
   .kova-home-plain .kh-flow li {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     width: 100%;
+    gap: 0;
   }
 
   .kova-home-plain .kh-flow li:not(:last-child)::after {
-    content: '↓';
-    margin: 0 0 0 auto;
+    content: '';
+    display: block;
+    width: 1px;
+    height: 18px;
+    margin: 6px auto;
+    background: rgba(197, 222, 78, 0.45);
+    border-radius: 999px;
   }
 
   .kova-home-plain .kh-flow span {
-    flex: 1;
+    flex: none;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    width: 100%;
+    max-width: none;
+    padding: 16px 18px;
+    border-radius: 14px;
+    font-family: var(--font-sans);
+    font-size: 14.5px;
+    font-weight: 650;
+    letter-spacing: -0.015em;
+    text-transform: none;
+    line-height: 1.35;
     white-space: normal;
+  }
+
+  .kova-home-plain .kh-flow__n {
+    flex: none;
+    margin-right: 0;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
   }
 
   .kova-home-plain .kh-mock__fields {
@@ -3226,7 +3215,117 @@
   }
 
   .kova-home-plain .kh-contact {
-    padding: 48px 0 36px !important;
+    padding: 52px 0 44px !important;
+  }
+
+  .kova-home-plain .kh-contact__grid {
+    display: flex !important;
+    flex-direction: column;
+    gap: 28px !important;
+  }
+
+  .kova-home-plain .kh-contact__copy {
+    order: 1;
+    max-width: none;
+  }
+
+  .kova-home-plain .kh-contact h2 {
+    max-width: none;
+    font-size: clamp(1.65rem, 7vw, 2rem) !important;
+    line-height: 1.12 !important;
+  }
+
+  .kova-home-plain .kh-contact__lead {
+    max-width: none;
+    font-size: 15px !important;
+    margin-top: 12px;
+  }
+
+  .kova-home-plain .kh-contact__pitch {
+    margin-top: 18px;
+    max-width: none;
+    font-size: 14.5px;
+  }
+
+  .kova-home-plain .kh-contact .kh-form,
+  .kova-boutique .kh-contact .kh-form {
+    order: 2;
+    width: 100%;
+    gap: 14px !important;
+    padding: 20px 16px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 16px !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .kova-boutique .kh-contact .kh-form--asesoria input,
+  .kova-boutique .kh-contact .kh-form--asesoria textarea,
+  .kova-home-plain .kh-contact .kh-form input,
+  .kova-home-plain .kh-contact .kh-form textarea {
+    margin-top: 8px !important;
+    min-height: 52px !important;
+    padding: 14px 14px !important;
+    border: 1px solid rgba(245, 241, 232, 0.18) !important;
+    border-radius: 12px !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    font-size: 16px !important;
+    line-height: 1.35 !important;
+  }
+
+  .kova-boutique .kh-contact .kh-form--asesoria textarea,
+  .kova-home-plain .kh-contact .kh-form textarea {
+    min-height: 120px !important;
+    padding-top: 14px !important;
+  }
+
+  .kova-boutique .kh-contact .kh-form--asesoria input:focus,
+  .kova-boutique .kh-contact .kh-form--asesoria textarea:focus,
+  .kova-home-plain .kh-contact .kh-form input:focus,
+  .kova-home-plain .kh-contact .kh-form textarea:focus {
+    border-color: #c5de4e !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .kova-home-plain .kh-form label > span,
+  .kova-boutique .kh-contact .kh-form label > span {
+    font-size: 12px !important;
+    letter-spacing: 0.06em;
+  }
+
+  .kova-boutique .kh-form__trust,
+  .kova-home-plain .kh-form__trust {
+    margin: 4px 0 2px;
+    gap: 8px;
+  }
+
+  .kova-boutique .kh-form__trust li,
+  .kova-home-plain .kh-form__trust li {
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .kova-home-plain .kh-form .kh-btn,
+  .kova-boutique .kh-contact .kh-btn--lime,
+  .kova-boutique .kh-contact .kh-btn--wa {
+    width: 100%;
+    min-height: 52px;
+    margin-top: 0 !important;
+    border-radius: 12px !important;
+    font-size: 15px !important;
+    padding: 14px 16px !important;
+  }
+
+  .kova-home-plain .kh-form .kh-btn--lime {
+    margin-top: 6px !important;
+  }
+
+  .kova-home-plain .kh-form__note {
+    text-align: left;
+    font-size: 13px;
+    margin-top: 2px;
   }
 
   .kova-home-plain .kh-footer__top {

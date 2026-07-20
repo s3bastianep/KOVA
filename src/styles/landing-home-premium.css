@@ -90,7 +90,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   --kh-mx: 50%;
   --kh-my: 28%;
 
-  /* Type scale ? Sora display / Inter body */
+  /* Type scale — Manrope */
   --kv-fs-hero: clamp(2.5rem, 5.2vw, 64px);
   --kv-fs-h2: clamp(1.75rem, 3.6vw, 42px);
   --kv-fs-h3: clamp(1.35rem, 2.2vw, 28px);
@@ -1605,8 +1605,8 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 .kova-home-plain .kh-costo-card__n {
-  color: rgba(245, 241, 232, 0.42) !important;
-  font-family: var(--font-mono, ui-monospace, monospace);
+  color: rgba(197, 222, 78, 0.7) !important;
+  font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.06em;
   margin: 0;
@@ -2059,16 +2059,6 @@ html.kova-home-chrome .kova-route-shell__fallback {
   font-size: 15.5px;
 }
 
-html.kova-home-chrome .kova-navbar .kv-logo {
-  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 800;
-  letter-spacing: -0.06em;
-}
-
-/* ???????????????????????????????????????????????????
-   Boutique refine ? trust, air, subtle craft
-   ??????????????????????????????????????????????????? */
-
 /* Softer elevation (no hard shadows) */
 .kova-home-plain {
   --kv-shadow-sm: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 6px 18px -10px rgba(0, 0, 0, 0.35);
@@ -2076,27 +2066,7 @@ html.kova-home-chrome .kova-navbar .kv-logo {
   --kv-shadow-lg: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 28px 56px -24px rgba(0, 0, 0, 0.5);
 }
 
-/* Nav ? glass un poco m?s profundo al hacer scroll */
-html.kova-home-chrome .kova-navbar.kv-nav {
-  transition:
-    background 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    backdrop-filter 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    padding 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
-  background: rgba(0, 0, 0, 0.82) !important;
-  backdrop-filter: blur(18px) saturate(1.35);
-  -webkit-backdrop-filter: blur(18px) saturate(1.35);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px -16px rgba(0, 0, 0, 0.45);
-  padding-top: 14px;
-  padding-bottom: 14px;
-}
-
-/* Hero type ? Sora 700 / up to 64px */
+/* Hero type — Manrope 700 / up to 64px */
 .kova-home-plain .kh-hero h1 {
   font-size: var(--kv-fs-hero) !important;
   font-weight: 700 !important;
@@ -2106,11 +2076,21 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   max-width: 14ch;
 }
 
-.kova-home-plain .kh-hero__grid > div:first-child {
+.kova-home-plain .kh-hero__grid > div:first-child,
+.kova-home-plain .kh-hero__copy {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0;
+}
+
+/* Mobile-only hero visual — hidden on desktop */
+.kova-home-plain .kh-hero__visual-m {
+  display: none;
+}
+
+.kova-home-plain .kh-cta-short {
+  display: none;
 }
 
 .kova-home-plain .kh-hero .kh-pill {
@@ -2995,6 +2975,169 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   white-space: nowrap;
 }
 
+/* ─── Para empresas — mobile hero (composition propia) ─── */
+@media (max-width: 900px) {
+  .kova-home-plain .kh-hero {
+    padding: 28px 0 52px !important;
+    overflow: visible;
+  }
+
+  .kova-home-plain .kh-hero::before,
+  .kova-home-plain .kh-hero::after {
+    display: none;
+  }
+
+  .kova-home-plain .kh-hero__grid {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0 !important;
+    max-width: min(420px, 100%);
+    margin-inline: auto;
+  }
+
+  .kova-home-plain .kh-hero__copy {
+    width: 100%;
+    align-items: stretch;
+    text-align: left;
+  }
+
+  .kova-home-plain .kh-hero .kh-pill {
+    display: block !important;
+    width: fit-content;
+    margin: 0 0 14px !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.14em !important;
+    text-transform: uppercase !important;
+    color: #c5de4e !important;
+    white-space: nowrap;
+  }
+
+  .kova-home-plain .kh-hero h1 {
+    max-width: none !important;
+    margin: 0 !important;
+    font-size: clamp(1.9rem, 8.2vw, 2.45rem) !important;
+    line-height: 1.1 !important;
+    letter-spacing: -0.038em !important;
+    font-weight: 800 !important;
+    text-wrap: balance;
+  }
+
+  .kova-home-plain .kh-hero__visual-m {
+    display: block;
+    position: relative;
+    width: 100%;
+    margin: 26px 0 0;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #141614;
+    aspect-ratio: 4 / 5;
+    max-height: 420px;
+  }
+
+  .kova-home-plain .kh-hero__visual-m img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 18%;
+    filter: contrast(1.04) saturate(0.92);
+  }
+
+  .kova-home-plain .kh-hero__collage--desk {
+    display: none !important;
+  }
+
+  .kova-home-plain .kh-hero__lead {
+    max-width: none !important;
+    margin: 22px 0 0 !important;
+    font-size: 15.5px !important;
+    line-height: 1.55 !important;
+    font-weight: 400 !important;
+    color: rgba(245, 245, 245, 0.7) !important;
+    text-wrap: pretty;
+  }
+
+  .kova-home-plain .kh-hero__ctas {
+    display: grid !important;
+    grid-template-columns: 1fr;
+    gap: 10px !important;
+    margin-top: 24px !important;
+  }
+
+  .kova-home-plain .kh-hero__ctas .kh-btn {
+    width: 100% !important;
+    min-height: 52px !important;
+    justify-content: center !important;
+    border-radius: 12px !important;
+    font-size: 15px !important;
+    padding: 0 20px !important;
+    white-space: nowrap;
+  }
+
+  .kova-home-plain .kh-cta-long {
+    display: none;
+  }
+
+  .kova-home-plain .kh-cta-short {
+    display: inline;
+  }
+
+  .kova-home-plain .kh-hero .kh-btn--lime {
+    box-shadow: none !important;
+  }
+
+  .kova-home-plain .kh-hero .kh-btn--outline {
+    border-width: 1.5px !important;
+    border-color: rgba(250, 250, 248, 0.28) !important;
+  }
+
+  .kova-home-plain .kh-hero__checks {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px 14px !important;
+    margin-top: 20px !important;
+  }
+
+  .kova-home-plain .kh-hero__checks span {
+    font-size: 12.5px !important;
+    color: rgba(245, 245, 245, 0.58) !important;
+  }
+
+  .kova-home-plain .kh-chart {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .kova-home-plain .kh-hero {
+    padding: 22px 0 44px !important;
+  }
+
+  .kova-home-plain .kh-hero h1 {
+    font-size: clamp(1.75rem, 8.4vw, 2.15rem) !important;
+  }
+
+  .kova-home-plain .kh-hero__visual-m {
+    margin-top: 22px;
+    border-radius: 14px;
+    max-height: 380px;
+  }
+
+  .kova-home-plain .kh-hero__lead {
+    font-size: 15px !important;
+  }
+}
+
 @media (max-width: 900px) {
   .kova-home-plain .kh-dash__frame--os {
     grid-template-columns: 1fr;
@@ -3633,11 +3776,51 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 
 .kova-home-plain #metodo .kh-flow span,
 .kova-home-plain .kh-artifact .kh-flow span {
-  background: rgba(255, 255, 255, 0.07) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset;
-  backdrop-filter: blur(16px) saturate(1.3);
-  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (max-width: 860px) {
+  .kova-home-plain #metodo .kh-h2,
+  .kova-home-plain .kh-artifact .kh-h2 {
+    max-width: 12ch !important;
+    font-size: clamp(1.85rem, 7.5vw, 2.35rem) !important;
+    line-height: 1.1 !important;
+  }
+
+  .kova-home-plain #metodo .kh-artifact__lead,
+  .kova-home-plain .kh-artifact .kh-artifact__lead {
+    max-width: none;
+    margin-top: 14px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: rgba(245, 241, 232, 0.68);
+  }
+
+  .kova-home-plain #metodo .kh-flow,
+  .kova-home-plain .kh-artifact .kh-flow {
+    margin-top: 28px;
+  }
+
+  .kova-home-plain #metodo .kh-flow span,
+  .kova-home-plain .kh-artifact .kh-flow span {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #f5f1e8;
+  }
+
+  .kova-home-plain #metodo .kh-flow__n,
+  .kova-home-plain .kh-artifact .kh-flow__n {
+    color: #c5de4e;
+  }
+
+  .kova-home-plain #metodo .kh-flow li:not(:last-child)::after,
+  .kova-home-plain .kh-artifact .kh-flow li:not(:last-child)::after {
+    background: rgba(197, 222, 78, 0.5);
+  }
 }
 
 .kova-home-plain #metodo .kh-method-qa__item,
@@ -3989,7 +4172,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 
 .kova-home-plain .kh-platform--slim .kh-platform__kicker {
   margin: 0 0 14px;
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.16em;

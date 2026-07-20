@@ -34,7 +34,7 @@ function AppShell() {
 
   return (
     <ErrorBoundary>
-      {!isAuth ? <Navbar /> : null}
+      <Navbar />
       <div className={isAuth || isHome ? undefined : 'kova-route-shell'}>
         <Suspense fallback={<RouteFallback />}>
           <Routes>

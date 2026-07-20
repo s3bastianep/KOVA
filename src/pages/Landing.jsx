@@ -349,12 +349,24 @@ export default function Landing() {
     >
       <header id="top" className="kh-hero">
         <div className="kh-hero__grid">
-          <div>
+          <div className="kh-hero__copy">
             <span className="kh-pill">Especialistas en talento comercial</span>
             <h1>
               Contrata talento comercial alineado con{' '}
               <span className="kh-accent">tu estrategia de ventas</span>.
             </h1>
+
+            <div className="kh-hero__visual-m">
+              <img
+                src="/landing/people/final-empresas-pro.jpg"
+                alt="Especialistas revisando el perfil comercial de un candidato"
+                width={800}
+                height={1000}
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+
             <p className="kh-hero__lead">
               No somos una agencia tradicional. Buscamos solo perfiles comerciales:
               entendemos cómo vende su empresa y le presentamos candidatos que
@@ -362,7 +374,8 @@ export default function Landing() {
             </p>
             <div className="kh-hero__ctas">
               <a href="#contacto" className="kh-btn kh-btn--lime">
-                Agenda tu diagnóstico comercial
+                <span className="kh-cta-long">Agenda tu diagnóstico comercial</span>
+                <span className="kh-cta-short">Agendar diagnóstico</span>
               </a>
               <a href="#metodologia" className="kh-btn kh-btn--outline">
                 Ver cómo lo hacemos
@@ -382,7 +395,7 @@ export default function Landing() {
           </div>
 
           <div
-            className={`kh-hero__collage${
+            className={`kh-hero__collage kh-hero__collage--desk${
               heroView === 'morph' ? ' is-morphing' : ' is-revealed is-report'
             }`}
           >
@@ -945,11 +958,6 @@ export default function Landing() {
       <section id="garantia" className="kh-section kh-guarantee">
         <div className="kh-wrap">
           <div className="kh-guarantee__panel">
-            <div className="kh-guarantee__badge" aria-hidden>
-              <span className="kh-guarantee__ring" />
-              <strong>6</strong>
-              <span>meses de garantía</span>
-            </div>
             <div className="kh-guarantee__copy">
               <div className="kh-eyebrow">
                 <span className="kh-eyebrow__dot" aria-hidden />
