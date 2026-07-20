@@ -307,17 +307,52 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 @media (max-width: 900px) {
+  .kova-home-plain .kh-trust {
+    padding: 28px 0 32px;
+  }
+
   .kova-home-plain .kh-trust__inner {
     flex-direction: column;
     align-items: flex-start;
+    gap: 18px;
+  }
+
+  .kova-home-plain .kh-trust__label {
+    max-width: none;
+    font-size: 13.5px !important;
+    line-height: 1.35 !important;
   }
 
   .kova-home-plain .kh-trust__marquee {
     width: 100%;
+    overflow: visible;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  /* Stop marquee: show the 5 sectors as a wrapping list */
+  .kova-home-plain .kh-trust__brands--track {
+    animation: none;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 100%;
+    column-gap: 0;
+    row-gap: 12px;
+  }
+
+  .kova-home-plain .kh-trust__brands--track li:nth-child(n + 6) {
+    display: none;
   }
 
   .kova-home-plain .kh-trust__brands li {
-    padding: 0 16px;
+    padding: 0 14px 0 16px;
+    font-size: 14px !important;
+    white-space: normal;
+  }
+
+  .kova-home-plain .kh-trust__brands li::before {
+    left: 4px;
   }
 }
 
@@ -1035,16 +1070,48 @@ html.kova-home-chrome .kova-route-shell__fallback {
 
   .kova-home-plain .kh-dolores-band .kh-dolores {
     grid-template-columns: 1fr;
-    row-gap: 28px;
+    row-gap: 36px;
   }
 
+  /* Mobile: no card enclosure — number + rule + copy only */
   .kova-home-plain .kh-dolores-band .kh-dolor,
-  .kova-home-plain .kh-dolores-band .kh-dolor:not(:first-child) {
+  .kova-home-plain .kh-dolores-band .kh-dolor:not(:first-child),
+  .kova-home-plain .kh-section--tight .kh-dolor {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     padding: 0 !important;
+    margin: 0 !important;
   }
 
   .kova-home-plain .kh-dolores-band .kh-dolor::after {
     display: none !important;
+  }
+
+  .kova-home-plain .kh-dolores-band .kh-dolor__n,
+  .kova-home-plain .kh-section--tight .kh-dolor__n {
+    display: block;
+    min-width: 2.2ch;
+    letter-spacing: 0 !important;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+    font-size: 1.35rem !important;
+    font-weight: 800 !important;
+    color: #c5de4e !important;
+    -webkit-text-fill-color: #c5de4e !important;
+  }
+
+  .kova-home-plain .kh-dolores-band .kh-dolor__rule {
+    width: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    flex: none;
+    align-self: flex-start;
+    margin: 10px 0 14px;
+    background: rgba(26, 23, 18, 0.2);
   }
 
   .kova-home-plain .kh-dolores-band__footer {
@@ -1453,8 +1520,20 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 .kova-home-plain .kh-hero .kh-pill {
+  display: block;
+  width: fit-content;
+  margin: 0;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
   color: #c5de4e !important;
-  border-color: rgba(197, 222, 78, 0.4) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
 }
 
 .kova-home-plain .kh-hero__checks span {
@@ -1605,7 +1684,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 .kova-home-plain .kh-costo-card__n {
-  color: rgba(245, 241, 232, 0.42) !important;
+  color: rgba(197, 222, 78, 0.85) !important;
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 12px;
   letter-spacing: 0.06em;
@@ -1641,7 +1720,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 
 .kova-home-plain .kh-costo-card--accent .kh-costo-card__n,
 .kova-home-plain .kh-costo-card:nth-child(6) .kh-costo-card__n {
-  color: rgba(197, 222, 78, 0.7) !important;
+  color: rgba(197, 222, 78, 0.85) !important;
 }
 
 .kova-home-plain .kh-costo-card--accent:hover,
@@ -3595,6 +3674,33 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   -webkit-backdrop-filter: blur(20px) saturate(1.4);
 }
 
+/* Mobile dolores: open list, lime nums — overrides frost cards above */
+@media (max-width: 720px) {
+  .kova-home-plain .kh-dolores-band .kh-dolor,
+  .kova-home-plain .kh-dolores-band .kh-dolor:not(:first-child),
+  .kova-home-plain .kh-section--tight .kh-dolor {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+  }
+
+  .kova-home-plain .kh-dolores-band .kh-dolor__n,
+  .kova-home-plain .kh-section--tight .kh-dolor__n {
+    color: #c5de4e !important;
+    -webkit-text-fill-color: #c5de4e !important;
+    font-size: 1.35rem !important;
+  }
+
+  .kova-home-plain .kh-dolores-band .kh-dolor__rule {
+    width: 36px !important;
+    margin: 10px 0 14px;
+  }
+}
+
 /* ?? Light frost: metodolog?a ?? */
 .kova-home-plain #metodologia .kh-stage-btn {
   background: rgba(255, 255, 255, 0.48) !important;
@@ -4062,6 +4168,117 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   box-shadow: none;
 }
 
+/* Mobile: editorial dolor list — open, not boxed (beats boutique frost) */
+@media (max-width: 720px) {
+  .kova-home-plain .kh-dolores-band {
+    padding-block: 56px !important;
+  }
+
+  .kova-home-plain .kh-dolores-band__head {
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  .kova-home-plain .kh-dolores-band__title,
+  .kova-home-plain .kh-dolores-band .kh-h2 {
+    font-size: clamp(1.65rem, 7vw, 2rem) !important;
+    line-height: 1.12 !important;
+  }
+
+  .kova-home-plain .kh-dolores-band__aside {
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+    max-width: 34ch;
+  }
+
+  .kova-home-plain .kh-dolores-band__rail {
+    margin: 8px 0 4px;
+  }
+
+  .kova-home-plain .kh-dolores-band .kh-dolores {
+    grid-template-columns: 1fr;
+    row-gap: 0;
+    margin-top: 28px;
+  }
+
+  .kova-home-plain.kova-boutique .kh-dolores-band .kh-dolor,
+  .kova-home-plain.kova-boutique .kh-section--tight .kh-dolor,
+  .kova-boutique .kh-dolores-band .kh-dolor,
+  .kova-boutique .kh-section--tight .kh-dolor,
+  .kova-home-plain .kh-dolores-band .kh-dolor,
+  .kova-home-plain .kh-dolores-band .kh-dolor:not(:first-child),
+  .kova-home-plain .kh-section--tight .kh-dolor {
+    display: grid !important;
+    grid-template-columns: 2.6ch 1fr;
+    column-gap: 12px;
+    row-gap: 6px;
+    align-items: baseline;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    border-bottom: 1px solid rgba(26, 23, 18, 0.1) !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 22px 0 !important;
+    margin: 0 !important;
+  }
+
+  .kova-home-plain .kh-dolores-band .kh-dolor:last-child,
+  .kova-boutique .kh-dolores-band .kh-dolor:last-child {
+    border-bottom: none !important;
+  }
+
+  .kova-home-plain .kh-dolores-band .kh-dolor::after {
+    display: none !important;
+  }
+
+  .kova-home-plain.kova-boutique .kh-dolores-band .kh-dolor__n,
+  .kova-home-plain.kova-boutique .kh-section--tight .kh-dolor__n,
+  .kova-boutique .kh-dolores-band .kh-dolor__n,
+  .kova-boutique .kh-section--tight .kh-dolor__n,
+  .kova-home-plain .kh-dolores-band .kh-dolor__n,
+  .kova-home-plain .kh-section--tight .kh-dolor__n {
+    grid-column: 1;
+    grid-row: 1;
+    display: block;
+    min-width: 2.2ch;
+    margin: 0;
+    font-family: 'Space Mono', ui-monospace, monospace !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.06em !important;
+    line-height: 1.4 !important;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+    color: #9bbb1f !important;
+    -webkit-text-fill-color: #9bbb1f !important;
+  }
+
+  .kova-home-plain .kh-dolores-band .kh-dolor__rule {
+    display: none !important;
+  }
+
+  .kova-home-plain .kh-dolores-band .kh-dolor__tag,
+  .kova-home-plain .kh-section--tight .kh-dolor__tag {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0 !important;
+    font-size: 1.05rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .kova-home-plain .kh-dolores-band .kh-dolor p,
+  .kova-home-plain .kh-section--tight .kh-dolor p {
+    grid-column: 2;
+    grid-row: 2;
+    margin: 2px 0 0 !important;
+    max-width: none !important;
+    font-size: 14.5px !important;
+    line-height: 1.55 !important;
+  }
+}
+
 .kova-boutique .kh-dolores-band__go {
   background: #14120e;
   color: #f5f1e8;
@@ -4384,6 +4601,79 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 .kova-boutique #metodo .kh-h2 .kh-accent {
   color: #f5f1e8 !important;
   -webkit-text-fill-color: #f5f1e8 !important;
+}
+
+/* Mobile #metodo flow: full-width steps, no chips, arrows under each step */
+@media (max-width: 860px) {
+  .kova-home-plain #metodo .kh-flow,
+  .kova-home-plain .kh-artifact .kh-flow {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin-top: 36px;
+    max-width: 36ch;
+  }
+
+  .kova-home-plain #metodo .kh-flow li,
+  .kova-home-plain .kh-artifact .kh-flow li {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 0;
+  }
+
+  .kova-home-plain #metodo .kh-flow li:not(:last-child)::after,
+  .kova-home-plain .kh-artifact .kh-flow li:not(:last-child)::after {
+    content: '↓';
+    display: block;
+    margin: 10px 0 10px 0.15em;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    color: #c5de4e;
+    opacity: 0.55;
+    line-height: 1;
+  }
+
+  .kova-home-plain #metodo .kh-flow span,
+  .kova-home-plain .kh-artifact .kh-flow span,
+  .kova-boutique #metodo .kh-flow span {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    font-family: var(--font-display, Manrope, sans-serif);
+    font-size: 15px !important;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    text-transform: none;
+    line-height: 1.35;
+    color: #f5f1e8 !important;
+  }
+
+  .kova-home-plain #metodo .kh-flow__n,
+  .kova-home-plain .kh-artifact .kh-flow__n {
+    flex: none;
+    font-family: 'Space Mono', ui-monospace, monospace !important;
+    font-size: 12px !important;
+    font-weight: 700;
+    font-style: normal;
+    letter-spacing: 0.06em;
+    color: #c5de4e !important;
+    -webkit-text-fill-color: #c5de4e !important;
+    margin-right: 0;
+    opacity: 1;
+  }
 }
 
 /* Contact: quieter form */

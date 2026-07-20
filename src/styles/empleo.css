@@ -254,11 +254,20 @@
 }
 
 .kova-empleo .emp-hero .kh-pill {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(197, 222, 78, 0.4) !important;
+  display: block;
+  width: fit-content;
+  margin: 0;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
   color: #c5de4e !important;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
 }
 
 .kova-empleo .emp-hero .kh-btn--lime {
@@ -290,53 +299,62 @@
   position: relative;
   justify-self: center;
   width: 100%;
-  max-width: 520px;
-  padding: 58px 50px;
+  max-width: 540px;
+  /* Room so floats kiss edges instead of burying faces */
+  padding: 52px 44px;
 }
 
 .kova-empleo .emp-mosaic__grid {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  grid-template-rows: repeat(2, 150px);
-  gap: 14px;
+  grid-template-columns: 1fr 1.15fr;
+  grid-template-rows: repeat(2, 168px);
+  gap: 12px;
 }
 
 .kova-empleo .emp-mosaic__photo {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 30%;
+  object-position: center 22%;
   border-radius: 18px;
-  border: 4px solid rgba(255, 255, 255, 0.1);
+  border: 3px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 18px 44px -16px rgba(0, 0, 0, 0.65);
 }
 
 .kova-empleo .emp-mosaic__photo--1 { grid-column: 1; grid-row: 1; }
-.kova-empleo .emp-mosaic__photo--2 { grid-column: 2; grid-row: 1 / span 2; }
-.kova-empleo .emp-mosaic__photo--3 { grid-column: 1; grid-row: 2; }
+.kova-empleo .emp-mosaic__photo--2 {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  object-position: center 18%;
+}
+.kova-empleo .emp-mosaic__photo--3 {
+  grid-column: 1;
+  grid-row: 2;
+  object-position: center 20%;
+}
 .kova-empleo .emp-mosaic__photo--4 { display: none; }
 
-/* Floating chips around the mosaic — dark glass like para-empresas */
+/* Floating chips — sit in the mosaic gutter, only lightly overlap corners */
 .kova-empleo .emp-float {
   position: absolute;
   z-index: 2;
-  background: rgba(18, 16, 14, 0.92);
+  background: rgba(13, 15, 15, 0.88);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 14px;
-  box-shadow: 0 16px 40px -14px rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(16px);
-  padding: 12px 15px;
+  box-shadow: 0 14px 36px -16px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(14px);
+  padding: 10px 12px;
   color: #f5f1e8;
 }
 
 .kova-empleo .emp-float--score {
-  top: 0;
-  left: 0;
+  top: 6px;
+  left: 4px;
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 10px;
 }
 
 .kova-empleo .emp-float__ring {
@@ -371,11 +389,11 @@
 }
 
 .kova-empleo .emp-float--checks {
-  bottom: 0;
-  left: -6px;
+  bottom: 8px;
+  left: 4px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .kova-empleo .emp-float--checks div {
@@ -395,9 +413,9 @@
 }
 
 .kova-empleo .emp-float--match {
-  top: 4px;
-  right: -6px;
-  max-width: 180px;
+  top: 8px;
+  right: 4px;
+  max-width: 168px;
 }
 
 .kova-empleo .emp-float--match .emp-float__tag {
@@ -424,11 +442,11 @@
 }
 
 .kova-empleo .emp-float--stat {
-  bottom: -6px;
-  right: 0;
+  bottom: 6px;
+  right: 4px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
 }
 
 .kova-empleo .emp-float__arrow {
@@ -721,14 +739,40 @@
   .kova-empleo .emp-band__sectors {
     flex-direction: column;
     align-items: flex-start;
+    gap: 18px;
+  }
+
+  .kova-empleo .emp-band__sectors-label {
+    max-width: none;
   }
 
   .kova-empleo .emp-band__sectors-marquee {
     width: 100%;
+    overflow: visible;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  .kova-empleo .emp-band__sectors-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 100%;
+    row-gap: 12px;
+  }
+
+  .kova-empleo .emp-band__sectors-track li:nth-child(n + 6) {
+    display: none;
   }
 
   .kova-empleo .emp-band__sectors-track li {
-    padding: 0 16px;
+    padding: 0 14px 0 16px;
+    font-size: 14px;
+    white-space: normal;
+  }
+
+  .kova-empleo .emp-band__sectors-track li::before {
+    left: 4px;
   }
 }
 
@@ -1510,22 +1554,132 @@
 
 /* ─── Responsive ─── */
 @media (max-width: 880px) {
+  .kova-empleo .emp-hero {
+    padding: 28px 0 44px !important;
+  }
+
   .kova-empleo .emp-hero__grid,
   .kova-empleo .emp-explorer,
   .kova-empleo .emp-feature {
     grid-template-columns: 1fr;
-    gap: 36px;
+    gap: 28px;
+  }
+
+  .kova-empleo .emp-hero__grid {
+    max-width: min(420px, 100%);
+    margin-inline: auto;
   }
 
   .kova-empleo .emp-hero h1 {
     max-width: none;
+    font-size: clamp(1.85rem, 8vw, 2.4rem) !important;
+    line-height: 1.1 !important;
   }
 
-  .kova-empleo .emp-mosaic { max-width: 400px; margin-top: 12px; padding: 46px 34px; }
-  .kova-empleo .emp-mosaic__grid { grid-template-rows: repeat(2, 110px); }
-  .kova-empleo .emp-float--match { right: -2px; top: 2px; }
-  .kova-empleo .emp-float--checks { left: -2px; bottom: 0; }
-  .kova-empleo .emp-float--stat { right: -2px; bottom: -2px; }
+  .kova-empleo .emp-hero__lead {
+    max-width: none;
+    font-size: 15.5px !important;
+    line-height: 1.55 !important;
+  }
+
+  .kova-empleo .emp-hero__ctas {
+    display: grid !important;
+    grid-template-columns: 1fr;
+    gap: 10px !important;
+    margin-top: 22px !important;
+  }
+
+  .kova-empleo .emp-hero__ctas .kh-btn {
+    width: 100% !important;
+    min-height: 52px !important;
+    justify-content: center !important;
+    border-radius: 12px !important;
+    font-size: 15px !important;
+  }
+
+  .kova-empleo .emp-mosaic {
+    max-width: 100%;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    /* Keep gutter so chips frame photos instead of covering faces */
+    padding: 44px 12px 52px;
+    order: -1;
+  }
+
+  .kova-empleo .emp-mosaic__grid {
+    grid-template-columns: 1fr 1.15fr;
+    grid-template-rows: repeat(2, minmax(140px, 26vw));
+    gap: 10px;
+  }
+
+  .kova-empleo .emp-float {
+    padding: 8px 10px;
+    border-radius: 12px;
+    box-shadow: 0 10px 28px -14px rgba(0, 0, 0, 0.6);
+  }
+
+  .kova-empleo .emp-float__ring {
+    width: 34px;
+    height: 34px;
+    font-size: 10px;
+  }
+
+  .kova-empleo .emp-float--score {
+    top: 4px;
+    left: 2px;
+    gap: 8px;
+  }
+
+  .kova-empleo .emp-float--score strong {
+    font-size: 9.5px;
+  }
+
+  .kova-empleo .emp-float--score span {
+    font-size: 11.5px;
+  }
+
+  .kova-empleo .emp-float--match {
+    top: 6px;
+    right: 2px;
+    max-width: 138px;
+  }
+
+  .kova-empleo .emp-float--match strong {
+    font-size: 12px;
+  }
+
+  .kova-empleo .emp-float--match span:last-child {
+    font-size: 10.5px;
+  }
+
+  .kova-empleo .emp-float--checks {
+    left: 2px;
+    bottom: 8px;
+    gap: 5px;
+  }
+
+  .kova-empleo .emp-float--checks div {
+    font-size: 11px;
+  }
+
+  .kova-empleo .emp-float--stat {
+    right: 2px;
+    bottom: 6px;
+    gap: 8px;
+  }
+
+  .kova-empleo .emp-float__arrow {
+    width: 26px;
+    height: 26px;
+  }
+
+  .kova-empleo .emp-float--stat strong {
+    font-size: 9.5px;
+  }
+
+  .kova-empleo .emp-float--stat span {
+    font-size: 12.5px;
+  }
 
   .kova-empleo .emp-detail { position: static; }
 
@@ -1536,10 +1690,48 @@
 
   .kova-empleo .emp-journey {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 28px;
+    margin-top: 40px;
+    max-width: 360px;
   }
 
-  .kova-empleo .emp-journey::before { display: none; }
+  .kova-empleo .emp-journey::before {
+    display: none;
+  }
+
+  .kova-empleo .emp-step {
+    text-align: left;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+
+  .kova-empleo .emp-step__n,
+  .kova-empleo .emp-sec--dark .emp-step__n {
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    display: block;
+    flex: none;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.4;
+    color: rgba(197, 222, 78, 0.85);
+  }
+
+  .kova-empleo .emp-step h3 {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 0;
+  }
 
   .kova-empleo .emp-sec { padding: 64px 0; }
   .kova-empleo .emp-fan { order: -1; }
@@ -1550,6 +1742,79 @@
     padding: 28px 28px 44px;
     border-left: none;
     border-top: 1px solid rgba(26, 23, 18, 0.08);
+  }
+}
+
+@media (max-width: 480px) {
+  .kova-empleo .emp-band__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kova-empleo .emp-hero h1 {
+    font-size: clamp(1.7rem, 8.2vw, 2.1rem) !important;
+  }
+
+  /* Narrow phones: 2 tall photos + 2 chips framing (not burying) faces */
+  .kova-empleo .emp-mosaic {
+    padding: 48px 4px 68px;
+  }
+
+  .kova-empleo .emp-mosaic__grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(220px, 58vw);
+    gap: 10px;
+  }
+
+  .kova-empleo .emp-mosaic__photo {
+    border-radius: 16px;
+    border-width: 2px;
+  }
+
+  .kova-empleo .emp-mosaic__photo--1 {
+    grid-column: 1;
+    grid-row: 1;
+    object-position: center 18%;
+  }
+
+  .kova-empleo .emp-mosaic__photo--2 {
+    grid-column: 2;
+    grid-row: 1;
+    object-position: center 12%;
+  }
+
+  .kova-empleo .emp-mosaic__photo--3 {
+    display: none;
+  }
+
+  .kova-empleo .emp-float--checks,
+  .kova-empleo .emp-float--stat {
+    display: none;
+  }
+
+  .kova-empleo .emp-float--score {
+    top: 4px;
+    left: 0;
+    max-width: calc(100% - 24px);
+  }
+
+  .kova-empleo .emp-float--match {
+    top: auto;
+    bottom: 8px;
+    right: 0;
+    max-width: 150px;
+    padding: 8px 10px;
+  }
+
+  .kova-empleo .emp-float--match strong {
+    font-size: 12.5px;
+  }
+
+  .kova-empleo .emp-float--match .emp-float__tag {
+    font-size: 9.5px;
+  }
+
+  .kova-empleo .emp-float--match span:last-child {
+    font-size: 10.5px;
   }
 }
 

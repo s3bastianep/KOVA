@@ -64,7 +64,7 @@ export default function Privacidad() {
 
       <footer className="kc-footer">
         <div className="kc-wrap">
-          <p>© 2026 Kova · Reclutamiento comercial, con evidencia</p>
+          <p>© {new Date().getFullYear()} Kova</p>
         </div>
       </footer>
     </div>
