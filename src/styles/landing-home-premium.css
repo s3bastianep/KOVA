@@ -90,7 +90,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   --kh-mx: 50%;
   --kh-my: 28%;
 
-  /* Type scale — Manrope */
+  /* Type scale ? Sora display / Inter body */
   --kv-fs-hero: clamp(2.5rem, 5.2vw, 64px);
   --kv-fs-h2: clamp(1.75rem, 3.6vw, 42px);
   --kv-fs-h3: clamp(1.35rem, 2.2vw, 28px);
@@ -1605,8 +1605,8 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 .kova-home-plain .kh-costo-card__n {
-  color: rgba(197, 222, 78, 0.7) !important;
-  font-family: var(--font-mono);
+  color: rgba(245, 241, 232, 0.42) !important;
+  font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 12px;
   letter-spacing: 0.06em;
   margin: 0;
@@ -2059,6 +2059,16 @@ html.kova-home-chrome .kova-route-shell__fallback {
   font-size: 15.5px;
 }
 
+html.kova-home-chrome .kova-navbar .kv-logo {
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+}
+
+/* ???????????????????????????????????????????????????
+   Boutique refine ? trust, air, subtle craft
+   ??????????????????????????????????????????????????? */
+
 /* Softer elevation (no hard shadows) */
 .kova-home-plain {
   --kv-shadow-sm: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 6px 18px -10px rgba(0, 0, 0, 0.35);
@@ -2066,7 +2076,27 @@ html.kova-home-chrome .kova-route-shell__fallback {
   --kv-shadow-lg: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 28px 56px -24px rgba(0, 0, 0, 0.5);
 }
 
-/* Hero type — Manrope 700 / up to 64px */
+/* Nav ? glass un poco m?s profundo al hacer scroll */
+html.kova-home-chrome .kova-navbar.kv-nav {
+  transition:
+    background 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    backdrop-filter 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    padding 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
+  background: rgba(0, 0, 0, 0.82) !important;
+  backdrop-filter: blur(18px) saturate(1.35);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px -16px rgba(0, 0, 0, 0.45);
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+/* Hero type ? Sora 700 / up to 64px */
 .kova-home-plain .kh-hero h1 {
   font-size: var(--kv-fs-hero) !important;
   font-weight: 700 !important;
@@ -2975,7 +3005,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   white-space: nowrap;
 }
 
-/* ─── Para empresas — mobile hero (composition propia) ─── */
+/* ─── Para empresas — mobile hero only (desktop collage unchanged) ─── */
 @media (max-width: 900px) {
   .kova-home-plain .kh-hero {
     padding: 28px 0 52px !important;
@@ -3776,51 +3806,11 @@ html.kova-home-chrome .kova-route-shell__fallback {
 
 .kova-home-plain #metodo .kh-flow span,
 .kova-home-plain .kh-artifact .kh-flow span {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
-@media (max-width: 860px) {
-  .kova-home-plain #metodo .kh-h2,
-  .kova-home-plain .kh-artifact .kh-h2 {
-    max-width: 12ch !important;
-    font-size: clamp(1.85rem, 7.5vw, 2.35rem) !important;
-    line-height: 1.1 !important;
-  }
-
-  .kova-home-plain #metodo .kh-artifact__lead,
-  .kova-home-plain .kh-artifact .kh-artifact__lead {
-    max-width: none;
-    margin-top: 14px;
-    font-size: 15px;
-    line-height: 1.55;
-    color: rgba(245, 241, 232, 0.68);
-  }
-
-  .kova-home-plain #metodo .kh-flow,
-  .kova-home-plain .kh-artifact .kh-flow {
-    margin-top: 28px;
-  }
-
-  .kova-home-plain #metodo .kh-flow span,
-  .kova-home-plain .kh-artifact .kh-flow span {
-    background: rgba(255, 255, 255, 0.06) !important;
-    border-color: rgba(255, 255, 255, 0.1) !important;
-    color: #f5f1e8;
-  }
-
-  .kova-home-plain #metodo .kh-flow__n,
-  .kova-home-plain .kh-artifact .kh-flow__n {
-    color: #c5de4e;
-  }
-
-  .kova-home-plain #metodo .kh-flow li:not(:last-child)::after,
-  .kova-home-plain .kh-artifact .kh-flow li:not(:last-child)::after {
-    background: rgba(197, 222, 78, 0.5);
-  }
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset;
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
 }
 
 .kova-home-plain #metodo .kh-method-qa__item,
@@ -4172,7 +4162,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 
 .kova-home-plain .kh-platform--slim .kh-platform__kicker {
   margin: 0 0 14px;
-  font-family: var(--font-mono);
+  font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.16em;

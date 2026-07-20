@@ -356,6 +356,7 @@ export default function Landing() {
               <span className="kh-accent">tu estrategia de ventas</span>.
             </h1>
 
+            {/* Mobile-only hero image — hidden on desktop via CSS */}
             <div className="kh-hero__visual-m">
               <img
                 src="/landing/people/final-empresas-pro.jpg"
@@ -958,6 +959,11 @@ export default function Landing() {
       <section id="garantia" className="kh-section kh-guarantee">
         <div className="kh-wrap">
           <div className="kh-guarantee__panel">
+            <div className="kh-guarantee__badge" aria-hidden>
+              <span className="kh-guarantee__ring" />
+              <strong>6</strong>
+              <span>meses de garantía</span>
+            </div>
             <div className="kh-guarantee__copy">
               <div className="kh-eyebrow">
                 <span className="kh-eyebrow__dot" aria-hidden />

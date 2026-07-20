@@ -12,6 +12,15 @@ const PANEL_BARS = [
   { label: 'Motivaciones', value: 86 },
 ];
 
+const METHOD_CONCEPTS = [
+  'Negocio',
+  'Cultura',
+  'Liderazgo',
+  'Capacidades',
+  'Forma de trabajar',
+  'Motivaciones',
+];
+
 export default function HomeDark() {
   usePageMeta({
     title: 'Empresas y talento comercial alineados para crecer.',
@@ -40,7 +49,7 @@ export default function HomeDark() {
           }
         });
       },
-      { threshold: 0.18, rootMargin: '0px 0px -8% 0px' },
+      { threshold: 0.2 },
     );
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
@@ -117,62 +126,65 @@ export default function HomeDark() {
           <div className="kd-hero-copy">
             <p className="kd-eyebrow">Especialistas en talento comercial</p>
             <h1 id="kd-hero-title">
-              Empresas y talento comercial alineados para{' '}
-              <span className="kd-grow">
-                crecer
-                <svg className="kd-plane" viewBox="0 0 24 24" aria-hidden>
-                  <path d="M22 2.6 2.6 10.4 10.7 13.3 13.6 21.4Z" />
-                  <path className="fold" d="M22 2.6 10.7 13.3" />
-                </svg>
-              </span>
-              .
+              Empresas y talento
+              <br />
+              comercial <span>alineados</span>
+              <br />
+              para crecer.
             </h1>
-
-            <div
-              className="kd-visual"
-              role="img"
-              aria-label="Profesionales comerciales colaborando y revisando estrategia en equipo"
-            >
-              <svg className="kd-frame" viewBox="-4 -3 658 505" preserveAspectRatio="xMidYMid meet" aria-hidden>
-                <defs>
-                  <clipPath id="kd-hero-clip">
-                    <path d="M63 2.4 H585.5 C620.5 2.4 647.6 28.5 647.6 63 V356.5 C647.6 391.8 620.5 419.8 585.5 419.8 H69 C46 421 30 435 20 452 C11 468 4 482 1 495 C0.7 499 0.4 499 0 499 L0 63 C0 28.5 28.5 2.4 63 2.4 Z" />
-                  </clipPath>
-                </defs>
-                <g clipPath="url(#kd-hero-clip)">
-                  <g className="kd-visual__media">
-                    <image
-                      className="kd-visual__img"
-                      href="/landing/kova-home-hero.jpg"
-                      x="-30"
-                      y="-30"
-                      width="710"
-                      height="680"
-                      preserveAspectRatio="xMidYMid slice"
-                    />
-                  </g>
-                  <rect x="0" y="0" width="650" height="500" fill="#0a9b63" opacity="0.05" />
-                </g>
-                <path
-                  className="shape"
-                  d="M585.5 2.4 C620.5 2.4 647.6 28.5 647.6 63 V356.5 C647.6 391.8 620.5 419.8 585.5 419.8 H69 C46 421 30 435 20 452 C11 468 4 482 1 495 C0.7 499 0.4 499 0 499 L0 63 C0 28.5 28.5 2.4 63 2.4 H585.5"
-                />
-              </svg>
-            </div>
-
             <p className="kd-hero-sub">
               Kova entiende el negocio, la cultura y el potencial de cada profesional para
               construir equipos de alto desempeño y relaciones laborales con futuro.
             </p>
             <div className="kd-hero-actions">
-              <Link className="kd-btn kd-btn--empresa" to="/para-empresas">
+              <Link className="kd-btn kd-btn--lime" to="/para-empresas">
                 Empresa
               </Link>
-              <Link className="kd-btn kd-btn--talento" to="/empleo">
+              <Link className="kd-btn kd-btn--ghost" to="/empleo">
                 Talento
               </Link>
             </div>
           </div>
+        </div>
+
+        <div
+          className="kd-visual"
+          role="img"
+          aria-label="Profesionales comerciales colaborando y revisando estrategia en equipo"
+        >
+          <svg className="kd-visual__frame" viewBox="0 0 650 500" preserveAspectRatio="none" aria-hidden>
+            <defs>
+              <clipPath id="kd-bubble-clip">
+                <path d="M63 2.4 H585.5 C620.5 2.4 647.6 28.5 647.6 63 V356.5 C647.6 391.8 620.5 419.8 585.5 419.8 H69 C45 422 28 438 17 463 C7 484 3 523 1 581 C0.7 593 0.4 603 0 610 L0 63 C0 28.5 28.5 2.4 63 2.4 Z" />
+              </clipPath>
+            </defs>
+            <g clipPath="url(#kd-bubble-clip)">
+              <g className="kd-visual__media">
+                <image
+                  className="kd-visual__img"
+                  href="/landing/kova-home-hero.jpg"
+                  x="-12"
+                  y="-12"
+                  width="674"
+                  height="444"
+                  preserveAspectRatio="xMidYMid slice"
+                />
+                <image
+                  href="/landing/kova-home-hero.jpg"
+                  x="0"
+                  y="418"
+                  width="80"
+                  height="192"
+                  preserveAspectRatio="xMinYMax slice"
+                />
+              </g>
+              <rect x="0" y="0" width="650" height="610" fill="#0a9b63" opacity="0.05" />
+            </g>
+            <path
+              className="kd-visual__shape"
+              d="M585.5 2.4 C620.5 2.4 647.6 28.5 647.6 63 V356.5 C647.6 391.8 620.5 419.8 585.5 419.8 H69 C45 422 28 438 17 463 C7 484 3 523 1 581 C0.7 593 0.4 603 0 610 L0 63 C0 28.5 28.5 2.4 63 2.4 H585.5"
+            />
+          </svg>
         </div>
 
         <div className="kd-node" aria-hidden>
@@ -180,7 +192,7 @@ export default function HomeDark() {
         </div>
       </section>
 
-      {/* 02 · DOS CAMINOS — timeline empresas / profesionales */}
+      {/* 02 · DOS CAMINOS — la línea se ramifica hacia cada público */}
       <section className="kd-paths" id="caminos" aria-labelledby="kd-paths-title">
         <div className="kd-branch" data-reveal aria-hidden>
           <svg viewBox="0 0 1160 250" preserveAspectRatio="xMidYMin meet">
@@ -243,296 +255,156 @@ export default function HomeDark() {
           </p>
         </div>
 
-        <div className="kd-timeline" data-reveal>
-          <div className="kd-timeline__group">
-            <p className="kd-timeline__label" data-reveal>
-              <span className="kd-timeline__mark" aria-hidden />
-              Para empresas
-            </p>
+        <div className="kd-doors" data-reveal>
+          <article className="kd-door kd-door--lime">
+            <span className="kd-door__icon">
+              <svg viewBox="0 0 24 24" aria-hidden>
+                <rect x="5" y="4" width="14" height="17" rx="1.5" />
+                <path d="M9 8h.01M15 8h.01M9 12h.01M15 12h.01M9 16h.01M15 16h.01M3 21h18" />
+              </svg>
+            </span>
+            <span className="kd-door__body">
+              <span className="kd-door__tag">01 · Empresas</span>
+              <h3>Contrata para generar resultados</h3>
+              <p>
+                Antes de recomendar un profesional, entendemos tu negocio, tu proceso
+                comercial y el perfil que realmente necesita tu empresa para crecer.
+              </p>
+            </span>
+          </article>
 
-            <article className="kd-timeline__step" data-reveal>
-              <span className="kd-timeline__num" aria-hidden>
-                01
-              </span>
-              <div className="kd-timeline__card kd-timeline__card--lime">
-                <span className="kd-timeline__icon">
-                  <svg viewBox="0 0 24 24" aria-hidden>
-                    <rect x="5" y="4" width="14" height="17" rx="1.5" />
-                    <path d="M9 8h.01M15 8h.01M9 12h.01M15 12h.01M9 16h.01M15 16h.01M3 21h18" />
-                  </svg>
-                </span>
-                <h3>Contrata para generar resultados</h3>
-                <p>
-                  Antes de recomendar un profesional, entendemos tu negocio, tu proceso
-                  comercial y el perfil que realmente necesita tu empresa para crecer.
-                </p>
-              </div>
-            </article>
+          <article className="kd-door">
+            <span className="kd-door__icon">
+              <svg viewBox="0 0 24 24" aria-hidden>
+                <circle cx="12" cy="12" r="8.5" />
+                <path d="M8.5 12.2l2.4 2.4 4.6-5" />
+              </svg>
+            </span>
+            <span className="kd-door__body">
+              <span className="kd-door__tag">02 · Empresas</span>
+              <h3>Mucho más que un currículo</h3>
+              <p>
+                Evaluamos habilidades, personalidad, motivaciones, cultura y objetivos
+                para identificar profesionales con una verdadera alineación con tu
+                organización.
+              </p>
+            </span>
+          </article>
 
-            <article className="kd-timeline__step" data-reveal>
-              <span className="kd-timeline__num" aria-hidden>
-                02
-              </span>
-              <div className="kd-timeline__card">
-                <span className="kd-timeline__icon">
-                  <svg viewBox="0 0 24 24" aria-hidden>
-                    <circle cx="12" cy="12" r="8.5" />
-                    <path d="M8.5 12.2l2.4 2.4 4.6-5" />
-                  </svg>
-                </span>
-                <h3>Mucho más que un currículo</h3>
-                <p>
-                  Evaluamos habilidades, personalidad, motivaciones, cultura y objetivos
-                  para identificar profesionales con una verdadera alineación con tu
-                  organización.
-                </p>
-              </div>
-            </article>
-          </div>
+          <article className="kd-door">
+            <span className="kd-door__icon">
+              <svg viewBox="0 0 24 24" aria-hidden>
+                <circle cx="12" cy="8" r="3.6" />
+                <path d="M5.5 20c.8-3.6 3.4-5.4 6.5-5.4s5.7 1.8 6.5 5.4" />
+              </svg>
+            </span>
+            <span className="kd-door__body">
+              <span className="kd-door__tag">03 · Profesionales</span>
+              <h3>Tu experiencia merece una evaluación más completa</h3>
+              <p>
+                No nos quedamos con tu hoja de vida. Entendemos tus habilidades, tu forma
+                de trabajar y tus objetivos para conectarte con empresas donde realmente
+                puedas aportar valor.
+              </p>
+            </span>
+          </article>
 
-          <div className="kd-timeline__group">
-            <p className="kd-timeline__label" data-reveal>
-              <span className="kd-timeline__mark" aria-hidden />
-              Para profesionales
-            </p>
-
-            <article className="kd-timeline__step" data-reveal>
-              <span className="kd-timeline__num" aria-hidden>
-                03
-              </span>
-              <div className="kd-timeline__card">
-                <span className="kd-timeline__icon">
-                  <svg viewBox="0 0 24 24" aria-hidden>
-                    <circle cx="12" cy="8" r="3.6" />
-                    <path d="M5.5 20c.8-3.6 3.4-5.4 6.5-5.4s5.7 1.8 6.5 5.4" />
-                  </svg>
-                </span>
-                <h3>Tu experiencia merece una evaluación más completa</h3>
-                <p>
-                  No nos quedamos con tu hoja de vida. Entendemos tus habilidades, tu forma
-                  de trabajar y tus objetivos para conectarte con empresas donde realmente
-                  puedas aportar valor.
-                </p>
-              </div>
-            </article>
-
-            <article className="kd-timeline__step" data-reveal>
-              <span className="kd-timeline__num" aria-hidden>
-                04
-              </span>
-              <div className="kd-timeline__card kd-timeline__card--lime">
-                <span className="kd-timeline__icon">
-                  <svg viewBox="0 0 24 24" aria-hidden>
-                    <rect x="6" y="3" width="12" height="18" rx="2" />
-                    <path d="M9.5 8h5M9.5 12h5M9.5 16h3" />
-                  </svg>
-                </span>
-                <h3>Crece donde realmente puedas destacar</h3>
-                <p>
-                  Conecta con empresas que buscan profesionales alineados con su cultura,
-                  su forma de vender y sus objetivos de negocio.
-                </p>
-              </div>
-            </article>
-          </div>
+          <article className="kd-door kd-door--lime">
+            <span className="kd-door__icon">
+              <svg viewBox="0 0 24 24" aria-hidden>
+                <rect x="6" y="3" width="12" height="18" rx="2" />
+                <path d="M9.5 8h5M9.5 12h5M9.5 16h3" />
+              </svg>
+            </span>
+            <span className="kd-door__body">
+              <span className="kd-door__tag">04 · Profesionales</span>
+              <h3>Crece donde realmente puedas destacar</h3>
+              <p>
+                Conecta con empresas que buscan profesionales alineados con su cultura,
+                su forma de vender y sus objetivos de negocio.
+              </p>
+            </span>
+          </article>
         </div>
+
       </section>
 
       {/* 03 · TENSIÓN — hoja de vida vs alineación */}
-      <section className="dx" id="diferencia" aria-labelledby="dx-title" data-reveal>
-        <p className="dx__eyebrow">Nuestra diferencia</p>
-
-        <h2 className="dx__title" id="dx-title">
-          <span className="lead">La experiencia abre la puerta.</span>{' '}
-          <span className="accent">La alineación determina lo que ocurre después.</span>
-        </h2>
-
-        <p className="dx__sub">
-          Una persona puede tener una gran trayectoria y no encontrar el entorno donde
-          pueda dar lo mejor. Una empresa puede contratar experiencia y no obtener el
-          impacto que esperaba.
-        </p>
-
-        <div className="cmp">
-          <div className="cmp__block cmp__block--surface">
-            <div className="cmp__meta">
-              <span className="cmp__idx">01</span>
-              <span className="cmp__tag">Hoja de vida</span>
-            </div>
-            <div className="cmp__cap">Lo que los otros ven</div>
-            <ul className="cmp__list">
-              <li>
-                <span className="cmp__dash" aria-hidden />
-                Cargos anteriores
-              </li>
-              <li>
-                <span className="cmp__dash" aria-hidden />
-                Años de experiencia
-              </li>
-              <li>
-                <span className="cmp__dash" aria-hidden />
-                Empresas y títulos
-              </li>
-              <li>
-                <span className="cmp__dash" aria-hidden />
-                Logros en papel
-              </li>
-            </ul>
-          </div>
-
-          <div className="cmp__rule">
-            <span>Más allá</span>
-          </div>
-
-          <div className="cmp__block cmp__block--kova">
-            <div className="cmp__meta">
-              <span className="cmp__idx">02</span>
-              <span className="cmp__tag">Alineación Kova</span>
-            </div>
-            <div className="cmp__cap">Lo que nosotros vemos</div>
-            <ul className="cmp__list">
-              <li>
-                <span className="cmp__check" aria-hidden>
-                  <svg viewBox="0 0 24 24">
-                    <path d="M5 12.5l4.2 4.2L19 7" />
-                  </svg>
-                </span>
-                Cómo vende y negocia
-              </li>
-              <li>
-                <span className="cmp__check" aria-hidden>
-                  <svg viewBox="0 0 24 24">
-                    <path d="M5 12.5l4.2 4.2L19 7" />
-                  </svg>
-                </span>
-                Cultura y valores
-              </li>
-              <li>
-                <span className="cmp__check" aria-hidden>
-                  <svg viewBox="0 0 24 24">
-                    <path d="M5 12.5l4.2 4.2L19 7" />
-                  </svg>
-                </span>
-                Forma de trabajar
-              </li>
-              <li>
-                <span className="cmp__check" aria-hidden>
-                  <svg viewBox="0 0 24 24">
-                    <path d="M5 12.5l4.2 4.2L19 7" />
-                  </svg>
-                </span>
-                Motivaciones reales
-              </li>
-            </ul>
-          </div>
+      <section className="kd-diff" aria-labelledby="kd-diff-title">
+        <div className="kd-diff-head" data-reveal>
+          <p className="kd-eyebrow">Nuestra diferencia</p>
+          <h2 id="kd-diff-title">
+            La experiencia abre la puerta.
+            <br />
+            <span>La alineación determina lo que ocurre después.</span>
+          </h2>
+          <p className="kd-diff-sub">
+            Una persona puede tener una gran trayectoria y no encontrar el entorno donde
+            pueda dar lo mejor. Una empresa puede contratar experiencia y no obtener el
+            impacto que esperaba.
+          </p>
         </div>
+
+        <div className="kd-compare" data-reveal>
+          <article className="kd-compare__card kd-compare__card--cv">
+            <header>
+              <span className="kd-compare__tag">Hoja de vida</span>
+              <span className="kd-compare__caption">Lo que los otros ven</span>
+            </header>
+            <ul>
+              <li>Cargos anteriores</li>
+              <li>Años de experiencia</li>
+              <li>Empresas y títulos</li>
+              <li>Logros en papel</li>
+            </ul>
+          </article>
+
+          <div className="kd-compare__bridge" aria-hidden>
+            <span className="kd-compare__wire" />
+            <span className="kd-compare__node">
+              <span className="kd-compare__ring" />
+              <i />
+            </span>
+            <span className="kd-compare__wire kd-compare__wire--b" />
+          </div>
+
+          <article className="kd-compare__card kd-compare__card--kova">
+            <header>
+              <span className="kd-compare__tag">Alineación Kova</span>
+              <span className="kd-compare__caption">Lo que nosotros vemos</span>
+            </header>
+            <ul>
+              <li style={{ '--d': '0ms' }}>Cómo vende y negocia</li>
+              <li style={{ '--d': '120ms' }}>Cultura y valores</li>
+              <li style={{ '--d': '240ms' }}>Forma de trabajar</li>
+              <li style={{ '--d': '360ms' }}>Motivaciones reales</li>
+            </ul>
+          </article>
+        </div>
+
+        <p className="kd-diff-close" data-reveal>
+          Por eso Kova mira más allá de la hoja de vida.
+        </p>
       </section>
 
-      {/* 03 · QUÉ EVALUAMOS */}
-      <section className="mt" id="metodo" aria-labelledby="mt-title" data-reveal>
-        <p className="mt__eyebrow">
-          <i aria-hidden />
-          Qué evaluamos
-        </p>
-        <h2 className="mt__title" id="mt-title">
-          Vemos lo que una hoja de vida no muestra.
-        </h2>
-        <p className="mt__sub">
-          Antes de recomendar a una persona, entendemos cómo funciona la empresa, qué
-          necesita el rol y qué condiciones permiten que un profesional se desarrolle y
-          genere resultados.
-        </p>
-
-        <div className="mt__list">
-          <article className="mt__card">
-            <span className="mt__ico" aria-hidden>
-              <svg viewBox="0 0 24 24">
-                <path d="M4 20h16" />
-                <path className="mt__ico-fill" d="M6 14h3v6H6zm4.5-5h3v11h-3zM15 5h3v15h-3z" />
-              </svg>
-            </span>
-            <div>
-              <h3 className="mt__t">Negocio</h3>
-              <p className="mt__d">Cómo genera ingresos y qué impulsa sus resultados.</p>
-            </div>
-          </article>
-
-          <article className="mt__card">
-            <span className="mt__ico" aria-hidden>
-              <svg viewBox="0 0 24 24">
-                <circle cx="8.2" cy="8" r="2.35" />
-                <circle cx="15.8" cy="8" r="2.35" />
-                <path d="M3.8 18.5c.35-2.9 2.2-4.5 4.4-4.5s4.05 1.6 4.4 4.5" />
-                <path d="M11.4 18.5c.35-2.9 2.2-4.5 4.4-4.5s4.05 1.6 4.4 4.5" />
-              </svg>
-            </span>
-            <div>
-              <h3 className="mt__t">Cultura</h3>
-              <p className="mt__d">Cómo se trabaja y se decide dentro del equipo.</p>
-            </div>
-          </article>
-
-          <article className="mt__card">
-            <span className="mt__ico" aria-hidden>
-              <svg viewBox="0 0 24 24">
-                <path d="M7 20.5V4.2" />
-                <path d="M7 5h9.4a.7.7 0 0 1 .6 1L15.2 9.8a.9.9 0 0 0 0 .9l1.8 3.6a.7.7 0 0 1-.6 1H7" />
-              </svg>
-            </span>
-            <div>
-              <h3 className="mt__t">Liderazgo</h3>
-              <p className="mt__d">El estilo de gestión y lo que espera el rol.</p>
-            </div>
-          </article>
-
-          <article className="mt__card">
-            <span className="mt__ico" aria-hidden>
-              <svg viewBox="0 0 24 24">
-                <path d="M12 3.4 19.2 7.6v8.8L12 20.6l-7.2-4.2V7.6z" />
-                <path d="M12 8.2 15.6 10.3v4.2L12 16.6l-3.6-2.1v-4.2z" />
-              </svg>
-            </span>
-            <div>
-              <h3 className="mt__t">Capacidades</h3>
-              <p className="mt__d">Las habilidades reales, más allá del título.</p>
-            </div>
-          </article>
-
-          <article className="mt__card">
-            <span className="mt__ico" aria-hidden>
-              <svg viewBox="0 0 24 24">
-                <circle cx="6.2" cy="12" r="2.2" />
-                <circle cx="12" cy="6.4" r="2.2" />
-                <circle cx="17.8" cy="12" r="2.2" />
-                <circle cx="12" cy="17.6" r="2.2" />
-                <path d="M7.9 10.6 10.3 8.2M13.7 8.2l2.4 2.4M13.7 15.8l2.4-2.4M7.9 13.4l2.4 2.4" />
-              </svg>
-            </span>
-            <div>
-              <h3 className="mt__t">Forma de trabajar</h3>
-              <p className="mt__d">Ritmo, autonomía y forma de colaborar.</p>
-            </div>
-          </article>
-
-          <article className="mt__card">
-            <span className="mt__ico" aria-hidden>
-              <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="7.8" />
-                <circle cx="12" cy="12" r="4.2" />
-                <circle cx="12" cy="12" r="1.25" className="mt__ico-fill" />
-              </svg>
-            </span>
-            <div>
-              <h3 className="mt__t">Motivaciones</h3>
-              <p className="mt__d">Lo que impulsa a la persona a largo plazo.</p>
-            </div>
-          </article>
+      {/* 03 · ABREBOCAS DEL MÉTODO */}
+      <section className="kd-method" id="metodo" aria-labelledby="kd-method-title">
+        <div className="kd-section-head" data-reveal>
+          <h2 id="kd-method-title">Vemos lo que una hoja de vida no muestra.</h2>
+          <p>
+            Antes de recomendar a una persona, entendemos cómo funciona la empresa, qué
+            necesita el rol y qué condiciones permiten que un profesional se desarrolle y
+            genere resultados.
+          </p>
         </div>
-
-        <div className="mt__close">
-          <svg viewBox="0 0 24 24" aria-hidden>
-            <path d="M5 12.5l4.2 4.2L19 7" />
-          </svg>
+        <div className="kd-concepts" data-reveal>
+          {METHOD_CONCEPTS.map((concept) => (
+            <span key={concept} className="kd-concept">
+              {concept}
+            </span>
+          ))}
+        </div>
+        <div className="kd-method-close" data-reveal>
           <p>Convertimos esa información en un perfil de éxito específico para cada organización.</p>
         </div>
       </section>
@@ -583,6 +455,11 @@ export default function HomeDark() {
       {/* 05b · GARANTÍA */}
       <section className="kd-guarantee" id="garantia" aria-labelledby="kd-guarantee-title">
         <div className="kd-guarantee-inner" data-reveal>
+          <div className="kd-guarantee-badge" aria-hidden>
+            <span className="kd-guarantee-badge__ring" />
+            <span className="kd-guarantee-badge__num">6</span>
+            <span className="kd-guarantee-badge__label">meses de garantía</span>
+          </div>
           <div className="kd-guarantee-copy">
             <p className="kd-eyebrow">Compromiso Kova</p>
             <h2 id="kd-guarantee-title">
@@ -604,60 +481,49 @@ export default function HomeDark() {
       {/* 06 · CIERRE */}
       <section className="kd-final" id="contacto" aria-labelledby="kd-final-title">
         <div className="kd-final-shell" data-reveal>
-          <div className="kd-final-main">
+          <span className="kd-final-dots kd-final-dots--tl" aria-hidden />
+          <span className="kd-final-dots kd-final-dots--br" aria-hidden />
+
+          <div className="kd-final-grid">
+            <figure className="kd-final-shot kd-final-shot--left">
+              <img src="/landing/people/final-empresas-pro.jpg" alt="" loading="lazy" />
+            </figure>
+
             <div className="kd-final-copy">
               <p className="kd-final-kicker">Dos caminos. Un criterio.</p>
               <h2 id="kd-final-title">
-                El talento <span>correcto</span>
+                El talento
+                <span> correcto</span>
                 <br />
-                necesita el entorno <span>correcto</span>.
+                necesita el entorno
+                <span> correcto</span>.
               </h2>
               <p className="kd-final-lead">
                 Cuando una empresa encuentra a la persona adecuada y un profesional encuentra
                 dónde desarrollar su potencial, ambos crecen.
               </p>
+              <div className="kd-final-actions">
+                <Link className="kd-final-btn kd-final-btn--primary" to="/para-empresas">
+                  Para empresas
+                </Link>
+                <Link className="kd-final-btn kd-final-btn--ghost" to="/empleo">
+                  Para talento
+                </Link>
+              </div>
             </div>
 
-            <figure className="kd-final-shot">
-              <img
-                src="/landing/people/final-talento-pro.jpg"
-                alt="Profesional comercial"
-                loading="lazy"
-              />
+            <figure className="kd-final-shot kd-final-shot--right">
+              <img src="/landing/people/final-talento-pro.jpg" alt="" loading="lazy" />
             </figure>
-
-            <div className="kd-final-actions">
-              <Link className="kd-final-btn kd-final-btn--primary" to="/para-empresas">
-                Para empresas
-              </Link>
-              <Link className="kd-final-btn kd-final-btn--ghost" to="/empleo">
-                Para talento
-              </Link>
-            </div>
           </div>
         </div>
       </section>
 
       <footer className="kd-footer">
-        <div className="kd-footer__inner">
-          <div className="kd-footer__row">
-            <Link className="kd-footer__brand" to="/">
-              kova<span>.</span>
-            </Link>
-
-            <nav className="kd-footer__nav" aria-label="Pie de página">
-              <Link to="/para-empresas">Empresas</Link>
-              <Link to="/empleo">Talento</Link>
-              <Link to="/guias">Blog</Link>
-              <Link to="/para-empresas#contacto">Contacto</Link>
-            </nav>
-          </div>
-
-          <div className="kd-footer__base">
-            <p className="kd-footer__tag">Reclutamiento comercial, con criterio.</p>
-            <p className="kd-footer__copy">© {new Date().getFullYear()} Kova</p>
-          </div>
-        </div>
+        <Link className="kd-brand" to="/">
+          kova<span>.</span>
+        </Link>
+        <p>© {new Date().getFullYear()} Kova</p>
       </footer>
     </main>
   );
