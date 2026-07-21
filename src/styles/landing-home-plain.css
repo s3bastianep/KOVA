@@ -2835,20 +2835,89 @@
 
 @media (max-width: 860px) {
   .kova-home-plain .kh-guarantee__panel {
-    flex-direction: column;
-    align-items: flex-start;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding: 28px 22px 26px;
+    border-radius: 20px;
   }
 
+  /* Sello circular: solo desktop (en móvil se quitó a propósito) */
   .kova-home-plain .kh-guarantee__badge {
-    flex: 0 0 auto;
-    width: 140px;
-    height: 140px;
+    display: none !important;
   }
 
-  .kova-home-plain .kh-guarantee__badge strong {
-    font-size: 48px;
+  .kova-home-plain .kh-guarantee__panel::before {
+    content: '6';
+    position: absolute;
+    right: -4px;
+    top: -28px;
+    z-index: 0;
+    font-size: clamp(120px, 38vw, 168px);
+    font-weight: 800;
+    letter-spacing: -0.08em;
+    line-height: 1;
+    color: rgba(8, 117, 76, 0.08);
+    pointer-events: none;
+  }
+
+  .kova-home-plain .kh-guarantee__copy {
+    position: relative;
+    z-index: 1;
+  }
+
+  .kova-home-plain .kh-guarantee__copy .kh-h2 {
+    max-width: none;
+    font-size: clamp(1.55rem, 6.5vw, 1.9rem) !important;
+    line-height: 1.12 !important;
+  }
+
+  .kova-home-plain .kh-guarantee__lead {
+    margin-top: 12px;
+    font-size: 15px !important;
+    line-height: 1.55;
+  }
+
+  .kova-home-plain .kh-guarantee__points {
+    margin-top: 20px;
+    gap: 0;
+  }
+
+  .kova-home-plain .kh-guarantee__points li {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    align-items: start;
+    gap: 10px;
+    padding: 12px 0;
+    border-top: 1px solid rgba(26, 23, 18, 0.1);
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .kova-home-plain .kh-guarantee__points li:last-child {
+    padding-bottom: 0;
+  }
+
+  .kova-home-plain .kh-guarantee__points li::before {
+    content: '✓';
+    position: static;
+    top: auto;
+    left: auto;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    margin-top: 0;
+    border-radius: 8px;
+    background: rgba(8, 117, 76, 0.12);
+    color: #08754c;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
   }
 }
+
+/* Desktop: sello circular visible */
 
 .kova-home-plain .kh-form input.kh-input--error {
   border-bottom-color: #e85c6b;
@@ -2986,7 +3055,6 @@
   .kova-home-plain .kh-score-explain,
   .kova-home-plain .kh-contact__grid,
   .kova-home-plain .kh-form-row,
-  .kova-home-plain .kh-costos,
   .kova-home-plain .kh-dolores {
     grid-template-columns: 1fr !important;
     gap: 28px !important;

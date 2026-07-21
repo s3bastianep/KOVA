@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMotionValue, useSpring } from 'framer-motion';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useLandingPremiumMotion } from '@/hooks/useLandingPremiumMotion';
@@ -153,21 +153,6 @@ const DIAG_CHECKS = [
   'Ticket promedio',
   'Cultura comercial',
   'Estilo de negociación',
-];
-
-const METHOD_POINTS = [
-  {
-    q: '¿Qué es el Kova Score?',
-    a: 'Una forma clara de ver qué tan bien encaja alguien con cómo vende tu empresa.',
-  },
-  {
-    q: '¿Qué obtienes?',
-    a: 'Una lista corta de candidatos priorizados y una recomendación que puedes defender.',
-  },
-  {
-    q: '¿Cómo lo logramos?',
-    a: 'Con un método propio. El detalle lo vemos juntos en la conversación, no en un brochure.',
-  },
 ];
 
 const CASO = {
@@ -332,17 +317,29 @@ export default function Landing() {
   };
 
   const validateForm = () => {
+    const telDigits = form.tel.replace(/\D/g, '');
     const errors = {
       nombre: !form.nombre.trim(),
-      tel: !form.tel.trim(),
+      tel: telDigits.length < 10,
       empresa: !form.empresa.trim(),
       cargo: !form.cargo.trim(),
     };
     setFormErrors(errors);
-    return !Object.values(errors).some(Boolean);
+    if (Object.values(errors).some(Boolean)) {
+      const firstKey = ['nombre', 'tel', 'empresa', 'cargo'].find((k) => errors[k]);
+      const el = document.querySelector(
+        firstKey === 'tel'
+          ? '.kh-form--asesoria input[type="tel"]'
+          : `.kh-form--asesoria input[name="${firstKey}"]`,
+      );
+      el?.focus?.();
+      return false;
+    }
+    return true;
   };
 
-  const goToCalendar = () => {
+  const goToCalendar = (e) => {
+    e?.preventDefault?.();
     if (!validateForm()) return;
     navigate(CONTACT_BOOKING_PATH, {
       state: {
@@ -917,15 +914,6 @@ export default function Landing() {
             </article>
           </div>
 
-          <div className="kh-method-qa">
-            {METHOD_POINTS.map((item) => (
-              <div key={item.q} className="kh-method-qa__item">
-                <h3>{item.q}</h3>
-                <p>{item.a}</p>
-              </div>
-            ))}
-          </div>
-
           <div className="kh-case-panel kh-case-panel--compact">
             <div className="kh-case-panel__copy">
               <div className="kh-perfil__tag">Así se ve una buena contratación</div>
@@ -1066,14 +1054,17 @@ export default function Landing() {
             </p>
           </div>
 
-          <div className="kh-form kh-form--asesoria">
+          <form className="kh-form kh-form--asesoria" onSubmit={goToCalendar} noValidate>
             <div className="kh-form-row">
               <label>
                 <span>Nombre</span>
                 <input
                   type="text"
+                  name="nombre"
                   placeholder="Tu nombre"
                   required
+                  autoComplete="name"
+                  aria-invalid={formErrors.nombre ? 'true' : undefined}
                   className={formErrors.nombre ? 'kh-input--error' : undefined}
                   value={form.nombre}
                   onChange={setField('nombre')}
@@ -1083,9 +1074,12 @@ export default function Landing() {
                 <span>WhatsApp</span>
                 <input
                   type="tel"
+                  name="tel"
                   inputMode="tel"
                   placeholder="+57"
                   required
+                  autoComplete="tel"
+                  aria-invalid={formErrors.tel ? 'true' : undefined}
                   className={formErrors.tel ? 'kh-input--error' : undefined}
                   value={form.tel}
                   onChange={setField('tel')}
@@ -1097,8 +1091,11 @@ export default function Landing() {
                 <span>Empresa</span>
                 <input
                   type="text"
+                  name="empresa"
                   placeholder="¿Cómo se llama tu empresa?"
                   required
+                  autoComplete="organization"
+                  aria-invalid={formErrors.empresa ? 'true' : undefined}
                   className={formErrors.empresa ? 'kh-input--error' : undefined}
                   value={form.empresa}
                   onChange={setField('empresa')}
@@ -1108,8 +1105,11 @@ export default function Landing() {
                 <span>Cargo</span>
                 <input
                   type="text"
+                  name="cargo"
                   placeholder="¿Cuál es tu cargo?"
                   required
+                  autoComplete="organization-title"
+                  aria-invalid={formErrors.cargo ? 'true' : undefined}
                   className={formErrors.cargo ? 'kh-input--error' : undefined}
                   value={form.cargo}
                   onChange={setField('cargo')}
@@ -1122,6 +1122,7 @@ export default function Landing() {
                 <span className="kh-form__opt">(opcional)</span>
               </span>
               <textarea
+                name="msg"
                 rows={3}
                 placeholder="¿Qué tipo de profesional necesitas? ¿Qué retos tendrá? Cualquier contexto que nos compartas nos ayudará a orientarte mejor."
                 value={form.msg}
@@ -1150,7 +1151,7 @@ export default function Landing() {
               </p>
             )}
 
-            <button type="button" className="kh-btn kh-btn--lime" onClick={goToCalendar}>
+            <button type="submit" className="kh-btn kh-btn--lime">
               Quiero hablar con un especialista
             </button>
             <button type="button" className="kh-btn kh-btn--wa" onClick={sendWhatsApp}>
@@ -1159,7 +1160,7 @@ export default function Landing() {
             <p className="kh-form__note">
               Te responderemos lo antes posible para coordinar la asesoría.
             </p>
-          </div>
+          </form>
         </div>
       </section>
 
@@ -1174,9 +1175,9 @@ export default function Landing() {
         </div>
       </footer>
 
-      <Link
+      <a
         className="kh-agenda-float"
-        to={CONTACT_BOOKING_PATH}
+        href="#contacto"
         aria-label="Agenda una asesoría"
       >
         <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden focusable="false">
@@ -1185,7 +1186,7 @@ export default function Landing() {
             d="M8 6h16a2 2 0 012 2v16a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2zm2 4v2h12v-2H10zm0 5v2h12v-2H10zm0 5v2h8v-2h-8z"
           />
         </svg>
-      </Link>
+      </a>
     </div>
   );
 }
