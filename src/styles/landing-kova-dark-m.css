@@ -192,7 +192,7 @@
   max-width: 38em;
   margin: 30px 0 0;
   color: rgba(245, 245, 245, 0.66);
-  font-size: clamp(17px, 1.5vw, 20px);
+  font-size: var(--kv-fs-hero-sub, clamp(17px, 1.5vw, 20px));
   font-weight: 400;
   line-height: 1.5;
 }
@@ -998,6 +998,109 @@
   font-size: 16px;
   line-height: 1.62;
 }
+.kova-dark-m .mt__split {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.kova-dark-m .mt__panel {
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--mt-line);
+  display: flex;
+  flex-direction: column;
+}
+.kova-dark-m .mt__panel--empresa {
+  background: #0d0f0f;
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #f5f5f5;
+}
+.kova-dark-m .mt__panel--talento {
+  background: linear-gradient(165deg, #f7fbe8 0%, #ffffff 62%);
+}
+.kova-dark-m .mt__panel-kicker {
+  margin: 0;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--kd-lime);
+}
+.kova-dark-m .mt__panel--talento .mt__panel-kicker {
+  color: color-mix(in srgb, var(--kd-lime) 45%, #0d0f0f);
+}
+.kova-dark-m .mt__panel-head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 18px 0;
+  min-height: 9rem;
+}
+.kova-dark-m .mt__panel-title {
+  margin: 0;
+  max-width: 18ch;
+  min-height: 2.5em;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+.kova-dark-m .mt__panel--empresa .mt__panel-title {
+  color: #f5f5f5;
+}
+.kova-dark-m .mt__panel-promise {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: rgba(245, 245, 245, 0.62);
+}
+.kova-dark-m .mt__panel--talento .mt__panel-promise {
+  color: rgba(13, 15, 15, 0.62);
+}
+.kova-dark-m .mt__panel-cta {
+  margin: auto 18px 18px;
+  align-self: flex-start;
+  min-width: 11rem;
+  justify-content: center;
+}
+.kova-dark-m .mt__panel--talento .mt__panel-cta.kd-btn--ghost {
+  background: #0d0f0f;
+  border-color: #0d0f0f;
+  color: #fafaf8;
+  box-shadow: none;
+}
+.kova-dark-m .mt__panel--talento .mt__panel-cta.kd-btn--ghost:hover {
+  background: #1a1c1a;
+  border-color: #1a1c1a;
+  color: #fff;
+}
+.kova-dark-m .mt__panel .mt__list {
+  margin-top: 8px;
+  padding: 8px 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  grid-template-columns: none;
+  flex: 1 1 auto;
+}
+.kova-dark-m .mt__panel--empresa .mt__card {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+}
+.kova-dark-m .mt__panel--empresa .mt__t {
+  color: #f5f5f5;
+}
+.kova-dark-m .mt__panel--empresa .mt__d {
+  color: rgba(245, 245, 245, 0.58);
+}
+.kova-dark-m .mt__panel--talento .mt__card {
+  background: rgba(255, 255, 255, 0.72);
+}
 .kova-dark-m .mt__list {
   margin-top: 32px;
   display: grid;
@@ -1006,10 +1109,10 @@
 }
 .kova-dark-m .mt__card {
   display: grid;
-  grid-template-columns: 46px 1fr;
-  gap: 15px;
-  align-items: center;
-  padding: 16px 18px;
+  grid-template-columns: 2.25rem 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 14px 16px;
   border: 1px solid var(--mt-line);
   border-radius: 15px;
   background: var(--mt-card);
@@ -1020,6 +1123,16 @@
   border-color: rgba(182, 210, 58, 0.85);
   transform: translateY(-2px);
   box-shadow: 0 12px 24px rgba(20, 20, 25, 0.08);
+}
+.kova-dark-m .mt__n {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  color: var(--kd-lime);
+}
+.kova-dark-m .mt__panel--talento .mt__n {
+  color: color-mix(in srgb, var(--kd-lime) 40%, #0d0f0f);
 }
 .kova-dark-m .mt__ico {
   width: 46px;
@@ -1084,6 +1197,23 @@
   line-height: 1.5;
   letter-spacing: -0.01em;
   color: var(--mt-ink);
+}
+.kova-dark-m .mt__bridge {
+  margin-top: 14px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: var(--kd-lime);
+  color: #0d0f0f;
+}
+.kova-dark-m .mt__bridge p {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.45;
+}
+.kova-dark-m .mt__bridge strong {
+  font-weight: 800;
 }
 .kova-dark-m .kd-score {
   position: relative;
@@ -1676,7 +1806,7 @@
 .kova-dark-m .kd-hero h1 {
     max-width: none;
     margin: 0;
-    font-size: clamp(33px, 10.5vw, 44px);
+    font-size: var(--kv-fs-hero);
     line-height: 1;
     letter-spacing: -0.035em;
     font-weight: 800;
@@ -1752,7 +1882,7 @@
     margin: 22px 0 0;
     padding-left: 0;
     border-left: none;
-    font-size: 16px;
+    font-size: var(--kv-fs-hero-sub);
     line-height: 1.55;
     color: #bdbdb7;
     font-weight: 400;
@@ -1768,10 +1898,10 @@
   }
 .kova-dark-m .kd-hero-actions .kd-btn {
     width: 100%;
-    min-height: 54px;
-    height: 54px;
+    min-height: var(--kv-hero-btn-h);
+    height: var(--kv-hero-btn-h);
     border-radius: 12px;
-    font-size: 15px;
+    font-size: var(--kv-fs-hero-btn);
     font-weight: 700;
     justify-content: center;
     transform: none;
@@ -2006,7 +2136,7 @@
     border-radius: 0 0 24px 0;
   }
 .kova-dark-m .kd-hero h1 {
-    font-size: clamp(33px, 10.5vw, 40px);
+    font-size: var(--kv-fs-hero);
     max-width: none;
     line-height: 1;
   }
@@ -2019,7 +2149,7 @@
   }
 .kova-dark-m .kd-hero-sub {
     margin-top: 20px;
-    font-size: 15.5px;
+    font-size: var(--kv-fs-hero-sub);
     max-width: none;
     text-align: center;
   }
@@ -2029,10 +2159,10 @@
     gap: 12px;
   }
 .kova-dark-m .kd-hero-actions .kd-btn {
-    min-height: 54px;
-    height: 54px;
+    min-height: var(--kv-hero-btn-h);
+    height: var(--kv-hero-btn-h);
     padding: 0 16px;
-    font-size: 15px;
+    font-size: var(--kv-fs-hero-btn);
     border-radius: 12px;
   }
 .kova-dark-m .mt {

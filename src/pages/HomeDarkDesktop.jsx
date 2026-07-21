@@ -11,13 +11,51 @@ const PANEL_BARS = [
   { label: 'Motivaciones', value: 86 },
 ];
 
-const METHOD_CONCEPTS = [
-  'Negocio',
-  'Cultura',
-  'Liderazgo',
-  'Capacidades',
-  'Forma de trabajar',
-  'Motivaciones',
+const METHOD_SIDES = [
+  {
+    id: 'empresa',
+    kicker: 'Si contratas',
+    title: 'Reduce el riesgo de una mala contratación',
+    promise:
+      'Perfil de éxito defendible, evaluación con evidencia y acompañamiento de la integración en los primeros 90 días.',
+    points: [
+      {
+        title: 'Sabes a quién necesitas antes de buscar',
+        text: 'Diagnosticamos tu modelo de venta y definimos el perfil del rol: cliente, ciclo, ticket y cultura del equipo.',
+      },
+      {
+        title: 'Eliges con evidencia, no con corazonada',
+        text: 'Comparamos candidatos con un estándar comercial claro. Menos intuición de entrevista; más decisión argumentada.',
+      },
+      {
+        title: 'Acompañamos la integración 90 días',
+        text: 'Hitos 30 · 60 · 90 para adoptar el modelo, el proceso y el ritmo del equipo, con seguimiento y ajustes a tiempo.',
+      },
+    ],
+    cta: { to: '/para-empresas', label: 'Empieza a contratar' },
+  },
+  {
+    id: 'talento',
+    kicker: 'Si buscas empleo',
+    title: 'Crece con transparencia y acompañamiento',
+    promise:
+      'Siempre estás informado. Te acompañamos en el arranque y después, con retroalimentación de tu carrera comercial.',
+    points: [
+      {
+        title: 'Siempre sabes en qué va tu proceso',
+        text: 'Te mantenemos al tanto en cada etapa: qué se evalúa, qué falta y por qué avanzas o no. Sin silencio ni sorpresas.',
+      },
+      {
+        title: 'Beneficios pensados para tu desarrollo',
+        text: 'Condiciones claras, feedback útil y empresas alineadas a tu estilo de venta, para crecer donde realmente aportas.',
+      },
+      {
+        title: 'Acompañamiento más allá de 90 días',
+        text: 'Seguimos contigo en la integración y después, con seguimiento y retroalimentación de cómo avanza tu carrera.',
+      },
+    ],
+    cta: { to: '/empleo', label: 'Encontrar un empleo' },
+  },
 ];
 
 export default function HomeDarkDesktop() {
@@ -296,7 +334,7 @@ export default function HomeDarkDesktop() {
               </svg>
             </span>
             <span className="kd-door__body">
-              <span className="kd-door__tag">03 · Profesionales</span>
+              <span className="kd-door__tag">03 · Talento</span>
               <h3>Tu experiencia merece una evaluación más completa</h3>
               <p>
                 No nos quedamos con tu hoja de vida. Entendemos tus habilidades, tu forma
@@ -314,10 +352,10 @@ export default function HomeDarkDesktop() {
               </svg>
             </span>
             <span className="kd-door__body">
-              <span className="kd-door__tag">04 · Profesionales</span>
+              <span className="kd-door__tag">04 · Talento</span>
               <h3>Crece donde realmente puedas destacar</h3>
               <p>
-                Conecta con empresas que buscan profesionales alineados con su cultura,
+                Conecta con empresas que buscan talento alineado con su cultura,
                 su forma de vender y sus objetivos de negocio.
               </p>
             </span>
@@ -329,7 +367,6 @@ export default function HomeDarkDesktop() {
       {/* 03 · TENSIÓN — hoja de vida vs alineación */}
       <section className="kd-diff" aria-labelledby="kd-diff-title">
         <div className="kd-diff-head" data-reveal>
-          <p className="kd-eyebrow">Nuestra diferencia</p>
           <h2 id="kd-diff-title">
             La experiencia abre la puerta.
             <br />
@@ -367,7 +404,7 @@ export default function HomeDarkDesktop() {
 
           <article className="kd-compare__card kd-compare__card--kova">
             <header>
-              <span className="kd-compare__tag">Alineación Kova</span>
+              <span className="kd-compare__tag">Perfil comercial</span>
               <span className="kd-compare__caption">Lo que nosotros vemos</span>
             </header>
             <ul>
@@ -378,31 +415,55 @@ export default function HomeDarkDesktop() {
             </ul>
           </article>
         </div>
-
-        <p className="kd-diff-close" data-reveal>
-          Por eso Kova mira más allá de la hoja de vida.
-        </p>
       </section>
 
-      {/* 03 · ABREBOCAS DEL MÉTODO */}
+      {/* 03 · MÉTODO + CONDICIONES (empresa y talento) */}
       <section className="kd-method" id="metodo" aria-labelledby="kd-method-title">
-        <div className="kd-section-head" data-reveal>
-          <h2 id="kd-method-title">Vemos lo que una hoja de vida no muestra.</h2>
+        <div className="kd-section-head kd-section-head--center" data-reveal>
+          <h2 id="kd-method-title">
+            Certeza al contratar.
+            <br />
+            Claridad al crecer.
+          </h2>
           <p>
-            Antes de recomendar a una persona, entendemos cómo funciona la empresa, qué
-            necesita el rol y qué condiciones permiten que un profesional se desarrolle y
-            genere resultados.
+            Si contratas, te ayudamos a elegir bien y a acompañar la integración. Si buscas
+            empleo, te damos condiciones claras y te conectamos donde realmente puedas
+            aportar.
           </p>
         </div>
-        <div className="kd-concepts" data-reveal>
-          {METHOD_CONCEPTS.map((concept) => (
-            <span key={concept} className="kd-concept">
-              {concept}
-            </span>
+
+        <div className="kd-method-split" data-reveal>
+          {METHOD_SIDES.map((side) => (
+            <article
+              key={side.id}
+              className={`kd-method-panel kd-method-panel--${side.id}`}
+            >
+              <header className="kd-method-panel__head">
+                <p className="kd-method-panel__kicker">{side.kicker}</p>
+                <h3 className="kd-method-panel__title">{side.title}</h3>
+                <p className="kd-method-panel__promise">{side.promise}</p>
+              </header>
+              <ul className="kd-method-panel__list">
+                {side.points.map((point, i) => (
+                  <li key={point.title}>
+                    <span className="kd-method-panel__n" aria-hidden>
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span className="kd-method-panel__body">
+                      <strong>{point.title}</strong>
+                      <span>{point.text}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                className={`kd-btn ${side.id === 'empresa' ? 'kd-btn--lime' : 'kd-btn--ghost'}`}
+                to={side.cta.to}
+              >
+                {side.cta.label}
+              </Link>
+            </article>
           ))}
-        </div>
-        <div className="kd-method-close" data-reveal>
-          <p>Convertimos esa información en un perfil de éxito específico para cada organización.</p>
         </div>
       </section>
 
@@ -419,14 +480,14 @@ export default function HomeDarkDesktop() {
               Combinamos metodología, evaluación humana y tecnología para tomar decisiones
               con más contexto.
             </p>
-            <Link className="kd-btn kd-btn--lime" to="/para-empresas">
+            <Link className="kd-btn kd-btn--lime" to="/para-empresas#metodologia">
               Conoce cómo evaluamos la alineación
             </Link>
           </div>
 
           <div className="kd-dashboard" data-reveal>
             <div className="kd-dashboard__head">
-              <span>Perfil de alineación Kova</span>
+              <span>Perfil comercial</span>
               <span className="kd-dashboard__badge">Ejemplo ilustrativo</span>
             </div>
             <p className="kd-dashboard__score">
@@ -458,7 +519,6 @@ export default function HomeDarkDesktop() {
             <span className="kd-guarantee-badge__label">meses de garantía</span>
           </div>
           <div className="kd-guarantee-copy">
-            <p className="kd-eyebrow">Compromiso Kova</p>
             <h2 id="kd-guarantee-title">
               Contrata con <span>garantía de 6 meses</span>.
             </h2>

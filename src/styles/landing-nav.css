@@ -7,12 +7,16 @@
   /* Negro unificado — navbar + heroes + shell */
   --kv-black: #0d0f0f;
   --kv-lime: #c5de4e;
-  /* Shared type scale — Manrope */
+  /* Shared type scale — Manrope (heroes = HomeDark) */
   --kv-fs-hero: clamp(2.5rem, 5.2vw, 64px);
+  --kv-fs-hero-sub: clamp(17px, 1.5vw, 20px);
+  --kv-fs-eyebrow: 12px;
+  --kv-fs-hero-btn: 14.5px;
+  --kv-hero-btn-h: 48px;
   --kv-fs-h2: clamp(1.75rem, 3.6vw, 42px);
   --kv-fs-h3: clamp(1.35rem, 2.2vw, 28px);
-  --kv-fs-sub: clamp(1.05rem, 1.35vw, 20px);
-  --kv-fs-lead: var(--kv-fs-sub);
+  --kv-fs-sub: var(--kv-fs-hero-sub);
+  --kv-fs-lead: var(--kv-fs-hero-sub);
   --kv-fs-body: clamp(1rem, 1.15vw, 18px);
   --kv-fs-small: 16px;
   --kv-font-sans: Manrope, 'Helvetica Neue', Arial, sans-serif;
@@ -75,7 +79,7 @@ body {
   flex-shrink: 0;
   font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
   font-weight: 800;
-  font-size: 28px;
+  font-size: 28px !important;
   letter-spacing: -0.06em;
   line-height: 1;
   color: #f5f5f5 !important;
@@ -123,7 +127,7 @@ body {
   display: none;
   align-items: center;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 14px !important;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -166,7 +170,7 @@ body {
   margin: 0;
   cursor: pointer;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 14px !important;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -198,7 +202,7 @@ body {
   box-shadow: none !important;
   color: var(--kv-lime) !important;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 13px !important;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -248,7 +252,7 @@ body {
   background: var(--kv-lime) !important;
   color: #0d0f0f !important;
   font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 12.5px;
+  font-size: 12.5px !important;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -581,11 +585,11 @@ body {
     height: 38px;
     min-height: 38px;
     padding: 0 14px;
-    font-size: 13px;
+    font-size: 13px !important;
   }
 
   .kova-navbar .kv-logo {
-    font-size: 20px;
+    font-size: 20px !important;
   }
 }
 
@@ -598,6 +602,49 @@ body {
     height: 36px;
     min-height: 36px;
     padding: 0 12px;
-    font-size: 12.5px;
+    font-size: 12.5px !important;
   }
+}
+
+/* ─── Heroes unificados — misma escala que HomeDark ─── */
+.kova-dark .kd-hero h1,
+.kova-dark-m .kd-hero h1,
+.kova-home-plain .kh-hero h1,
+.kova-empleo .emp-hero h1,
+.kova-contacto .kc-head h1,
+.kova-landing-wave .kv-guia-hero h1,
+.kova-landing-wave .kv-inner-hero h1,
+.kova-landing-wave .kv-blog-hero-title {
+  font-size: var(--kv-fs-hero) !important;
+}
+
+.kova-dark .kd-hero-sub,
+.kova-dark-m .kd-hero-sub,
+.kova-home-plain .kh-hero__lead,
+.kova-empleo .emp-hero__lead,
+.kova-contacto .kc-head__lead,
+.kova-landing-wave .kv-inner-hero-sub,
+.kova-landing-wave .kv-blog-hero-lead {
+  font-size: var(--kv-fs-hero-sub) !important;
+}
+
+.kova-dark .kd-hero .kd-eyebrow,
+.kova-dark-m .kd-hero .kd-eyebrow,
+.kova-home-plain .kh-hero .kh-pill,
+.kova-empleo .emp-hero .kh-pill,
+.kova-contacto .kc-eyebrow,
+.kova-landing-wave .kv-blog-hero .kv-eyebrow,
+.kova-landing-wave .kv-inner-hero .kv-eyebrow,
+.kova-landing-wave .kv-guia-hero .kv-eyebrow {
+  font-size: var(--kv-fs-eyebrow) !important;
+}
+
+.kova-dark .kd-hero-actions .kd-btn,
+.kova-dark-m .kd-hero-actions .kd-btn,
+.kova-home-plain .kh-hero__ctas .kh-btn,
+.kova-empleo .emp-hero__ctas .kh-btn {
+  font-size: var(--kv-fs-hero-btn) !important;
+  height: var(--kv-hero-btn-h) !important;
+  min-height: var(--kv-hero-btn-h) !important;
+  box-sizing: border-box;
 }

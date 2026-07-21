@@ -9,7 +9,7 @@ import '@/styles/auth-login.css';
 
 const COPY = {
   candidate: {
-    eyebrow: 'Candidatos · Kova',
+    eyebrow: 'Portal para candidatos',
     title: (
       <>
         Tu espacio para <span className="kv-login-accent">oportunidades</span> comerciales

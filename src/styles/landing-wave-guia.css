@@ -44,7 +44,7 @@
 .kova-landing-wave .kv-guia-hero h1 {
   font-family: var(--kv-font-sans);
   font-weight: 800;
-  font-size: clamp(1.875rem, 3.6vw, 2.75rem);
+  font-size: var(--kv-fs-hero);
   line-height: 1.08;
   letter-spacing: -0.03em;
   color: #fff;

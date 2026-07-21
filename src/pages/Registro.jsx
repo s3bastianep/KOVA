@@ -75,7 +75,7 @@ export default function Registro() {
             <AuthMosaic />
           </div>
           <div className="kv-login-copy">
-            <p className="kv-login-eyebrow">Candidatos · Kova</p>
+            <p className="kv-login-eyebrow">Portal para candidatos</p>
             <h1 className="kv-login-title">
               Encuentra la oportunidad <span className="kv-login-accent">hecha para ti</span>.
             </h1>

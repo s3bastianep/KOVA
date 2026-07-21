@@ -248,7 +248,7 @@
 
 .kova-empleo .emp-hero__lead {
   font-family: var(--font-body, Manrope, sans-serif);
-  font-size: var(--kv-fs-sub, clamp(1.05rem, 1.35vw, 20px));
+  font-size: var(--kv-fs-hero-sub, clamp(17px, 1.5vw, 20px));
   font-weight: 500;
   line-height: 1.55;
   color: rgba(245, 241, 232, 0.68);
@@ -264,9 +264,12 @@
 }
 
 .kova-empleo .emp-hero__ctas .kh-btn {
-  font-size: 16px;
+  font-size: var(--kv-fs-hero-btn);
   font-weight: 700;
-  padding: 15px 26px;
+  height: var(--kv-hero-btn-h);
+  min-height: var(--kv-hero-btn-h);
+  padding: 0 26px;
+  box-sizing: border-box;
 }
 
 .kova-empleo .emp-hero .kh-pill {
@@ -1588,13 +1591,13 @@
 
   .kova-empleo .emp-hero h1 {
     max-width: none;
-    font-size: clamp(1.85rem, 8vw, 2.4rem) !important;
+    font-size: var(--kv-fs-hero) !important;
     line-height: 1.1 !important;
   }
 
   .kova-empleo .emp-hero__lead {
     max-width: none;
-    font-size: 15.5px !important;
+    font-size: var(--kv-fs-hero-sub) !important;
     line-height: 1.55 !important;
   }
 
@@ -1607,10 +1610,11 @@
 
   .kova-empleo .emp-hero__ctas .kh-btn {
     width: 100% !important;
-    min-height: 52px !important;
+    height: var(--kv-hero-btn-h) !important;
+    min-height: var(--kv-hero-btn-h) !important;
     justify-content: center !important;
     border-radius: 12px !important;
-    font-size: 15px !important;
+    font-size: var(--kv-fs-hero-btn) !important;
   }
 
   .kova-empleo .emp-mosaic {
@@ -1754,6 +1758,11 @@
 
   .kova-empleo .emp-cta__panel { grid-template-columns: 1fr; }
   .kova-empleo .emp-cta__col { padding: 44px 28px 36px; }
+  .kova-empleo .emp-cta__lead {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
   .kova-empleo .emp-cta__recap {
     padding: 28px 28px 44px;
     border-left: none;
@@ -1767,7 +1776,7 @@
   }
 
   .kova-empleo .emp-hero h1 {
-    font-size: clamp(1.7rem, 8.2vw, 2.1rem) !important;
+    font-size: var(--kv-fs-hero) !important;
   }
 
   /* Narrow phones: 2 tall photos + 2 chips framing (not burying) faces */

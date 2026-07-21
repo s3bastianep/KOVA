@@ -287,7 +287,7 @@ export default function HomeDarkMobile() {
           <div className="kd-timeline__group">
             <p className="kd-timeline__label" data-reveal>
               <span className="kd-timeline__mark" aria-hidden />
-              Para profesionales
+              Para talento
             </p>
 
             <article className="kd-timeline__step" data-reveal>
@@ -335,7 +335,6 @@ export default function HomeDarkMobile() {
 
       {/* 03 · TENSIÓN — hoja de vida vs alineación */}
       <section className="dx" id="diferencia" aria-labelledby="dx-title" data-reveal>
-        <p className="dx__eyebrow">Nuestra diferencia</p>
 
         <h2 className="dx__title" id="dx-title">
           <span className="lead">La experiencia abre la puerta.</span>{' '}
@@ -382,7 +381,7 @@ export default function HomeDarkMobile() {
           <div className="cmp__block cmp__block--kova">
             <div className="cmp__meta">
               <span className="cmp__idx">02</span>
-              <span className="cmp__tag">Alineación Kova</span>
+              <span className="cmp__tag">Perfil comercial</span>
             </div>
             <div className="cmp__cap">Lo que nosotros vemos</div>
             <ul className="cmp__list">
@@ -423,112 +422,125 @@ export default function HomeDarkMobile() {
         </div>
       </section>
 
-      {/* 03 · QUÉ EVALUAMOS */}
+      {/* 03 · MÉTODO + CONDICIONES (empresa y talento) */}
       <section className="mt" id="metodo" aria-labelledby="mt-title" data-reveal>
         <p className="mt__eyebrow">
           <i aria-hidden />
-          Qué evaluamos
+          Elige tu camino
         </p>
         <h2 className="mt__title" id="mt-title">
-          Vemos lo que una hoja de vida no muestra.
+          Certeza al contratar. Claridad al crecer.
         </h2>
         <p className="mt__sub">
-          Antes de recomendar a una persona, entendemos cómo funciona la empresa, qué
-          necesita el rol y qué condiciones permiten que un profesional se desarrolle y
-          genere resultados.
+          Si contratas, te ayudamos a elegir bien y a acompañar la integración. Si buscas
+          empleo, te damos condiciones claras y te conectamos donde realmente puedas
+          aportar.
         </p>
 
-        <div className="mt__list">
-          <article className="mt__card">
-            <span className="mt__ico" aria-hidden>
-              <svg viewBox="0 0 24 24">
-                <path d="M4 20h16" />
-                <path className="mt__ico-fill" d="M6 14h3v6H6zm4.5-5h3v11h-3zM15 5h3v15h-3z" />
-              </svg>
-            </span>
-            <div>
-              <h3 className="mt__t">Negocio</h3>
-              <p className="mt__d">Cómo genera ingresos y qué impulsa sus resultados.</p>
+        <div className="mt__split">
+          <div className="mt__panel mt__panel--empresa">
+            <header className="mt__panel-head">
+              <p className="mt__panel-kicker">Si contratas</p>
+              <h3 className="mt__panel-title">Reduce el riesgo de una mala contratación</h3>
+              <p className="mt__panel-promise">
+                Perfil de éxito defendible, evaluación con evidencia y acompañamiento de la
+                integración en los primeros 90 días.
+              </p>
+            </header>
+            <div className="mt__list">
+              <article className="mt__card">
+                <span className="mt__n" aria-hidden>
+                  01
+                </span>
+                <div>
+                  <h3 className="mt__t">Sabes a quién necesitas antes de buscar</h3>
+                  <p className="mt__d">
+                    Diagnosticamos tu modelo de venta y definimos el perfil del rol: cliente,
+                    ciclo, ticket y cultura del equipo.
+                  </p>
+                </div>
+              </article>
+              <article className="mt__card">
+                <span className="mt__n" aria-hidden>
+                  02
+                </span>
+                <div>
+                  <h3 className="mt__t">Eliges con evidencia, no con corazonada</h3>
+                  <p className="mt__d">
+                    Comparamos candidatos con un estándar comercial claro. Menos intuición;
+                    más decisión argumentada.
+                  </p>
+                </div>
+              </article>
+              <article className="mt__card">
+                <span className="mt__n" aria-hidden>
+                  03
+                </span>
+                <div>
+                  <h3 className="mt__t">Acompañamos la integración 90 días</h3>
+                  <p className="mt__d">
+                    Hitos 30 · 60 · 90 para adoptar el modelo, el proceso y el ritmo del
+                    equipo, con seguimiento y ajustes a tiempo.
+                  </p>
+                </div>
+              </article>
             </div>
-          </article>
+            <Link className="kd-btn kd-btn--lime mt__panel-cta" to="/para-empresas">
+              Empieza a contratar
+            </Link>
+          </div>
 
-          <article className="mt__card">
-            <span className="mt__ico" aria-hidden>
-              <svg viewBox="0 0 24 24">
-                <circle cx="8.2" cy="8" r="2.35" />
-                <circle cx="15.8" cy="8" r="2.35" />
-                <path d="M3.8 18.5c.35-2.9 2.2-4.5 4.4-4.5s4.05 1.6 4.4 4.5" />
-                <path d="M11.4 18.5c.35-2.9 2.2-4.5 4.4-4.5s4.05 1.6 4.4 4.5" />
-              </svg>
-            </span>
-            <div>
-              <h3 className="mt__t">Cultura</h3>
-              <p className="mt__d">Cómo se trabaja y se decide dentro del equipo.</p>
+          <div className="mt__panel mt__panel--talento">
+            <header className="mt__panel-head">
+              <p className="mt__panel-kicker">Si buscas empleo</p>
+              <h3 className="mt__panel-title">Crece con transparencia y acompañamiento</h3>
+              <p className="mt__panel-promise">
+                Siempre estás informado. Te acompañamos en el arranque y después, con
+                retroalimentación de tu carrera comercial.
+              </p>
+            </header>
+            <div className="mt__list">
+              <article className="mt__card">
+                <span className="mt__n" aria-hidden>
+                  01
+                </span>
+                <div>
+                  <h3 className="mt__t">Siempre sabes en qué va tu proceso</h3>
+                  <p className="mt__d">
+                    Te mantenemos al tanto en cada etapa: qué se evalúa, qué falta y por qué
+                    avanzas o no. Sin silencio ni sorpresas.
+                  </p>
+                </div>
+              </article>
+              <article className="mt__card">
+                <span className="mt__n" aria-hidden>
+                  02
+                </span>
+                <div>
+                  <h3 className="mt__t">Beneficios pensados para tu desarrollo</h3>
+                  <p className="mt__d">
+                    Condiciones claras, feedback útil y empresas alineadas a tu estilo de
+                    venta, para crecer donde realmente aportas.
+                  </p>
+                </div>
+              </article>
+              <article className="mt__card">
+                <span className="mt__n" aria-hidden>
+                  03
+                </span>
+                <div>
+                  <h3 className="mt__t">Acompañamiento más allá de 90 días</h3>
+                  <p className="mt__d">
+                    Seguimos contigo en la integración y después, con seguimiento y
+                    retroalimentación de cómo avanza tu carrera.
+                  </p>
+                </div>
+              </article>
             </div>
-          </article>
-
-          <article className="mt__card">
-            <span className="mt__ico" aria-hidden>
-              <svg viewBox="0 0 24 24">
-                <path d="M7 20.5V4.2" />
-                <path d="M7 5h9.4a.7.7 0 0 1 .6 1L15.2 9.8a.9.9 0 0 0 0 .9l1.8 3.6a.7.7 0 0 1-.6 1H7" />
-              </svg>
-            </span>
-            <div>
-              <h3 className="mt__t">Liderazgo</h3>
-              <p className="mt__d">El estilo de gestión y lo que espera el rol.</p>
-            </div>
-          </article>
-
-          <article className="mt__card">
-            <span className="mt__ico" aria-hidden>
-              <svg viewBox="0 0 24 24">
-                <path d="M12 3.4 19.2 7.6v8.8L12 20.6l-7.2-4.2V7.6z" />
-                <path d="M12 8.2 15.6 10.3v4.2L12 16.6l-3.6-2.1v-4.2z" />
-              </svg>
-            </span>
-            <div>
-              <h3 className="mt__t">Capacidades</h3>
-              <p className="mt__d">Las habilidades reales, más allá del título.</p>
-            </div>
-          </article>
-
-          <article className="mt__card">
-            <span className="mt__ico" aria-hidden>
-              <svg viewBox="0 0 24 24">
-                <circle cx="6.2" cy="12" r="2.2" />
-                <circle cx="12" cy="6.4" r="2.2" />
-                <circle cx="17.8" cy="12" r="2.2" />
-                <circle cx="12" cy="17.6" r="2.2" />
-                <path d="M7.9 10.6 10.3 8.2M13.7 8.2l2.4 2.4M13.7 15.8l2.4-2.4M7.9 13.4l2.4 2.4" />
-              </svg>
-            </span>
-            <div>
-              <h3 className="mt__t">Forma de trabajar</h3>
-              <p className="mt__d">Ritmo, autonomía y forma de colaborar.</p>
-            </div>
-          </article>
-
-          <article className="mt__card">
-            <span className="mt__ico" aria-hidden>
-              <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="7.8" />
-                <circle cx="12" cy="12" r="4.2" />
-                <circle cx="12" cy="12" r="1.25" className="mt__ico-fill" />
-              </svg>
-            </span>
-            <div>
-              <h3 className="mt__t">Motivaciones</h3>
-              <p className="mt__d">Lo que impulsa a la persona a largo plazo.</p>
-            </div>
-          </article>
-        </div>
-
-        <div className="mt__close">
-          <svg viewBox="0 0 24 24" aria-hidden>
-            <path d="M5 12.5l4.2 4.2L19 7" />
-          </svg>
-          <p>Convertimos esa información en un perfil de éxito específico para cada organización.</p>
+            <Link className="kd-btn kd-btn--ghost mt__panel-cta" to="/empleo">
+              Encontrar un empleo
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -545,14 +557,14 @@ export default function HomeDarkMobile() {
               Combinamos metodología, evaluación humana y tecnología para tomar decisiones
               con más contexto.
             </p>
-            <Link className="kd-btn kd-btn--lime" to="/para-empresas">
+            <Link className="kd-btn kd-btn--lime" to="/para-empresas#metodologia">
               Conoce cómo evaluamos la alineación
             </Link>
           </div>
 
           <div className="kd-dashboard" data-reveal>
             <div className="kd-dashboard__head">
-              <span>Perfil de alineación Kova</span>
+              <span>Perfil comercial</span>
               <span className="kd-dashboard__badge">Ejemplo ilustrativo</span>
             </div>
             <p className="kd-dashboard__score">
@@ -579,7 +591,6 @@ export default function HomeDarkMobile() {
       <section className="kd-guarantee" id="garantia" aria-labelledby="kd-guarantee-title">
         <div className="kd-guarantee-inner" data-reveal>
           <div className="kd-guarantee-copy">
-            <p className="kd-eyebrow">Compromiso Kova</p>
             <h2 id="kd-guarantee-title">
               Contrata con <span>garantía de 6 meses</span>.
             </h2>
@@ -632,28 +643,6 @@ export default function HomeDarkMobile() {
           </div>
         </div>
       </section>
-
-      <footer className="kd-footer">
-        <div className="kd-footer__inner">
-          <div className="kd-footer__row">
-            <Link className="kd-footer__brand" to="/">
-              kova<span>.</span>
-            </Link>
-
-            <nav className="kd-footer__nav" aria-label="Pie de página">
-              <Link to="/para-empresas">Empresas</Link>
-              <Link to="/empleo">Talento</Link>
-              <Link to="/guias">Blog</Link>
-              <Link to="/para-empresas#contacto">Contacto</Link>
-            </nav>
-          </div>
-
-          <div className="kd-footer__base">
-            <p className="kd-footer__tag">Reclutamiento comercial, con criterio.</p>
-            <p className="kd-footer__copy">© {new Date().getFullYear()} Kova</p>
-          </div>
-        </div>
-      </footer>
     </main>
   );
 }

@@ -8,51 +8,51 @@ const DIMENSIONS = [
   {
     label: 'Compatibilidad comercial',
     pct: 94,
-    desc: 'Mide qué tan bien encaja tu forma de vender con el modelo comercial de la empresa: tipo de cliente, ticket, ciclo de venta y ritmo esperado. Un puntaje alto indica que puedes generar resultados en ese contexto, no solo en ventas en general.',
+    desc: 'Refleja el nivel de alineación entre tu perfil y el modelo de negocio, la cultura y la forma de vender de cada empresa.',
   },
   {
     label: 'Competencias de venta',
     pct: 89,
-    desc: 'Evalúa capacidades concretas del oficio comercial: prospección, diagnóstico de necesidad, manejo de objeciones, negociación y cierre. Se pondera según si el rol es consultivo, técnico, transaccional o de desarrollo de cuentas.',
+    desc: 'Evalúa tus competencias comerciales según el tipo de venta en el que mejor te desempeñas.',
   },
   {
     label: 'Comunicación',
     pct: 91,
-    desc: 'Valora cómo presentas valor, escuchas al cliente y sostienes conversaciones difíciles con claridad. En B2B esto incluye alinear stakeholders, defender precio y traducir beneficios técnicos a impacto de negocio.',
+    desc: 'Refleja tu capacidad para construir relaciones, presentar ideas con claridad y sostener conversaciones de valor con clientes y equipos.',
   },
   {
     label: 'Alineación con la empresa',
     pct: 88,
-    desc: 'Compara tu estilo de trabajo con la cultura comercial del equipo: autonomía vs. proceso, ritmo de metas, nivel de soporte y forma de tomar decisiones. Reduce el riesgo de una contratación que “encaja en papel” pero no en la operación diaria.',
+    desc: 'Mide la afinidad entre tu filosofía de trabajo y la cultura, el modelo comercial y el entorno de la organización.',
   },
   {
     label: 'Adaptabilidad',
     pct: 85,
-    desc: 'Indica qué tan rápido te adaptas a un nuevo producto, vertical o ciclo de venta sin perder productividad. Clave en empresas que abren mercados, cambian de oferta o enfrentan ciclos comerciales variables.',
+    desc: 'Indica con qué facilidad te ajustas a nuevos productos, ciclos de venta y tipos de cliente sin perder desempeño.',
   },
   {
     label: 'Potencial de desarrollo',
     pct: 82,
-    desc: 'Proyecta tu capacidad de crecer en el rol: asumir cuentas más complejas, liderar pipeline o subir a key account / team lead. Las empresas lo usan para contratar con visión de mediano plazo, no solo para cubrir la vacante de hoy.',
+    desc: 'Proyecta tu capacidad de crecer en el rol, asumir mayores responsabilidades y desarrollarse profesionalmente en el contexto adecuado.',
   },
 ];
 
 const BENEFITS = [
   {
     title: 'Gratis para siempre',
-    desc: 'Crear y actualizar tu perfil comercial, y postularte a vacantes B2B, no tiene costo. Las empresas asumen el proceso; tú inviertes solo tu tiempo en mostrar cómo vendes.',
+    desc: 'Crear tu perfil, actualizarlo y postularte a oportunidades nunca tendrá costo.',
   },
   {
     title: 'Siempre informado',
-    desc: 'Ves en qué etapa está cada proceso (revisión, evaluación, entrevista, decisión) sin depender de seguimientos por WhatsApp. Menos incertidumbre y más claridad sobre el avance de cada oportunidad.',
+    desc: 'Conoce el estado de cada proceso en tiempo real. Sin incertidumbre ni silencios.',
   },
   {
     title: 'Un solo perfil para todas las oportunidades',
-    desc: 'Defines una vez cómo vendes, en qué sectores te mueves y qué tipo de ciclo dominas. Con eso te conectamos con vacantes donde tu perfil comercial tiene mayor probabilidad de impacto.',
+    desc: 'Crea tu perfil una sola vez y conecta con empresas donde tus habilidades y forma de trabajar realmente encajen.',
   },
   {
     title: 'Te acompañamos durante tus primeros 90 días',
-    desc: 'Si te contratan, el onboarding no termina en el firmado. Te acompañamos en la integración al modelo comercial del equipo para que aceleres tu curva de productividad en el nuevo rol.',
+    desc: 'Si te contratan, te acompañamos en la integración para facilitar tu adaptación al modelo del equipo.',
   },
 ];
 
@@ -65,21 +65,9 @@ const SECTORS = [
 ];
 
 const STEPS = [
-  {
-    n: '01',
-    title: 'Crea tu perfil',
-    desc: 'Registra experiencia, sectores y el tipo de venta que dominas: consultiva, técnica o de cuentas.',
-  },
-  {
-    n: '02',
-    title: 'Muestra cómo vendes',
-    desc: 'Completas una evaluación comercial alineada a escenarios B2B reales, no solo a tu hoja de vida.',
-  },
-  {
-    n: '03',
-    title: 'Recibe oportunidades alineadas',
-    desc: 'Las empresas te encuentran cuando tu perfil encaja con su ciclo, cliente ideal y metas del cargo.',
-  },
+  { n: '01', title: 'Crea tu perfil' },
+  { n: '02', title: 'Muestra cómo vendes' },
+  { n: '03', title: 'Recibe oportunidades alineadas' },
 ];
 
 export default function Empleo() {
@@ -157,7 +145,7 @@ export default function Empleo() {
             <div className="emp-float emp-float--score">
               <div className="emp-float__ring">89%</div>
               <div>
-                <strong>Kova Score</strong>
+                <strong>Perfil comercial</strong>
                 <span>Excelente compatibilidad</span>
               </div>
             </div>
@@ -167,7 +155,7 @@ export default function Empleo() {
                 <em>✓</em> Perfil completo
               </div>
               <div>
-                <em>✓</em> Kova Score listo
+                <em>✓</em> Perfil listo
               </div>
               <div>
                 <em>✓</em> Visible para empresas
@@ -255,9 +243,9 @@ export default function Empleo() {
             <em>el valor que puedes aportar</em> a una empresa.
           </h2>
           <p className="emp-sub">
-            Tu perfil se evalúa con el mismo criterio que usan las empresas B2B para decidir:
-            modelo comercial, ciclo de venta, competencias del rol y ajuste al equipo.
-            Selecciona cada dimensión para ver qué mide y por qué importa al contratar.
+            Cada perfil se evalúa para destacar las habilidades, conocimientos y nivel de
+            alineación que realmente influyen en el éxito de una contratación comercial.
+            Selecciona cada dimensión para ver qué representa.
           </p>
 
           <div className="emp-explorer">
@@ -292,7 +280,7 @@ export default function Empleo() {
         </div>
       </section>
 
-      {/* JOURNEY INFOGRAPHIC */}
+      {/* JOURNEY */}
       <section className="emp-sec emp-sec--tight emp-sec--dark">
         <div className="emp-wrap">
           <h2 className="emp-h2 emp-h2--sub emp-head">
@@ -303,7 +291,6 @@ export default function Empleo() {
               <div key={s.n} className="emp-step">
                 <div className="emp-step__n">{s.n}</div>
                 <h3>{s.title}</h3>
-                <p>{s.desc}</p>
               </div>
             ))}
           </div>

@@ -90,14 +90,18 @@ html.kova-home-chrome .kova-route-shell__fallback {
   --kh-mx: 50%;
   --kh-my: 28%;
 
-  /* Type scale — Manrope only (brand) */
+  /* Escala tipográfica — cuerpo de página (heroes usan tokens globales HomeDark) */
   --kv-fs-hero: clamp(2.5rem, 5.2vw, 64px);
-  --kv-fs-h2: clamp(1.75rem, 3.6vw, 42px);
-  --kv-fs-h3: clamp(1.35rem, 2.2vw, 28px);
-  --kv-fs-sub: clamp(1.05rem, 1.35vw, 20px);
-  --kv-fs-body: clamp(1rem, 1.15vw, 18px);
-  --kv-fs-small: 16px;
-  --kv-fs-lead: var(--kv-fs-sub);
+  --kv-fs-h2: 38px; /* H2 */
+  --kv-fs-h3: 30px; /* H3 */
+  --kv-fs-card-title: 22px;
+  --kv-fs-body: 17px; /* texto principal / cards */
+  --kv-fs-sub: clamp(17px, 1.5vw, 20px);
+  --kv-fs-lead: clamp(17px, 1.5vw, 20px);
+  --kv-fs-small: 15px; /* texto secundario */
+  --kv-fs-btn: 17px;
+  --kv-fs-input: 17px;
+  --kv-fs-nav: 16px;
 
   background: var(--kh-bone);
   color: var(--kv-text);
@@ -2183,8 +2187,6 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   -webkit-backdrop-filter: blur(18px) saturate(1.35);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px -16px rgba(0, 0, 0, 0.45);
-  padding-top: 14px;
-  padding-bottom: 14px;
 }
 
 /* Hero type — Manrope 700 / up to 64px */
@@ -3238,7 +3240,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
     background: none !important;
     box-shadow: none !important;
     backdrop-filter: none !important;
-    font-size: 11px !important;
+    font-size: var(--kv-fs-eyebrow) !important;
     font-weight: 800 !important;
     letter-spacing: 0.14em !important;
     text-transform: uppercase !important;
@@ -3249,7 +3251,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   .kova-home-plain .kh-hero h1 {
     max-width: none !important;
     margin: 0 !important;
-    font-size: clamp(1.9rem, 8.2vw, 2.45rem) !important;
+    font-size: var(--kv-fs-hero) !important;
     line-height: 1.1 !important;
     letter-spacing: -0.038em !important;
     font-weight: 800 !important;
@@ -3260,14 +3262,16 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
     display: block;
     position: relative;
     width: 100%;
-    margin: 26px 0 0;
-    border-radius: 16px;
+    max-width: 100%;
+    margin: 20px 0 0;
+    border-radius: 14px;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: #121514;
+    border: none;
+    background: transparent;
     aspect-ratio: auto;
     max-height: none;
-    padding: 14px;
+    padding: 0;
+    transform: none;
   }
 
   .kova-home-plain .kh-hero__visual-m img {
@@ -3275,6 +3279,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   }
 
   .kova-home-plain .kh-hero__visual-m .kh-score-shell--mobile {
+    display: block;
     position: relative;
     inset: auto;
     width: 100%;
@@ -3286,62 +3291,90 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 
   .kova-home-plain .kh-hero__visual-m .kh-score {
     background: #161714;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 14px;
-    padding: 12px 12px 0;
-    box-shadow: none;
+    padding: 16px 16px 18px;
+    box-shadow: 0 14px 32px -16px rgba(0, 0, 0, 0.7);
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 12px;
+    margin-bottom: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .kova-home-plain .kh-hero__visual-m .kh-score__toplabel {
     color: rgba(245, 245, 245, 0.55);
-    font-size: 10px;
+    font-size: 12px;
+    font-weight: 600;
   }
 
   .kova-home-plain .kh-hero__visual-m .kh-score__live {
     color: #c5de4e;
-    font-size: 10px;
+    font-size: 12px;
+    font-weight: 600;
   }
 
   .kova-home-plain .kh-hero__visual-m .kh-score__person {
-    margin-top: 8px;
-    gap: 10px;
+    margin-top: 14px;
+    gap: 12px;
+    align-items: flex-start;
   }
 
   .kova-home-plain .kh-hero__visual-m .kh-score__name {
     color: #f5f1e8;
-    font-size: 14px;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.2;
   }
 
   .kova-home-plain .kh-hero__visual-m .kh-score__sub,
   .kova-home-plain .kh-hero__visual-m .kh-score__num span {
-    color: rgba(245, 245, 245, 0.5);
-    font-size: 10px;
+    color: rgba(245, 245, 245, 0.55);
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score__meta {
+    margin-top: 4px;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score__num {
+    text-align: right;
+    flex-shrink: 0;
   }
 
   .kova-home-plain .kh-hero__visual-m .kh-score__num strong {
     color: #c5de4e;
-    font-size: 22px;
+    font-size: 26px;
     line-height: 1;
+    font-weight: 800;
   }
 
   .kova-home-plain .kh-hero__visual-m .kh-score__dims-label {
-    color: rgba(245, 245, 245, 0.45);
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    padding: 10px 0 8px;
+    color: rgba(245, 245, 245, 0.5);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    padding: 16px 0 10px;
     text-transform: uppercase;
+    font-weight: 700;
   }
 
-  /* Dims: label | bar | % in one tight row */
+  /* Dims: label | bar | % — más aire y texto legible */
   .kova-home-plain .kh-hero__visual-m .kh-dims {
-    gap: 7px;
+    gap: 12px;
+    padding-bottom: 2px;
   }
 
   .kova-home-plain .kh-hero__visual-m .kh-dim {
     display: grid !important;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.4fr) 28px;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.5fr) 34px;
     align-items: center;
-    gap: 8px !important;
+    gap: 10px !important;
     flex-wrap: nowrap !important;
   }
 
@@ -3349,71 +3382,34 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
     width: auto !important;
     flex: none !important;
     min-width: 0;
-    font-size: 10.5px !important;
-    line-height: 1.2;
-    color: rgba(245, 245, 245, 0.62);
+    font-size: 13px !important;
+    line-height: 1.25;
+    color: rgba(245, 245, 245, 0.72);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-weight: 600;
   }
 
   .kova-home-plain .kh-hero__visual-m .kh-dim__track {
     flex: none !important;
     width: 100%;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.08);
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 99px;
   }
 
   .kova-home-plain .kh-hero__visual-m .kh-dim__pct {
     width: auto !important;
-    font-size: 10.5px !important;
+    font-size: 13px !important;
     font-weight: 700;
-    color: rgba(245, 245, 245, 0.72);
+    color: rgba(245, 245, 245, 0.82);
     text-align: right;
     font-variant-numeric: tabular-nums;
   }
 
-  /* Stats: 3 columns, compact footer */
   .kova-home-plain .kh-hero__visual-m .kh-score__stats {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 0;
-    margin: 12px -12px 0 !important;
-    padding: 0 !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(197, 222, 78, 0.08);
-    border-radius: 0 0 13px 13px;
-  }
-
-  .kova-home-plain .kh-hero__visual-m .kh-score__stat {
-    padding: 10px 6px !important;
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
-    text-align: center;
-  }
-
-  .kova-home-plain .kh-hero__visual-m .kh-score__stat:last-child {
-    border-right: none;
-  }
-
-  .kova-home-plain .kh-hero__visual-m .kh-score__stat strong {
-    display: block;
-    color: #f5f1e8;
-    font-size: 15px !important;
-    line-height: 1.1;
-    margin-bottom: 2px;
-  }
-
-  .kova-home-plain .kh-hero__visual-m .kh-score__stat strong.is-lime {
-    color: #c5de4e;
-  }
-
-  .kova-home-plain .kh-hero__visual-m .kh-score__stat span {
-    display: block;
-    color: rgba(245, 245, 245, 0.48);
-    font-size: 9px !important;
-    line-height: 1.25;
-    white-space: normal !important;
+    display: none !important;
   }
 
   .kova-home-plain .kh-hero__collage--desk {
@@ -3423,7 +3419,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   .kova-home-plain .kh-hero__lead {
     max-width: none !important;
     margin: 22px 0 0 !important;
-    font-size: 15.5px !important;
+    font-size: var(--kv-fs-hero-sub) !important;
     line-height: 1.55 !important;
     font-weight: 400 !important;
     color: rgba(245, 245, 245, 0.7) !important;
@@ -3439,10 +3435,11 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 
   .kova-home-plain .kh-hero__ctas .kh-btn {
     width: 100% !important;
-    min-height: 52px !important;
+    height: var(--kv-hero-btn-h) !important;
+    min-height: var(--kv-hero-btn-h) !important;
     justify-content: center !important;
     border-radius: 12px !important;
-    font-size: 15px !important;
+    font-size: var(--kv-fs-hero-btn) !important;
     padding: 0 20px !important;
     white-space: nowrap;
   }
@@ -3489,17 +3486,17 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   }
 
   .kova-home-plain .kh-hero h1 {
-    font-size: clamp(1.75rem, 8.4vw, 2.15rem) !important;
+    font-size: var(--kv-fs-hero) !important;
   }
 
   .kova-home-plain .kh-hero__visual-m {
-    margin-top: 22px;
-    border-radius: 14px;
+    margin-top: 14px;
+    border-radius: 12px;
     max-height: none;
   }
 
   .kova-home-plain .kh-hero__lead {
-    font-size: 15px !important;
+    font-size: var(--kv-fs-hero-sub) !important;
   }
 }
 
@@ -4308,7 +4305,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 .kova-boutique .kh-hero__lead {
   color: rgba(245, 241, 232, 0.62) !important;
   max-width: 36ch;
-  font-size: clamp(16px, 1.2vw, 18px);
+  font-size: var(--kv-fs-hero-sub) !important;
   line-height: 1.55;
 }
 
@@ -4319,7 +4316,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   backdrop-filter: none !important;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-size: 11px;
+  font-size: var(--kv-fs-eyebrow);
   font-weight: 600;
 }
 
@@ -5233,4 +5230,78 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
     transform: none !important;
   }
 }
+
+/* ─── Escala tipográfica fija — solo desktop (≥901px) ─── */
+@media (min-width: 901px) {
+  .kova-home-plain {
+    font-size: 17px;
+  }
+
+  .kova-home-plain .kh-hero h1 {
+    font-size: var(--kv-fs-hero) !important;
+    line-height: 1.08 !important;
+  }
+
+  .kova-home-plain .kh-h2,
+  .kova-home-plain h2.kh-h2 {
+    font-size: 38px !important;
+  }
+
+  .kova-home-plain h3,
+  .kova-home-plain .kh-h3 {
+    font-size: 30px !important;
+  }
+
+  .kova-home-plain .kh-hero__lead {
+    font-size: var(--kv-fs-hero-sub) !important;
+    font-weight: 500 !important;
+  }
+
+  .kova-home-plain .kh-contact__lead,
+  .kova-home-plain .kh-platform__lead,
+  .kova-home-plain #metodologia .kh-stage-panel__desc,
+  .kova-home-plain .kh-dolor p,
+  .kova-home-plain .kh-platform__grid span,
+  .kova-home-plain .kh-perfil-card p,
+  .kova-home-plain .kh-guide-card p,
+  .kova-home-plain .kh-stage-panel__bullets span {
+    font-size: 17px !important;
+    font-weight: 500 !important;
+  }
+
+  .kova-home-plain .kh-btn,
+  .kova-home-plain .kh-form button[type='submit'],
+  .kova-home-plain .kh-platform .kh-btn {
+    font-size: 17px !important;
+    font-weight: 600 !important;
+  }
+
+  .kova-home-plain .kh-hero__ctas .kh-btn {
+    font-size: var(--kv-fs-hero-btn) !important;
+    height: var(--kv-hero-btn-h) !important;
+    min-height: var(--kv-hero-btn-h) !important;
+  }
+
+  .kova-home-plain .kh-form input,
+  .kova-home-plain .kh-form textarea {
+    font-size: 17px !important;
+  }
+
+  .kova-home-plain .kh-dolor__tag,
+  .kova-home-plain .kh-platform__grid strong,
+  .kova-home-plain .kh-perfil-card__title,
+  .kova-home-plain .kh-guide-card strong {
+    font-size: 22px !important;
+  }
+
+  .kova-home-plain .kh-eyebrow__label,
+  .kova-home-plain .kh-hero__checks,
+  .kova-home-plain .kh-hero__checks span,
+  .kova-home-plain .kh-form label > span,
+  .kova-home-plain .kh-footer__copy {
+    font-size: 15px !important;
+  }
+}
+
+/* Navbar tipografía/tamaño: solo landing-nav.css (igual en todas las páginas) */
 

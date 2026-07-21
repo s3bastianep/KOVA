@@ -235,7 +235,7 @@
   max-width: 520px;
   margin: 30px 0 0;
   color: rgba(245, 245, 245, 0.66);
-  font-size: clamp(17px, 1.5vw, 20px);
+  font-size: var(--kv-fs-hero-sub, clamp(17px, 1.5vw, 20px));
   font-weight: 400;
   line-height: 1.5;
 }
@@ -788,13 +788,187 @@
 }
 .kova-dark .kd-method {
   position: relative;
-  padding: 170px 0;
-  background: var(--kd-light);
+  padding: 150px 0 160px;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(197, 222, 78, 0.12), transparent 60%),
+    var(--kd-light);
   color: var(--kd-ink);
+  overflow: hidden;
 }
 .kova-dark .kd-method .kd-section-head {
-  margin-bottom: 66px;
+  margin-bottom: 56px;
 }
+.kova-dark .kd-method .kd-section-head--center {
+  text-align: center;
+  margin-inline: auto;
+}
+.kova-dark .kd-method .kd-section-head--center h2 {
+  max-width: 18ch;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+.kova-dark .kd-method .kd-section-head--center p {
+  max-width: 52ch;
+  margin-inline: auto;
+}
+.kova-dark .kd-method-split {
+  width: var(--kd-page);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: stretch;
+  border: 1px solid rgba(13, 15, 15, 0.12);
+  border-radius: 28px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 24px 60px -36px rgba(13, 15, 15, 0.35);
+}
+.kova-dark .kd-method-panel {
+  padding: 36px 40px 40px;
+  min-width: 0;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: 100%;
+  box-sizing: border-box;
+}
+.kova-dark .kd-method-panel--empresa {
+  background: #0d0f0f;
+  color: #f5f5f5;
+}
+.kova-dark .kd-method-panel--talento {
+  background: linear-gradient(165deg, #f7fbe8 0%, #ffffff 58%);
+  color: var(--kd-ink);
+  border-left: 1px solid rgba(13, 15, 15, 0.08);
+}
+.kova-dark .kd-method-panel__head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 9.5rem;
+}
+.kova-dark .kd-method-panel__kicker {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--kd-lime);
+}
+.kova-dark .kd-method-panel--talento .kd-method-panel__kicker {
+  color: color-mix(in srgb, var(--kd-lime) 45%, #0d0f0f);
+}
+.kova-dark .kd-method-panel__title {
+  margin: 0;
+  min-height: 2.6em;
+  max-width: 18ch;
+  font-size: clamp(24px, 2.1vw, 30px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+.kova-dark .kd-method-panel__promise {
+  margin: 0;
+  max-width: 38ch;
+  min-height: 4.5em;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: rgba(245, 245, 245, 0.64);
+}
+.kova-dark .kd-method-panel--talento .kd-method-panel__promise {
+  color: rgba(13, 15, 15, 0.62);
+}
+.kova-dark .kd-method-panel__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1 1 auto;
+}
+.kova-dark .kd-method-panel__list li {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: 12px 14px;
+  align-items: start;
+  min-height: 4.75rem;
+}
+.kova-dark .kd-method-panel__n {
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  color: var(--kd-lime);
+}
+.kova-dark .kd-method-panel--talento .kd-method-panel__n {
+  color: color-mix(in srgb, var(--kd-lime) 40%, #0d0f0f);
+}
+.kova-dark .kd-method-panel__body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.kova-dark .kd-method-panel__body strong {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.kova-dark .kd-method-panel__body span {
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: rgba(245, 245, 245, 0.62);
+}
+.kova-dark .kd-method-panel--talento .kd-method-panel__body span {
+  color: rgba(13, 15, 15, 0.58);
+}
+.kova-dark .kd-method-panel .kd-btn {
+  align-self: flex-start;
+  margin-top: auto;
+  min-width: 11.5rem;
+  justify-content: center;
+}
+.kova-dark .kd-method-panel--talento .kd-btn--ghost {
+  border-color: rgba(13, 15, 15, 0.22);
+  color: var(--kd-ink);
+}
+.kova-dark .kd-method-panel--talento .kd-btn--ghost:hover {
+  border-color: rgba(13, 15, 15, 0.45);
+  background: rgba(13, 15, 15, 0.04);
+}
+.kova-dark .kd-method-bridge {
+  width: var(--kd-page);
+  margin: 28px auto 0;
+  padding: 22px 28px;
+  border-radius: 18px;
+  background: var(--kd-lime);
+  color: var(--kd-ink);
+  box-shadow: 0 14px 36px -18px rgba(13, 15, 15, 0.35);
+}
+.kova-dark .kd-method-bridge p {
+  margin: 0;
+  max-width: 62ch;
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+.kova-dark .kd-method-bridge strong {
+  font-weight: 800;
+}
+/* legacy concept pills (unused here; keep safe if referenced) */
 .kova-dark .kd-concepts {
   width: var(--kd-page);
   margin: 0 auto;
@@ -814,27 +988,6 @@
   color: var(--kd-light);
   font-size: 14.5px;
   font-weight: 600;
-  letter-spacing: 0.01em;
-  line-height: 1;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 1px 2px rgba(0, 0, 0, 0.12);
-  transition:
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    background 180ms ease,
-    border-color 180ms ease,
-    color 180ms ease,
-    box-shadow 180ms ease;
-}
-.kova-dark .kd-concept:hover {
-  transform: translateY(-1px);
-  color: var(--kd-ink);
-  background: var(--kd-lime);
-  border-color: color-mix(in srgb, var(--kd-lime) 72%, #0d0f0f);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.28),
-    inset 0 -1px 0 rgba(13, 15, 15, 0.08),
-    0 2px 6px rgba(0, 0, 0, 0.16);
 }
 .kova-dark .kd-method-close {
   width: var(--kd-page);
@@ -851,11 +1004,6 @@
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.4;
-}
-.kova-dark .kd-method-close .kd-btn i {
-  margin-left: 10px;
-  font-style: normal;
-  color: var(--kd-lime);
 }
 .kova-dark .kd-score {
   position: relative;
@@ -1318,6 +1466,23 @@
 .kova-dark .kd-method,
 .kova-dark .kd-score {
     padding: 100px 0;
+  }
+.kova-dark .kd-method-split {
+    grid-template-columns: 1fr;
+    border-radius: 22px;
+  }
+.kova-dark .kd-method-panel {
+    padding: 28px 24px 32px;
+  }
+.kova-dark .kd-method-panel--talento {
+    border-left: none;
+    border-top: 1px solid rgba(13, 15, 15, 0.08);
+  }
+.kova-dark .kd-method-bridge {
+    padding: 18px 20px;
+  }
+.kova-dark .kd-method-bridge p {
+    font-size: 15.5px;
   }
 .kova-dark .kd-final {
     padding: 72px 0 88px;

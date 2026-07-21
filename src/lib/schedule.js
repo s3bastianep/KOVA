@@ -8,6 +8,7 @@ import {
   formatDateKeyFromParts,
   generateDisplayTimeSlots,
   generateTimeSlots,
+  getDayBookingMode,
   isBookableDateKey,
   isOpenBookingSlot,
 } from '../../shared/schedule.js';
@@ -21,6 +22,7 @@ export {
   formatDateKeyFromParts,
   generateDisplayTimeSlots,
   generateTimeSlots,
+  getDayBookingMode,
   isBookableDateKey,
   isOpenBookingSlot,
 };

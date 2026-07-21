@@ -13,6 +13,7 @@ import {
   dateKeyToLocalDate,
   findNextBookableDateKey,
   generateDisplayTimeSlots,
+  getDayBookingMode,
   isBookableDateKey,
   isOpenBookingSlot,
   localDateToKey,
@@ -96,9 +97,9 @@ export default function BookingScheduler({ alternateContact = null, initialLead 
           setSlots([]);
           return;
         }
-        // Solo ventanas abiertas (9–10 y 15–16); el resto se muestra ocupado en UI.
-        const openFree = nextSlots.filter(isOpenBookingSlot);
-        // Si el día elegido ya no tiene cupos (p. ej. hoy tarde), saltar al próximo con horarios.
+        // API ya aplica reglas por día; filtramos por modo del día seleccionado.
+        const openFree = nextSlots.filter((time) => isOpenBookingSlot(time, selectedDateKey));
+        // Si el día elegido ya no tiene cupos, saltar al próximo con horarios.
         if (openFree.length === 0) {
           const nextKey = findNextBookableDateKey(addDaysToDateKey(selectedDateKey, 1));
           if (nextKey && nextKey !== selectedDateKey) {
@@ -120,8 +121,8 @@ export default function BookingScheduler({ alternateContact = null, initialLead 
   const slotRows = useMemo(() => {
     const free = new Set(slots);
     return displaySlots.map((time) => {
-      const inOpenWindow = isOpenBookingSlot(time);
-      const available = inOpenWindow && free.has(time);
+      const bookable = isOpenBookingSlot(time, selectedDateKey);
+      const available = bookable && free.has(time);
       const hour = Number(String(time).split(':')[0]);
       return {
         time,
@@ -130,7 +131,9 @@ export default function BookingScheduler({ alternateContact = null, initialLead 
         period: hour < 13 ? 'morning' : 'afternoon',
       };
     });
-  }, [displaySlots, slots]);
+  }, [displaySlots, slots, selectedDateKey]);
+
+  const dayMode = selectedDateKey ? getDayBookingMode(selectedDateKey) : 'none';
 
   const morningSlots = useMemo(
     () => slotRows.filter((row) => row.period === 'morning'),
@@ -341,7 +344,9 @@ export default function BookingScheduler({ alternateContact = null, initialLead 
                       {!hasOpenSlot ? (
                         <div className="kv-booking-empty-block">
                           <p className="kv-booking-empty">
-                            Este día ya no tiene cupos libres en las ventanas 9:00–10:00 y 15:00–16:00 (hora Colombia).
+                            {dayMode === 'limited'
+                              ? 'Este día ya no tiene cupos libres en las ventanas 9:00–10:00 y 15:00–16:00 (hora Colombia).'
+                              : 'Este día ya no tiene cupos libres.'}
                           </p>
                           <button
                             type="button"
@@ -369,7 +374,9 @@ export default function BookingScheduler({ alternateContact = null, initialLead 
                   ) : (
                     <div className="kv-booking-empty-block">
                       <p className="kv-booking-empty">
-                        Este día ya no tiene horarios libres (9:00–10:00 y 15:00–16:00, hora Colombia).
+                        {dayMode === 'limited'
+                          ? 'Este día ya no tiene horarios libres (9:00–10:00 y 15:00–16:00, hora Colombia).'
+                          : 'Este día ya no tiene horarios libres.'}
                       </p>
                       <button
                         type="button"

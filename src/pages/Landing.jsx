@@ -102,39 +102,39 @@ const STAGES = [
     num: '01',
     title: 'Entendemos tu negocio',
     label: 'Cómo vendes tú',
-    desc: 'No empezamos por la vacante genérica. Diagnosticamos cómo vende tu empresa: cliente ideal, ticket, ciclo, canal y complejidad de la negociación. Con eso definimos el perfil de éxito del cargo y solo entonces abrimos la búsqueda con un criterio comercial defendible.',
+    desc: 'No empezamos buscando candidatos. Primero entendemos cómo vende tu empresa, cómo funciona tu operación comercial y qué necesita realmente el cargo. Solo así podemos definir el perfil adecuado e iniciar la búsqueda con un criterio claro.',
     bullets: [
-      'Cliente ideal, vertical y mercado objetivo.',
-      'Ciclo de venta, ticket y complejidad de la oferta.',
+      'Cliente ideal y mercado objetivo.',
+      'Proceso, ciclo y complejidad de la venta.',
       'Tipo de venta: consultiva, técnica o transaccional.',
-      'Apertura de mercado o desarrollo / retención de cuentas.',
-      'Metas del rol, productividad esperada y señales de desempeño.',
+      'Apertura de mercado o desarrollo de cuentas.',
+      'Rol, expectativas y nivel de desempeño esperado.',
     ],
   },
   {
     num: '02',
     title: 'Evaluamos con evidencia',
     label: 'Si puede vender',
-    desc: 'Diseñamos la evaluación sobre tu modelo comercial, no sobre un test genérico. Medimos prospección, diagnóstico, objeciones, negociación y cierre en escenarios cercanos al día a día del cargo. Entregamos un informe comparable para que la decisión quede respaldada ante dirección comercial y talento.',
+    desc: 'Cada empresa vende de forma diferente. Por eso diseñamos las evaluaciones según el modelo comercial de tu empresa, para medir cómo se desempeñaría cada candidato en el contexto real del cargo. Al finalizar, entregamos un informe detallado con la evidencia que respalda cada recomendación.',
     bullets: [
-      'Evaluaciones calibradas a tu modelo y ciclo de venta.',
-      'Simulaciones con situaciones reales del rol B2B.',
-      'Entrevistas por competencias comerciales observables.',
-      'Cobertura del proceso: prospección, negociación y cierre.',
-      'Informe con fortalezas, riesgos y nivel de compatibilidad.',
+      'Evaluaciones diseñadas para tu modelo comercial.',
+      'Simulaciones basadas en situaciones reales de venta.',
+      'Entrevistas por competencias comerciales.',
+      'Evaluación de prospección, negociación y cierre.',
+      'Informe detallado con fortalezas, riesgos y nivel de compatibilidad.',
     ],
   },
   {
     num: '03',
     title: 'Gamificamos el onboarding',
     label: 'Después de firmar',
-    desc: 'Una contratación solo convierte si el comercial arranca bien. En los primeros 90 días convertimos la integración en un recorrido con hitos, retos y seguimiento: producto, proceso, cuentas y ritmo de ventas. Así reduces el tiempo a productividad y evitas rotación temprana por mala adopción del modelo.',
+    desc: 'Una buena contratación necesita un buen arranque. Convertimos los primeros 90 días en un onboarding gamificado: metas claras, retos prácticos y seguimiento, para que el nuevo integrante se adapte más rápido a tu modelo comercial y empiece a generar resultados.',
     bullets: [
       'Recorrido de incorporación con hitos y retos medibles.',
-      'Adaptación al modelo comercial, CRM y equipo.',
-      'Revisiones a 30, 60 y 90 días con señales de productividad.',
-      'Ajustes tempranos si la curva de resultados se desvía.',
-      'Entrega al líder con un perfil ya operando en el rol.',
+      'Adaptación al modelo comercial, al equipo y al rol.',
+      'Seguimiento a los 30, 60 y 90 días con señales de desempeño.',
+      'Ajustes tempranos cuando la integración se desvía.',
+      'Entrega al líder del equipo con un perfil que ya está rindiendo.',
     ],
   },
 ];
@@ -158,15 +158,15 @@ const DIAG_CHECKS = [
 const METHOD_POINTS = [
   {
     q: '¿Qué es el Kova Score?',
-    a: 'Un índice de compatibilidad comercial: cruza el perfil del candidato con tu modelo de venta, ciclo, tipo de cliente y cultura del equipo. Sirve para priorizar con criterio, no con intuición de entrevista.',
+    a: 'Una forma clara de ver qué tan bien encaja alguien con cómo vende tu empresa.',
   },
   {
     q: '¿Qué obtienes?',
-    a: 'Una lista corta priorizada, informe comparable por candidato y una recomendación argumentada que puedes defender ante dirección comercial o gerencia.',
+    a: 'Una lista corta de candidatos priorizados y una recomendación que puedes defender.',
   },
   {
     q: '¿Cómo lo logramos?',
-    a: 'Con un método propio de diagnóstico + evaluación por competencias B2B. El detalle del diseño para tu vacante lo revisamos juntos en la asesoría, no en un folleto genérico.',
+    a: 'Con un método propio. El detalle lo vemos juntos en la conversación, no en un brochure.',
   },
 ];
 
@@ -176,8 +176,8 @@ const CASO = {
   items: [
     { k: 'Tiempo de cierre', v: '28 días' },
     { k: 'Permanencia', v: '2 años+' },
-    { k: 'Productividad esperada', v: '6 meses' },
-    { k: 'Productividad lograda', v: '4 meses' },
+    { k: 'Ramp-up esperado', v: '6 meses' },
+    { k: 'Ramp-up logrado', v: '4 meses' },
   ],
 };
 
@@ -389,15 +389,51 @@ export default function Landing() {
               <span className="kh-accent">tu estrategia de ventas</span>.
             </h1>
 
-            {/* Mobile-only hero image — hidden on desktop via CSS */}
+            {/* Mobile-only: mockup de evaluación (compacto). Desktop usa el collage. */}
             <div className="kh-hero__visual-m">
-              <img
-                src="/landing/people/final-empresas-pro.jpg"
-                alt="Especialistas revisando el perfil comercial de un candidato"
-                width={800}
-                height={1000}
-                loading="eager"
-              />
+              <div className="kh-score-shell kh-score-shell--mobile">
+                <div className="kh-score">
+                  <div className="kh-score__top">
+                    <span className="kh-score__toplabel">Así se ve una evaluación</span>
+                    <span className="kh-score__live">
+                      <span className="kh-pill__dot" aria-hidden />
+                      Ejemplo
+                    </span>
+                  </div>
+                  <div className="kh-score__person">
+                    <div>
+                      <div className="kh-score__name-row">
+                        <span className="kh-score__name">Candidato ejemplo</span>
+                      </div>
+                      <div className="kh-score__meta">
+                        <span className="kh-score__sub">Key Account Manager B2B</span>
+                      </div>
+                    </div>
+                    <div className="kh-score__num">
+                      <strong>{scoreNum}%</strong>
+                      <span>Compatibilidad</span>
+                    </div>
+                  </div>
+                  <div className="kh-score__dims-label">Dimensiones</div>
+                  <div className="kh-dims" key={lit ? 'm-dims-on' : 'm-dims-off'}>
+                    {DIMS.slice(0, 4).map((d) => (
+                      <div key={d.label} className="kh-dim">
+                        <span className="kh-dim__label">{d.label}</span>
+                        <div className="kh-dim__track">
+                          <div
+                            className="kh-dim__fill"
+                            style={{
+                              transform: `scaleX(${lit ? d.pct / 100 : 0})`,
+                              background: d.color,
+                            }}
+                          />
+                        </div>
+                        <span className="kh-dim__pct">{d.pct}%</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
 
             <p className="kh-hero__lead">
@@ -729,7 +765,6 @@ export default function Landing() {
                 >
                   <span className="kh-stage-btn__n">{s.num}</span>
                   <span className="kh-stage-btn__t">{s.title}</span>
-                  <span className="kh-stage-btn__label">{s.label}</span>
                 </button>
               ))}
             </div>
@@ -798,9 +833,8 @@ export default function Landing() {
             Nuestro <span className="kh-accent">método</span>
           </h2>
           <p className="kh-artifact__lead">
-            Cada vacante comercial exige un criterio distinto. Diagnosticamos cómo vende tu
-            empresa, definimos el perfil de éxito del rol y evaluamos candidatos con evidencia
-            comparable — no con intuición de entrevista.
+            Cada contratación importante merece un método claro. Entendemos tu negocio,
+            definimos el perfil adecuado y encontramos el talento con mayor alineación.
           </p>
 
           <ol className="kh-flow">
@@ -995,10 +1029,6 @@ export default function Landing() {
               <span>meses de garantía</span>
             </div>
             <div className="kh-guarantee__copy">
-              <div className="kh-eyebrow">
-                <span className="kh-eyebrow__dot" aria-hidden />
-                <span className="kh-eyebrow__label">Compromiso Kova</span>
-              </div>
               <h2 className="kh-h2 kh-h2--regular">
                 Contrata con <span className="kh-accent">garantía de 6 meses</span>.
               </h2>

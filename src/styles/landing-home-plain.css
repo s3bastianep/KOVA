@@ -49,13 +49,19 @@
   --font-body: Manrope, 'Helvetica Neue', Arial, sans-serif;
   --font-sans: Manrope, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: Manrope, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Escala tipográfica — cuerpo de página (heroes usan tokens globales HomeDark) */
   --kv-fs-hero: clamp(2.5rem, 5.2vw, 64px);
-  --kv-fs-h2: clamp(1.75rem, 3.6vw, 42px);
-  --kv-fs-h3: clamp(1.35rem, 2.2vw, 28px);
-  --kv-fs-sub: clamp(1.05rem, 1.35vw, 20px);
-  --kv-fs-body: clamp(1rem, 1.15vw, 18px);
-  --kv-fs-small: 16px;
-  --kv-fs-lead: var(--kv-fs-sub);
+  --kv-fs-h2: 38px; /* H2 */
+  --kv-fs-h3: 30px; /* H3 */
+  --kv-fs-card-title: 22px;
+  --kv-fs-body: 17px; /* texto principal / cards */
+  --kv-fs-sub: clamp(17px, 1.5vw, 20px);
+  --kv-fs-lead: clamp(17px, 1.5vw, 20px);
+  --kv-fs-small: 15px; /* texto secundario */
+  --kv-fs-btn: 17px;
+  --kv-fs-input: 17px;
+  --kv-fs-nav: 16px;
   box-sizing: border-box;
   width: 100%;
   overflow-x: hidden;
@@ -170,7 +176,7 @@
   gap: 9px;
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 15px;
+  font-size: var(--kv-fs-btn);
   letter-spacing: -0.01em;
   text-transform: none;
   border-radius: 12px;
@@ -360,8 +366,11 @@
 }
 
 .kova-home-plain .kh-hero__ctas .kh-btn {
-  font-size: 15px;
-  padding: 15px 24px;
+  font-size: var(--kv-fs-hero-btn);
+  height: var(--kv-hero-btn-h);
+  min-height: var(--kv-hero-btn-h);
+  padding: 0 22px;
+  box-sizing: border-box;
 }
 
 /* Editorial metric strip — replaces the check row */
@@ -988,7 +997,7 @@
 
 .kova-home-plain .kh-dolor__tag {
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: var(--kv-fs-card-title);
   font-weight: 800;
   letter-spacing: -0.03em;
   text-transform: none;
@@ -1000,7 +1009,7 @@
 }
 
 .kova-home-plain .kh-dolor p {
-  font-size: 15px;
+  font-size: var(--kv-fs-card-desc, var(--kv-fs-body));
   line-height: 1.45;
   color: #3A4136;
   margin-top: 10px;
@@ -2469,14 +2478,14 @@
 .kova-home-plain .kh-platform__grid strong {
   display: block;
   font-weight: 700;
-  font-size: 16px;
+  font-size: var(--kv-fs-card-title);
   color: var(--kv-ink);
 }
 
 .kova-home-plain .kh-platform__grid span {
   display: block;
   color: var(--kv-body);
-  font-size: 13.5px;
+  font-size: var(--kv-fs-body);
   font-weight: 500;
   line-height: 1.5;
   margin-top: 7px;
@@ -2485,7 +2494,8 @@
 
 .kova-home-plain .kh-platform .kh-btn {
   margin-top: 28px;
-  font-size: 14px;
+  font-size: var(--kv-fs-btn);
+  font-weight: 600;
   padding: 16px 28px;
 }
 
@@ -2692,7 +2702,7 @@
   padding: 12px 0 14px;
   color: var(--kv-text);
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: var(--kv-fs-input);
   font-weight: 500;
   outline: none;
   resize: vertical;
@@ -3000,13 +3010,13 @@
   }
 
   .kova-home-plain .kh-hero h1 {
-    font-size: clamp(28px, 8.5vw, 40px) !important;
+    font-size: var(--kv-fs-hero) !important;
     max-width: none !important;
     margin-top: 22px !important;
   }
 
   .kova-home-plain .kh-hero__lead {
-    font-size: 16px !important;
+    font-size: var(--kv-fs-hero-sub) !important;
     margin-top: 18px !important;
   }
 
@@ -3388,7 +3398,7 @@
   }
 
   .kova-home-plain .kh-hero h1 {
-    font-size: 26px !important;
+    font-size: var(--kv-fs-hero) !important;
     line-height: 1.08 !important;
   }
 
@@ -3685,3 +3695,74 @@
     left: 10px;
   }
 }
+
+/* ─── Escala tipográfica fija — solo desktop ─── */
+@media (min-width: 901px) {
+  .kova-home-plain {
+    font-size: var(--kv-fs-body);
+  }
+
+  .kova-home-plain h1,
+  .kova-home-plain .kh-hero h1 {
+    font-size: var(--kv-fs-hero) !important;
+    line-height: 1.08;
+  }
+
+  .kova-home-plain h2,
+  .kova-home-plain .kh-h2 {
+    font-size: var(--kv-fs-h2) !important;
+  }
+
+  .kova-home-plain h3,
+  .kova-home-plain .kh-h3 {
+    font-size: var(--kv-fs-h3) !important;
+  }
+
+  .kova-home-plain .kh-hero__lead {
+    font-size: var(--kv-fs-hero-sub) !important;
+  }
+
+  .kova-home-plain .kh-contact__lead,
+  .kova-home-plain .kh-platform__lead,
+  .kova-home-plain .kh-stage-panel__desc {
+    font-size: var(--kv-fs-body) !important;
+  }
+
+  .kova-home-plain .kh-btn,
+  .kova-home-plain .kh-cta-long,
+  .kova-home-plain .kh-form button[type='submit'] {
+    font-size: var(--kv-fs-btn) !important;
+    font-weight: 600 !important;
+  }
+
+  .kova-home-plain .kh-hero__ctas .kh-btn {
+    font-size: var(--kv-fs-hero-btn) !important;
+    height: var(--kv-hero-btn-h) !important;
+    min-height: var(--kv-hero-btn-h) !important;
+  }
+
+  .kova-home-plain .kh-form input,
+  .kova-home-plain .kh-form textarea {
+    font-size: var(--kv-fs-input) !important;
+  }
+
+  .kova-home-plain .kh-dolor__tag,
+  .kova-home-plain .kh-platform__grid strong {
+    font-size: var(--kv-fs-card-title) !important;
+  }
+
+  .kova-home-plain .kh-dolor p,
+  .kova-home-plain .kh-platform__grid span {
+    font-size: var(--kv-fs-body) !important;
+  }
+
+  .kova-home-plain .kh-eyebrow__label,
+  .kova-home-plain .kh-stage-btn__label,
+  .kova-home-plain .kh-footer__copy,
+  .kova-home-plain .kh-muted,
+  .kova-home-plain .kh-form label > span,
+  .kova-home-plain .kh-hero__checks span {
+    font-size: var(--kv-fs-small) !important;
+  }
+}
+

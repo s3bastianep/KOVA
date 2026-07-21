@@ -1,4 +1,4 @@
-﻿/* Booking scheduler â€” wave (dark) */
+/* Booking scheduler â€” wave (dark) */
 .kova-landing-wave .kv-booking-card--dark {
   background: #0a0b0a;
   background: var(--kv-ink);
@@ -483,8 +483,10 @@
 }
 
 .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar.rdp {
-  --rdp-cell-size: 2.125rem;
+  --rdp-cell-size: 2.35rem;
+  --rdp-day-gap: 0.35rem;
   margin: 0;
+  width: 100%;
 }
 
 .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-caption_label {
@@ -514,8 +516,12 @@
 .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-button,
 .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-day_button {
   color: #fff;
-  width: var(--rdp-cell-size, 2.125rem);
-  height: var(--rdp-cell-size, 2.125rem);
+  box-sizing: border-box;
+  width: var(--rdp-cell-size, 2.35rem);
+  height: var(--rdp-cell-size, 2.35rem);
+  max-width: 100%;
+  margin: 0;
+  border-radius: 10px;
 }
 
 .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-button:hover:not(:disabled),
@@ -552,14 +558,23 @@
 .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-row {
   display: flex;
   width: 100%;
-  margin-top: 0.35rem;
+  margin-top: 0.55rem;
+  gap: var(--rdp-day-gap, 0.35rem);
+}
+
+.kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-head_row {
+  display: flex;
+  width: 100%;
+  gap: var(--rdp-day-gap, 0.35rem);
 }
 
 .kova-landing-wave .kv-booking-card--dark .kova-booking-calendar .rdp-cell {
-  flex: 1;
+  flex: 1 1 0;
   display: flex;
   justify-content: center;
+  align-items: center;
   padding: 0;
+  min-width: 0;
 }
 
 .kova-landing-wave input:focus,
