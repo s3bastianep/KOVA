@@ -6,9 +6,32 @@ export const SCHEDULE = {
   workingDays: [1, 2, 3, 4, 5],
   workStartHour: 9,
   workEndHour: 17,
+  /**
+   * Ventanas abiertas a reserva (hora Colombia).
+   * El resto del día laboral se muestra como ocupado (señal de demanda).
+   */
+  openWindows: [
+    { startHour: 9, endHour: 12 },
+    { startHour: 15, endHour: 16 },
+  ],
   timezone: 'America/Bogota',
   utcOffset: '-05:00',
 };
+
+function slotToMinutes(time) {
+  const [hh, mm] = String(time).split(':').map(Number);
+  return hh * 60 + mm;
+}
+
+/** true si el horario cae en una ventana abierta a reserva (9–12 o 15–16). */
+export function isOpenBookingSlot(time) {
+  const start = slotToMinutes(time);
+  return SCHEDULE.openWindows.some(({ startHour, endHour }) => {
+    const winStart = startHour * 60;
+    const winEnd = endHour * 60;
+    return start >= winStart && start + SCHEDULE.slotMinutes <= winEnd;
+  });
+}
 
 export function formatDateKeyFromParts(year, month, day) {
   return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
@@ -82,7 +105,7 @@ export function isBookableDateKey(dateKey) {
   return SCHEDULE.workingDays.includes(weekdayFromDateKey(dateKey));
 }
 
-export function generateTimeSlots(dateKey) {
+function buildDaySlots(dateKey, { openOnly }) {
   if (!isBookableDateKey(dateKey)) return [];
 
   const slots = [];
@@ -92,20 +115,29 @@ export function generateTimeSlots(dateKey) {
     for (let m = 0; m < 60; m += slotMinutes) {
       const startMinutes = h * 60 + m;
       if (startMinutes + slotMinutes > workEndHour * 60) continue;
-      slots.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
+      const time = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+      if (openOnly && !isOpenBookingSlot(time)) continue;
+      slots.push(time);
     }
   }
 
   const now = bogotaNowParts();
   if (dateKey === now.dateKey) {
     const nowMinutes = now.hour * 60 + now.minute;
-    return slots.filter((slot) => {
-      const [hh, mm] = slot.split(':').map(Number);
-      return hh * 60 + mm > nowMinutes + 30;
-    });
+    return slots.filter((slot) => slotToMinutes(slot) > nowMinutes + 30);
   }
 
   return slots;
+}
+
+/** Slots reservables (solo ventanas 9–12 y 15–16). Usado por API y booking. */
+export function generateTimeSlots(dateKey) {
+  return buildDaySlots(dateKey, { openOnly: true });
+}
+
+/** Grilla completa 9–17 para UI (incluye ocupados fuera de ventana). */
+export function generateDisplayTimeSlots(dateKey) {
+  return buildDaySlots(dateKey, { openOnly: false });
 }
 
 export function filterBookedSlots(dateKey, slots, bookings) {

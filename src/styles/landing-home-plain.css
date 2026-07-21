@@ -61,7 +61,7 @@
   overflow-x: hidden;
   background: var(--kv-page);
   color: var(--kv-text);
-  font-family: var(--font-sans);
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
   font-feature-settings: 'ss01', 'cv01';
   font-kerning: normal;
   -webkit-font-smoothing: antialiased;
@@ -899,12 +899,13 @@
 .kova-home-plain .kh-trust__label {
   font-family: var(--font-sans);
   font-size: 14.5px;
-  font-weight: 400;
+  font-weight: 700;
   letter-spacing: 0;
   text-transform: none;
   color: var(--kv-soft, #6f695f);
-  max-width: 16ch;
-  line-height: 1.4;
+  max-width: none;
+  white-space: nowrap;
+  line-height: 1.3;
   margin: 0;
   flex-shrink: 0;
 }
@@ -1482,10 +1483,10 @@
 
 .kova-home-plain .kh-method-cta {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 18px;
+  gap: 12px;
   margin-top: 40px;
-  flex-wrap: wrap;
 }
 
 .kova-home-plain .kh-method-cta .kh-btn {
@@ -1498,6 +1499,8 @@
   font-weight: 500;
   font-size: 13.5px;
   color: var(--kv-body);
+  text-align: center;
+  margin: 0;
 }
 
 .kova-home-plain .kh-perfil {
@@ -1612,11 +1615,14 @@
 }
 
 .kova-home-plain .kh-flow li:not(:last-child)::after {
-  content: '→';
-  font-family: var(--font-mono);
-  color: var(--kv-lime);
-  opacity: 0.7;
-  margin: 0 6px 0 2px;
+  content: '';
+  width: 18px;
+  height: 1px;
+  margin: 0 8px 0 4px;
+  background: rgba(197, 222, 78, 0.45);
+  flex: none;
+  opacity: 1;
+  font-size: 0;
 }
 
 .kova-home-plain .kh-flow span {
@@ -3138,14 +3144,17 @@
   }
 
   .kova-home-plain .kh-method-cta {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 14px;
+    gap: 10px;
   }
 
   .kova-home-plain .kh-method-cta .kh-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .kova-home-plain .kh-method-cta p {
+    width: 100%;
+    text-align: center;
   }
 
   .kova-home-plain .kh-calc {
@@ -3211,14 +3220,13 @@
   }
 
   .kova-home-plain .kh-flow li:not(:last-child)::after {
-    content: '↓';
+    content: '';
     display: block;
-    width: auto;
-    margin: 8px 0 8px 0.2em;
-    text-align: left;
-    font-size: 11px;
-    line-height: 1;
-    opacity: 0.5;
+    width: 1px;
+    height: 14px;
+    margin: 8px 0 8px 0.55em;
+    background: rgba(197, 222, 78, 0.4);
+    font-size: 0;
   }
 
   .kova-home-plain .kh-flow span {
@@ -3467,8 +3475,8 @@
   color: var(--kv-body);
 }
 
-/* ─── Floating WhatsApp button (persistent conversion CTA) ─── */
-.kova-home-plain .kh-wa-float {
+/* ─── Floating agenda button (persistent conversion CTA) ─── */
+.kova-home-plain .kh-agenda-float {
   position: fixed;
   right: clamp(16px, 3vw, 32px);
   bottom: clamp(16px, 3vw, 32px);
@@ -3479,37 +3487,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #25d366;
-  color: #fff;
-  box-shadow: 0 8px 22px -6px rgba(37, 211, 102, 0.6), 0 2px 6px rgba(20, 18, 13, 0.2);
+  background: #c5de4e;
+  color: #0d0f0f;
+  box-shadow: 0 8px 22px -6px rgba(13, 15, 15, 0.35), 0 2px 6px rgba(20, 18, 13, 0.2);
   transition: transform 0.2s var(--kv-ease), box-shadow 0.2s var(--kv-ease);
 }
 
-.kova-home-plain .kh-wa-float::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: #25d366;
-  opacity: 0.45;
-  z-index: -1;
-  animation: kh-wa-pulse 2.4s ease-out infinite;
+.kova-home-plain .kh-agenda-float:hover {
+  transform: translateY(-1px);
+  color: #0d0f0f;
+  box-shadow: 0 10px 26px -8px rgba(13, 15, 15, 0.4), 0 2px 6px rgba(20, 18, 13, 0.22);
 }
 
-@keyframes kh-wa-pulse {
-  0% { transform: scale(1); opacity: 0.45; }
-  70% { transform: scale(1.5); opacity: 0; }
-  100% { transform: scale(1.5); opacity: 0; }
-}
-
-.kova-home-plain .kh-wa-float:hover {
-  transform: scale(1.06);
-  color: #fff;
-  box-shadow: 0 12px 30px -6px rgba(37, 211, 102, 0.7), 0 2px 6px rgba(20, 18, 13, 0.24);
+.kova-home-plain .kh-agenda-float:active {
+  transform: translateY(0) scale(0.98);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .kova-home-plain .kh-wa-float::before { animation: none; }
+  .kova-home-plain .kh-agenda-float:hover,
+  .kova-home-plain .kh-agenda-float:active {
+    transform: none;
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════

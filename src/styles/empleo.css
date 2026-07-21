@@ -15,6 +15,12 @@
   --emp-dark: #0c0b0a;
   --emp-dark-2: #121110;
 
+  --font-display: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --font-body: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
+
   /* Force light-page kv tokens (parent .kova-home-plain defaults to dark-hero) */
   --kv-ink: #1a1712;
   --kv-text: #1a1712;
@@ -40,10 +46,20 @@
 
   background: #ffffff;
   color: var(--emp-ink);
-  font-family: var(--font-body, Manrope, sans-serif);
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
   font-size: var(--kv-fs-body, 18px);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+}
+
+.kova-empleo button,
+.kova-empleo input,
+.kova-empleo textarea,
+.kova-empleo select,
+.kova-empleo .font-mono,
+.kova-empleo .font-display,
+.kova-empleo .emp-step__n {
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif !important;
 }
 
 /* Display titles — Manrope */
@@ -1718,7 +1734,7 @@
     box-shadow: none;
     display: block;
     flex: none;
-    font-family: var(--font-mono, ui-monospace, monospace);
+    font-family: var(--font-mono, Manrope, 'Helvetica Neue', Arial, sans-serif);
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.06em;

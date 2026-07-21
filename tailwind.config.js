@@ -78,10 +78,11 @@ module.exports = {
   			}
   		},
   		fontFamily: {
-  			heading: ['var(--font-heading)'],
-  			body: ['var(--font-body)'],
-  			display: ['var(--font-display)'],
-  			mono: ['var(--font-mono)']
+  			heading: ['var(--font-heading)', 'Manrope', 'Helvetica Neue', 'Arial', 'sans-serif'],
+  			body: ['var(--font-body)', 'Manrope', 'Helvetica Neue', 'Arial', 'sans-serif'],
+  			display: ['var(--font-display)', 'Manrope', 'Helvetica Neue', 'Arial', 'sans-serif'],
+  			sans: ['var(--font-sans)', 'Manrope', 'Helvetica Neue', 'Arial', 'sans-serif'],
+  			mono: ['var(--font-mono)', 'Manrope', 'Helvetica Neue', 'Arial', 'sans-serif']
   		},
   		boxShadow: {
   			'card': '0 1px 3px 0 rgba(11,17,32,0.06), 0 1px 2px -1px rgba(11,17,32,0.04)',

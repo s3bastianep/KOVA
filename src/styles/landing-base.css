@@ -25,10 +25,16 @@
     --ring: 220 70% 15%;
     --radius: 0.625rem;
 
+    /* Brand type — Manrope only */
     --font-heading: Manrope, 'Helvetica Neue', Arial, sans-serif;
     --font-body: Manrope, 'Helvetica Neue', Arial, sans-serif;
     --font-display: Manrope, 'Helvetica Neue', Arial, sans-serif;
+    --font-sans: Manrope, 'Helvetica Neue', Arial, sans-serif;
     --font-mono: Manrope, 'Helvetica Neue', Arial, sans-serif;
+    --kv-font-sans: Manrope, 'Helvetica Neue', Arial, sans-serif;
+    --kv-font-display: Manrope, 'Helvetica Neue', Arial, sans-serif;
+    --kv-font-mono: Manrope, 'Helvetica Neue', Arial, sans-serif;
+    --kv-font-serif: Manrope, 'Helvetica Neue', Arial, sans-serif;
   }
 
   ::selection {
@@ -46,6 +52,7 @@ html {
   -webkit-text-size-adjust: 100%;
   text-rendering: geometricPrecision;
   overflow-x: hidden;
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
 }
 
 body {
@@ -54,7 +61,21 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: subpixel-antialiased;
   -moz-osx-font-smoothing: auto;
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
 }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  button,
+  input,
+  textarea,
+  select {
+    font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  }
 
   h1,
   h2,

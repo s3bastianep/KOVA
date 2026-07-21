@@ -1,6 +1,7 @@
 import '@/styles/contacto-kova.css';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Mail } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { CONTACT_EMAIL, CONTACT_MAILTO } from '@/lib/contact';
 
@@ -12,7 +13,7 @@ const PASOS = [
   { num: '03', title: 'Propuesta', desc: 'Recibes alcance, perfil y siguiente paso.' },
 ];
 
-function BookingMount() {
+function BookingMount({ initialLead = null }) {
   const ref = useRef(null);
   const [active, setActive] = useState(false);
 
@@ -44,6 +45,7 @@ function BookingMount() {
       {active ? (
         <Suspense fallback={<div className="kv-booking-loading" aria-busy="true" aria-label="Cargando calendario" />}>
           <BookingScheduler
+            initialLead={initialLead}
             alternateContact={{
               emailDisplay: CONTACT_EMAIL,
               emailMailto: CONTACT_MAILTO,
@@ -58,6 +60,9 @@ function BookingMount() {
 }
 
 export default function Contacto() {
+  const location = useLocation();
+  const initialLead = location.state?.lead || null;
+
   usePageMeta({
     title: 'Agenda una asesoría sin costo',
     description:
@@ -115,7 +120,7 @@ export default function Contacto() {
           </aside>
 
           <div className="kc-booking kova-landing-wave" id="agendar">
-            <BookingMount />
+            <BookingMount initialLead={initialLead} />
           </div>
         </div>
       </main>

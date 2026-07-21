@@ -256,8 +256,9 @@ export default function HomeDarkMobile() {
                 </span>
                 <h3>Contrata para generar resultados</h3>
                 <p>
-                  Antes de recomendar un profesional, entendemos tu negocio, tu proceso
-                  comercial y el perfil que realmente necesita tu empresa para crecer.
+                  Antes de buscar, diagnosticamos tu modelo comercial: cliente ideal, ciclo,
+                  ticket y lo que el cargo debe lograr. Solo con ese criterio recomendamos
+                  perfiles con probabilidad real de impacto.
                 </p>
               </div>
             </article>
@@ -275,9 +276,9 @@ export default function HomeDarkMobile() {
                 </span>
                 <h3>Mucho más que un currículo</h3>
                 <p>
-                  Evaluamos habilidades, personalidad, motivaciones, cultura y objetivos
-                  para identificar profesionales con una verdadera alineación con tu
-                  organización.
+                  Evaluamos competencias de venta, comunicación, cultura y motivación en el
+                  contexto de tu operación. Así priorizas candidatos defendibles ante
+                  dirección comercial, no solo hojas de vida atractivas.
                 </p>
               </div>
             </article>
@@ -302,9 +303,9 @@ export default function HomeDarkMobile() {
                 </span>
                 <h3>Tu experiencia merece una evaluación más completa</h3>
                 <p>
-                  No nos quedamos con tu hoja de vida. Entendemos tus habilidades, tu forma
-                  de trabajar y tus objetivos para conectarte con empresas donde realmente
-                  puedas aportar valor.
+                  Más allá de tu trayectoria, medimos cómo vendes: ciclo, tipo de cliente y
+                  estilo comercial. Así te conectamos con empresas donde tu forma de trabajar
+                  genera resultados, no solo encaje cultural genérico.
                 </p>
               </div>
             </article>
@@ -322,8 +323,9 @@ export default function HomeDarkMobile() {
                 </span>
                 <h3>Crece donde realmente puedas destacar</h3>
                 <p>
-                  Conecta con empresas que buscan profesionales alineados con su cultura,
-                  su forma de vender y sus objetivos de negocio.
+                  Accede a vacantes B2B donde el modelo de venta, el ticket y las metas del
+                  cargo coinciden con tu perfil. Menos postulaciones a ciegas; más procesos
+                  con criterio comercial claro.
                 </p>
               </div>
             </article>
@@ -605,10 +607,10 @@ export default function HomeDarkMobile() {
                 <br />
                 necesita el entorno <span>correcto</span>.
               </h2>
-              <p className="kd-final-lead">
-                Cuando una empresa encuentra a la persona adecuada y un profesional encuentra
-                dónde desarrollar su potencial, ambos crecen.
-              </p>
+            <p className="kd-final-lead">
+              Cuando una empresa encuentra a la persona adecuada y tú encuentras
+              dónde desarrollar tu potencial, ambos crecen.
+            </p>
             </div>
 
             <figure className="kd-final-shot">

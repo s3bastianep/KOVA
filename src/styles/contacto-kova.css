@@ -31,6 +31,15 @@ html.kova-contacto-active .kova-route-shell__fallback {
   -webkit-font-smoothing: antialiased;
 }
 
+.kova-contacto button,
+.kova-contacto input,
+.kova-contacto textarea,
+.kova-contacto select,
+.kova-contacto .font-mono,
+.kova-contacto .font-display {
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif !important;
+}
+
 .kova-contacto *,
 .kova-contacto *::before,
 .kova-contacto *::after {
@@ -419,6 +428,22 @@ html.kova-contacto-active .kova-route-shell__fallback {
   border-color: var(--kc-lime);
   color: var(--kv-ink);
   font-weight: 700;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-slot.is-occupied {
+  border-color: rgba(255, 255, 255, 0.06);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.28);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-slot.is-occupied:hover {
+  border-color: rgba(255, 255, 255, 0.06);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.28);
 }
 
 .kova-contacto .kova-landing-wave .kv-booking-card--dark .kv-booking-empty {

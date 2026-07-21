@@ -157,8 +157,8 @@ export default function GuiaContratarComercial() {
       <GuiaCtaBand
         eyebrow="Siguiente paso"
         title="Identifiquemos el talento comercial ideal para tu vacante"
-        description="Contáctenos. Un especialista de Kova revisa tu contexto comercial y te presenta una propuesta con perfil, alcance y cotización."
-        ctaLabel="Contáctenos"
+        description="Contáctanos. Un especialista de Kova revisa tu contexto comercial y te presenta una propuesta con perfil, alcance y cotización."
+        ctaLabel="Contáctanos"
         ctaTo="/contacto"
       />
     </GuiaPageLayout>

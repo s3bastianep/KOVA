@@ -35,11 +35,11 @@
 }
 
 .kova-landing-wave .font-display {
-  font-family: var(--kv-font-sans);
+  font-family: var(--kv-font-display, Manrope, 'Helvetica Neue', Arial, sans-serif);
 }
 
 .kova-landing-wave .font-mono {
-  font-family: var(--kv-font-mono);
+  font-family: var(--kv-font-mono, Manrope, 'Helvetica Neue', Arial, sans-serif);
 }
 
 /* .kv-wrap width lives in landing-nav.css (shared with home) */

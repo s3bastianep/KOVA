@@ -90,7 +90,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
   --kh-mx: 50%;
   --kh-my: 28%;
 
-  /* Type scale ? Sora display / Inter body */
+  /* Type scale — Manrope only (brand) */
   --kv-fs-hero: clamp(2.5rem, 5.2vw, 64px);
   --kv-fs-h2: clamp(1.75rem, 3.6vw, 42px);
   --kv-fs-h3: clamp(1.35rem, 2.2vw, 28px);
@@ -101,11 +101,29 @@ html.kova-home-chrome .kova-route-shell__fallback {
 
   background: var(--kh-bone);
   color: var(--kv-text);
-  font-family: var(--font-body);
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1.65;
   font-size: var(--kv-fs-body);
+}
+
+.kova-home-plain button,
+.kova-home-plain input,
+.kova-home-plain textarea,
+.kova-home-plain select,
+.kova-home-plain .kh-btn,
+.kova-home-plain .kh-pill,
+.kova-home-plain .kh-eyebrow,
+.kova-home-plain .kh-flow__n,
+.kova-home-plain .kh-dolor__n,
+.kova-home-plain .kh-costo-card__n,
+.kova-home-plain .kh-stage-btn,
+.kova-home-plain .kh-platform__kicker,
+.kova-home-plain .kh-platform__mark,
+.kova-home-plain .font-mono,
+.kova-home-plain .font-display {
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif !important;
 }
 
 .kova-home-plain::before {
@@ -216,13 +234,18 @@ html.kova-home-chrome .kova-route-shell__fallback {
 .kova-home-plain .kh-trust__label {
   margin: 0;
   flex: 0 0 auto;
-  max-width: 16ch;
-  color: #6a645a !important;
-  font-family: var(--font-body) !important;
-  font-size: clamp(13.5px, 1.1vw, 15px) !important;
-  font-weight: 400 !important;
-  line-height: 1.4 !important;
-  letter-spacing: 0;
+  max-width: none;
+  white-space: nowrap;
+  overflow: visible;
+  color: #14120e !important;
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif !important;
+  font-size: clamp(14px, 1.15vw, 16px) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.3 !important;
+  text-transform: none;
+  mask-image: none;
+  -webkit-mask-image: none;
 }
 
 .kova-home-plain .kh-trust__marquee {
@@ -245,7 +268,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 }
 
 .kova-home-plain .kh-trust__brands--track {
-  animation: kh-trust-marquee 28s linear infinite;
+  animation: kh-trust-marquee 18s linear infinite;
 }
 
 .kova-home-plain .kh-trust__marquee:hover .kh-trust__brands--track {
@@ -308,51 +331,40 @@ html.kova-home-chrome .kova-route-shell__fallback {
 
 @media (max-width: 900px) {
   .kova-home-plain .kh-trust {
-    padding: 28px 0 32px;
+    padding: 24px 0 28px;
   }
 
   .kova-home-plain .kh-trust__inner {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 18px;
+    align-items: stretch;
+    gap: 14px;
   }
 
   .kova-home-plain .kh-trust__label {
-    max-width: none;
-    font-size: 13.5px !important;
-    line-height: 1.35 !important;
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+    white-space: normal;
+    text-align: left;
+    overflow: visible;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
   }
 
   .kova-home-plain .kh-trust__marquee {
     width: 100%;
-    overflow: visible;
-    mask-image: none;
-    -webkit-mask-image: none;
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
   }
 
-  /* Stop marquee: show the 5 sectors as a wrapping list */
   .kova-home-plain .kh-trust__brands--track {
-    animation: none;
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    max-width: 100%;
-    column-gap: 0;
-    row-gap: 12px;
-  }
-
-  .kova-home-plain .kh-trust__brands--track li:nth-child(n + 6) {
-    display: none;
+    animation: kh-trust-marquee 14s linear infinite;
   }
 
   .kova-home-plain .kh-trust__brands li {
-    padding: 0 14px 0 16px;
+    padding: 0 18px;
     font-size: 14px !important;
-    white-space: normal;
-  }
-
-  .kova-home-plain .kh-trust__brands li::before {
-    left: 4px;
+    white-space: nowrap;
   }
 }
 
@@ -1685,7 +1697,7 @@ html.kova-home-chrome .kova-route-shell__fallback {
 
 .kova-home-plain .kh-costo-card__n {
   color: rgba(197, 222, 78, 0.85) !important;
-  font-family: var(--font-mono, ui-monospace, monospace);
+  font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.06em;
   margin: 0;
@@ -2175,7 +2187,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   padding-bottom: 14px;
 }
 
-/* Hero type ? Sora 700 / up to 64px */
+/* Hero type — Manrope 700 / up to 64px */
 .kova-home-plain .kh-hero h1 {
   font-size: var(--kv-fs-hero) !important;
   font-weight: 700 !important;
@@ -2299,17 +2311,119 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 /* Buttons ? 120ms, scale 1.02, depth */
 .kova-home-plain .kh-btn {
   transition:
-    transform 120ms ease,
-    box-shadow 120ms ease,
-    filter 120ms ease,
-    background 120ms ease,
-    border-color 120ms ease,
-    color 120ms ease !important;
+    transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 160ms ease,
+    filter 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease !important;
+}
+
+.kova-home-plain .kh-btn--motion:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px -12px rgba(0, 0, 0, 0.28);
+}
+
+.kova-home-plain .kh-btn--motion:active {
+  transform: translateY(0) scale(0.99);
 }
 
 .kova-home-plain .kh-hero .kh-btn--lime:hover,
 .kova-home-plain #calculadora .kh-btn--lime:hover {
-  transform: scale(1.02) translateY(-1px);
+  transform: translateY(-1px);
+}
+
+/* Stage panel swap — soft crossfade when changing tabs */
+.kova-home-plain .kh-stage-panel {
+  transition:
+    opacity 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kova-home-plain .kh-stages .kh-stage-btn {
+  transition:
+    opacity 200ms ease,
+    background 200ms ease,
+    border-color 200ms ease,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kova-home-plain .kh-stages .kh-stage-btn.is-inview:not(.is-active) {
+  transform: translateX(6px);
+}
+
+.kova-home-plain .kh-dim__fill {
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Loud motion extras — no filter on text (warps glyph spacing on scroll) */
+.kova-home-plain.kh-motion-loud .kh-accent--alive {
+  animation: kh-accent-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes kh-accent-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.82;
+  }
+}
+
+.kova-home-plain.kh-motion-loud .kh-card-depth:hover {
+  transform: translateY(-8px) scale(1.015);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 28px 56px -24px rgba(0, 0, 0, 0.42);
+}
+
+.kova-home-plain.kh-motion-loud .kh-pill__dot {
+  animation: kh-glow-breathe 1.6s ease-in-out infinite;
+}
+
+.kova-home-plain.kh-motion-loud .kh-score__live .kh-pill__dot,
+.kova-home-plain.kh-motion-loud .kh-collage__chip-icon {
+  animation: kh-glow-breathe 1.4s ease-in-out infinite;
+}
+
+.kova-home-plain.kh-motion-loud .kh-platform__track > li {
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kova-home-plain.kh-motion-loud .kh-platform__track > li:hover {
+  transform: translateY(-6px);
+}
+
+.kova-home-plain.kh-motion-loud .kh-flow li {
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kova-home-plain.kh-motion-loud .kh-flow li:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kova-home-plain .kh-btn--motion:hover,
+  .kova-home-plain .kh-btn--motion:active,
+  .kova-home-plain .kh-hero .kh-btn--lime:hover,
+  .kova-home-plain #calculadora .kh-btn--lime:hover,
+  .kova-home-plain .kh-stages .kh-stage-btn.is-inview:not(.is-active),
+  .kova-home-plain.kh-motion-loud .kh-card-depth:hover,
+  .kova-home-plain.kh-motion-loud .kh-platform__track > li:hover,
+  .kova-home-plain.kh-motion-loud .kh-flow li:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .kova-home-plain.kh-motion-loud .kh-accent--alive,
+  .kova-home-plain.kh-motion-loud .kh-pill__dot,
+  .kova-home-plain.kh-motion-loud .kh-score__live .kh-pill__dot,
+  .kova-home-plain.kh-motion-loud .kh-collage__chip-icon {
+    animation: none !important;
+    filter: none;
+    opacity: 1;
+  }
 }
 
 /* Cards ? lift / shadow / border light / top sheen */
@@ -3146,18 +3260,156 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
     border-radius: 16px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.12);
-    background: #141614;
-    aspect-ratio: 4 / 5;
-    max-height: 420px;
+    background: #121514;
+    aspect-ratio: auto;
+    max-height: none;
+    padding: 14px;
   }
 
   .kova-home-plain .kh-hero__visual-m img {
-    display: block;
+    display: none;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score-shell--mobile {
+    position: relative;
+    inset: auto;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 18%;
-    filter: contrast(1.04) saturate(0.92);
+    max-width: none;
+    opacity: 1;
+    transform: none;
+    pointer-events: none;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score {
+    background: #161714;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 12px 12px 0;
+    box-shadow: none;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score__toplabel {
+    color: rgba(245, 245, 245, 0.55);
+    font-size: 10px;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score__live {
+    color: #c5de4e;
+    font-size: 10px;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score__person {
+    margin-top: 8px;
+    gap: 10px;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score__name {
+    color: #f5f1e8;
+    font-size: 14px;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score__sub,
+  .kova-home-plain .kh-hero__visual-m .kh-score__num span {
+    color: rgba(245, 245, 245, 0.5);
+    font-size: 10px;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score__num strong {
+    color: #c5de4e;
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score__dims-label {
+    color: rgba(245, 245, 245, 0.45);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    padding: 10px 0 8px;
+    text-transform: uppercase;
+  }
+
+  /* Dims: label | bar | % in one tight row */
+  .kova-home-plain .kh-hero__visual-m .kh-dims {
+    gap: 7px;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-dim {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.4fr) 28px;
+    align-items: center;
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-dim__label {
+    width: auto !important;
+    flex: none !important;
+    min-width: 0;
+    font-size: 10.5px !important;
+    line-height: 1.2;
+    color: rgba(245, 245, 245, 0.62);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-dim__track {
+    flex: none !important;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 99px;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-dim__pct {
+    width: auto !important;
+    font-size: 10.5px !important;
+    font-weight: 700;
+    color: rgba(245, 245, 245, 0.72);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Stats: 3 columns, compact footer */
+  .kova-home-plain .kh-hero__visual-m .kh-score__stats {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0;
+    margin: 12px -12px 0 !important;
+    padding: 0 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(197, 222, 78, 0.08);
+    border-radius: 0 0 13px 13px;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score__stat {
+    padding: 10px 6px !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: center;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score__stat:last-child {
+    border-right: none;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score__stat strong {
+    display: block;
+    color: #f5f1e8;
+    font-size: 15px !important;
+    line-height: 1.1;
+    margin-bottom: 2px;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score__stat strong.is-lime {
+    color: #c5de4e;
+  }
+
+  .kova-home-plain .kh-hero__visual-m .kh-score__stat span {
+    display: block;
+    color: rgba(245, 245, 245, 0.48);
+    font-size: 9px !important;
+    line-height: 1.25;
+    white-space: normal !important;
   }
 
   .kova-home-plain .kh-hero__collage--desk {
@@ -3239,7 +3491,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   .kova-home-plain .kh-hero__visual-m {
     margin-top: 22px;
     border-radius: 14px;
-    max-height: 380px;
+    max-height: none;
   }
 
   .kova-home-plain .kh-hero__lead {
@@ -3550,13 +3802,13 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 }
 
 .kova-home-plain .kh-btn:hover {
-  transform: scale(1.03);
-  box-shadow: 0 10px 28px -12px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px -12px rgba(0, 0, 0, 0.28);
 }
 
 .kova-home-plain .kh-btn--lime:hover {
   border-color: rgba(20, 18, 13, 0.18);
-  box-shadow: 0 12px 32px -14px rgba(8, 117, 76, 0.45);
+  box-shadow: 0 8px 20px -14px rgba(8, 117, 76, 0.35);
 }
 
 .kova-home-plain .kh-btn-magnetic {
@@ -4244,7 +4496,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
     display: block;
     min-width: 2.2ch;
     margin: 0;
-    font-family: 'Space Mono', ui-monospace, monospace !important;
+    font-family: var(--font-mono) !important;
     font-size: 12px !important;
     font-weight: 700 !important;
     letter-spacing: 0.06em !important;
@@ -4290,10 +4542,12 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 
 /* Trust: quieter */
 .kova-boutique .kh-trust__label {
-  color: #6f685c !important;
-  letter-spacing: 0.04em;
+  color: #14120e !important;
+  letter-spacing: 0 !important;
   text-transform: none;
-  font-weight: 500;
+  font-weight: 700 !important;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
 }
 
 .kova-boutique .kh-trust__brands li {
@@ -4377,22 +4631,28 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   max-width: 52rem;
 }
 
+.kova-home-plain .kh-platform--slim .kh-platform__intro .kh-eyebrow {
+  margin-bottom: 18px;
+}
+
 .kova-home-plain .kh-platform--slim .kh-platform__kicker {
   margin: 0 0 14px;
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #08754c;
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif !important;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: #303830;
 }
 
 .kova-home-plain .kh-platform--slim h2 {
   max-width: 18ch !important;
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif !important;
 }
 
 .kova-home-plain .kh-platform--slim .kh-platform__lead {
   max-width: 48ch !important;
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif !important;
   font-size: clamp(15px, 1.2vw, 17px) !important;
   line-height: 1.5 !important;
   color: #4a453c !important;
@@ -4451,17 +4711,17 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   display: inline-block;
   margin: 0 0 4px;
   color: #08754c;
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif !important;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: none;
 }
 
 .kova-home-plain .kh-platform--slim .kh-platform__track strong {
   margin: 0;
   color: #14120e !important;
-  font-family: var(--font-display) !important;
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif !important;
   font-size: clamp(1.05rem, 1.3vw, 1.2rem) !important;
   font-weight: 700 !important;
   letter-spacing: -0.03em !important;
@@ -4472,6 +4732,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   margin: 0;
   max-width: 28ch;
   color: #5c564c !important;
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif !important;
   font-size: 14.5px !important;
   font-weight: 500 !important;
   line-height: 1.45 !important;
@@ -4603,6 +4864,60 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   -webkit-text-fill-color: #f5f1e8 !important;
 }
 
+/* Seam claro → oscuro: corte B2B seco + filete estructural (sin figura, sin fade, sin lima) */
+.kova-home-plain #calculadora,
+.kova-home-plain #metodo,
+.kova-home-plain #metodo.kh-artifact {
+  border-top: none !important;
+  border-radius: 0 !important;
+  margin-top: 0 !important;
+  overflow: hidden !important;
+  box-shadow: none !important;
+  clip-path: none !important;
+  padding-top: clamp(104px, 12vw, 148px) !important;
+}
+
+.kova-home-plain #calculadora {
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 12%, rgba(255, 255, 255, 0.03), transparent 55%),
+    radial-gradient(ellipse 40% 35% at 85% 70%, rgba(197, 222, 78, 0.04), transparent 50%),
+    linear-gradient(180deg, #0d0f0f 0%, #121514 50%, #0d0f0f 100%) !important;
+}
+
+.kova-home-plain #metodo,
+.kova-home-plain #metodo.kh-artifact {
+  background:
+    radial-gradient(ellipse 50% 40% at 20% 30%, rgba(197, 222, 78, 0.14), transparent 55%),
+    radial-gradient(ellipse 45% 40% at 85% 65%, rgba(255, 255, 255, 0.05), transparent 50%),
+    linear-gradient(180deg, #0e0d0b 0%, #0c0b0a 100%) !important;
+}
+
+/* Barra sólida de empalme — como filete de informe */
+.kova-home-plain #calculadora::after,
+.kova-home-plain #metodo::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 6px;
+  transform: none;
+  pointer-events: none;
+  z-index: 3;
+  background-image: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.kova-home-plain #metodo::after {
+  background: #faf8f3;
+}
+
+.kova-home-plain #calculadora::after {
+  background: #f4f0e7;
+}
+
 /* Mobile #metodo flow: full-width steps, no chips, arrows under each step */
 @media (max-width: 860px) {
   .kova-home-plain #metodo .kh-flow,
@@ -4626,14 +4941,14 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
 
   .kova-home-plain #metodo .kh-flow li:not(:last-child)::after,
   .kova-home-plain .kh-artifact .kh-flow li:not(:last-child)::after {
-    content: '↓';
+    content: '';
     display: block;
-    margin: 10px 0 10px 0.15em;
-    font-family: var(--font-mono, ui-monospace, monospace);
-    font-size: 11px;
-    color: #c5de4e;
-    opacity: 0.55;
-    line-height: 1;
+    width: 1px;
+    height: 14px;
+    margin: 8px 0 8px 0.55em;
+    background: rgba(197, 222, 78, 0.4);
+    font-size: 0;
+    opacity: 1;
   }
 
   .kova-home-plain #metodo .kh-flow span,
@@ -4664,7 +4979,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   .kova-home-plain #metodo .kh-flow__n,
   .kova-home-plain .kh-artifact .kh-flow__n {
     flex: none;
-    font-family: 'Space Mono', ui-monospace, monospace !important;
+    font-family: var(--font-mono) !important;
     font-size: 12px !important;
     font-weight: 700;
     font-style: normal;

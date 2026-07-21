@@ -100,47 +100,47 @@ const COSTOS = [
 const STAGES = [
   {
     num: '01',
-    title: 'Entendemos su negocio',
-    label: 'Cómo vende usted',
-    desc: 'No empezamos buscando candidatos. Primero entendemos cómo vende su empresa, cómo funciona su operación comercial y qué necesita realmente el cargo. Solo así podemos definir el perfil adecuado e iniciar la búsqueda con un criterio claro.',
+    title: 'Entendemos tu negocio',
+    label: 'Cómo vendes tú',
+    desc: 'No empezamos por la vacante genérica. Diagnosticamos cómo vende tu empresa: cliente ideal, ticket, ciclo, canal y complejidad de la negociación. Con eso definimos el perfil de éxito del cargo y solo entonces abrimos la búsqueda con un criterio comercial defendible.',
     bullets: [
-      'Cliente ideal y mercado objetivo.',
-      'Proceso, ciclo y complejidad de la venta.',
+      'Cliente ideal, vertical y mercado objetivo.',
+      'Ciclo de venta, ticket y complejidad de la oferta.',
       'Tipo de venta: consultiva, técnica o transaccional.',
-      'Apertura de mercado o desarrollo de cuentas.',
-      'Rol, expectativas y nivel de desempeño esperado.',
+      'Apertura de mercado o desarrollo / retención de cuentas.',
+      'Metas del rol, productividad esperada y señales de desempeño.',
     ],
   },
   {
     num: '02',
     title: 'Evaluamos con evidencia',
     label: 'Si puede vender',
-    desc: 'Cada empresa vende de forma diferente. Por eso diseñamos las evaluaciones según el modelo comercial de su empresa, para medir cómo se desempeñaría cada candidato en el contexto real del cargo. Al finalizar, entregamos un informe detallado con la evidencia que respalda cada recomendación.',
+    desc: 'Diseñamos la evaluación sobre tu modelo comercial, no sobre un test genérico. Medimos prospección, diagnóstico, objeciones, negociación y cierre en escenarios cercanos al día a día del cargo. Entregamos un informe comparable para que la decisión quede respaldada ante dirección comercial y talento.',
     bullets: [
-      'Evaluaciones diseñadas para su modelo comercial.',
-      'Simulaciones basadas en situaciones reales de venta.',
-      'Entrevistas por competencias comerciales.',
-      'Evaluación de prospección, negociación y cierre.',
-      'Informe detallado con fortalezas, riesgos y nivel de compatibilidad.',
+      'Evaluaciones calibradas a tu modelo y ciclo de venta.',
+      'Simulaciones con situaciones reales del rol B2B.',
+      'Entrevistas por competencias comerciales observables.',
+      'Cobertura del proceso: prospección, negociación y cierre.',
+      'Informe con fortalezas, riesgos y nivel de compatibilidad.',
     ],
   },
   {
     num: '03',
     title: 'Gamificamos el onboarding',
     label: 'Después de firmar',
-    desc: 'Una buena contratación necesita un buen arranque. Convertimos los primeros 90 días en un onboarding gamificado: metas claras, retos prácticos y seguimiento, para que el nuevo integrante se adapte más rápido a su modelo comercial y empiece a generar resultados.',
+    desc: 'Una contratación solo convierte si el comercial arranca bien. En los primeros 90 días convertimos la integración en un recorrido con hitos, retos y seguimiento: producto, proceso, cuentas y ritmo de ventas. Así reduces el tiempo a productividad y evitas rotación temprana por mala adopción del modelo.',
     bullets: [
       'Recorrido de incorporación con hitos y retos medibles.',
-      'Adaptación al modelo comercial, al equipo y al rol.',
-      'Seguimiento a los 30, 60 y 90 días con señales de desempeño.',
-      'Ajustes tempranos cuando la integración se desvía.',
-      'Entrega al líder del equipo con un perfil que ya está rindiendo.',
+      'Adaptación al modelo comercial, CRM y equipo.',
+      'Revisiones a 30, 60 y 90 días con señales de productividad.',
+      'Ajustes tempranos si la curva de resultados se desvía.',
+      'Entrega al líder con un perfil ya operando en el rol.',
     ],
   },
 ];
 
 const PROCESS_FLOW = [
-  { num: '01', title: 'Entendemos su negocio.' },
+  { num: '01', title: 'Entendemos tu negocio.' },
   { num: '02', title: 'Diseñamos el perfil de éxito.' },
   { num: '03', title: 'Encontramos el talento más alineado.' },
   { num: '04', title: 'Evaluamos con evidencia.' },
@@ -158,15 +158,15 @@ const DIAG_CHECKS = [
 const METHOD_POINTS = [
   {
     q: '¿Qué es el Kova Score?',
-    a: 'Una forma clara de ver qué tan bien encaja alguien con cómo vende su empresa.',
+    a: 'Un índice de compatibilidad comercial: cruza el perfil del candidato con tu modelo de venta, ciclo, tipo de cliente y cultura del equipo. Sirve para priorizar con criterio, no con intuición de entrevista.',
   },
   {
-    q: '¿Qué obtiene?',
-    a: 'Una lista corta de candidatos priorizados y una recomendación que puede defender.',
+    q: '¿Qué obtienes?',
+    a: 'Una lista corta priorizada, informe comparable por candidato y una recomendación argumentada que puedes defender ante dirección comercial o gerencia.',
   },
   {
     q: '¿Cómo lo logramos?',
-    a: 'Con un método propio. El detalle lo vemos juntos en la conversación, no en un brochure.',
+    a: 'Con un método propio de diagnóstico + evaluación por competencias B2B. El detalle del diseño para tu vacante lo revisamos juntos en la asesoría, no en un folleto genérico.',
   },
 ];
 
@@ -176,8 +176,8 @@ const CASO = {
   items: [
     { k: 'Tiempo de cierre', v: '28 días' },
     { k: 'Permanencia', v: '2 años+' },
-    { k: 'Ramp-up esperado', v: '6 meses' },
-    { k: 'Ramp-up logrado', v: '4 meses' },
+    { k: 'Productividad esperada', v: '6 meses' },
+    { k: 'Productividad lograda', v: '4 meses' },
   ],
 };
 
@@ -224,7 +224,7 @@ export default function Landing() {
   usePageMeta({
     title: 'Contrata talento comercial alineado con tu estrategia de ventas',
     description:
-      'Las mejores contrataciones comienzan entendiendo cómo vende su empresa, no revisando hojas de vida.',
+      'Las mejores contrataciones comienzan entendiendo cómo vende tu empresa, no revisando hojas de vida.',
     path: '/para-empresas',
   });
   useLandingPremiumMotion();
@@ -262,8 +262,13 @@ export default function Landing() {
   }, [smx, smy]);
 
   // Hero sequence: world search → explode → reunite → evaluation report
-  const [heroView, setHeroView] = useState('morph'); // morph | report
-  const [morphVisible, setMorphVisible] = useState(true);
+  // On mobile the collage is hidden — light the mockup directly.
+  const [heroView, setHeroView] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 900px)').matches
+      ? 'report'
+      : 'morph',
+  );
+  const [morphVisible, setMorphVisible] = useState(() => heroView === 'morph');
   const [lit, setLit] = useState(false);
   const [scoreNum, setScoreNum] = useState(0);
   const onMorphComplete = useCallback(() => {
@@ -271,6 +276,20 @@ export default function Landing() {
     // Keep particles a beat so they dissolve into the mockup instead of cutting off
     window.setTimeout(() => setMorphVisible(false), 560);
   }, []);
+
+  useEffect(() => {
+    if (heroView === 'report') return undefined;
+    const mq = window.matchMedia('(max-width: 900px)');
+    const sync = () => {
+      if (mq.matches) {
+        setHeroView('report');
+        setMorphVisible(false);
+      }
+    };
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, [heroView]);
 
   useEffect(() => {
     if (heroView !== 'report') return undefined;
@@ -324,16 +343,29 @@ export default function Landing() {
 
   const goToCalendar = () => {
     if (!validateForm()) return;
-    navigate(CONTACT_BOOKING_PATH);
+    navigate(CONTACT_BOOKING_PATH, {
+      state: {
+        lead: {
+          nombre: form.nombre.trim(),
+          telefono: form.tel.trim(),
+          empresa: form.empresa.trim(),
+          rolVacante: form.cargo.trim(),
+          notas: form.msg.trim(),
+        },
+      },
+    });
   };
 
   const sendWhatsApp = () => {
     if (!validateForm()) return;
+    const tel = form.tel.trim();
     const txt = `Hola Kova, soy ${form.nombre.trim() || '...'}${
       form.cargo.trim() ? `, ${form.cargo.trim()}` : ''
     }${
       form.empresa.trim() ? ` de ${form.empresa.trim()}` : ''
-    }. Quiero hablar de mi próxima contratación.${form.msg.trim() ? ` ${form.msg.trim()}` : ''}`;
+    }.${tel ? ` Mi WhatsApp: ${tel}.` : ''} Quiero hablar de mi próxima contratación.${
+      form.msg.trim() ? ` ${form.msg.trim()}` : ''
+    }`;
     window.open(buildWhatsAppUrl(txt), '_blank', 'noopener,noreferrer');
   };
 
@@ -364,13 +396,12 @@ export default function Landing() {
                 width={800}
                 height={1000}
                 loading="eager"
-                decoding="async"
               />
             </div>
 
             <p className="kh-hero__lead">
               No somos una agencia tradicional. Buscamos solo perfiles comerciales:
-              entendemos cómo vende su empresa y le presentamos candidatos que
+              entendemos cómo vende tu empresa y te presentamos candidatos que
               encajan de verdad.
             </p>
             <div className="kh-hero__ctas">
@@ -419,7 +450,7 @@ export default function Landing() {
               <span className="kh-collage__chip-icon">✓</span>
               <span className="kh-collage__chip-text">
                 <strong>Alta compatibilidad</strong>
-                Alineado a su modelo comercial
+                Alineado a tu modelo comercial
               </span>
             </div>
             <div className="kh-score-shell">
@@ -533,9 +564,7 @@ export default function Landing() {
       >
         <div className="kh-trust__inner">
           <p className="kh-trust__label">
-            Especialistas
-            <br />
-            en distintos sectores
+            Especialistas en distintos sectores
           </p>
           <div className="kh-trust__marquee" aria-hidden="true">
             <ul className="kh-trust__brands kh-trust__brands--track">
@@ -627,7 +656,7 @@ export default function Landing() {
                 <span className="kh-pill__dot" aria-hidden />
                 <span>Calculadora de riesgo</span>
               </div>
-              <h3>¿Cuánto le cuesta contratar al vendedor equivocado?</h3>
+              <h3>¿Cuánto te cuesta contratar al vendedor equivocado?</h3>
 
               <CalcSlider
                 label="Salario mensual del cargo"
@@ -665,7 +694,7 @@ export default function Landing() {
               </div>
 
               <a href="#contacto" className="kh-btn kh-btn--lime">
-                Cuéntenos qué perfil necesita →
+                Cuéntanos qué perfil necesitas
               </a>
               <p className="kh-calc__ref">
                 Es una estimación con supuestos fijos. Sirve para ver el tamaño del problema.
@@ -683,7 +712,7 @@ export default function Landing() {
           </div>
           <h2 className="kh-h2 kh-h2--regular" style={{ maxWidth: '22ch' }}>
             No empezamos por la hoja de vida.{' '}
-            <span className="kh-accent">Empezamos por entender su negocio</span>.
+            <span className="kh-accent">Empezamos por entender tu negocio</span>.
           </h2>
 
           <div className="kh-method-grid">
@@ -711,7 +740,7 @@ export default function Landing() {
               <div className="kh-stage-panel__bullets">
                 {stage.bullets.map((b) => (
                   <div key={b}>
-                    <em>→</em>
+                    <em aria-hidden>·</em>
                     <span>{b}</span>
                   </div>
                 ))}
@@ -721,7 +750,7 @@ export default function Landing() {
 
           <div className="kh-method-cta">
             <a href="#contacto" className="kh-btn kh-btn--outline-lime">
-              Empecemos por entender su equipo →
+              Empecemos por entender tu equipo
             </a>
             <p>30 minutos · sin compromiso</p>
           </div>
@@ -732,9 +761,9 @@ export default function Landing() {
               <span className="kh-accent">el perfil correcto</span>.
             </h3>
             <p className="kh-perfil__lead">
-              Antes de buscar candidatos, entendemos tu negocio para definir el perfil que
-              realmente necesita tu empresa. Solo así encontramos profesionales con mayor
-              alineación.
+              Antes de publicar o buscar, traducimos tu operación comercial en un perfil de
+              éxito: cliente, ciclo, ticket y resultados esperados del cargo. Con ese mapa
+              encontramos talento con mayor probabilidad de vender en tu contexto.
             </p>
             <div className="kh-perfil-grid">
               <div className="kh-perfil-card kh-perfil-card--generic">
@@ -748,7 +777,7 @@ export default function Landing() {
                 </ul>
               </div>
               <div className="kh-perfil-card kh-perfil-card--real">
-                <div className="kh-perfil-card__label">Perfil definido para su empresa</div>
+                <div className="kh-perfil-card__label">Perfil definido para tu empresa</div>
                 <ul>
                   <li>Tipo de clientes que atenderá.</li>
                   <li>Modelo comercial que deberá dominar.</li>
@@ -762,18 +791,15 @@ export default function Landing() {
         </div>
       </section>
 
-      <section
-        id="metodo"
-        className="kh-section kh-artifact"
-        style={{ borderTop: '1px solid var(--kv-line)' }}
-      >
+      <section id="metodo" className="kh-section kh-artifact">
         <div className="kh-wrap">
           <h2 className="kh-h2 kh-h2--regular" style={{ maxWidth: '14ch' }}>
             Nuestro <span className="kh-accent">método</span>
           </h2>
           <p className="kh-artifact__lead">
-            Cada contratación importante merece un método claro. Entendemos tu negocio,
-            definimos el perfil adecuado y encontramos el talento con mayor alineación.
+            Cada vacante comercial exige un criterio distinto. Diagnosticamos cómo vende tu
+            empresa, definimos el perfil de éxito del rol y evaluamos candidatos con evidencia
+            comparable — no con intuición de entrevista.
           </p>
 
           <ol className="kh-flow">
@@ -817,18 +843,18 @@ export default function Landing() {
               </div>
             </article>
 
-            <article className="kh-mock" aria-label="Ejemplo de shortlist priorizada">
+            <article className="kh-mock" aria-label="Ejemplo de lista corta priorizada">
               <div className="kh-mock__chrome">
                 <span className="kh-mock__dots" aria-hidden>
                   <i />
                   <i />
                   <i />
                 </span>
-                <span className="kh-mock__file">shortlist priorizada</span>
+                <span className="kh-mock__file">lista corta priorizada</span>
               </div>
               <div className="kh-mock__body">
                 <div className="kh-mock__head">
-                  <span>Shortlist</span>
+                  <span>Lista corta</span>
                   <em>Ejemplo</em>
                 </div>
                 <ul className="kh-mock__rank">
@@ -899,7 +925,10 @@ export default function Landing() {
         <div className="kh-wrap">
           <div className="kh-platform kh-platform--slim">
             <header className="kh-platform__intro">
-              <p className="kh-platform__kicker">Para empresas</p>
+              <div className="kh-eyebrow">
+                <span className="kh-eyebrow__dot" aria-hidden />
+                <span className="kh-eyebrow__label">Para empresas</span>
+              </div>
               <h2>
                 Onboarding{' '}
                 <span className="kh-accent">gamificado</span>
@@ -907,9 +936,9 @@ export default function Landing() {
               </h2>
               <p className="kh-platform__lead">
                 Contratar bien no alcanza si la persona se pierde en los primeros meses.
-                Gamificamos el onboarding de sus nuevos comerciales: metas claras, retos
+                Gamificamos el onboarding de tus nuevos comerciales: metas claras, retos
                 prácticos y seguimiento en los primeros{' '}
-                <strong>90 días</strong>, para que se adapten más rápido a cómo vende su
+                <strong>90 días</strong>, para que se adapten más rápido a cómo vende tu
                 empresa y generen resultados desde el inicio.
               </p>
             </header>
@@ -919,7 +948,7 @@ export default function Landing() {
                 <span className="kh-platform__mark">Arranque</span>
                 <strong>Entra con rumbo</strong>
                 <span>
-                  Retos y metas de la primera semana alineados a su modelo comercial, su
+                  Retos y metas de la primera semana alineados a tu modelo comercial, tu
                   equipo y lo que el rol debe lograr.
                 </span>
               </li>
@@ -927,7 +956,7 @@ export default function Landing() {
                 <span className="kh-platform__mark">30 · 60</span>
                 <strong>Progreso visible</strong>
                 <span>
-                  Hitos claros de adaptación y ritmo de ventas. Usted ve avances; el
+                  Hitos claros de adaptación y ritmo de ventas. Tú ves avances; el
                   nuevo integrante sabe exactamente qué mejorar.
                 </span>
               </li>
@@ -949,7 +978,7 @@ export default function Landing() {
                 </span>
               </p>
               <a href="#contacto" className="kh-btn kh-btn--outline-lime">
-                Quiero ese onboarding →
+                Quiero ese onboarding
               </a>
             </div>
           </div>
@@ -1115,7 +1144,7 @@ export default function Landing() {
       </footer>
 
       <Link
-        className="kh-wa-float"
+        className="kh-agenda-float"
         to={CONTACT_BOOKING_PATH}
         aria-label="Agenda una asesoría"
       >

@@ -6,8 +6,10 @@ import {
   findNextBookableDateKey,
   formatDateKey,
   formatDateKeyFromParts,
+  generateDisplayTimeSlots,
   generateTimeSlots,
   isBookableDateKey,
+  isOpenBookingSlot,
 } from '../../shared/schedule.js';
 
 export {
@@ -17,8 +19,10 @@ export {
   findNextBookableDateKey,
   formatDateKey,
   formatDateKeyFromParts,
+  generateDisplayTimeSlots,
   generateTimeSlots,
   isBookableDateKey,
+  isOpenBookingSlot,
 };
 
 /** Prefer Bogotá calendar math (same as the API) over the browser local TZ. */
