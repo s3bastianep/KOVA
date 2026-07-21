@@ -2,22 +2,37 @@ import { useEffect, useId, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 
 const MAIN_LINKS = [
-  { to: '/para-empresas', label: 'Empresas' },
-  { to: '/empleo', label: 'Talento' },
+  { to: '/para-empresas', label: 'PARA EMPRESAS' },
+  { to: '/empleo', label: 'PARA TALENTO' },
   { to: '/guias', label: 'Blog' },
 ];
 
-const CONTACT_CTA = { to: '/para-empresas#contacto', label: 'Contáctanos' };
+const CONTACT_CTA = { to: '/para-empresas#contacto', label: 'EMPIEZA A CONTRATAR' };
 
-const ACTION_LINKS = [
-  { to: '/login', label: 'Ingresar' },
-  { to: '/registro', label: 'Crear cuenta' },
-];
+const LOGIN_LINK = { to: '/login', label: 'Ingresar' };
+const REGISTER_CTA = { to: '/registro', label: 'CREAR MI PERFIL' };
+
+function scrollToContacto() {
+  window.setTimeout(() => {
+    const el = document.getElementById('contacto');
+    if (!el) return;
+    const lenis = window.__kovaLenis;
+    if (lenis) lenis.scrollTo(el, { offset: -88 });
+    else el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    window.dispatchEvent(new CustomEvent('kova:deep-link-scroll'));
+  }, 0);
+}
 
 export default function Navbar() {
   const { pathname, hash } = useLocation();
   const [open, setOpen] = useState(false);
   const panelId = useId();
+  const hideContactCta = pathname === '/empleo' || pathname.startsWith('/empleo/');
+  const hideAuthLinks =
+    pathname === '/para-empresas' || pathname.startsWith('/para-empresas/');
+  const showTalentGroup = !hideAuthLinks;
+  const showCompanyCta = !hideContactCta;
+  const showSeparator = showTalentGroup && showCompanyCta;
 
   useEffect(() => {
     setOpen(false);
@@ -67,31 +82,42 @@ export default function Navbar() {
         </div>
 
         <div className="kv-nav-actions">
-          {ACTION_LINKS.map((item) => (
-            <NavLink
-              key={item.label}
-              to={item.to}
-              className={({ isActive }) => `kv-nav-quiet${isActive ? ' is-active' : ''}`}
-            >
-              {item.label}
-            </NavLink>
-          ))}
-          <Link
-            to={CONTACT_CTA.to}
-            className="kv-cta-pill kv-cta-pill--lime"
-            onClick={() => {
-              if (pathname !== '/para-empresas') return;
-              window.setTimeout(() => {
-                const el = document.getElementById('contacto');
-                if (!el) return;
-                const lenis = window.__kovaLenis;
-                if (lenis) lenis.scrollTo(el, { offset: -88 });
-                else el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }, 0);
-            }}
-          >
-            {CONTACT_CTA.label}
-          </Link>
+          {showTalentGroup ? (
+            <div className="kv-nav-actions__group kv-nav-actions__group--talent" aria-label="Para talento">
+              <NavLink
+                to={LOGIN_LINK.to}
+                className={({ isActive }) => `kv-nav-quiet${isActive ? ' is-active' : ''}`}
+              >
+                {LOGIN_LINK.label}
+              </NavLink>
+              <NavLink
+                to={REGISTER_CTA.to}
+                className={({ isActive }) =>
+                  `kv-cta-pill kv-cta-pill--ghost${isActive ? ' is-active' : ''}`
+                }
+              >
+                {REGISTER_CTA.label}
+              </NavLink>
+            </div>
+          ) : null}
+
+          {showSeparator ? <span className="kv-nav-actions__sep" aria-hidden /> : null}
+
+          {showCompanyCta ? (
+            <div className="kv-nav-actions__group kv-nav-actions__group--company" aria-label="Para empresas">
+              <Link
+                to={CONTACT_CTA.to}
+                className="kv-cta-pill kv-cta-pill--lime"
+                onClick={() => {
+                  if (pathname !== '/para-empresas') return;
+                  scrollToContacto();
+                }}
+              >
+                {CONTACT_CTA.label}
+              </Link>
+            </div>
+          ) : null}
+
           <button
             type="button"
             className="kv-nav-toggle"
@@ -122,28 +148,37 @@ export default function Navbar() {
               ))}
             </div>
             <div className="kv-nav-drawer__actions">
-              {ACTION_LINKS.map((item) => (
-                <Link key={item.label} to={item.to} onClick={() => setOpen(false)}>
-                  {item.label}
-                </Link>
-              ))}
-              <Link
-                to={CONTACT_CTA.to}
-                className="kv-cta-pill kv-cta-pill--lime kv-nav-drawer__cta"
-                onClick={() => {
-                  setOpen(false);
-                  if (pathname !== '/para-empresas') return;
-                  window.setTimeout(() => {
-                    const el = document.getElementById('contacto');
-                    if (!el) return;
-                    const lenis = window.__kovaLenis;
-                    if (lenis) lenis.scrollTo(el, { offset: -88 });
-                    else el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }, 0);
-                }}
-              >
-                {CONTACT_CTA.label}
-              </Link>
+              {showTalentGroup ? (
+                <div className="kv-nav-drawer__group">
+                  <p className="kv-nav-drawer__group-label">Talento</p>
+                  <Link to={LOGIN_LINK.to} onClick={() => setOpen(false)}>
+                    {LOGIN_LINK.label}
+                  </Link>
+                  <Link
+                    to={REGISTER_CTA.to}
+                    className="kv-cta-pill kv-cta-pill--ghost kv-nav-drawer__cta"
+                    onClick={() => setOpen(false)}
+                  >
+                    {REGISTER_CTA.label}
+                  </Link>
+                </div>
+              ) : null}
+              {showCompanyCta ? (
+                <div className="kv-nav-drawer__group">
+                  <p className="kv-nav-drawer__group-label">Empresas</p>
+                  <Link
+                    to={CONTACT_CTA.to}
+                    className="kv-cta-pill kv-cta-pill--lime kv-nav-drawer__cta"
+                    onClick={() => {
+                      setOpen(false);
+                      if (pathname !== '/para-empresas') return;
+                      scrollToContacto();
+                    }}
+                  >
+                    {CONTACT_CTA.label}
+                  </Link>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

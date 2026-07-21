@@ -11,7 +11,7 @@ export const SCHEDULE = {
    * El resto del día laboral se muestra como ocupado (señal de demanda).
    */
   openWindows: [
-    { startHour: 9, endHour: 12 },
+    { startHour: 9, endHour: 10 },
     { startHour: 15, endHour: 16 },
   ],
   timezone: 'America/Bogota',
@@ -23,7 +23,7 @@ function slotToMinutes(time) {
   return hh * 60 + mm;
 }
 
-/** true si el horario cae en una ventana abierta a reserva (9–12 o 15–16). */
+/** true si el horario cae en una ventana abierta a reserva (9–10 o 15–16). */
 export function isOpenBookingSlot(time) {
   const start = slotToMinutes(time);
   return SCHEDULE.openWindows.some(({ startHour, endHour }) => {
@@ -100,7 +100,8 @@ export function findNextBookableDateKey(fromDateKey) {
 
 export function isBookableDateKey(dateKey) {
   const now = bogotaNowParts();
-  if (dateKey < now.dateKey) return false;
+  // Día actual bloqueado por completo; se agenda desde mañana.
+  if (dateKey <= now.dateKey) return false;
   if (dateKey > addDaysToDateKey(now.dateKey, SCHEDULE.daysAhead)) return false;
   return SCHEDULE.workingDays.includes(weekdayFromDateKey(dateKey));
 }
@@ -121,16 +122,10 @@ function buildDaySlots(dateKey, { openOnly }) {
     }
   }
 
-  const now = bogotaNowParts();
-  if (dateKey === now.dateKey) {
-    const nowMinutes = now.hour * 60 + now.minute;
-    return slots.filter((slot) => slotToMinutes(slot) > nowMinutes + 30);
-  }
-
   return slots;
 }
 
-/** Slots reservables (solo ventanas 9–12 y 15–16). Usado por API y booking. */
+/** Slots reservables (solo ventanas 9–10 y 15–16). Usado por API y booking. */
 export function generateTimeSlots(dateKey) {
   return buildDaySlots(dateKey, { openOnly: true });
 }

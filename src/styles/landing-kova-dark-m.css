@@ -411,10 +411,6 @@
 .kova-dark-m .kd-section-head--center {
   text-align: center;
 }
-.kova-dark-m .kd-section-head--center p {
-  margin-left: auto;
-  margin-right: auto;
-}
 .kova-dark-m .kd-paths {
   position: relative;
   padding: 0 0 170px;
@@ -441,6 +437,12 @@
   color: var(--kd-muted);
   font-size: 18px;
   line-height: 1.5;
+}
+.kova-dark-m .kd-section-head--center h2,
+.kova-dark-m .kd-section-head--center p {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 .kova-dark-m .kd-doors {
   display: none;
@@ -1903,8 +1905,11 @@
   }
 .kova-dark-m .kd-paths .kd-section-head p {
     margin-top: 14px;
+    margin-left: auto;
+    margin-right: auto;
     font-size: 15px;
-    max-width: none;
+    max-width: 34ch;
+    text-align: center;
   }
 .kova-dark-m .kd-branch {
     display: none !important;

@@ -23,13 +23,14 @@ function scrollToElement(el) {
   const lenis = window.__kovaLenis;
   if (lenis) {
     lenis.scrollTo(el, { offset: -88, immediate: true });
-    return;
+  } else {
+    const html = document.documentElement;
+    const previous = html.style.scrollBehavior;
+    html.style.scrollBehavior = 'auto';
+    el.scrollIntoView({ behavior: 'auto', block: 'start' });
+    html.style.scrollBehavior = previous;
   }
-  const html = document.documentElement;
-  const previous = html.style.scrollBehavior;
-  html.style.scrollBehavior = 'auto';
-  el.scrollIntoView({ behavior: 'auto', block: 'start' });
-  html.style.scrollBehavior = previous;
+  window.dispatchEvent(new CustomEvent('kova:deep-link-scroll'));
 }
 
 export default function ScrollToTop() {

@@ -405,7 +405,7 @@
 }
 
 .kova-empleo .emp-float--checks {
-  bottom: 8px;
+  bottom: 4px;
   left: 4px;
   display: flex;
   flex-direction: column;
@@ -458,7 +458,7 @@
 }
 
 .kova-empleo .emp-float--stat {
-  bottom: 6px;
+  bottom: 4px;
   right: 4px;
   display: flex;
   align-items: center;
@@ -1670,7 +1670,7 @@
 
   .kova-empleo .emp-float--checks {
     left: 2px;
-    bottom: 8px;
+    bottom: 4px;
     gap: 5px;
   }
 
@@ -1680,7 +1680,7 @@
 
   .kova-empleo .emp-float--stat {
     right: 2px;
-    bottom: 6px;
+    bottom: 4px;
     gap: 8px;
   }
 

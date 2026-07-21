@@ -96,7 +96,7 @@ export default function BookingScheduler({ alternateContact = null, initialLead 
           setSlots([]);
           return;
         }
-        // Solo ventanas abiertas (9–12 y 15–16); el resto se muestra ocupado en UI.
+        // Solo ventanas abiertas (9–10 y 15–16); el resto se muestra ocupado en UI.
         const openFree = nextSlots.filter(isOpenBookingSlot);
         // Si el día elegido ya no tiene cupos (p. ej. hoy tarde), saltar al próximo con horarios.
         if (openFree.length === 0) {
@@ -122,15 +122,65 @@ export default function BookingScheduler({ alternateContact = null, initialLead 
     return displaySlots.map((time) => {
       const inOpenWindow = isOpenBookingSlot(time);
       const available = inOpenWindow && free.has(time);
+      const hour = Number(String(time).split(':')[0]);
       return {
         time,
         available,
         occupied: !available,
+        period: hour < 13 ? 'morning' : 'afternoon',
       };
     });
   }, [displaySlots, slots]);
 
+  const morningSlots = useMemo(
+    () => slotRows.filter((row) => row.period === 'morning'),
+    [slotRows],
+  );
+  const afternoonSlots = useMemo(
+    () => slotRows.filter((row) => row.period === 'afternoon'),
+    [slotRows],
+  );
+
   const hasOpenSlot = slotRows.some((row) => row.available);
+
+  const renderSlotButton = ({ time, available, occupied }) => {
+    const isSelected = selectedTime === time;
+    const slotId = `booking-slot-${time.replace(':', '')}`;
+    if (occupied) {
+      return (
+        <button
+          key={time}
+          id={slotId}
+          type="button"
+          disabled
+          aria-disabled="true"
+          aria-label={`Horario ${time}, agenda ocupada`}
+          className="kv-booking-slot is-occupied"
+        >
+          <span className="kv-booking-slot__time font-mono">{time}</span>
+          <span className="kv-booking-slot__status">Agenda ocupada</span>
+        </button>
+      );
+    }
+    return (
+      <button
+        key={time}
+        id={slotId}
+        type="button"
+        name="booking-slot"
+        aria-label={`Horario ${time} del ${selectedDateLabel}`}
+        aria-pressed={isSelected}
+        onClick={() => {
+          setSelectedTime(time);
+          setError('');
+        }}
+        className={`kv-booking-slot${isSelected ? ' is-selected' : ''}`}
+      >
+        <span className="kv-booking-slot__time font-mono">{time}</span>
+        <span className="kv-booking-slot__status">{isSelected ? 'Seleccionado' : 'Disponible'}</span>
+      </button>
+    );
+  };
 
   const goToNextOpenDay = () => {
     const from = selectedDateKey
@@ -275,49 +325,23 @@ export default function BookingScheduler({ alternateContact = null, initialLead 
                   ) : displaySlots.length ? (
                     <>
                       <div className="kv-booking-slots" role="group" aria-label={`Horarios para ${selectedDateLabel}`}>
-                        {slotRows.map(({ time, available, occupied }) => {
-                          const isSelected = selectedTime === time;
-                          const slotId = `booking-slot-${time.replace(':', '')}`;
-                          if (occupied) {
-                            return (
-                              <button
-                                key={time}
-                                id={slotId}
-                                type="button"
-                                disabled
-                                aria-disabled="true"
-                                aria-label={`Horario ${time} ocupado`}
-                                className="kv-booking-slot font-mono is-occupied"
-                              >
-                                {time}
-                              </button>
-                            );
-                          }
-                          return (
-                            <button
-                              key={time}
-                              id={slotId}
-                              type="button"
-                              name="booking-slot"
-                              aria-label={`Horario ${time} del ${selectedDateLabel}`}
-                              aria-pressed={isSelected}
-                              onClick={() => {
-                                setSelectedTime(time);
-                                setError('');
-                              }}
-                              className={`kv-booking-slot font-mono${isSelected ? ' is-selected' : ''}`}
-                            >
-                              {time}
-                            </button>
-                          );
-                        })}
+                        {morningSlots.length > 0 && (
+                          <div className="kv-booking-slots__group">
+                            <p className="kv-booking-slots__group-label font-mono">Mañana</p>
+                            <div className="kv-booking-slots__list">{morningSlots.map(renderSlotButton)}</div>
+                          </div>
+                        )}
+                        {afternoonSlots.length > 0 && (
+                          <div className="kv-booking-slots__group">
+                            <p className="kv-booking-slots__group-label font-mono">Tarde</p>
+                            <div className="kv-booking-slots__list">{afternoonSlots.map(renderSlotButton)}</div>
+                          </div>
+                        )}
                       </div>
                       {!hasOpenSlot ? (
                         <div className="kv-booking-empty-block">
                           <p className="kv-booking-empty">
-                            {selectedDateKey === todayKey
-                              ? 'Hoy ya no hay cupos libres en las ventanas 9:00–12:00 y 15:00–16:00 (hora Colombia).'
-                              : 'Este día ya no tiene cupos libres en las ventanas abiertas.'}
+                            Este día ya no tiene cupos libres en las ventanas 9:00–10:00 y 15:00–16:00 (hora Colombia).
                           </p>
                           <button
                             type="button"
@@ -345,9 +369,7 @@ export default function BookingScheduler({ alternateContact = null, initialLead 
                   ) : (
                     <div className="kv-booking-empty-block">
                       <p className="kv-booking-empty">
-                        {selectedDateKey === todayKey
-                          ? 'Hoy ya no hay horarios disponibles (9:00–12:00 y 15:00–16:00, hora Colombia).'
-                          : 'Este día ya no tiene horarios libres.'}
+                        Este día ya no tiene horarios libres (9:00–10:00 y 15:00–16:00, hora Colombia).
                       </p>
                       <button
                         type="button"

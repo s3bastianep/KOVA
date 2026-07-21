@@ -13,7 +13,7 @@ export default function HomeDark() {
   usePageMeta({
     title: 'Empresas y talento comercial alineados para crecer.',
     description:
-      'Kova entiende el negocio, la cultura y el potencial de cada profesional para construir equipos comerciales de alto desempeño.',
+      'Entendemos tu negocio, la cultura y el potencial de cada profesional para construir equipos comerciales de alto desempeño.',
     path: '/',
   });
 

@@ -75,14 +75,41 @@ export function useLandingPremiumMotion(rootSelector = '.kova-home-plain') {
       gsap.ticker.add(ticker);
       gsap.ticker.lagSmoothing(0);
 
-      if (window.location.hash) {
-        const target = document.querySelector(window.location.hash);
-        if (target) {
-          requestAnimationFrame(() => {
-            lenis.scrollTo(target, { offset: -88, immediate: true });
-          });
+      /** Complete once-reveals already scrolled past (hash jumps skip their triggers). */
+      const completePassedReveals = () => {
+        ScrollTrigger.update();
+        const contactHash = window.location.hash === '#contacto';
+        ScrollTrigger.getAll().forEach((st) => {
+          if (!st.animation) return;
+          if (st.vars?.scrub) return;
+          try {
+            // Deep-link to contact: reveal the whole page so scrolling up is never blank.
+            if (contactHash || st.scroll() >= st.start - 2) {
+              st.animation.progress(1);
+            }
+          } catch {
+            /* ignore stale triggers */
+          }
+        });
+      };
+
+      const syncDeepLinkScroll = () => {
+        const hash = window.location.hash;
+        if (!hash || hash.length < 2) {
+          completePassedReveals();
+          return;
         }
-      }
+        let target = null;
+        try {
+          target = document.querySelector(hash);
+        } catch {
+          target = document.getElementById(decodeURIComponent(hash.slice(1)));
+        }
+        if (target) {
+          lenis.scrollTo(target, { offset: -88, immediate: true });
+        }
+        completePassedReveals();
+      };
 
       const idleFloat = (els, amp = 10, dur = 2.8) => {
         const list = gsap.utils.toArray(els).filter(Boolean);
@@ -116,9 +143,6 @@ export function useLandingPremiumMotion(rootSelector = '.kova-home-plain') {
         const heroPill = hero?.querySelector('.kh-pill');
         const heroChart = hero?.querySelector('.kh-chart');
         const floats = [...(hero?.querySelectorAll('.kh-float') || [])];
-        const photos = hero?.querySelectorAll('.kh-collage__photo');
-        const chip = hero?.querySelector('.kh-collage__chip');
-        const score = hero?.querySelector('.kh-score-shell');
         const visualM = hero?.querySelector('.kh-hero__visual-m');
 
         if (heroCopy) {
@@ -145,9 +169,7 @@ export function useLandingPremiumMotion(rootSelector = '.kova-home-plain') {
             });
           }
           if (heroChart) gsap.set(heroChart, { autoAlpha: 0, y: 24 });
-          if (photos?.length) gsap.set(photos, { autoAlpha: 0, y: 20 });
-          if (chip) gsap.set(chip, { autoAlpha: 0, y: 16 });
-          if (score) gsap.set(score, { autoAlpha: 0, y: 24 });
+          /* Photos / chip / score: CSS morph→reveal owns this sequence (avoid GSAP fight) */
           floats.forEach((f, i) => {
             gsap.set(f, { autoAlpha: 0, y: 20 + i * 6 });
           });
@@ -156,11 +178,6 @@ export function useLandingPremiumMotion(rootSelector = '.kova-home-plain') {
           heroTl
             .to(heroVisual, { autoAlpha: 1, y: 0, duration: 0.9 }, 0)
             .to(visualM, { autoAlpha: 1, y: 0, duration: 0.75 }, 0.05)
-            .to(
-              photos,
-              { autoAlpha: 1, y: 0, duration: 0.65, stagger: 0.1, ease: EASE.out },
-              0.15,
-            )
             .to(heroPill, { autoAlpha: 1, y: 0, duration: 0.45, ease: EASE.out }, 0.08)
             .to(heroTitle, { autoAlpha: 1, y: 0, duration: 0.75 }, 0.12)
             .to(heroLead, { autoAlpha: 1, y: 0, duration: 0.5, ease: EASE.out }, 0.35)
@@ -176,8 +193,6 @@ export function useLandingPremiumMotion(rootSelector = '.kova-home-plain') {
               },
               0.52,
             )
-            .to(chip, { autoAlpha: 1, y: 0, duration: 0.45, ease: EASE.out }, 0.48)
-            .to(score, { autoAlpha: 1, y: 0, duration: 0.55, ease: EASE.out }, 0.42)
             .to(
               floats,
               {
@@ -198,7 +213,6 @@ export function useLandingPremiumMotion(rootSelector = '.kova-home-plain') {
               { clearProps: 'transform,filter' },
             );
             if (heroChecks?.length) gsap.set(heroChecks, { clearProps: 'transform,filter' });
-            idleFloat(chip, 6, 3.2);
           });
         }
 
@@ -712,12 +726,34 @@ export function useLandingPremiumMotion(rootSelector = '.kova-home-plain') {
         }
       }, root);
 
-      /* Refresh after layout settles */
-      requestAnimationFrame(() => ScrollTrigger.refresh());
-      setTimeout(() => ScrollTrigger.refresh(), 400);
+      /* Refresh + deep-link: hash jumps skip mid-page reveals and left content invisible. */
+      const runDeepLinkPass = () => {
+        ScrollTrigger.refresh();
+        syncDeepLinkScroll();
+      };
+      requestAnimationFrame(runDeepLinkPass);
+      const deepLinkIds = [
+        window.setTimeout(runDeepLinkPass, 120),
+        window.setTimeout(runDeepLinkPass, 450),
+        window.setTimeout(runDeepLinkPass, 900),
+      ];
+      cleanups.push(() => deepLinkIds.forEach((id) => clearTimeout(id)));
+
+      const onDeepLinkEvent = () => {
+        requestAnimationFrame(runDeepLinkPass);
+        window.setTimeout(runDeepLinkPass, 80);
+        window.setTimeout(runDeepLinkPass, 320);
+      };
+      window.addEventListener('kova:deep-link-scroll', onDeepLinkEvent);
+      window.addEventListener('hashchange', onDeepLinkEvent);
+      cleanups.push(() => {
+        window.removeEventListener('kova:deep-link-scroll', onDeepLinkEvent);
+        window.removeEventListener('hashchange', onDeepLinkEvent);
+      });
 
       /* Failsafe: never leave conversion UI stuck invisible */
       const safetyId = window.setTimeout(() => {
+        completePassedReveals();
         root.querySelectorAll('#contacto, #contacto *').forEach((el) => {
           if (!(el instanceof HTMLElement)) return;
           const cs = getComputedStyle(el);
@@ -741,7 +777,10 @@ export function useLandingPremiumMotion(rootSelector = '.kova-home-plain') {
       }, 3500);
       cleanups.push(() => clearTimeout(safetyId));
 
-      const onResize = () => ScrollTrigger.refresh();
+      const onResize = () => {
+        ScrollTrigger.refresh();
+        completePassedReveals();
+      };
       window.addEventListener('resize', onResize);
 
       disposeMotion = () => {

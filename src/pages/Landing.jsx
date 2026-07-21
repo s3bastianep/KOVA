@@ -274,7 +274,7 @@ export default function Landing() {
   const onMorphComplete = useCallback(() => {
     setHeroView('report');
     // Keep particles a beat so they dissolve into the mockup instead of cutting off
-    window.setTimeout(() => setMorphVisible(false), 560);
+    window.setTimeout(() => setMorphVisible(false), 480);
   }, []);
 
   useEffect(() => {
@@ -293,7 +293,8 @@ export default function Landing() {
 
   useEffect(() => {
     if (heroView !== 'report') return undefined;
-    const start = setTimeout(() => setLit(true), 160);
+    // Start score count with the card reveal (not before floaters)
+    const start = setTimeout(() => setLit(true), 280);
     return () => clearTimeout(start);
   }, [heroView]);
 

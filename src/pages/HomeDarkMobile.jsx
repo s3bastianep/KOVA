@@ -102,8 +102,8 @@ export default function HomeDarkMobile() {
         <svg className="kd-thread" viewBox="0 0 1320 780" preserveAspectRatio="none" aria-hidden>
           <path pathLength="1" d="M77 121 C115 142 166 154 226 154 C316 155 456 154 560 154 C624 154 672 192 672 244 V765" />
           <path pathLength="1" d="M50 94 L96 111 L77 121 L86 143 Z M50 94 L77 121" />
-          <path pathLength="1" className="kd-thread__actions" d="M672 715 V644 C672 608 645 582 598 582 H256" />
-          <path pathLength="1" className="kd-thread__pointer" d="M265 573 L256 582 L265 591" />
+          <path pathLength="1" className="kd-thread__actions" d="M672 715 V644 C672 608 645 582 598 582 H400" />
+          <path pathLength="1" className="kd-thread__pointer" d="M409 573 L400 582 L409 591" />
         </svg>
 
         <div className="kd-hero-content">
@@ -154,15 +154,15 @@ export default function HomeDarkMobile() {
             </div>
 
             <p className="kd-hero-sub">
-              Kova entiende el negocio, la cultura y el potencial de cada profesional para
+              Entendemos tu negocio, la cultura y el potencial de cada profesional para
               construir equipos de alto desempeño y relaciones laborales con futuro.
             </p>
             <div className="kd-hero-actions">
               <Link className="kd-btn kd-btn--empresa" to="/para-empresas">
-                Empresa
+                Empieza a contratar
               </Link>
               <Link className="kd-btn kd-btn--talento" to="/empleo">
-                Talento
+                Encontrar un empleo
               </Link>
             </div>
           </div>

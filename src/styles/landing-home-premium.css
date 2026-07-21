@@ -2635,32 +2635,36 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   opacity: 1;
   visibility: visible;
   transform: none;
-  animation: kh-profile-reveal 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: kh-profile-reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.kova-home-plain .kh-hero__collage.is-revealed .kh-score-shell {
+  animation-delay: 0s;
 }
 
 .kova-home-plain .kh-hero__collage.is-revealed .kh-collage__photo--a {
-  animation-delay: 0.08s;
+  animation-delay: 0.12s;
 }
 
 .kova-home-plain .kh-hero__collage.is-revealed .kh-collage__photo--b {
-  animation-delay: 0.16s;
+  animation-delay: 0.2s;
 }
 
 .kova-home-plain .kh-hero__collage.is-revealed .kh-collage__chip {
-  animation-delay: 0.28s;
+  animation-delay: 0.32s;
 }
 
 .kova-home-plain .kh-hero__collage.is-revealed .kh-morph {
   opacity: 0;
-  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
 }
 
 @keyframes kh-profile-reveal {
   from {
     opacity: 0;
-    transform: translateY(14px) scale(0.96);
-    filter: blur(6px);
+    transform: translateY(12px) scale(0.98);
+    filter: blur(4px);
   }
   to {
     opacity: 1;
