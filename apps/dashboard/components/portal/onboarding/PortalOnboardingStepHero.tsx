@@ -9,6 +9,8 @@ type Props = {
   eyebrow?: string;
   progress?: string;
   showGreeting?: boolean;
+  /** Preferencias FlexJobs-style: centered question rhythm */
+  align?: 'start' | 'center';
 };
 
 export function PortalOnboardingStepHero({
@@ -18,9 +20,10 @@ export function PortalOnboardingStepHero({
   eyebrow,
   progress,
   showGreeting = false,
+  align = 'start',
 }: Props) {
   return (
-    <header className="ob-step-hero">
+    <header className={`ob-step-hero${align === 'center' ? ' ob-step-hero--center' : ''}`}>
       {eyebrow || progress ? (
         <div className="ob-step-hero__meta">
           {showGreeting && firstName ? (

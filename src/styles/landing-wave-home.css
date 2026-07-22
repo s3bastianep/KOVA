@@ -16,6 +16,7 @@
   --kv-section-pad-inner: clamp(2.25rem, 4vw, 3.125rem);
   font-family: var(--kv-font-sans);
   font-size: 16px;
+  font-weight: 500;
   background: var(--kv-ink);
   color: #f4f5f0;
   line-height: 1.55;

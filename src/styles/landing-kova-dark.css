@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
 
 .kova-dark {
   --kd-dark: #0d0f0f;
@@ -14,8 +14,11 @@
   --kd-radius: 20px;
   --kd-page: min(1280px, calc(100% - 136px));
   --kd-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  /* Medium: un paso bajo semibold (600), más presencia que regular (400) */
+  --kd-copy-weight: 500;
 
   font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: var(--kd-copy-weight);
   color: var(--kd-text);
   background: var(--kd-dark);
   -webkit-font-smoothing: antialiased;
@@ -234,9 +237,9 @@
 .kova-dark .kd-hero-sub {
   max-width: 520px;
   margin: 30px 0 0;
-  color: rgba(245, 245, 245, 0.66);
+  color: rgba(245, 245, 245, 0.78);
   font-size: var(--kv-fs-hero-sub, clamp(17px, 1.5vw, 20px));
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.5;
 }
 .kova-dark .kd-hero-actions {
@@ -453,6 +456,7 @@
   margin: 26px 0 0;
   color: var(--kd-muted);
   font-size: 18px;
+  font-weight: 500;
   line-height: 1.5;
 }
 .kova-dark .kd-section-head--center h2,
@@ -564,6 +568,7 @@
   margin: 0;
   color: var(--kd-muted);
   font-size: 14.5px;
+  font-weight: 500;
   line-height: 1.55;
 }
 .kova-dark .kd-door__link {
@@ -630,6 +635,7 @@
   margin: 28px auto 0;
   color: var(--kd-muted);
   font-size: 17px;
+  font-weight: 500;
   line-height: 1.6;
 }
 .kova-dark .kd-compare {
@@ -697,7 +703,7 @@
 }
 .kova-dark .kd-compare__card--kova li {
   color: var(--kd-text);
-  font-weight: 600;
+  font-weight: 500;
   opacity: 0;
   transform: translateX(-8px);
   transition: opacity 450ms ease calc(600ms + var(--d)),
@@ -960,7 +966,7 @@
   margin: 0;
   max-width: 62ch;
   font-size: 16.5px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.45;
   text-wrap: pretty;
@@ -1001,7 +1007,7 @@
   max-width: 480px;
   margin: 0;
   font-size: 19px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.4;
 }
@@ -1219,6 +1225,7 @@
   margin: 24px 0 0;
   color: var(--kd-muted);
   font-size: 17px;
+  font-weight: 500;
   line-height: 1.6;
 }
 .kova-dark .kd-guarantee-points {
@@ -1266,101 +1273,73 @@
 }
 .kova-dark .kd-final {
   position: relative;
-  padding: clamp(88px, 10vw, 132px) 0 clamp(72px, 8vw, 110px);
-  background: #f4f4f2;
+  padding: clamp(88px, 9vw, 128px) 0 clamp(80px, 8vw, 112px);
+  background: #f5f5f3;
   color: var(--kd-ink);
   overflow: hidden;
   font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
 }
+.kova-dark .kd-final::before,
+.kova-dark .kd-final-glow,
+.kova-dark .kd-final-dots {
+  display: none;
+}
 .kova-dark .kd-final-shell {
   position: relative;
+  z-index: 1;
   width: var(--kd-page);
   max-width: 1120px;
   margin: 0 auto;
 }
-.kova-dark .kd-final-dots {
-  position: absolute;
-  width: 72px;
-  height: 72px;
-  pointer-events: none;
-  opacity: 0.35;
-  background-image: radial-gradient(circle, rgba(23, 23, 23, 0.45) 1.1px, transparent 1.2px);
-  background-size: 12px 12px;
-}
-.kova-dark .kd-final-dots--tl { top: -8px; left: -8px; }
-.kova-dark .kd-final-dots--br { right: -8px; bottom: 40px; }
-.kova-dark .kd-final-grid {
+.kova-dark .kd-final-split {
   display: grid;
-  grid-template-columns: minmax(210px, 0.95fr) minmax(300px, 1.15fr) minmax(210px, 0.95fr);
-  grid-template-areas: "shotL copy shotR";
-  column-gap: clamp(24px, 3vw, 44px);
-  row-gap: 8px;
-  align-items: start;
+  grid-template-columns: minmax(0, 0.92fr) minmax(340px, 1.08fr);
+  gap: clamp(36px, 5vw, 64px);
+  align-items: center;
 }
-.kova-dark .kd-final-shot--left { grid-area: shotL; }
-.kova-dark .kd-final-copy { grid-area: copy; }
-.kova-dark .kd-final-shot--right { grid-area: shotR; }
-.kova-dark .kd-final-shot {
-  margin: 0;
-  overflow: hidden;
-  border-radius: 36px;
-  aspect-ratio: 4 / 5;
-  max-height: 460px;
-  background: #ddd9d0;
-  box-shadow: 0 14px 36px rgba(13, 15, 15, 0.09);
-}
-.kova-dark .kd-final-shot img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.kova-dark .kd-final-shot--left img { object-position: center 40%; }
-.kova-dark .kd-final-shot--right img { object-position: center 20%; }
 .kova-dark .kd-final-copy {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
   min-width: 0;
-  padding: 18px 4px 28px;
-  align-self: center;
+  padding: 0;
 }
 .kova-dark .kd-final-kicker {
   margin: 0 0 18px;
-  color: var(--kd-lime-ink);
-  font-size: 12px;
+  color: #8a8a8a;
+  font-family: inherit;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
+.kova-dark .kd-final-kicker::before,
 .kova-dark .kd-final-kicker::after {
-  content: '';
-  display: block;
-  width: 42px;
-  height: 2px;
-  margin: 12px auto 0;
-  background: var(--kd-lime-ink);
-  border-radius: 999px;
+  display: none;
 }
 .kova-dark .kd-final-copy h2 {
   margin: 0;
-  max-width: 11ch;
+  max-width: 12ch;
   font-family: inherit;
-  font-size: clamp(40px, 4.2vw, 58px);
+  font-size: clamp(2.35rem, 4.1vw, 3.25rem);
   font-weight: 800;
-  letter-spacing: -0.045em;
-  line-height: 1.02;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
   color: var(--kd-ink);
+  text-wrap: balance;
 }
-.kova-dark .kd-final-copy h2 span { color: var(--kd-lime-ink); }
+.kova-dark .kd-final-copy h2 span {
+  color: var(--kd-lime-ink);
+  font-weight: 800;
+}
 .kova-dark .kd-final-lead {
   max-width: 36ch;
-  margin: 22px auto 0;
+  margin: 20px 0 0;
   color: #6f6f6f;
-  font-size: 17px;
-  font-weight: 400;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: var(--kd-copy-weight);
   line-height: 1.55;
   text-wrap: pretty;
 }
@@ -1369,18 +1348,131 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
+  justify-content: flex-start;
+  gap: 10px;
 }
 .kova-dark .kd-final-actions .kd-btn {
-  min-width: 168px;
+  text-decoration: none;
 }
-.kova-dark .kd-final-actions .kd-btn--lime {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.28),
-    inset 0 -1px 0 rgba(13, 15, 15, 0.08),
-    0 1px 2px rgba(0, 0, 0, 0.12);
+.kova-dark .kd-final-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 18px 0 0;
+  color: #8a8a8a;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.35;
 }
+.kova-dark .kd-final-note__check {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  color: var(--kd-lime-ink);
+  flex-shrink: 0;
+}
+.kova-dark .kd-final-note__check svg {
+  width: 16px;
+  height: 16px;
+}
+.kova-dark .kd-final-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: stretch;
+  min-height: 420px;
+}
+.kova-dark .kd-final-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 420px;
+  height: 100%;
+  padding: 18px;
+  border-radius: 28px;
+  background: #dcdad4;
+  overflow: hidden;
+  box-shadow: 0 14px 36px rgba(13, 15, 15, 0.12);
+  transition: transform 0.3s var(--kd-ease), box-shadow 0.3s ease;
+}
+.kova-dark .kd-final-card::before {
+  display: none;
+}
+.kova-dark .kd-final-card__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.kova-dark .kd-final-card--empresas .kd-final-card__photo {
+  object-position: center 35%;
+}
+.kova-dark .kd-final-card--talento .kd-final-card__photo {
+  object-position: center 20%;
+}
+.kova-dark .kd-final-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    transparent 55%,
+    rgba(13, 15, 15, 0.2) 78%,
+    rgba(13, 15, 15, 0.45) 100%
+  );
+  pointer-events: none;
+}
+.kova-dark .kd-final-card__chip {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  align-self: flex-start;
+  min-height: 32px;
+  padding: 0 13px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #fff;
+  background: rgba(13, 15, 15, 0.78);
+  backdrop-filter: blur(8px);
+}
+.kova-dark .kd-final-card__chip svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.kova-dark .kd-final-card--empresas .kd-final-card__chip {
+  background: var(--kd-lime-ink);
+}
+.kova-dark .kd-final-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(13, 15, 15, 0.16);
+}
+.kova-dark .kd-final-card:hover .kd-final-card__photo {
+  transform: scale(1.035);
+}
+@media (prefers-reduced-motion: reduce) {
+  .kova-dark .kd-final-card,
+  .kova-dark .kd-final-card__photo {
+    transition: none;
+  }
+  .kova-dark .kd-final-card:hover {
+    transform: none;
+  }
+  .kova-dark .kd-final-card:hover .kd-final-card__photo {
+    transform: none;
+  }
+}
+
 .kova-dark .kd-btn--ghost-light {
   color: rgba(250, 250, 248, 0.92);
   border-color: rgba(250, 250, 248, 0.22);
@@ -1485,39 +1577,33 @@
     font-size: 15.5px;
   }
 .kova-dark .kd-final {
-    padding: 72px 0 88px;
+    padding: 72px 0 84px;
   }
-.kova-dark .kd-final-grid {
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "copy copy"
-      "shotL shotR";
-    column-gap: 14px;
-    row-gap: 18px;
-  }
-.kova-dark .kd-final-copy {
-    padding: 0 0 8px;
+.kova-dark .kd-final-split {
+    grid-template-columns: 1fr;
+    gap: 32px;
   }
 .kova-dark .kd-final-copy h2 {
-    max-width: 12ch;
-    font-size: clamp(34px, 8vw, 44px);
+    max-width: 13ch;
+    font-size: clamp(2rem, 6vw, 2.6rem);
   }
 .kova-dark .kd-final-lead {
     max-width: 42ch;
   }
-.kova-dark .kd-final-shot {
-    max-height: 300px;
-    border-radius: 28px;
+.kova-dark .kd-final-cards {
+    max-width: 480px;
+    min-height: 300px;
+  }
+.kova-dark .kd-final-card {
+    min-height: 300px;
+    border-radius: 22px;
   }
 .kova-dark .kd-final-actions {
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-items: stretch;
     width: 100%;
   }
 .kova-dark .kd-final-actions .kd-btn {
-    width: 100%;
-    min-width: 0;
+    flex: 1 1 auto;
+    min-width: 140px;
   }
 .kova-dark .kd-paths {
     padding: 0 0 100px;

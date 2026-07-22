@@ -538,22 +538,13 @@ export default function HomeDarkDesktop() {
       {/* 06 · CIERRE */}
       <section className="kd-final" id="contacto" aria-labelledby="kd-final-title">
         <div className="kd-final-shell" data-reveal>
-          <span className="kd-final-dots kd-final-dots--tl" aria-hidden />
-          <span className="kd-final-dots kd-final-dots--br" aria-hidden />
-
-          <div className="kd-final-grid">
-            <figure className="kd-final-shot kd-final-shot--left">
-              <img src="/landing/people/final-empresas-pro.jpg" alt="" loading="lazy" />
-            </figure>
-
+          <div className="kd-final-split">
             <div className="kd-final-copy">
               <p className="kd-final-kicker">Dos caminos. Un criterio.</p>
               <h2 id="kd-final-title">
-                El talento
-                <span> correcto</span>
+                El talento <span>correcto</span>
                 <br />
-                necesita el entorno
-                <span> correcto</span>.
+                necesita el entorno <span>correcto</span>.
               </h2>
               <p className="kd-final-lead">
                 Cuando una empresa encuentra a la persona adecuada y un profesional encuentra
@@ -563,15 +554,70 @@ export default function HomeDarkDesktop() {
                 <Link className="kd-btn kd-btn--lime" to="/para-empresas">
                   Para empresas
                 </Link>
-                <Link className="kd-btn kd-btn--ghost-ink" to="/empleo">
+                <Link className="kd-btn kd-btn--ink" to="/empleo">
                   Para talento
                 </Link>
               </div>
+              <p className="kd-final-note">
+                <span className="kd-final-note__check" aria-hidden>
+                  <svg viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="7.25" stroke="currentColor" strokeWidth="1.5" />
+                    <path
+                      d="M4.6 8.2l2.1 2.1 4.7-4.7"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+                Especialistas solo en perfiles comerciales.
+              </p>
             </div>
 
-            <figure className="kd-final-shot kd-final-shot--right">
-              <img src="/landing/people/final-talento-pro.jpg" alt="" loading="lazy" />
-            </figure>
+            <div className="kd-final-cards" aria-hidden>
+              <div className="kd-final-card kd-final-card--empresas">
+                <img
+                  className="kd-final-card__photo"
+                  src="/landing/people/kova-final-empresas.jpg"
+                  alt=""
+                  loading="lazy"
+                />
+                <span className="kd-final-card__chip">
+                  <svg viewBox="0 0 16 16" fill="none" aria-hidden>
+                    <circle cx="8" cy="5.2" r="2.4" stroke="currentColor" strokeWidth="1.4" />
+                    <path
+                      d="M3.2 13.2c.7-2.4 2.4-3.6 4.8-3.6s4.1 1.2 4.8 3.6"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  Empresas
+                </span>
+              </div>
+
+              <div className="kd-final-card kd-final-card--talento">
+                <img
+                  className="kd-final-card__photo"
+                  src="/landing/people/kova-final-talento.jpg"
+                  alt=""
+                  loading="lazy"
+                />
+                <span className="kd-final-card__chip">
+                  <svg viewBox="0 0 16 16" fill="none" aria-hidden>
+                    <circle cx="8" cy="5.2" r="2.4" stroke="currentColor" strokeWidth="1.4" />
+                    <path
+                      d="M3.2 13.2c.7-2.4 2.4-3.6 4.8-3.6s4.1 1.2 4.8 3.6"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  Talento
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </section>

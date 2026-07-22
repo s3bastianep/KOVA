@@ -68,6 +68,7 @@
   background: var(--kv-page);
   color: var(--kv-text);
   font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 500;
   font-feature-settings: 'ss01', 'cv01';
   font-kerning: normal;
   -webkit-font-smoothing: antialiased;

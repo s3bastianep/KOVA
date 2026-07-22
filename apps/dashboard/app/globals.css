@@ -48,6 +48,7 @@
   --font-serif: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
   --font-heading: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
   --font-body: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --kv-copy-weight: 500;
 }
 
 html {
@@ -55,6 +56,7 @@ html {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-weight: var(--kv-copy-weight, 500);
 }
 
 /* The onboarding is dark, but <body>'s own background is the light landing/dashboard cream.
@@ -69,6 +71,7 @@ html.portal-onboarding-immersive body {
 
 body {
   font-family: var(--font-manrope), Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: var(--kv-copy-weight, 500);
   background-color: var(--kova-surface);
   background-image:
     radial-gradient(900px 480px at 0% -5%, rgba(51, 65, 196, 0.07), transparent 55%),
@@ -132,6 +135,7 @@ body {
 
 .kova-portal-body {
   font-size: 0.9375rem;
+  font-weight: 500;
   line-height: 1.7;
   color: var(--kova-navy-muted);
 }

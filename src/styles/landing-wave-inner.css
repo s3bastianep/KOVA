@@ -44,6 +44,7 @@
 
 .kova-landing-wave .kv-inner-hero-sub {
   font-size: var(--kv-fs-lead);
+  font-weight: 500;
   color: #c6c9be;
   max-width: 36rem;
   margin-bottom: 1.75rem;

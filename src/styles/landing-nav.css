@@ -1,5 +1,5 @@
 /* Shared site chrome + content width (home + inner pages) */
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
 
 :root {
   --kv-content-max: 1300px;
@@ -23,16 +23,20 @@
   --kv-font-display: Manrope, 'Helvetica Neue', Arial, sans-serif;
   --kv-font-mono: Manrope, 'Helvetica Neue', Arial, sans-serif;
   --kv-font-serif: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  --kv-copy-weight: 500;
 }
 
 html {
   scrollbar-gutter: stable;
   background: var(--kv-black);
   scroll-padding-top: 88px;
+  font-weight: var(--kv-copy-weight, 500);
 }
 
 body {
   background: var(--kv-black);
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: var(--kv-copy-weight, 500);
 }
 
 .kova-route-shell {

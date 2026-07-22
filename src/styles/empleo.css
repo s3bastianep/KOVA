@@ -48,6 +48,7 @@
   color: var(--emp-ink);
   font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
   font-size: var(--kv-fs-body, 18px);
+  font-weight: 500;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }

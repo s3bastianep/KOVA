@@ -35,6 +35,8 @@
     --kv-font-display: Manrope, 'Helvetica Neue', Arial, sans-serif;
     --kv-font-mono: Manrope, 'Helvetica Neue', Arial, sans-serif;
     --kv-font-serif: Manrope, 'Helvetica Neue', Arial, sans-serif;
+    /* Peso base de cuerpo en toda la web (Medium — bajo semibold) */
+    --kv-copy-weight: 500;
   }
 
   ::selection {
@@ -53,6 +55,7 @@ html {
   text-rendering: geometricPrecision;
   overflow-x: hidden;
   font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: var(--kv-copy-weight, 500);
 }
 
 body {
@@ -62,6 +65,7 @@ body {
   -webkit-font-smoothing: subpixel-antialiased;
   -moz-osx-font-smoothing: auto;
   font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: var(--kv-copy-weight, 500);
 }
 
   h1,

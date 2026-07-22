@@ -12,6 +12,7 @@ import {
 } from '@/lib/portal-preferencias-wizard';
 import { LANGUAGE_LEVEL_OPTIONS } from '@/lib/commercial-profile-builder';
 import { microFeedbackForPrefStep } from '@/lib/portal-onboarding-unified';
+import { getPreferenciasOptionMeta } from '@/lib/portal-preferencias-option-meta';
 import { PortalOnboardingStepHero } from './PortalOnboardingStepHero';
 import { PortalIndustryPicker } from './PortalIndustryPicker';
 
@@ -90,16 +91,17 @@ export function PortalOnboardingPreferencias({
     (currentStep.multi ? 'Puedes seleccionar varias opciones.' : 'Elige la opción que mejor te representa.');
 
   return (
-    <div className="ob-pref" key={currentStep.id}>
+    <div className="ob-pref ob-pref--cards" key={currentStep.id}>
       <PortalOnboardingStepHero
         firstName={firstName}
         eyebrow={blockLabel}
         progress={`${blockPosition} / ${blockSteps.length}`}
         title={currentStep.title}
         subtitle={subtitle}
+        align="center"
       />
 
-      <section className="ob-panel ob-question-panel">
+      <section className="ob-panel ob-question-panel ob-question-panel--cards">
       {currentStep.kind === 'slider' ? (
         <div className="portal-onboarding-salary">
           <p className="portal-onboarding-salary__value">{SALARY_SLIDER_LABELS[salaryIdx]}</p>
@@ -198,7 +200,7 @@ export function PortalOnboardingPreferencias({
           onChange={(values) => onSetAnswers?.(currentStep.id, values)}
         />
       ) : (
-        <div className="portal-onboarding-chip-list">
+        <div className="ob-option-cards" role="list">
           {currentStep.options.map((option) => {
             const isOther = OTHER_OPTION.test(option.trim());
             // "Otra"/"Otro" is stored as "Otra: <lo que escribió>" once the candidate types
@@ -211,23 +213,37 @@ export function PortalOnboardingPreferencias({
             const otherText = otherEntry?.startsWith(`${option}: `)
               ? otherEntry.slice(option.length + 2)
               : '';
+            const meta = getPreferenciasOptionMeta(currentStep.id, option);
+            const Icon = meta.icon;
 
             return (
-              <div key={option} className="portal-onboarding-chip-row-wrap">
+              <div key={option} className="ob-option-card-wrap" role="listitem">
                 <button
                   type="button"
-                  className={`portal-onboarding-chip-row${on ? ' portal-onboarding-chip-row--on' : ''}`}
+                  className={`ob-option-card${on ? ' ob-option-card--on' : ''}`}
+                  aria-pressed={on}
                   onClick={() => onToggle(currentStep.id, otherEntry ?? option, currentStep.multi)}
                 >
-                  <span className="portal-onboarding-chip-row__label">{option}</span>
-                  <span className="portal-onboarding-chip-row__box" aria-hidden>
-                    {on ? <Check className="w-3 h-3" strokeWidth={3} /> : null}
+                  <span className="ob-option-card__icon" aria-hidden>
+                    <Icon strokeWidth={1.75} />
+                  </span>
+                  <span className="ob-option-card__text">
+                    <span className="ob-option-card__title">{option}</span>
+                    {meta.blurb ? (
+                      <span className="ob-option-card__blurb">{meta.blurb}</span>
+                    ) : null}
+                  </span>
+                  <span
+                    className={`ob-option-card__check${currentStep.multi ? ' ob-option-card__check--multi' : ''}`}
+                    aria-hidden
+                  >
+                    {on ? <Check className="w-3.5 h-3.5" strokeWidth={3} /> : null}
                   </span>
                 </button>
                 {isOther && on ? (
                   <input
                     type="text"
-                    className="portal-onboarding-chip-row__other-input"
+                    className="ob-option-card__other-input"
                     placeholder="Escribe cuál"
                     value={otherText}
                     autoFocus={!otherText}
@@ -242,7 +258,7 @@ export function PortalOnboardingPreferencias({
       )}
 
       {microFeedback ? (
-        <p className="portal-onboarding-micro-feedback" aria-live="polite">
+        <p className="portal-onboarding-micro-feedback ob-pref-tip" aria-live="polite">
           <span className="portal-onboarding-micro-feedback__icon" aria-hidden>
             <Check className="w-3.5 h-3.5" strokeWidth={3} />
           </span>

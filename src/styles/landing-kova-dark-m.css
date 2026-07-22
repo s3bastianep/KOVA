@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
 
 .kova-dark-m {
   --kd-dark: #0d0f0f;
@@ -15,8 +15,10 @@
   --kd-radius: 20px;
   --kd-page: min(1280px, calc(100% - 136px));
   --kd-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --kd-copy-weight: 500;
 
   font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: var(--kd-copy-weight);
   color: var(--kd-text);
   background: var(--kd-dark);
   -webkit-font-smoothing: antialiased;
@@ -191,9 +193,9 @@
 .kova-dark-m .kd-hero-sub {
   max-width: 38em;
   margin: 30px 0 0;
-  color: rgba(245, 245, 245, 0.66);
+  color: rgba(245, 245, 245, 0.78);
   font-size: var(--kv-fs-hero-sub, clamp(17px, 1.5vw, 20px));
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.5;
 }
 .kova-dark-m .kd-hero-actions {
@@ -436,6 +438,7 @@
   margin: 26px 0 0;
   color: var(--kd-muted);
   font-size: 18px;
+  font-weight: 500;
   line-height: 1.5;
 }
 .kova-dark-m .kd-section-head--center h2,
@@ -733,6 +736,7 @@
   margin: 0;
   color: var(--kd-muted);
   font-size: 14.5px;
+  font-weight: 500;
   line-height: 1.55;
 }
 .kova-dark-m .kd-door__link {
@@ -820,6 +824,7 @@
   max-width: 42ch;
   color: var(--dx-muted);
   font-size: 16px;
+  font-weight: 500;
   line-height: 1.62;
 }
 .kova-dark-m .cmp {
@@ -996,6 +1001,7 @@
   max-width: 46ch;
   color: var(--mt-muted);
   font-size: 16px;
+  font-weight: 500;
   line-height: 1.62;
 }
 .kova-dark-m .mt__split {
@@ -1388,6 +1394,7 @@
   margin: 24px 0 0;
   color: var(--kd-muted);
   font-size: 17px;
+  font-weight: 500;
   line-height: 1.6;
 }
 .kova-dark-m .kd-guarantee-points {
@@ -1513,7 +1520,9 @@
 .kova-dark-m .kd-final {
   position: relative;
   padding: clamp(88px, 10vw, 128px) 0 clamp(72px, 8vw, 104px);
-  background: #f2f2ef;
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 0%, rgba(197, 222, 78, 0.12), transparent 65%),
+    #eef0ec;
   color: var(--kd-ink);
   overflow: hidden;
   font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
@@ -1578,9 +1587,9 @@
 .kova-dark-m .kd-final-lead {
   max-width: 42ch;
   margin: 20px 0 0;
-  color: #5c5c5c;
+  color: #4a4f48;
   font-size: clamp(15px, 1.25vw, 17px);
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.55;
   text-wrap: pretty;
 }
@@ -1592,10 +1601,12 @@
   max-width: none;
   padding: 0;
   overflow: hidden;
-  border-radius: 14px;
+  border-radius: 18px;
   background: #d4d0c8;
   border: 1px solid rgba(23, 23, 23, 0.1);
-  box-shadow: none;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 18px 40px -26px rgba(13, 15, 15, 0.35);
   box-sizing: border-box;
   aspect-ratio: 4 / 5;
   align-self: center;
@@ -1884,8 +1895,8 @@
     border-left: none;
     font-size: var(--kv-fs-hero-sub);
     line-height: 1.55;
-    color: #bdbdb7;
-    font-weight: 400;
+    color: rgba(245, 245, 245, 0.78);
+    font-weight: 500;
     text-align: center;
     text-wrap: pretty;
   }
