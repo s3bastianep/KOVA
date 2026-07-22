@@ -9,6 +9,31 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/** Fail-fast: un proceso “vivo” sin DB/JWT engaña al healthcheck y rompe auth/citas. */
+function assertProductionEnv() {
+  if (process.env.NODE_ENV !== 'production') return;
+
+  const missing = [];
+  if (!process.env.DATABASE_URL?.trim()) missing.push('DATABASE_URL');
+  if (!process.env.JWT_SECRET?.trim()) missing.push('JWT_SECRET');
+  if (missing.length) {
+    console.error(`[kova] Faltan variables obligatorias en producción: ${missing.join(', ')}`);
+    process.exit(1);
+  }
+
+  if (process.env.SEED_DEMO_DATA === 'true') {
+    console.error('[kova] SEED_DEMO_DATA=true está prohibido en producción. Quita la variable en Railway.');
+    process.exit(1);
+  }
+
+  const jwtExpires = process.env.JWT_EXPIRES_IN?.trim();
+  if (jwtExpires && /d$/i.test(jwtExpires)) {
+    console.warn(
+      `[kova] JWT_EXPIRES_IN=${jwtExpires} es muy largo para access tokens en localStorage. Usa 1h o menos.`,
+    );
+  }
+}
+
 function runCommand(command, args, timeoutMs = 120_000) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, {
@@ -110,6 +135,7 @@ function startNext() {
 }
 
 try {
+  assertProductionEnv();
   await prepareSchema();
   startNext();
   runSeedInBackground();

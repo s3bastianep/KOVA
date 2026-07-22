@@ -187,6 +187,18 @@ async function handlePOST(req: NextRequest) {
       return Response.json({ message: 'Correo o contraseña incorrectos' }, { status: 401 });
     }
 
+    // Mismo mensaje genérico que un fallo de password: no revelar cuentas suspendidas.
+    if (user.status !== 'ACTIVE') {
+      logSecurityEvent('login_failed', {
+        email: user.email,
+        ip: clientIp(req),
+        userId: user.id,
+        reason: 'inactive_status',
+      });
+      await sleep(failureDelayMs(1));
+      return Response.json({ message: 'Correo o contraseña incorrectos' }, { status: 401 });
+    }
+
     await prisma.user.update({
       where: { id: user.id },
       data: { failedAttempts: 0, lockedUntil: null, lastLoginAt: new Date() },

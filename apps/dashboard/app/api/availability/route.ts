@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { AgendaUnavailableError } from '../../../lib/agenda-request-service';
 import { getAvailabilityForDate } from '../../../lib/booking-slots';
 import { withApiErrors } from '../../../lib/api-handler';
 
@@ -22,6 +23,16 @@ async function handleGET(req: NextRequest) {
     return Response.json({ error: 'Fecha inválida.' }, { status: 400, headers: CORS_HEADERS });
   }
 
-  const slots = await getAvailabilityForDate(date);
-  return Response.json({ date, slots }, { headers: CORS_HEADERS });
+  try {
+    const slots = await getAvailabilityForDate(date);
+    return Response.json({ date, slots }, { headers: CORS_HEADERS });
+  } catch (err) {
+    if (err instanceof AgendaUnavailableError) {
+      return Response.json(
+        { error: 'Agenda temporalmente no disponible. Intenta de nuevo en unos minutos.' },
+        { status: 503, headers: CORS_HEADERS },
+      );
+    }
+    throw err;
+  }
 }

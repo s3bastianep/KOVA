@@ -1,9 +1,10 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeEach } from 'vitest';
 import { POST as createBooking } from '../app/api/bookings/route';
 import { POST as createSolicitud } from '../app/api/solicitudes/route';
 import { GET as getAvailability } from '../app/api/availability/route';
 import { NextRequest } from 'next/server';
 import { jsonRequest, nextBookableDate, nextSunday, freshIp } from './helpers';
+import { resetMockAgendaRequests } from '../lib/agenda-request-service';
 
 const requester = {
   nombre: 'Carlos Gómez',
@@ -11,6 +12,10 @@ const requester = {
   telefono: '3009876543',
   empresa: 'Acme SAS',
 };
+
+beforeEach(() => {
+  resetMockAgendaRequests();
+});
 
 describe('POST /api/bookings', () => {
   it('crea la cita en un horario válido', async () => {
@@ -91,8 +96,15 @@ describe('POST /api/solicitudes', () => {
   });
 
   it('rechaza horario ya reservado por bookings', async () => {
-    const { date, slots } = nextBookableDate();
-    const slot = slots[slots.length - 1];
+    const { date } = nextBookableDate();
+    const availRes = await getAvailability(
+      new NextRequest(`http://localhost/api/availability?date=${date}`),
+    );
+    expect(availRes.status).toBe(200);
+    const { slots: free } = await availRes.json();
+    expect(free.length).toBeGreaterThan(0);
+    const slot = free[0];
+
     const booked = await createBooking(
       jsonRequest('/api/bookings', { ...requester, date, time: slot }),
     );
@@ -130,5 +142,13 @@ describe('GET /api/availability', () => {
       new NextRequest('http://localhost/api/availability?date=hola'),
     );
     expect(res.status).toBe(400);
+  });
+});
+
+describe('parseTimeToDate (Bogotá)', () => {
+  it('guarda 10:00 Colombia como 15:00 UTC (offset -05:00)', async () => {
+    const { parseTimeToDate } = await import('../lib/agenda-request-service');
+    const d = parseTimeToDate('2026-08-10', '10:00');
+    expect(d.toISOString()).toBe('2026-08-10T15:00:00.000Z');
   });
 });

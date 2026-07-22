@@ -1118,9 +1118,13 @@ model AgendaRequest {
   statusReason   String?  @db.Text
   moveHistory    Json     @default("[]")
   agendaItemKey  String?
+  /// Clave de cupo activa (`YYYY-MM-DDTHH:mm`). Null al rechazar → libera el slot
+  /// (Postgres permite varios NULL en unique). Evita doble reserva concurrente.
+  slotKey        String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
+  @@unique([tenantId, slotKey])
   @@index([tenantId, status])
   @@index([tenantId, scheduledAt])
   @@map("agenda_requests")

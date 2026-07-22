@@ -1,5 +1,7 @@
 # Kova Talent OS — Plataforma
 
+> **HISTÓRICO / DESACTUALIZADO (2026-07):** el deploy real es **un solo servicio** en la raíz del repo (`npm run build` / `npm run start` → Next sirve landing + API + portal). No uses Root Directory `apps/dashboard` ni dos servicios `kova-web` + `kova-app`. Guía vigente: `README.md`.
+
 Plataforma privada de reclutamiento comercial que vive junto a la página pública de Kova.
 Todo funciona en **Railway**, sin servicios externos.
 

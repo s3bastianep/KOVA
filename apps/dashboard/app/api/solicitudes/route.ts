@@ -5,6 +5,8 @@ import { withApiErrors } from '../../../lib/api-handler';
 import { isSlotAvailable } from '../../../lib/booking-slots';
 import { generateTimeSlots, isBookableDateKey } from '../../../../../shared/schedule.js';
 import {
+  AgendaSlotConflictError,
+  AgendaUnavailableError,
   createAgendaRequest,
   listAgendaRequests,
   type AgendaRequestStatus,
@@ -30,8 +32,18 @@ async function handleGET(req: NextRequest) {
   if (!isInternalRole(user.role)) return forbidden();
 
   const status = req.nextUrl.searchParams.get('status') as AgendaRequestStatus | null;
-  const requests = await listAgendaRequests(user.tenantId, status ?? undefined);
-  return Response.json({ requests });
+  try {
+    const requests = await listAgendaRequests(user.tenantId, status ?? undefined);
+    return Response.json({ requests });
+  } catch (err) {
+    if (err instanceof AgendaUnavailableError) {
+      return Response.json(
+        { message: 'Agenda temporalmente no disponible. Intenta de nuevo en unos minutos.' },
+        { status: 503 },
+      );
+    }
+    throw err;
+  }
 }
 
 export const POST = withApiErrors('solicitudes', handlePOST, { headers: CORS_HEADERS });
@@ -88,15 +100,15 @@ async function handlePOST(req: NextRequest) {
       { status: 400, headers: CORS_HEADERS },
     );
   }
-  const available = await isSlotAvailable(date, time);
-  if (!available) {
-    return Response.json(
-      { message: 'Ese horario acaba de ser reservado. Elige otro.' },
-      { status: 409, headers: CORS_HEADERS },
-    );
-  }
-
   try {
+    const available = await isSlotAvailable(date, time);
+    if (!available) {
+      return Response.json(
+        { message: 'Ese horario acaba de ser reservado. Elige otro.' },
+        { status: 409, headers: CORS_HEADERS },
+      );
+    }
+
     const request = await createAgendaRequest({
       date,
       time,
@@ -121,6 +133,18 @@ async function handlePOST(req: NextRequest) {
       { status: 201, headers: CORS_HEADERS },
     );
   } catch (err) {
+    if (err instanceof AgendaSlotConflictError) {
+      return Response.json(
+        { message: 'Ese horario acaba de ser reservado. Elige otro.' },
+        { status: 409, headers: CORS_HEADERS },
+      );
+    }
+    if (err instanceof AgendaUnavailableError) {
+      return Response.json(
+        { message: 'Agenda temporalmente no disponible. Intenta de nuevo en unos minutos.' },
+        { status: 503, headers: CORS_HEADERS },
+      );
+    }
     console.error('[solicitudes]', err);
     return Response.json(
       { message: 'No se pudo registrar la solicitud. Intenta de nuevo en unos minutos.' },

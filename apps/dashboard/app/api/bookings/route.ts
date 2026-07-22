@@ -1,5 +1,9 @@
 import { NextRequest } from 'next/server';
-import { createAgendaRequest } from '../../../lib/agenda-request-service';
+import {
+  AgendaSlotConflictError,
+  AgendaUnavailableError,
+  createAgendaRequest,
+} from '../../../lib/agenda-request-service';
 import { isSlotAvailable } from '../../../lib/booking-slots';
 import { generateTimeSlots, isBookableDateKey } from '../../../../../shared/schedule.js';
 import { isRateLimited } from '../../../lib/rate-limit';
@@ -65,15 +69,15 @@ async function handlePOST(req: NextRequest) {
     rolVacante?: string;
   };
 
-  const available = await isSlotAvailable(date, time);
-  if (!available) {
-    return Response.json(
-      { error: 'Ese horario acaba de ser reservado. Elige otro.' },
-      { status: 409, headers: CORS_HEADERS },
-    );
-  }
-
   try {
+    const available = await isSlotAvailable(date, time);
+    if (!available) {
+      return Response.json(
+        { error: 'Ese horario acaba de ser reservado. Elige otro.' },
+        { status: 409, headers: CORS_HEADERS },
+      );
+    }
+
     const request = await createAgendaRequest({
       date,
       time,
@@ -100,7 +104,18 @@ async function handlePOST(req: NextRequest) {
       { status: 201, headers: CORS_HEADERS },
     );
   } catch (err) {
-    // El detalle va al log; al cliente solo un mensaje genérico (no filtrar internos de DB).
+    if (err instanceof AgendaSlotConflictError) {
+      return Response.json(
+        { error: 'Ese horario acaba de ser reservado. Elige otro.' },
+        { status: 409, headers: CORS_HEADERS },
+      );
+    }
+    if (err instanceof AgendaUnavailableError) {
+      return Response.json(
+        { error: 'Agenda temporalmente no disponible. Intenta de nuevo en unos minutos.' },
+        { status: 503, headers: CORS_HEADERS },
+      );
+    }
     console.error('[bookings]', err);
     return Response.json(
       { error: 'No se pudo registrar la cita. Intenta de nuevo en unos minutos.' },

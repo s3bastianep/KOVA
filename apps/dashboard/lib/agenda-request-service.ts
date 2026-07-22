@@ -1,9 +1,29 @@
 import { randomUUID } from 'crypto';
 import { prisma } from './prisma';
 import { isMockMode } from './mock';
+import { formatDateKey, SCHEDULE } from '../../../shared/schedule.js';
 import type { AgendaItem, AgendaMoveEntry, AgendaStatus } from './agenda';
 
 export type AgendaRequestStatus = 'REQUESTED' | 'ACCEPTED' | 'REJECTED';
+
+/** Cupo ya tomado (carrera o unique `tenantId+slotKey`). */
+export class AgendaSlotConflictError extends Error {
+  constructor() {
+    super('SLOT_CONFLICT');
+    this.name = 'AgendaSlotConflictError';
+  }
+}
+
+/** No se pudo leer la agenda (DB caída). No fingir “todo libre”. */
+export class AgendaUnavailableError extends Error {
+  constructor(cause?: unknown) {
+    super('AGENDA_UNAVAILABLE');
+    this.name = 'AgendaUnavailableError';
+    if (cause !== undefined) {
+      (this as Error & { cause?: unknown }).cause = cause;
+    }
+  }
+}
 
 export type AgendaRequestRecord = {
   id: string;
@@ -108,8 +128,10 @@ async function persistRequestCalendarState(
         moveHistory: state.moveHistory,
       },
     });
-  } catch {
-    mockAgendaStates.set(agendaStoreKey(tenantId, state.itemKey), state);
+  } catch (err) {
+    // Nunca caer a mock en memoria cuando hay (o debería haber) Postgres.
+    console.error('[agenda] No se pudo persistir agendaState:', err);
+    throw err;
   }
 }
 
@@ -121,11 +143,29 @@ export function getMockRequestAgendaStates(tenantId: string) {
   return items;
 }
 
-function parseTimeToDate(dateKey: string, time: string): Date {
-  const [hours, minutes] = time.split(':').map(Number);
-  const d = new Date(`${dateKey}T12:00:00`);
-  d.setHours(hours, minutes, 0, 0);
+/** Interpreta fecha+hora de la agenda en Colombia, independiente del TZ del proceso. */
+export function parseTimeToDate(dateKey: string, time: string): Date {
+  const iso = `${dateKey}T${time}:00${SCHEDULE.utcOffset}`;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) {
+    throw new Error(`Fecha/hora inválida: ${dateKey} ${time}`);
+  }
   return d;
+}
+
+function slotKeyFor(dateKey: string, time: string): string {
+  return `${dateKey}T${time}`;
+}
+
+function bogotaSlotKeyFromIso(iso: string): string {
+  const d = new Date(iso);
+  const time = new Intl.DateTimeFormat('en-GB', {
+    timeZone: SCHEDULE.timezone,
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(d);
+  return `${formatDateKey(d)}T${time}`;
 }
 
 function endAtFromStart(start: Date, minutes = 30): string {
@@ -196,6 +236,7 @@ export async function createAgendaRequest(input: {
   const tenantId = input.tenantId ?? (await resolveDefaultTenantId());
   const scheduledAt = parseTimeToDate(input.date, input.time);
   const endAt = endAtFromStart(scheduledAt);
+  const slotKey = slotKeyFor(input.date, input.time);
 
   const data = {
     tenantId,
@@ -210,10 +251,20 @@ export async function createAgendaRequest(input: {
     notes: input.notes?.trim() || null,
     status: 'REQUESTED',
     moveHistory: [],
+    slotKey,
   };
 
   const db = agendaRequestDb();
   if (!db) {
+    for (const existing of mockRequests.values()) {
+      if (
+        existing.tenantId === tenantId &&
+        existing.status !== 'REJECTED' &&
+        bogotaSlotKeyFromIso(existing.scheduledAt) === slotKey
+      ) {
+        throw new AgendaSlotConflictError();
+      }
+    }
     const id = randomUUID();
     const record: AgendaRequestRecord = {
       id,
@@ -235,8 +286,26 @@ export async function createAgendaRequest(input: {
     return record;
   }
 
-  const row = await db.create({ data });
-  return rowToRecord(row as Parameters<typeof rowToRecord>[0]);
+  try {
+    const row = await prisma.$transaction(
+      async (tx) => {
+        const conflict = await tx.agendaRequest.findFirst({
+          where: { tenantId, slotKey },
+          select: { id: true },
+        });
+        if (conflict) throw new AgendaSlotConflictError();
+        return tx.agendaRequest.create({ data });
+      },
+      { isolationLevel: 'Serializable' },
+    );
+    return rowToRecord(row as Parameters<typeof rowToRecord>[0]);
+  } catch (err) {
+    if (err instanceof AgendaSlotConflictError) throw err;
+    const code = err && typeof err === 'object' && 'code' in err ? String((err as { code: string }).code) : '';
+    // P2002 unique; P2034 serialization failure → tratar como cupo tomado.
+    if (code === 'P2002' || code === 'P2034') throw new AgendaSlotConflictError();
+    throw err;
+  }
 }
 
 export async function listAgendaRequests(
@@ -251,14 +320,15 @@ export async function listAgendaRequests(
 
   try {
     const db = agendaRequestDb();
-    if (!db) return [];
+    if (!db) throw new AgendaUnavailableError('agendaRequest model unavailable');
     const rows = await db.findMany({
       where: { tenantId, ...(status ? { status } : {}) },
       orderBy: { scheduledAt: 'asc' },
     });
     return rows.map((row) => rowToRecord(row as Parameters<typeof rowToRecord>[0]));
-  } catch {
-    return [];
+  } catch (err) {
+    if (err instanceof AgendaUnavailableError) throw err;
+    throw new AgendaUnavailableError(err);
   }
 }
 
@@ -296,6 +366,8 @@ async function saveRequest(record: AgendaRequestRecord) {
       statusReason: record.statusReason ?? null,
       moveHistory: record.moveHistory,
       agendaItemKey: record.agendaItemKey ?? null,
+      // Al rechazar liberamos el unique para que el cupo vuelva a estar disponible.
+      slotKey: record.status === 'REJECTED' ? null : bogotaSlotKeyFromIso(record.scheduledAt),
     },
   });
 }
@@ -455,4 +527,10 @@ export function seedMockAgendaRequests() {
   ];
 
   for (const s of samples) mockRequests.set(s.id, s);
+}
+
+/** Limpia agenda mock entre tests (evita contaminación de cupos). */
+export function resetMockAgendaRequests() {
+  mockRequests.clear();
+  mockAgendaStates.clear();
 }

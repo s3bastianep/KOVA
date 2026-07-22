@@ -33,20 +33,23 @@ Edita `shared/schedule.js`: días laborables, franja horaria (9:00–17:00), dur
 
 ## Deploy en Railway
 
-1. Conecta el repo en [railway.app](https://railway.app).
-2. **Build command:** `npm run build`
-3. **Start command:** `npm run start`
-4. Genera un dominio en **Settings → Networking**.
+1. Conecta el repo en [railway.app](railway.app) con **Root Directory = raíz del repo** (no `apps/dashboard`).
+2. **Build command:** `npm run build` (landing Vite → `public/www` + Next).
+3. **Start command:** `npm run start` (prepara schema Postgres y arranca Next; sirve landing + API + portal).
+4. Variables mínimas: `DATABASE_URL` (Postgres), `JWT_SECRET` (largo y aleatorio), `JWT_EXPIRES_IN=1h`.
+5. Genera un dominio en **Settings → Networking**.
 
 Cada push redeploya la app. Las citas y todos los datos persisten en la base de datos Postgres de Railway (variable `DATABASE_URL`); no se pierden al redeployar.
+
+> **Nota:** Un solo servicio Next.js sirve marketing + Talent OS. No configures dos servicios ni Root Directory `apps/dashboard` (docs antiguas en `PLATFORM.md` están marcadas como históricas).
 
 ## Scripts
 
 | Comando | Descripción |
 |---------|-------------|
-| `npm run dev` | Frontend + API en localhost:3000 |
-| `npm run build` | Build de producción en `dist/` |
-| `npm run start` | Sirve `dist/` + API (Railway) |
+| `npm run dev` | Landing (Vite+proxy) en `:3000` + dashboard Next en `:3001` |
+| `npm run build` | Build landing → `apps/dashboard/public/www` + `next build` |
+| `npm run start` | Arranque producción: schema Postgres + `next start` (Railway) |
 | `npm run smoke:prod` | Smoke HTTPS/DB/registro/login/citas contra la URL pública |
 | `npm run lint` | ESLint |
 
