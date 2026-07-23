@@ -136,8 +136,10 @@ function startNext() {
 
 try {
   assertProductionEnv();
-  await prepareSchema();
+  // Escuchar el puerto YA: Railway empieza el healthcheck al lanzar `start`.
+  // Si prisma db push corre antes, nadie atiende :PORT y el deploy se queda colgado.
   startNext();
+  await prepareSchema();
   runSeedInBackground();
 } catch (error) {
   console.error('[kova] No se pudo preparar el entorno:', error?.message ?? error);
