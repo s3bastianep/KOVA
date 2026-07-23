@@ -21,7 +21,13 @@ function maskEmail(email: string): string {
 
 export function logSecurityEvent(
   event: SecurityEvent,
-  details: { email?: string; ip?: string | null; path?: string; userId?: string } = {},
+  details: {
+    email?: string;
+    ip?: string | null;
+    path?: string;
+    userId?: string;
+    reason?: string;
+  } = {},
 ): void {
   const entry = {
     ts: new Date().toISOString(),
@@ -30,6 +36,7 @@ export function logSecurityEvent(
     ...(details.ip ? { ip: details.ip } : {}),
     ...(details.path ? { path: details.path } : {}),
     ...(details.userId ? { userId: details.userId } : {}),
+    ...(details.reason ? { reason: details.reason } : {}),
   };
   console.warn(`[SECURITY] ${JSON.stringify(entry)}`);
 }
