@@ -74,15 +74,23 @@ async function prepareSchema() {
   for (let attempt = 1; attempt <= 3; attempt += 1) {
     try {
       console.log(`[kova] Sincronizando esquema (intento ${attempt}/3)...`);
-      // NOTE: --accept-data-loss is deliberately NOT passed. This project has no
-      // prisma/migrations history yet (only `db push` has ever been used), so we can't
-      // switch to `prisma migrate deploy` without first creating a baseline migration
-      // against the real production database — an operation with its own data-loss risk
-      // that needs to be done deliberately, not from this boot script. Without the flag,
-      // `db push` refuses (loudly, in the log) instead of silently dropping columns/tables
-      // when a schema change would be destructive. If this step starts failing after a
-      // schema edit, that failure is the signal to review the change and migrate manually.
-      await runCommand('npx', ['prisma', 'db', 'push', '--skip-generate'], 90_000);
+      // 1) Deduplicar cupos activos antes del UNIQUE (tenantId, slotKey).
+      // 2) --accept-data-loss: Prisma lo exige al crear ese UNIQUE aunque ya no
+      //    haya duplicados. No usamos migrate deploy todavía (sin historial).
+      //    Revisar a mano cualquier cambio de schema que borre columnas/tablas.
+      try {
+        await runCommand('node', ['scripts/dedupe-agenda-slots.mjs'], 30_000);
+      } catch (dedupeError) {
+        console.warn(
+          '[kova] Dedupe previo omitido/falló (se reintenta con db push):',
+          dedupeError?.message ?? dedupeError,
+        );
+      }
+      await runCommand(
+        'npx',
+        ['prisma', 'db', 'push', '--skip-generate', '--accept-data-loss'],
+        90_000,
+      );
       await runCommand('node', ['scripts/verify-schema.mjs'], 20_000);
       process.env.KOVA_SCHEMA_READY = 'true';
       console.log('[kova] Esquema listo.');

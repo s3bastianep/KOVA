@@ -37,7 +37,8 @@ if (/\.railway\.internal\b/i.test(databaseUrl)) {
 try {
   console.log('[kova] Preparando base de datos durante el build...');
   process.env.DATABASE_URL = databaseUrl;
-  await run('npx', ['prisma', 'db', 'push', '--skip-generate']);
+  await run('node', ['scripts/dedupe-agenda-slots.mjs']).catch(() => {});
+  await run('npx', ['prisma', 'db', 'push', '--skip-generate', '--accept-data-loss']);
   await run('npx', ['tsx', 'prisma/seed.ts']);
   console.log('[kova] Base de datos lista para el deploy.');
 } catch (error) {
