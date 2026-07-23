@@ -9,7 +9,7 @@ import {
   PortalOnboardingProvider,
   usePortalOnboarding,
 } from '@/components/portal/PortalOnboardingProvider';
-import { getStoredUser, portalApi } from '@/lib/api';
+import { authApi, clearSession, portalApi } from '@/lib/api';
 import { PORTAL_CACHE_KEYS, portalCacheGet } from '@/lib/portal-cache';
 
 function PortalLayoutInner({ children }: { children: React.ReactNode }) {
@@ -22,34 +22,44 @@ function PortalLayoutInner({ children }: { children: React.ReactNode }) {
     if (authChecked.current) return;
     authChecked.current = true;
 
-    const token = localStorage.getItem('kova_access_token');
-    const user = getStoredUser();
-    if (!token) {
-      router.replace('/login');
-      return;
-    }
-    if (user && user.role !== 'CANDIDATE') {
-      router.replace('/dashboard');
-      return;
-    }
-
-    const prefetchLater = () => {
-      if (!portalCacheGet(PORTAL_CACHE_KEYS.vacantes(0))) {
-        void portalApi.vacantes().catch(() => {});
-      }
-      if (!portalCacheGet(PORTAL_CACHE_KEYS.aplicaciones)) {
-        void portalApi.aplicaciones().catch(() => {});
-      }
-    };
-    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      (
-        window as Window & {
-          requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number;
+    let cancelled = false;
+    (async () => {
+      try {
+        const user = await authApi.me();
+        if (cancelled) return;
+        if (user.role !== 'CANDIDATE') {
+          router.replace('/dashboard');
+          return;
         }
-      ).requestIdleCallback(() => prefetchLater(), { timeout: 4000 });
-    } else {
-      setTimeout(prefetchLater, 2000);
-    }
+      } catch {
+        if (cancelled) return;
+        clearSession();
+        router.replace('/login');
+        return;
+      }
+
+      const prefetchLater = () => {
+        if (!portalCacheGet(PORTAL_CACHE_KEYS.vacantes(0))) {
+          void portalApi.vacantes().catch(() => {});
+        }
+        if (!portalCacheGet(PORTAL_CACHE_KEYS.aplicaciones)) {
+          void portalApi.aplicaciones().catch(() => {});
+        }
+      };
+      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+        (
+          window as Window & {
+            requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number;
+          }
+        ).requestIdleCallback(() => prefetchLater(), { timeout: 4000 });
+      } else {
+        setTimeout(prefetchLater, 2000);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [router]);
 
   useEffect(() => {

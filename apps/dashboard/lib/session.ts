@@ -17,11 +17,23 @@ import type { AuthUser } from './auth';
  */
 
 export const REFRESH_COOKIE = 'kova_refresh';
+/** Access JWT HttpOnly (Path=/). Evita exponer el Bearer en localStorage. */
+export const ACCESS_COOKIE = 'lh_access';
 const REFRESH_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 días
 const JWT_SECRET = process.env.JWT_SECRET as string; // auth.ts ya valida que exista
 
 function hashToken(raw: string): string {
   return createHash('sha256').update(raw).digest('hex');
+}
+
+function accessMaxAgeSeconds(): number {
+  const raw = (process.env.JWT_EXPIRES_IN ?? '1h').trim();
+  const match = /^(\d+)([smhd])?$/i.exec(raw);
+  if (!match) return 3600;
+  const n = Number(match[1]);
+  const unit = (match[2] || 's').toLowerCase();
+  const mult = unit === 'm' ? 60 : unit === 'h' ? 3600 : unit === 'd' ? 86400 : 1;
+  return Math.max(60, n * mult);
 }
 
 export async function issueRefreshToken(user: AuthUser): Promise<string> {
@@ -166,6 +178,10 @@ export function readRefreshCookie(req: NextRequest): string | null {
   return req.cookies.get(REFRESH_COOKIE)?.value ?? null;
 }
 
+export function readAccessCookie(req: NextRequest): string | null {
+  return req.cookies.get(ACCESS_COOKIE)?.value ?? null;
+}
+
 /** Set-Cookie para el refresh token: HttpOnly, solo rutas de auth, Secure en prod. */
 export function refreshCookie(raw: string): string {
   const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
@@ -176,4 +192,31 @@ export function refreshCookie(raw: string): string {
 export function clearRefreshCookie(): string {
   const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
   return `${REFRESH_COOKIE}=; Path=/api/auth; HttpOnly; SameSite=Lax; Max-Age=0${secure}`;
+}
+
+/** Access token en cookie HttpOnly (Path=/) — el JS no lo lee. */
+export function accessCookie(raw: string): string {
+  const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
+  const maxAge = accessMaxAgeSeconds();
+  return `${ACCESS_COOKIE}=${raw}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${secure}`;
+}
+
+export function clearAccessCookie(): string {
+  const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
+  return `${ACCESS_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure}`;
+}
+
+/** Headers Set-Cookie para login/refresh/registro. */
+export function sessionCookieHeaders(accessToken: string, refreshRaw: string): Headers {
+  const headers = new Headers();
+  headers.append('Set-Cookie', accessCookie(accessToken));
+  headers.append('Set-Cookie', refreshCookie(refreshRaw));
+  return headers;
+}
+
+export function clearSessionCookieHeaders(): Headers {
+  const headers = new Headers();
+  headers.append('Set-Cookie', clearAccessCookie());
+  headers.append('Set-Cookie', clearRefreshCookie());
+  return headers;
 }

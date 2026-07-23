@@ -1,7 +1,8 @@
 import { formatDateKey, isBookableDateKey } from '@/lib/schedule';
+import { CONTACT_EMAIL } from '@/lib/contact';
 
 const API_UNAVAILABLE_MSG =
-  'El servicio de citas no está disponible en este momento. Escríbenos a hola@litthunter.com o intenta más tarde.';
+  `El servicio de citas no está disponible en este momento. Escríbenos a ${CONTACT_EMAIL} o intenta más tarde.`;
 
 /** Solo devuelve horarios confirmados por el backend. Sin fallback local. */
 export async function fetchAvailability(date) {

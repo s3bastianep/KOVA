@@ -12,16 +12,12 @@ import {
   type AgendaRequestStatus,
 } from '../../../lib/agenda-request-service';
 
+import { publicCorsHeaders } from '../../../lib/public-cors';
+
 export const dynamic = 'force-dynamic';
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
-
-export async function OPTIONS() {
-  return new Response(null, { status: 204, headers: CORS_HEADERS });
+export async function OPTIONS(req: NextRequest) {
+  return new Response(null, { status: 204, headers: publicCorsHeaders(req, 'GET, POST, OPTIONS') });
 }
 
 export const GET = withApiErrors('solicitudes', handleGET);
@@ -46,14 +42,15 @@ async function handleGET(req: NextRequest) {
   }
 }
 
-export const POST = withApiErrors('solicitudes', handlePOST, { headers: CORS_HEADERS });
+export const POST = withApiErrors('solicitudes', handlePOST);
 
 async function handlePOST(req: NextRequest) {
-  // Endpoint público (CORS abierto): mismo límite defensivo que /api/bookings.
+  const cors = publicCorsHeaders(req, 'GET, POST, OPTIONS');
+  // Endpoint público (CORS allowlist): mismo límite defensivo que /api/bookings.
   if (isRateLimited(req, 'solicitudes', 5, 60_000)) {
     return Response.json(
       { message: 'Demasiadas solicitudes seguidas. Espera un minuto e intenta de nuevo.' },
-      { status: 429, headers: CORS_HEADERS },
+      { status: 429, headers: cors },
     );
   }
 
@@ -63,18 +60,18 @@ async function handlePOST(req: NextRequest) {
   if (!date || !time || !nombre?.trim() || !correo?.trim() || !telefono?.trim() || !empresa?.trim()) {
     return Response.json(
       { message: 'Completa fecha, hora, nombre, correo, teléfono y empresa.' },
-      { status: 400, headers: CORS_HEADERS },
+      { status: 400, headers: cors },
     );
   }
 
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    return Response.json({ message: 'Fecha inválida.' }, { status: 400, headers: CORS_HEADERS });
+    return Response.json({ message: 'Fecha inválida.' }, { status: 400, headers: cors });
   }
   if (!/^\d{2}:\d{2}$/.test(time)) {
-    return Response.json({ message: 'Hora inválida.' }, { status: 400, headers: CORS_HEADERS });
+    return Response.json({ message: 'Hora inválida.' }, { status: 400, headers: cors });
   }
   if (!String(correo).includes('@')) {
-    return Response.json({ message: 'Correo inválido.' }, { status: 400, headers: CORS_HEADERS });
+    return Response.json({ message: 'Correo inválido.' }, { status: 400, headers: cors });
   }
   if (
     String(nombre).length > 120 ||
@@ -82,7 +79,7 @@ async function handlePOST(req: NextRequest) {
     String(telefono).length > 30 ||
     String(empresa).length > 160
   ) {
-    return Response.json({ message: 'Datos demasiado largos.' }, { status: 400, headers: CORS_HEADERS });
+    return Response.json({ message: 'Datos demasiado largos.' }, { status: 400, headers: cors });
   }
 
   // OWASP A04: mismas reglas de negocio que /api/bookings. Sin esto, cualquier
@@ -91,13 +88,13 @@ async function handlePOST(req: NextRequest) {
   if (!isBookableDateKey(date)) {
     return Response.json(
       { message: 'La fecha seleccionada no está disponible.' },
-      { status: 400, headers: CORS_HEADERS },
+      { status: 400, headers: cors },
     );
   }
   if (!generateTimeSlots(date).includes(time)) {
     return Response.json(
       { message: 'El horario seleccionado no está disponible.' },
-      { status: 400, headers: CORS_HEADERS },
+      { status: 400, headers: cors },
     );
   }
   try {
@@ -105,7 +102,7 @@ async function handlePOST(req: NextRequest) {
     if (!available) {
       return Response.json(
         { message: 'Ese horario acaba de ser reservado. Elige otro.' },
-        { status: 409, headers: CORS_HEADERS },
+        { status: 409, headers: cors },
       );
     }
 
@@ -130,25 +127,25 @@ async function handlePOST(req: NextRequest) {
         },
         message: 'Solicitud enviada. Te confirmaremos pronto.',
       },
-      { status: 201, headers: CORS_HEADERS },
+      { status: 201, headers: cors },
     );
   } catch (err) {
     if (err instanceof AgendaSlotConflictError) {
       return Response.json(
         { message: 'Ese horario acaba de ser reservado. Elige otro.' },
-        { status: 409, headers: CORS_HEADERS },
+        { status: 409, headers: cors },
       );
     }
     if (err instanceof AgendaUnavailableError) {
       return Response.json(
         { message: 'Agenda temporalmente no disponible. Intenta de nuevo en unos minutos.' },
-        { status: 503, headers: CORS_HEADERS },
+        { status: 503, headers: cors },
       );
     }
     console.error('[solicitudes]', err);
     return Response.json(
       { message: 'No se pudo registrar la solicitud. Intenta de nuevo en unos minutos.' },
-      { status: 500, headers: CORS_HEADERS },
+      { status: 500, headers: cors },
     );
   }
 }

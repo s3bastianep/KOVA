@@ -34,7 +34,7 @@ export function Sidebar() {
             litt hunter
             <span className="lh-mark__sq" aria-hidden="true" />
           </p>
-          <p className="kova-sidebar-brand-sub text-[11px] mt-0.5">Talent OS · Reclutamiento comercial</p>
+          <p className="kova-sidebar-brand-sub text-[11px] mt-0.5">Reclutamiento comercial</p>
         </div>
       </div>
 

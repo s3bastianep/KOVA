@@ -14,7 +14,7 @@ export async function getPublicTenantId(): Promise<string> {
     where: { slug },
     update: { isActive: true },
     create: {
-      name: 'Litt Hunter Talent OS',
+      name: 'Litt Hunter',
       slug,
       plan: 'enterprise',
       isActive: true,

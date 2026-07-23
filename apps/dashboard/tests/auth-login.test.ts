@@ -24,9 +24,9 @@ describe('POST /api/auth/login', () => {
     expect(res.status).toBe(401);
   });
 
-  it('acepta credenciales válidas y emite access token + cookie de refresh HttpOnly', async () => {
+  it('acepta credenciales válidas y emite cookies HttpOnly (access + refresh)', async () => {
     const res = await login(
-      jsonRequest('/api/auth/login', { email: 'consultor@kova.co', password: 'Kova2026!' }),
+      jsonRequest('/api/auth/login', { email: 'consultor@litthunter.com', password: 'LittHunter2026!' }),
     );
     expect(res.status).toBe(200);
 
@@ -36,10 +36,14 @@ describe('POST /api/auth/login', () => {
     // El refresh token NUNCA debe venir en el body (iría a localStorage).
     expect(body.refreshToken).toBeUndefined();
 
-    const cookie = res.headers.get('set-cookie') ?? '';
-    expect(cookie).toContain('kova_refresh=');
-    expect(cookie).toContain('HttpOnly');
-    expect(cookie).toContain('Path=/api/auth');
+    const cookies =
+      typeof res.headers.getSetCookie === 'function'
+        ? res.headers.getSetCookie().join('\n')
+        : (res.headers.get('set-cookie') ?? '');
+    expect(cookies).toContain('lh_access=');
+    expect(cookies).toContain('kova_refresh=');
+    expect(cookies).toContain('HttpOnly');
+    expect(cookies).toContain('Path=/api/auth');
   });
 
   it('bloquea por cuenta tras 10 intentos aunque cambien de IP (fuerza bruta distribuida)', async () => {

@@ -11,6 +11,7 @@ export async function authFetch(path, options = {}) {
   try {
     const res = await fetch(`${API_URL}${path}`, {
       ...fetchOptions,
+      credentials: 'same-origin',
       signal: controller?.signal,
       headers: {
         'Content-Type': 'application/json',
@@ -49,8 +50,8 @@ export const authApi = {
 };
 
 export function saveSession(data) {
-  localStorage.setItem('kova_access_token', data.accessToken);
-  // El refresh token ya no viaja en el body: vive en una cookie HttpOnly.
+  // Tokens en cookies HttpOnly; solo cache de user para UI.
+  localStorage.removeItem('kova_access_token');
   localStorage.removeItem('kova_refresh_token');
   localStorage.setItem('kova_user', JSON.stringify(data.user));
 }

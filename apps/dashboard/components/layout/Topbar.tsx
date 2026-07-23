@@ -117,7 +117,7 @@ export function Topbar() {
                     litt hunter
                     <span className="lh-mark__sq" aria-hidden="true" />
                   </p>
-                  <p className="kova-sidebar-brand-sub text-[10px]">Talent OS</p>
+                  <p className="kova-sidebar-brand-sub text-[10px]">Reclutamiento comercial</p>
                 </div>
               </div>
               <button type="button" onClick={() => setMenuOpen(false)} aria-label="Cerrar menú" className="p-2 rounded-xl transition-colors" style={{ color: 'var(--kv-nav-muted)' }}>

@@ -1,10 +1,10 @@
 import { NextRequest } from 'next/server';
 import { signToken } from '../../../../lib/auth';
 import {
-  clearRefreshCookie,
+  clearSessionCookieHeaders,
   readRefreshCookie,
-  refreshCookie,
   rotateRefreshToken,
+  sessionCookieHeaders,
 } from '../../../../lib/session';
 import { clientIp } from '../../../../lib/rate-limit';
 import { logSecurityEvent } from '../../../../lib/security-log';
@@ -25,13 +25,14 @@ export async function POST(req: NextRequest) {
       logSecurityEvent('refresh_token_invalid', { ip: clientIp(req) });
       return Response.json(
         { message: 'Sesión expirada' },
-        { status: 401, headers: { 'Set-Cookie': clearRefreshCookie() } },
+        { status: 401, headers: clearSessionCookieHeaders() },
       );
     }
 
+    const accessToken = signToken(rotated.user);
     return Response.json(
-      { user: rotated.user, accessToken: signToken(rotated.user) },
-      { headers: { 'Set-Cookie': refreshCookie(rotated.refreshToken) } },
+      { user: rotated.user, accessToken },
+      { headers: sessionCookieHeaders(accessToken, rotated.refreshToken) },
     );
   } catch (err) {
     console.error('[auth/refresh]', err);

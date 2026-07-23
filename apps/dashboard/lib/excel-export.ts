@@ -360,7 +360,7 @@ async function gatherSheets(user: AuthUser): Promise<SheetDef[]> {
 
 export async function buildExcelExportBuffer(user: AuthUser) {
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = 'Litt Hunter Talent OS';
+  workbook.creator = 'Litt Hunter';
   workbook.created = new Date();
 
   const sheets = await gatherSheets(user);

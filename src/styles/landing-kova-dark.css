@@ -32,8 +32,15 @@
   display: block;
 }
 .kova-dark [data-reveal] {
+  /* Visible por defecto (SEO / sin JS). La animación solo corre con html.kd-motion. */
+  opacity: 1;
+  transform: none;
+}
+html.kd-motion .kova-dark [data-reveal]:not(.kd-in) {
   opacity: 0;
   transform: translateY(26px);
+}
+html.kd-motion .kova-dark [data-reveal] {
   transition: opacity 550ms ease, transform 550ms var(--kd-ease);
 }
 .kova-dark .kd-in {
@@ -659,7 +666,7 @@
   border: 1px solid var(--kd-border);
   background: var(--kd-dark-2);
 }
-.kova-dark .kd-compare__card--kova {
+.kova-dark .kd-compare__card--lh {
   border-color: rgba(197, 222, 78, 0.45);
   box-shadow: 0 30px 80px rgba(197, 222, 78, 0.07);
 }
@@ -678,7 +685,7 @@
   text-transform: uppercase;
   color: var(--kd-muted);
 }
-.kova-dark .kd-compare__card--kova .kd-compare__tag {
+.kova-dark .kd-compare__card--lh .kd-compare__tag {
   color: var(--kd-lime);
 }
 .kova-dark .kd-compare__caption {
@@ -709,7 +716,7 @@
   height: 1px;
   background: rgba(245, 245, 245, 0.3);
 }
-.kova-dark .kd-compare__card--kova li {
+.kova-dark .kd-compare__card--lh li {
   color: var(--kd-text);
   font-weight: 500;
   opacity: 0;
@@ -717,11 +724,11 @@
   transition: opacity 450ms ease calc(600ms + var(--d)),
     transform 450ms var(--kd-ease) calc(600ms + var(--d));
 }
-.kova-dark .kd-in .kd-compare__card--kova li {
+.kova-dark .kd-in .kd-compare__card--lh li {
   opacity: 1;
   transform: none;
 }
-.kova-dark .kd-compare__card--kova li::before {
+.kova-dark .kd-compare__card--lh li::before {
   content: '✓';
   flex: 0 0 22px;
   height: 22px;
@@ -1705,7 +1712,7 @@
 .kova-dark .kd-compare__wire {
     transform: none;
   }
-.kova-dark .kd-compare__card--kova li {
+.kova-dark .kd-compare__card--lh li {
     opacity: 1;
     transform: none;
   }

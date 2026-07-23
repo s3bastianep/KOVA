@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import {
+  CONTACT_EMAIL_PUBLIC,
   DEFAULT_DESCRIPTION,
   GEO_PLACENAME,
   GEO_POSITION,
@@ -76,7 +77,7 @@ export function usePageMeta({ title, description = DEFAULT_DESCRIPTION, path = '
       url: SITE_URL,
       logo: `${SITE_URL}/brand/litt-hunter-logo.png`,
       description: DEFAULT_DESCRIPTION,
-      email: 'hola@litthunter.com',
+      email: CONTACT_EMAIL_PUBLIC,
       areaServed: {
         '@type': 'Country',
         name: 'Colombia',
@@ -96,11 +97,6 @@ export function usePageMeta({ title, description = DEFAULT_DESCRIPTION, path = '
       url: SITE_URL,
       inLanguage: 'es-CO',
       publisher: { '@type': 'Organization', name: SITE_NAME },
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: `${SITE_URL}/guias?q={search_term_string}`,
-        'query-input': 'required name=search_term_string',
-      },
     });
   }, [title, description, path]);
 }

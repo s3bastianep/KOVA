@@ -375,7 +375,7 @@ function CandidateReport({ c }: { c: Candidate }) {
         <div className="flex items-center justify-between text-[11px] text-slate-400 px-1">
           <span className="flex items-center gap-1.5">
             <span className="w-4 h-4 rounded flex items-center justify-center text-white text-[9px] font-bold" style={{ background: 'var(--kova-navy)' }}>K</span>
-            Litt Hunter Talent OS
+            Litt Hunter
           </span>
           <span>Generado el {generatedAt}</span>
         </div>

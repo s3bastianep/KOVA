@@ -11,7 +11,7 @@ Start with `README.md` for local setup and Railway deployment.
 - `src/`: marketing frontend (landing + guías + contacto).
 - `src/pages/Landing.jsx`: main landing page (plain home styles).
 - `src/api/booking.js`: scheduling API client for `/contacto`.
-- `apps/dashboard/`: Talent OS (auth, portal, CRM).
+- `apps/dashboard/`: plataforma Litt Hunter (auth, portal, CRM).
 - `vite.config.js`: Vite configuration.
 - `.env.local`: local-only environment values; never commit secrets.
 

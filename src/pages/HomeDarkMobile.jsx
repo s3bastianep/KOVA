@@ -23,7 +23,14 @@ export default function HomeDarkMobile() {
   }, []);
 
   useEffect(() => {
-    const els = document.querySelectorAll('.kova-dark-m [data-reveal]');
+    const root = document.documentElement;
+    const els = Array.from(document.querySelectorAll('.kova-dark-m [data-reveal]'));
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      els.forEach((el) => el.classList.add('kd-in'));
+      return undefined;
+    }
+
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -35,8 +42,21 @@ export default function HomeDarkMobile() {
       },
       { threshold: 0.18, rootMargin: '0px 0px -8% 0px' },
     );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+
+    els.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
+        el.classList.add('kd-in');
+      } else {
+        io.observe(el);
+      }
+    });
+    root.classList.add('kd-motion');
+
+    return () => {
+      io.disconnect();
+      root.classList.remove('kd-motion');
+    };
   }, []);
 
   useEffect(() => {
@@ -136,7 +156,7 @@ export default function HomeDarkMobile() {
                   <g className="kd-visual__media">
                     <image
                       className="kd-visual__img"
-                      href="/landing/kova-home-hero.jpg"
+                      href="/landing/lh-home-hero.jpg"
                       x="-30"
                       y="-30"
                       width="710"
@@ -623,13 +643,14 @@ export default function HomeDarkMobile() {
               </p>
             </div>
 
-            <div className="kd-final-cards" aria-hidden>
+            <div className="kd-final-cards">
               <div className="kd-final-card kd-final-card--empresas">
                 <img
                   className="kd-final-card__photo"
-                  src="/landing/people/kova-final-empresas.jpg"
-                  alt=""
+                  src="/landing/people/lh-final-empresas.png"
+                  alt="Equipo comercial revisando candidatos en Litt Hunter"
                   loading="lazy"
+                  decoding="async"
                 />
                 <span className="kd-final-card__chip">
                   <svg viewBox="0 0 16 16" fill="none" aria-hidden>
@@ -648,9 +669,10 @@ export default function HomeDarkMobile() {
               <div className="kd-final-card kd-final-card--talento">
                 <img
                   className="kd-final-card__photo"
-                  src="/landing/people/kova-final-talento.jpg"
-                  alt=""
+                  src="/landing/people/lh-final-talento.png"
+                  alt="Profesional comercial listo para una vacante con Litt Hunter"
                   loading="lazy"
+                  decoding="async"
                 />
                 <span className="kd-final-card__chip">
                   <svg viewBox="0 0 16 16" fill="none" aria-hidden>

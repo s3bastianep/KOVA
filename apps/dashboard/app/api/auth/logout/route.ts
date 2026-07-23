@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { withApiErrors } from '@/lib/api-handler';
-import { clearRefreshCookie, readRefreshCookie, revokeRefreshToken } from '../../../../lib/session';
+import { clearSessionCookieHeaders, readRefreshCookie, revokeRefreshToken } from '../../../../lib/session';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,6 +12,6 @@ async function handlePOST(req: NextRequest) {
 
   return Response.json(
     { message: 'Sesión cerrada' },
-    { headers: { 'Set-Cookie': clearRefreshCookie() } },
+    { headers: clearSessionCookieHeaders() },
   );
 }

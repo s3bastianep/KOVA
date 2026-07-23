@@ -2806,7 +2806,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   color: rgba(245, 241, 232, 0.6);
 }
 
-/* Hide unused Talent OS dashboard chrome if leftover */
+/* Hide unused dashboard chrome if leftover */
 .kova-home-plain .kh-dash {
   display: none !important;
 }
@@ -2856,7 +2856,7 @@ html.kova-home-chrome .kova-navbar.kv-nav.is-scrolled {
   display: none !important;
 }
 
-/* Real Talent OS preview (light product UI) */
+/* Real product preview (light product UI) */
 .kova-home-plain .kh-dash__frame--os {
   height: 100%;
   border-radius: 18px;

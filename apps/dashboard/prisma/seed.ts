@@ -4,9 +4,9 @@ import crypto from 'node:crypto';
 
 const prisma = new PrismaClient();
 
-// La contraseña demo 'Kova2026!' vive en este archivo público: solo sirve para
+// La contraseña demo 'LittHunter2026!' vive en este archivo público: solo sirve para
 // desarrollo. En producción los usuarios demo son una puerta trasera.
-const DEMO_PASSWORD = 'Kova2026!';
+const DEMO_PASSWORD = 'LittHunter2026!';
 const IS_PRODUCTION = process.env.NODE_ENV === 'production' && process.env.SEED_DEMO_DATA !== 'true';
 
 function randomPassword(): string {
@@ -24,10 +24,10 @@ async function seedProduction() {
   const tenant = await prisma.tenant.upsert({
     where: { slug: 'kova' },
     update: {},
-    create: { name: 'Litt Hunter Talent OS', slug: 'kova', plan: 'enterprise' },
+    create: { name: 'Litt Hunter', slug: 'kova', plan: 'enterprise' },
   });
 
-  const adminEmail = 'admin@kova.co';
+  const adminEmail = 'admin@litthunter.com';
   const existingAdmin = await prisma.user.findFirst({
     where: { tenantId: tenant.id, email: adminEmail },
   });
@@ -85,18 +85,18 @@ async function main() {
     where: { slug: 'kova' },
     update: {},
     create: {
-      name: 'Litt Hunter Talent OS',
+      name: 'Litt Hunter',
       slug: 'kova',
       plan: 'enterprise',
     },
   });
 
   const admin = await prisma.user.upsert({
-    where: { tenantId_email: { tenantId: tenant.id, email: 'admin@kova.co' } },
+    where: { tenantId_email: { tenantId: tenant.id, email: 'admin@litthunter.com' } },
     update: {},
     create: {
       tenantId: tenant.id,
-      email: 'admin@kova.co',
+      email: 'admin@litthunter.com',
       passwordHash,
       firstName: 'Admin',
       lastName: 'Litt Hunter',
@@ -105,11 +105,11 @@ async function main() {
   });
 
   const consultant = await prisma.user.upsert({
-    where: { tenantId_email: { tenantId: tenant.id, email: 'consultor@kova.co' } },
+    where: { tenantId_email: { tenantId: tenant.id, email: 'consultor@litthunter.com' } },
     update: {},
     create: {
       tenantId: tenant.id,
-      email: 'consultor@kova.co',
+      email: 'consultor@litthunter.com',
       passwordHash,
       firstName: 'María',
       lastName: 'Consultora',

@@ -13,7 +13,7 @@ Litt Hunter (también LITT HUNTER) ayuda a empresas a contratar perfiles comerci
 - Privacidad: https://litthunter.com/privacidad
 
 ## Product
-- Litt Hunter Talent OS: plataforma de reclutamiento comercial (ATS / CRM / portal candidato)
+- Litt Hunter: plataforma de reclutamiento comercial (ATS / CRM / portal candidato)
 - Litt Hunter Score: puntuación de compatibilidad comercial
 - Litt Hunter Method: metodología de selección por competencias
 
@@ -23,5 +23,5 @@ Litt Hunter (también LITT HUNTER) ayuda a empresas a contratar perfiles comerci
 - Contacto: hola@litthunter.com
 
 ## Facts
-- Marca anterior conocida como Kova; la marca actual es Litt Hunter
+- Dominio canónico: https://litthunter.com
 - Enfoque exclusivo en perfiles comerciales (ventas, account management, SDR y afines)

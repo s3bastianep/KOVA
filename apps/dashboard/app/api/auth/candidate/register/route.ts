@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { signToken, type AuthUser } from '@/lib/auth';
-import { issueRefreshToken, refreshCookie } from '@/lib/session';
+import { issueRefreshToken, sessionCookieHeaders } from '@/lib/session';
 import { isRateLimited } from '@/lib/rate-limit';
 import { getPublicTenantId } from '@/lib/public-tenant';
 import { isMockMode, upsertMockPortalCandidate, getMockPortalCandidateByEmail } from '@/lib/mock';
@@ -27,16 +27,17 @@ type RegisterBody = {
 
 async function sessionResponse(authUser: AuthUser) {
   const refresh = await issueRefreshToken(authUser);
+  const accessToken = signToken(authUser);
   return Response.json(
-    { user: authUser, accessToken: signToken(authUser) },
-    { headers: { 'Set-Cookie': refreshCookie(refresh) } },
+    { user: authUser, accessToken },
+    { headers: sessionCookieHeaders(accessToken, refresh) },
   );
 }
 
 export const POST = withApiErrors('auth/candidate/register', handlePOST);
 
 async function handlePOST(req: NextRequest) {
-  // Registro público: cap por IP contra creación masiva de cuentas.
+  // Registro p?blico: cap por IP contra creaci?n masiva de cuentas.
   if (isRateLimited(req, 'candidate-register', 5, 60_000)) {
     return Response.json(
       { message: 'Demasiados registros seguidos. Espera un minuto e intenta de nuevo.' },
@@ -58,7 +59,7 @@ async function handlePOST(req: NextRequest) {
   }
 
   if (!/.+@.+\..+/.test(email)) {
-    return Response.json({ message: 'Correo electrónico inválido' }, { status: 400 });
+    return Response.json({ message: 'Correo electr?nico inv?lido' }, { status: 400 });
   }
 
   const passwordError = passwordPolicyError(password, { email, nombre });
@@ -82,7 +83,7 @@ async function handlePOST(req: NextRequest) {
   if (isMockMode()) {
     if (getMockPortalCandidateByEmail(email)) {
       return Response.json(
-        { message: 'Este correo ya está registrado. Inicia sesión para continuar.' },
+        { message: 'Este correo ya est? registrado. Inicia sesi?n para continuar.' },
         { status: 409 },
       );
     }
@@ -121,7 +122,7 @@ async function handlePOST(req: NextRequest) {
     const schemaOk = await waitForSchema();
     if (!schemaOk) {
       return Response.json(
-        { message: 'El sistema se está preparando. Espera un minuto e intenta de nuevo.' },
+        { message: 'El sistema se est? preparando. Espera un minuto e intenta de nuevo.' },
         { status: 503 },
       );
     }
@@ -134,7 +135,7 @@ async function handlePOST(req: NextRequest) {
     });
     if (existingUser) {
       return Response.json(
-        { message: 'Este correo ya está registrado. Inicia sesión para continuar.' },
+        { message: 'Este correo ya est? registrado. Inicia sesi?n para continuar.' },
         { status: 409 },
       );
     }
@@ -212,19 +213,19 @@ async function handlePOST(req: NextRequest) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
       if (err.code === 'P2002') {
         return Response.json(
-          { message: 'Este correo ya está registrado. Inicia sesión para continuar.' },
+          { message: 'Este correo ya est? registrado. Inicia sesi?n para continuar.' },
           { status: 409 },
         );
       }
       if (err.code === 'P2021' || err.code === 'P2022') {
         return Response.json(
-          { message: 'El sistema se está preparando. Espera un minuto e intenta de nuevo.' },
+          { message: 'El sistema se est? preparando. Espera un minuto e intenta de nuevo.' },
           { status: 503 },
         );
       }
       if (err.code === 'P1001' || err.code === 'P1002' || err.code === 'P2024') {
         return Response.json(
-          { message: 'La base de datos está ocupada. Intenta de nuevo en unos segundos.' },
+          { message: 'La base de datos est? ocupada. Intenta de nuevo en unos segundos.' },
           { status: 503 },
         );
       }

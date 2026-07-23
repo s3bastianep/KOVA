@@ -13,12 +13,12 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Litt Hunter Talent OS',
+    default: 'Litt Hunter',
     template: '%s | Litt Hunter',
   },
   description:
-    'Litt Hunter Talent OS. Plataforma de reclutamiento comercial especializado en Colombia.',
-  applicationName: 'Litt Hunter Talent OS',
+    'Litt Hunter. Plataforma de reclutamiento comercial especializado en Colombia.',
+  applicationName: 'Litt Hunter',
   authors: [{ name: 'Litt Hunter' }],
   robots: { index: false, follow: false },
   icons: {

@@ -69,7 +69,14 @@ export default function HomeDarkDesktop() {
   }, []);
 
   useEffect(() => {
-    const els = document.querySelectorAll('.kova-dark [data-reveal]');
+    const root = document.documentElement;
+    const els = Array.from(document.querySelectorAll('.kova-dark [data-reveal]'));
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      els.forEach((el) => el.classList.add('kd-in'));
+      return undefined;
+    }
+
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -81,8 +88,22 @@ export default function HomeDarkDesktop() {
       },
       { threshold: 0.2 },
     );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+
+    // Marca lo ya visible ANTES de activar el hide, para no flash SEO/above-fold.
+    els.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
+        el.classList.add('kd-in');
+      } else {
+        io.observe(el);
+      }
+    });
+    root.classList.add('kd-motion');
+
+    return () => {
+      io.disconnect();
+      root.classList.remove('kd-motion');
+    };
   }, []);
 
   useEffect(() => {
@@ -197,7 +218,7 @@ export default function HomeDarkDesktop() {
               <g className="kd-visual__media">
                 <image
                   className="kd-visual__img"
-                  href="/landing/kova-home-hero.jpg"
+                  href="/landing/lh-home-hero.jpg"
                   x="-12"
                   y="-12"
                   width="674"
@@ -205,7 +226,7 @@ export default function HomeDarkDesktop() {
                   preserveAspectRatio="xMidYMid slice"
                 />
                 <image
-                  href="/landing/kova-home-hero.jpg"
+                  href="/landing/lh-home-hero.jpg"
                   x="0"
                   y="418"
                   width="80"
@@ -402,7 +423,7 @@ export default function HomeDarkDesktop() {
             <span className="kd-compare__wire kd-compare__wire--b" />
           </div>
 
-          <article className="kd-compare__card kd-compare__card--kova">
+          <article className="kd-compare__card kd-compare__card--lh">
             <header>
               <span className="kd-compare__tag">Perfil comercial</span>
               <span className="kd-compare__caption">Lo que nosotros vemos</span>
@@ -559,13 +580,14 @@ export default function HomeDarkDesktop() {
               </div>
             </div>
 
-            <div className="kd-final-cards" aria-hidden>
+            <div className="kd-final-cards">
               <div className="kd-final-card kd-final-card--empresas">
                 <img
                   className="kd-final-card__photo"
-                  src="/landing/people/kova-final-empresas.jpg"
-                  alt=""
+                  src="/landing/people/lh-final-empresas.png"
+                  alt="Equipo comercial revisando candidatos en Litt Hunter"
                   loading="lazy"
+                  decoding="async"
                 />
                 <span className="kd-final-card__chip">
                   <svg viewBox="0 0 16 16" fill="none" aria-hidden>
@@ -584,9 +606,10 @@ export default function HomeDarkDesktop() {
               <div className="kd-final-card kd-final-card--talento">
                 <img
                   className="kd-final-card__photo"
-                  src="/landing/people/kova-final-talento.jpg"
-                  alt=""
+                  src="/landing/people/lh-final-talento.png"
+                  alt="Profesional comercial listo para una vacante con Litt Hunter"
                   loading="lazy"
+                  decoding="async"
                 />
                 <span className="kd-final-card__chip">
                   <svg viewBox="0 0 16 16" fill="none" aria-hidden>

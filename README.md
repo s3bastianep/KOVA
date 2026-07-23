@@ -41,7 +41,7 @@ Edita `shared/schedule.js`: días laborables, franja horaria (9:00–17:00), dur
 
 Cada push redeploya la app. Las citas y todos los datos persisten en la base de datos Postgres de Railway (variable `DATABASE_URL`); no se pierden al redeployar.
 
-> **Nota:** Un solo servicio Next.js sirve marketing + Talent OS. No configures dos servicios ni Root Directory `apps/dashboard` (docs antiguas en `PLATFORM.md` están marcadas como históricas).
+> **Nota:** Un solo servicio Next.js sirve marketing + plataforma. No configures dos servicios ni Root Directory `apps/dashboard` (docs antiguas en `PLATFORM.md` están marcadas como históricas).
 
 ## Scripts
 
@@ -65,4 +65,12 @@ SMOKE_BASE_URL=https://tu-servicio.up.railway.app npm run smoke:prod
 
 Verifica HTTPS, `/api/health` (Postgres real, `mockMode=false`), páginas públicas, registro de candidato, login y una cita real.
 
-**Nota:** `litthunter.com` debe apuntar al servicio de Railway (Custom Domain + DNS). En Railway → Settings → Networking → Custom Domain, agrega `litthunter.com` y `www.litthunter.com`, y copia los registros DNS que te indique.
+## Dominio canónico
+
+La URL pública es **`https://litthunter.com`** (ya conectada a Railway vía Cloudflare).
+
+Si agregas `www.litthunter.com`, crea el registro DNS que indique Railway/Cloudflare (hoy el apex responde; `www` puede faltar).
+
+En el build puedes fijar `VITE_SITE_URL=https://litthunter.com` (también es el default en código).
+
+El hostname de Railway (`*.up.railway.app`) es solo interno de hosting; la marca y el dominio públicos son Litt Hunter.

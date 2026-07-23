@@ -234,7 +234,7 @@ export default function ReportesPage() {
 
       <div className="rounded-2xl px-5 py-3.5 flex items-center justify-center gap-2 text-xs text-slate-500" style={{ background: '#F3E8FF' }}>
         <Radar className="w-3.5 h-3.5" style={{ color: '#7C3AED' }} />
-        Los datos se actualizan diariamente a las 02:00 AM · Fuente: Litt Hunter Talent OS
+        Los datos se actualizan diariamente a las 02:00 AM · Fuente: Litt Hunter
       </div>
     </div>
   );

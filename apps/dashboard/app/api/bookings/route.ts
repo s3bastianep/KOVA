@@ -8,17 +8,12 @@ import { isSlotAvailable } from '../../../lib/booking-slots';
 import { generateTimeSlots, isBookableDateKey } from '../../../../../shared/schedule.js';
 import { isRateLimited } from '../../../lib/rate-limit';
 import { withApiErrors } from '../../../lib/api-handler';
+import { publicCorsHeaders } from '../../../lib/public-cors';
 
 export const dynamic = 'force-dynamic';
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
-
-export async function OPTIONS() {
-  return new Response(null, { status: 204, headers: CORS_HEADERS });
+export async function OPTIONS(req: NextRequest) {
+  return new Response(null, { status: 204, headers: publicCorsHeaders(req, 'POST, OPTIONS') });
 }
 
 function validateBody(body: Record<string, unknown> | null) {
@@ -43,20 +38,22 @@ function validateBody(body: Record<string, unknown> | null) {
   return null;
 }
 
-export const POST = withApiErrors('bookings', handlePOST, { headers: CORS_HEADERS });
+export const POST = withApiErrors('bookings', handlePOST);
 
 async function handlePOST(req: NextRequest) {
+  const cors = publicCorsHeaders(req, 'POST, OPTIONS');
+
   if (isRateLimited(req, 'bookings', 5, 60_000)) {
     return Response.json(
       { error: 'Demasiadas solicitudes seguidas. Espera un minuto e intenta de nuevo.' },
-      { status: 429, headers: CORS_HEADERS },
+      { status: 429, headers: cors },
     );
   }
 
   const body = await req.json().catch(() => null);
   const error = validateBody(body);
   if (error) {
-    return Response.json({ error }, { status: 400, headers: CORS_HEADERS });
+    return Response.json({ error }, { status: 400, headers: cors });
   }
 
   const { date, time, nombre, correo, telefono, empresa, rolVacante } = body as {
@@ -74,7 +71,7 @@ async function handlePOST(req: NextRequest) {
     if (!available) {
       return Response.json(
         { error: 'Ese horario acaba de ser reservado. Elige otro.' },
-        { status: 409, headers: CORS_HEADERS },
+        { status: 409, headers: cors },
       );
     }
 
@@ -101,25 +98,25 @@ async function handlePOST(req: NextRequest) {
         },
         message: 'Solicitud enviada. Te confirmaremos pronto.',
       },
-      { status: 201, headers: CORS_HEADERS },
+      { status: 201, headers: cors },
     );
   } catch (err) {
     if (err instanceof AgendaSlotConflictError) {
       return Response.json(
         { error: 'Ese horario acaba de ser reservado. Elige otro.' },
-        { status: 409, headers: CORS_HEADERS },
+        { status: 409, headers: cors },
       );
     }
     if (err instanceof AgendaUnavailableError) {
       return Response.json(
         { error: 'Agenda temporalmente no disponible. Intenta de nuevo en unos minutos.' },
-        { status: 503, headers: CORS_HEADERS },
+        { status: 503, headers: cors },
       );
     }
     console.error('[bookings]', err);
     return Response.json(
       { error: 'No se pudo registrar la cita. Intenta de nuevo en unos minutos.' },
-      { status: 500, headers: CORS_HEADERS },
+      { status: 500, headers: cors },
     );
   }
 }

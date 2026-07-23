@@ -40,8 +40,15 @@
   display: block;
 }
 .kova-dark-m [data-reveal] {
+  /* Visible por defecto (SEO / sin JS). La animación solo corre con html.kd-motion. */
+  opacity: 1;
+  transform: none;
+}
+html.kd-motion .kova-dark-m [data-reveal]:not(.kd-in) {
   opacity: 0;
   transform: translateY(26px);
+}
+html.kd-motion .kova-dark-m [data-reveal] {
   transition: opacity 550ms ease, transform 550ms var(--kd-ease);
 }
 .kova-dark-m .kd-in {

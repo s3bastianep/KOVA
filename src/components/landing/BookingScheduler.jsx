@@ -5,6 +5,7 @@ import { es } from 'date-fns/locale';
 import { ArrowLeft, CalendarDays, Check, Loader2, Video } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { createBooking, fetchAvailability, checkBookingApi } from '@/api/booking';
+import { CONTACT_EMAIL } from '@/lib/contact';
 import {
   SCHEDULE,
   addDaysToDateKey,
@@ -211,7 +212,7 @@ export default function BookingScheduler({ alternateContact = null, initialLead 
     e.preventDefault();
     setError('');
     if (apiReady === false) {
-      setError('El agendamiento en línea no está disponible. Escríbenos a hola@litthunter.com.');
+      setError(`El agendamiento en línea no está disponible. Escríbenos a ${CONTACT_EMAIL}.`);
       return;
     }
     if (!selectedDateKey || !selectedTime) {
@@ -283,7 +284,7 @@ export default function BookingScheduler({ alternateContact = null, initialLead 
       {apiReady === false && (
         <div className="kv-booking-alert">
           El agendamiento en línea no está disponible ahora. Escríbenos a{' '}
-          <a href="mailto:hola@litthunter.com">hola@litthunter.com</a> y te ayudamos a reservar.
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> y te ayudamos a reservar.
         </div>
       )}
 

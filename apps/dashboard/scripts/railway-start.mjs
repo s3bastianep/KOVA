@@ -29,7 +29,7 @@ function assertProductionEnv() {
   const jwtExpires = process.env.JWT_EXPIRES_IN?.trim();
   if (jwtExpires && /d$/i.test(jwtExpires)) {
     console.warn(
-      `[litt-hunter] JWT_EXPIRES_IN=${jwtExpires} es muy largo para access tokens en localStorage. Usa 1h o menos.`,
+      `[litt-hunter] JWT_EXPIRES_IN=${jwtExpires} es muy largo para access tokens. Usa 1h o menos.`,
     );
   }
 }
@@ -66,7 +66,7 @@ async function prepareSchema() {
     console.error('[litt-hunter] DATABASE_URL no está definida. Configúrala en Railway → Variables → Postgres.');
     if (process.env.NODE_ENV !== 'production') {
       process.env.USE_MOCK = 'true';
-      console.warn('[litt-hunter] Modo demo activado - login: consultor@kova.co / Kova2026!');
+      console.warn('[litt-hunter] Modo demo activado - login: consultor@litthunter.com / LittHunter2026!');
     }
     return;
   }

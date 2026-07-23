@@ -20,6 +20,7 @@ const COMMON_PASSWORDS = new Set([
   'iloveyou', 'sunshine', 'football', 'superman', 'whatever',
   'colombia', 'colombia1', 'bogota123', 'medellin',
   'kova2026', 'kova1234', 'kovakova',
+  'litthunter', 'litthunter1', 'litthunter2026',
   'welcome1', 'letmein1', 'admin123', 'admin1234', 'usuario1',
 ]);
 

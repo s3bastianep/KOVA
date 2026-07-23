@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { UserRole } from '@prisma/client';
 import { prisma } from './prisma';
 import { isMockMode, MOCK_USER } from './mock';
+import { readAccessCookie } from './session';
 
 if (!process.env.JWT_SECRET) {
   throw new Error(
@@ -12,7 +13,7 @@ if (!process.env.JWT_SECRET) {
 }
 
 const JWT_SECRET = process.env.JWT_SECRET;
-// Access token corto: si lo roban (p. ej. vía XSS en localStorage) vale máximo 1 hora.
+// Access token corto en cookie HttpOnly (también acepta Bearer legacy en tests/API).
 // La sesión larga vive en el refresh token HttpOnly con revocación en DB (lib/session.ts).
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN ?? '1h';
 
@@ -46,7 +47,8 @@ export function signToken(user: AuthUser): string {
 
 export async function getUserFromRequest(req: NextRequest): Promise<AuthUser | null> {
   const header = req.headers.get('authorization');
-  const token = header?.startsWith('Bearer ') ? header.slice(7) : null;
+  const bearer = header?.startsWith('Bearer ') ? header.slice(7) : null;
+  const token = bearer || readAccessCookie(req);
   if (!token) return null;
 
   try {

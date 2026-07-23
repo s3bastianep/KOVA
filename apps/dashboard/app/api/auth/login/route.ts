@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '../../../../lib/prisma';
 import { signToken, type AuthUser } from '../../../../lib/auth';
-import { issueRefreshToken, refreshCookie } from '../../../../lib/session';
+import { issueRefreshToken, sessionCookieHeaders } from '../../../../lib/session';
 import { getCandidateForUser } from '../../../../lib/candidate-auth';
 import { isMockMode, MOCK_USER, getMockPortalCandidateByEmail, verifyMockPortalPassword } from '../../../../lib/mock';
 import { isRateLimited, isKeyRateLimited, clientIp } from '../../../../lib/rate-limit';
@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCK_DURATION_MS = 15 * 60 * 1000;
-const DEMO_PASSWORD = 'Kova2026!';
+const DEMO_PASSWORD = 'LittHunter2026!';
 
 // Hash real generado al arrancar (contraseña aleatoria descartada) para gastar el mismo
 // tiempo de bcrypt cuando el correo NO existe: sin esto, la respuesta rápida delata qué
@@ -50,12 +50,13 @@ function failureDelayMs(attempts: number) {
   return Math.min(500 * 2 ** Math.max(0, attempts - 1), 4000);
 }
 
-/** Sesión completa: access token en el body + refresh token en cookie HttpOnly. */
+/** Sesión completa: access + refresh en cookies HttpOnly (access también en body por compat). */
 async function sessionResponse(authUser: AuthUser) {
   const refresh = await issueRefreshToken(authUser);
+  const accessToken = signToken(authUser);
   return Response.json(
-    { user: authUser, accessToken: signToken(authUser) },
-    { headers: { 'Set-Cookie': refreshCookie(refresh) } },
+    { user: authUser, accessToken },
+    { headers: sessionCookieHeaders(accessToken, refresh) },
   );
 }
 
@@ -122,7 +123,7 @@ async function handlePOST(req: NextRequest) {
       return Response.json(
         {
           message:
-            'Correo o contraseña incorrectos. En modo demo solo funciona consultor@kova.co. Si eres candidato, regístrate en /registro.',
+            'Correo o contraseña incorrectos. En modo demo solo funciona consultor@litthunter.com. Si eres candidato, regístrate en /registro.',
         },
         { status: 401 },
       );
@@ -223,7 +224,7 @@ async function handlePOST(req: NextRequest) {
   } catch (err) {
     console.error('[auth/login] DB error:', err);
     // Fail closed: a DB outage must never hand out a valid session, even a "demo" one.
-    // (Previously this fell back to a hardcoded consultor@kova.co/Kova2026! token in production.)
+    // (Previously this fell back to a hardcoded consultor@litthunter.com/LittHunter2026! token in production.)
     return Response.json(
       { message: 'Base de datos no disponible. Intenta de nuevo en unos minutos.' },
       { status: 503 },

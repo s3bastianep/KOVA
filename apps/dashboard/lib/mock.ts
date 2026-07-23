@@ -7,7 +7,7 @@ import type { CommercialProfile } from './candidate-commercial-profile';
 
 export const MOCK_USER = {
   id: 'mock-user-001',
-  email: 'consultor@kova.co',
+  email: 'consultor@litthunter.com',
   firstName: 'María',
   lastName: 'Consultora',
   role: 'CONSULTANT',
@@ -98,7 +98,7 @@ export const MOCK_COMPANIES = [
     status: 'ACTIVE',
     email: 'contacto@techsales.co',
     phone: '+57 300 123 4567',
-    consultants: [{ consultant: { id: '1', firstName: 'María', lastName: 'Consultora', email: 'consultor@kova.co' } }],
+    consultants: [{ consultant: { id: '1', firstName: 'María', lastName: 'Consultora', email: 'consultor@litthunter.com' } }],
     _count: { vacancies: 2, contacts: 3 },
   },
   {
@@ -110,7 +110,7 @@ export const MOCK_COMPANIES = [
     status: 'ACTIVE',
     email: 'comercial@andina.co',
     phone: '+57 310 987 6543',
-    consultants: [{ consultant: { id: '1', firstName: 'María', lastName: 'Consultora', email: 'consultor@kova.co' } }],
+    consultants: [{ consultant: { id: '1', firstName: 'María', lastName: 'Consultora', email: 'consultor@litthunter.com' } }],
     _count: { vacancies: 1, contacts: 2 },
   },
   {
@@ -122,7 +122,7 @@ export const MOCK_COMPANIES = [
     status: 'ACTIVE',
     email: 'hr@innovatech.co',
     phone: '+57 320 555 8899',
-    consultants: [{ consultant: { id: '1', firstName: 'María', lastName: 'Consultora', email: 'consultor@kova.co' } }],
+    consultants: [{ consultant: { id: '1', firstName: 'María', lastName: 'Consultora', email: 'consultor@litthunter.com' } }],
     _count: { vacancies: 1, contacts: 1 },
   },
   {
@@ -134,7 +134,7 @@ export const MOCK_COMPANIES = [
     status: 'PAUSED',
     email: 'talento@logisticatotal.co',
     phone: '+57 315 444 2211',
-    consultants: [{ consultant: { id: '1', firstName: 'María', lastName: 'Consultora', email: 'consultor@kova.co' } }],
+    consultants: [{ consultant: { id: '1', firstName: 'María', lastName: 'Consultora', email: 'consultor@litthunter.com' } }],
     _count: { vacancies: 1, contacts: 2 },
   },
 ];

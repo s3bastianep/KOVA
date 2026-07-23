@@ -25,7 +25,7 @@ const COPY = {
     ),
   },
   staff: {
-    eyebrow: 'Talent intelligence · Litt Hunter',
+    eyebrow: 'Reclutamiento comercial · Litt Hunter',
     title: (
       <>
         El panel detrás del <span className="kv-login-accent">match</span> comercial

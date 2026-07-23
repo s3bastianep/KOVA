@@ -135,6 +135,26 @@ async function main() {
     ok(`GET ${path}`, `${res.status} ${text.length}b`);
   }
 
+  // --- Assets críticos (CTA final: PNG real; .jpg mal nombrados fallan con nosniff) ---
+  for (const asset of [
+    '/landing/people/lh-final-empresas.png',
+    '/landing/people/lh-final-talento.png',
+    '/landing/lh-home-hero.jpg',
+    '/brand/litt-hunter-logo.png',
+  ]) {
+    const { res } = await request(asset, { method: 'HEAD' });
+    const ct = res.headers.get('content-type') || '';
+    if (!res.ok) {
+      fail(`HEAD ${asset}`, `status ${res.status}`);
+    } else if (asset.endsWith('.png') && !ct.includes('image/png')) {
+      fail(`HEAD ${asset}`, `content-type inesperado: ${ct}`);
+    } else if (asset.endsWith('.jpg') && !ct.includes('image/jpeg') && !ct.includes('image/jpg')) {
+      fail(`HEAD ${asset}`, `content-type inesperado: ${ct}`);
+    } else {
+      ok(`HEAD ${asset}`, ct);
+    }
+  }
+
   const stamp = Date.now();
   const email = `smoke.prod.${stamp}@kova-smoke.test`;
   const password = `Smk!${stamp}Aa`;

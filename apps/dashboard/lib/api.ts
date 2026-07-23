@@ -25,18 +25,18 @@ export interface LoginResponse {
   accessToken: string;
 }
 
-function getToken() {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem('kova_access_token');
+function clearAccessTokenStorage() {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem('kova_access_token');
+  localStorage.removeItem('kova_refresh_token');
 }
 
-// El refresh token vive en una cookie HttpOnly (el JS no puede leerlo). Cuando el
-// access token expira (401), pedimos uno nuevo a /auth/refresh una sola vez y
-// reintentamos. Una sola promesa en vuelo evita disparar N refresh en paralelo.
-let refreshInFlight: Promise<string | null> | null = null;
+// Access token: cookie HttpOnly `lh_access`. Refresh: cookie HttpOnly `kova_refresh`.
+// Cuando el access expira (401), pedimos uno nuevo a /auth/refresh (cookie) y reintentamos.
+let refreshInFlight: Promise<boolean> | null = null;
 
-async function tryRefreshAccessToken(): Promise<string | null> {
-  if (typeof window === 'undefined') return null;
+async function tryRefreshAccessToken(): Promise<boolean> {
+  if (typeof window === 'undefined') return false;
   if (!refreshInFlight) {
     refreshInFlight = (async () => {
       try {
@@ -44,14 +44,13 @@ async function tryRefreshAccessToken(): Promise<string | null> {
           method: 'POST',
           credentials: 'same-origin',
         });
-        if (!res.ok) return null;
-        const data = (await res.json()) as { accessToken?: string; user?: AuthUser };
-        if (!data.accessToken) return null;
-        localStorage.setItem('kova_access_token', data.accessToken);
+        if (!res.ok) return false;
+        const data = (await res.json()) as { user?: AuthUser };
         if (data.user) localStorage.setItem('kova_user', JSON.stringify(data.user));
-        return data.accessToken;
+        clearAccessTokenStorage();
+        return true;
       } catch {
-        return null;
+        return false;
       } finally {
         refreshInFlight = null;
       }
@@ -60,7 +59,7 @@ async function tryRefreshAccessToken(): Promise<string | null> {
   return refreshInFlight;
 }
 
-export async function apiFetch<T>(
+async function apiFetch<T>(
   path: string,
   options: RequestInit & { timeoutMs?: number } = {},
 ): Promise<T> {
@@ -71,30 +70,30 @@ export async function apiFetch<T>(
       ? setTimeout(() => controller.abort(), timeoutMs)
       : null;
 
-  const doFetch = (token: string | null) =>
+  const doFetch = () =>
     fetch(`${API_URL}${path}`, {
       ...fetchOptions,
       credentials: 'same-origin',
       signal: controller?.signal,
       headers: {
         'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...fetchOptions.headers,
       },
     });
 
   try {
-    let res = await doFetch(getToken());
+    let res = await doFetch();
 
     const isAuthRequest = path.startsWith('/auth/login') || path.startsWith('/auth/candidate/register');
 
     if (res.status === 401 && typeof window !== 'undefined' && !isAuthRequest) {
-      const newToken = await tryRefreshAccessToken();
-      if (newToken) {
-        res = await doFetch(newToken);
+      const refreshed = await tryRefreshAccessToken();
+      if (refreshed) {
+        res = await doFetch();
       }
       if (res.status === 401) {
-        localStorage.removeItem('kova_access_token');
+        clearAccessTokenStorage();
+        localStorage.removeItem('kova_user');
         window.location.href = loginPathForStoredUser();
         throw new Error('Unauthorized');
       }
@@ -171,18 +170,17 @@ export type PortalPerfilResponse = {
 };
 
 async function uploadPortalCv(file: File) {
-  const token = getToken();
   const formData = new FormData();
   formData.append('file', file);
   const res = await fetch(`${API_URL}/portal/cv`, {
     method: 'POST',
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    credentials: 'same-origin',
     body: formData,
   });
 
   if (res.status === 401 && typeof window !== 'undefined') {
-    localStorage.removeItem('kova_access_token');
-    localStorage.removeItem('kova_refresh_token');
+    clearAccessTokenStorage();
+    localStorage.removeItem('kova_user');
     window.location.href = loginPathForStoredUser();
     throw new Error('Unauthorized');
   }
@@ -327,9 +325,8 @@ export const portalApi = {
     return res;
   },
   downloadCv: async () => {
-    const token = getToken();
     const res = await fetch(`${API_URL}/portal/cv`, {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      credentials: 'same-origin',
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
@@ -469,18 +466,18 @@ export const dashboardApi = {
   documents: () => apiFetch<unknown[]>('/documentos'),
   reports: () => apiFetch<Record<string, unknown>>('/reportes'),
   exportExcel: async () => {
-    const doFetch = (token: string | null) =>
+    const doFetch = () =>
       fetch(`${API_URL}/export/excel`, {
         credentials: 'same-origin',
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
-    let res = await doFetch(getToken());
+    let res = await doFetch();
     if (res.status === 401 && typeof window !== 'undefined') {
-      const newToken = await tryRefreshAccessToken();
-      if (newToken) res = await doFetch(newToken);
+      const refreshed = await tryRefreshAccessToken();
+      if (refreshed) res = await doFetch();
     }
     if (res.status === 401 && typeof window !== 'undefined') {
-      localStorage.removeItem('kova_access_token');
+      clearAccessTokenStorage();
+      localStorage.removeItem('kova_user');
       window.location.href = loginPathForStoredUser();
       throw new Error('Unauthorized');
     }
@@ -493,15 +490,13 @@ export const dashboardApi = {
 };
 
 export function saveSession(data: LoginResponse) {
-  localStorage.setItem('kova_access_token', data.accessToken);
-  // Limpieza de sesiones antiguas: el refresh ya no se guarda en localStorage.
-  localStorage.removeItem('kova_refresh_token');
+  // Access/refresh viven en cookies HttpOnly; solo cacheamos el user para UI.
+  clearAccessTokenStorage();
   localStorage.setItem('kova_user', JSON.stringify(data.user));
 }
 
 export function clearSession() {
-  localStorage.removeItem('kova_access_token');
-  localStorage.removeItem('kova_refresh_token');
+  clearAccessTokenStorage();
   localStorage.removeItem('kova_user');
   if (typeof window !== 'undefined') {
     clearOnboardingSession();

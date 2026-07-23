@@ -1,4 +1,4 @@
-# Litt Hunter Talent OS — Plataforma
+# Litt Hunter — Plataforma
 
 > **HISTÓRICO / DESACTUALIZADO (2026-07):** el deploy real es **un solo servicio** en la raíz del repo (`npm run build` / `npm run start` → Next sirve landing + API + portal). No uses Root Directory `apps/dashboard` ni dos servicios `web` + `app`. Guía vigente: `README.md`.
 
@@ -61,9 +61,11 @@ Con eso, el botón **Iniciar sesión** de la web pública abre la plataforma.
 
 | Rol | Correo | Contraseña |
 |-----|--------|------------|
-| Super Admin | `admin@kova.co` | `Kova2026!` |
-| Consultor | `consultor@kova.co` | `Kova2026!` |
-| Cliente | `cliente@techsales.co` | `Kova2026!` |
+| Super Admin | `admin@litthunter.com` | `LittHunter2026!` |
+| Consultor | `consultor@litthunter.com` | `LittHunter2026!` |
+| Cliente | `cliente@techsales.co` | `LittHunter2026!` |
+
+Contacto público de la marca: `hola@litthunter.com`.
 
 ## Desarrollo local
 
