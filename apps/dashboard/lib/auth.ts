@@ -127,7 +127,7 @@ export function isStaffRole(role: UserRole): boolean {
 }
 
 /**
- * Roles internos de Kova (excluye CLIENT y CANDIDATE). Las herramientas operativas
+ * Roles internos de Litt Hunter (excluye CLIENT y CANDIDATE). Las herramientas operativas
  * (CRM, agenda, tareas, reportes, etc.) contienen datos de TODOS los clientes del tenant,
  * así que un usuario CLIENT (empresa cliente) no debe poder consultarlas.
  * Usar como: `if (!isInternalRole(user.role)) return unauthorized();`

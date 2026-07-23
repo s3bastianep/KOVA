@@ -357,7 +357,7 @@ export default function Landing() {
   const sendWhatsApp = () => {
     if (!validateForm()) return;
     const tel = form.tel.trim();
-    const txt = `Hola Kova, soy ${form.nombre.trim() || '...'}${
+    const txt = `Hola Litt Hunter, soy ${form.nombre.trim() || '...'}${
       form.cargo.trim() ? `, ${form.cargo.trim()}` : ''
     }${
       form.empresa.trim() ? ` de ${form.empresa.trim()}` : ''
@@ -510,7 +510,7 @@ export default function Landing() {
                   <span>Compatibilidad</span>
                 </div>
               </div>
-              <div className="kh-score__dims-label">Dimensiones del Kova Score</div>
+              <div className="kh-score__dims-label">Dimensiones del Litt Hunter Score</div>
               <div className="kh-dims" key={lit ? 'dims-on' : 'dims-off'}>
                 {DIMS.map((d) => (
                   <div key={d.label} className="kh-dim">
@@ -551,7 +551,7 @@ export default function Landing() {
               <p>mucho riesgo, poca claridad</p>
             </div>
             <div className="kh-chart__cap kh-chart__cap--end">
-              <strong>Contratar con Kova</strong>
+              <strong>Contratar con Litt Hunter</strong>
               <p>menos sorpresas, más resultados</p>
             </div>
           </div>
@@ -561,7 +561,7 @@ export default function Landing() {
             viewBox="0 0 1200 148"
             preserveAspectRatio="xMidYMid meet"
             role="img"
-            aria-label="De contratar a ciegas a contratar con Kova"
+            aria-label="De contratar a ciegas a contratar con Litt Hunter"
           >
             <path
               d="M36,96 C78,128 118,128 160,96 C202,64 242,64 284,96 C326,128 366,128 408,96 C450,64 490,64 532,96 C564,120 592,112 620,96"
@@ -1167,10 +1167,11 @@ export default function Landing() {
       <footer className="kh-footer">
         <div className="kh-footer__inner">
           <div className="kh-footer__top">
-            <a href="#top" className="kh-footer__brand">
-              kova<span>.</span>
+            <a href="#top" className="kh-footer__brand lh-mark">
+              litt hunter
+              <span className="lh-mark__sq" aria-hidden="true" />
             </a>
-            <p className="kh-footer__copy">© 2026 Kova</p>
+            <p className="kh-footer__copy">© 2026 Litt Hunter</p>
           </div>
         </div>
       </footer>

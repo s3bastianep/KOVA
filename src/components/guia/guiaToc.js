@@ -16,7 +16,7 @@ export const TOC_EVALUACION = [
 export const TOC_PSICOMETRICAS = [
   { id: 'que-son-psicometricas', label: '¿Qué son las pruebas psicométricas?' },
   { id: 'limites-psicometricas', label: 'Límites de las psicométricas en comercial' },
-  { id: 'que-es-evaluacion-kova', label: '¿Qué es la evaluación comercial de Kova?' },
+  { id: 'que-es-evaluacion-kova', label: '¿Qué es la evaluación comercial de Litt Hunter?' },
   { id: 'como-supera', label: 'Cómo supera a las psicométricas' },
   { id: 'roi', label: 'Retorno de invertir en evaluación comercial' },
   { id: 'conclusion', label: 'Conclusión' },

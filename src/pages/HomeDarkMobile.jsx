@@ -612,7 +612,6 @@ export default function HomeDarkMobile() {
         <div className="kd-final-shell" data-reveal>
           <div className="kd-final-split">
             <div className="kd-final-copy">
-              <p className="kd-final-kicker">Dos caminos. Un criterio.</p>
               <h2 id="kd-final-title">
                 El talento <span>correcto</span>
                 <br />
@@ -677,25 +676,18 @@ export default function HomeDarkMobile() {
                   Para talento
                 </Link>
               </div>
-              <p className="kd-final-note">
-                <span className="kd-final-note__check" aria-hidden>
-                  <svg viewBox="0 0 16 16" fill="none">
-                    <circle cx="8" cy="8" r="7.25" stroke="currentColor" strokeWidth="1.5" />
-                    <path
-                      d="M4.6 8.2l2.1 2.1 4.7-4.7"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-                Especialistas solo en perfiles comerciales.
-              </p>
             </div>
           </div>
         </div>
       </section>
+
+      <footer className="kd-footer">
+        <Link className="kd-brand lh-mark" to="/">
+          litt hunter
+          <span className="lh-mark__sq" aria-hidden="true" />
+        </Link>
+        <p>© {new Date().getFullYear()} Litt Hunter</p>
+      </footer>
     </main>
   );
 }

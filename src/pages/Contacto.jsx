@@ -66,7 +66,7 @@ export default function Contacto() {
   usePageMeta({
     title: 'Agenda una asesoría sin costo',
     description:
-      'Agenda una asesoría sin costo de 30 minutos. Un especialista entiende tu vacante y te explica cómo Kova puede ayudarte a contratar con criterio y evidencia.',
+      'Agenda una asesoría sin costo de 30 minutos. Un especialista entiende tu vacante y te explica cómo Litt Hunter puede ayudarte a contratar con criterio y evidencia.',
     path: '/contacto',
   });
 
@@ -127,7 +127,7 @@ export default function Contacto() {
 
       <footer className="kc-footer">
         <div className="kc-wrap">
-          <p>© {new Date().getFullYear()} Kova</p>
+          <p>© {new Date().getFullYear()} Litt Hunter</p>
         </div>
       </footer>
     </div>

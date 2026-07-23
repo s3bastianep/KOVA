@@ -113,11 +113,11 @@ export function PortalTopbar() {
               style={{ borderColor: 'rgba(255,255,255,0.08)' }}
             >
               <div className="flex items-center gap-3">
-                <div className="kova-sidebar-logo-mark text-sm" aria-hidden>
-                  K
-                </div>
                 <div>
-                  <p className="kova-sidebar-brand font-heading text-sm font-bold">Kova</p>
+                  <p className="kova-sidebar-brand font-heading text-sm font-bold lh-mark">
+                    litt hunter
+                    <span className="lh-mark__sq" aria-hidden="true" />
+                  </p>
                   <p className="kova-sidebar-brand-sub text-[10px]">Tu espacio de candidato</p>
                 </div>
               </div>

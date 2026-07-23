@@ -28,7 +28,7 @@ export default function GuiaHabilidadesBlandasComercial() {
         </GuiaProse>
         <GuiaProse>
           Si eres líder comercial o de talento humano, necesitas un sistema de evaluación justo y objetivo que
-          mida competencias reales, no impresiones de una entrevista de 45 minutos. En Kova abordamos esto con
+          mida competencias reales, no impresiones de una entrevista de 45 minutos. En Litt Hunter abordamos esto con
           metodología especializada: evaluación por competencias, sin pruebas genéricas de RH.
         </GuiaProse>
         <GuiaProse>
@@ -114,7 +114,7 @@ export default function GuiaHabilidadesBlandasComercial() {
 
         <GuiaNumberedItem num={1} title="Evaluaciones de comportamiento comercial">
           Las evaluaciones de comportamiento miden cómo un candidato actúa en situaciones de venta reales:
-          prospección, presentación de propuesta, manejo de objeciones y cierre. En Kova, un especialista
+          prospección, presentación de propuesta, manejo de objeciones y cierre. En Litt Hunter, un especialista
           observa y califica cada competencia con rúbricas definidas para la vacante, no con preguntas genéricas
           de RH.
         </GuiaNumberedItem>
@@ -128,7 +128,7 @@ export default function GuiaHabilidadesBlandasComercial() {
         <GuiaNumberedItem num={3} title="Rúbricas estructuradas para calificar competencias">
           Sin criterios claros, cada entrevistador evalúa distinto. Una rúbrica desglosa cada habilidad blanda
           en indicadores observables: claridad al explicar valor, escucha activa, manejo emocional ante rechazo.
-          Kova califica cada candidato con la misma escala para que la comparación sea justa y defendible ante
+          Litt Hunter califica cada candidato con la misma escala para que la comparación sea justa y defendible ante
           dirección comercial.
         </GuiaNumberedItem>
 
@@ -192,7 +192,7 @@ export default function GuiaHabilidadesBlandasComercial() {
         </GuiaNumberedItem>
 
         <GuiaCallout
-          title="Cómo lo aborda Kova"
+          title="Cómo lo aborda Litt Hunter"
           items={[
             'Definición del perfil antes de evaluar: definimos qué habilidades blandas exige el rol.',
             'Evaluación por competencias comerciales con rúbricas, no impresiones subjetivas.',
@@ -212,14 +212,14 @@ export default function GuiaHabilidadesBlandasComercial() {
           competencias, observar comportamiento en escenarios reales y comparar candidatos con el mismo criterio.
         </GuiaProse>
         <GuiaProse>
-          Kova ayuda a empresas de todo tipo a evaluar habilidades blandas comerciales con metodología especializada:
+          Litt Hunter ayuda a empresas de todo tipo a evaluar habilidades blandas comerciales con metodología especializada:
           definición del perfil, evaluación por competencias, comparación entre candidatos e informe
           argumentado para que dirección comercial y talento humano decidan con evidencia.
         </GuiaProse>
 
         <GuiaArticleCTA
           title="Evalúa habilidades blandas comerciales con criterio de experto"
-          description="Contáctanos. Un especialista de Kova te orienta sobre cómo medir competencias interpersonales con rigor, no con intuición."
+          description="Contáctanos. Un especialista de Litt Hunter te orienta sobre cómo medir competencias interpersonales con rigor, no con intuición."
           primaryLabel="Contáctanos"
           primaryTo="/contacto"
           secondaryLabel="Ver artículo sobre evaluación comercial"

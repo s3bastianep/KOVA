@@ -21,18 +21,18 @@ const SECCIONES = [
   {
     titulo: 'Tus derechos',
     texto:
-      'Puedes solicitar acceso, corrección o eliminación de tus datos en cualquier momento escribiendo a contacto@kova.com.co.',
+      'Puedes solicitar acceso, corrección o eliminación de tus datos en cualquier momento escribiendo a hola@litthunter.com.',
   },
   {
     titulo: 'Contacto',
-    texto: 'Para cualquier consulta sobre esta política, escríbenos a contacto@kova.com.co.',
+    texto: 'Para cualquier consulta sobre esta política, escríbenos a hola@litthunter.com.',
   },
 ];
 
 export default function Privacidad() {
   usePageMeta({
     title: 'Política de privacidad',
-    description: 'Cómo Kova recopila, usa y protege tus datos personales.',
+    description: 'Cómo Litt Hunter recopila, usa y protege tus datos personales.',
     path: '/privacidad',
   });
 
@@ -64,7 +64,7 @@ export default function Privacidad() {
 
       <footer className="kc-footer">
         <div className="kc-wrap">
-          <p>© {new Date().getFullYear()} Kova</p>
+          <p>© {new Date().getFullYear()} Litt Hunter</p>
         </div>
       </footer>
     </div>

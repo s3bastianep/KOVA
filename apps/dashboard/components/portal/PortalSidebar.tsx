@@ -24,11 +24,11 @@ export function PortalSidebar() {
   return (
     <aside className="kova-sidebar relative z-20 hidden h-full w-[268px] min-w-[268px] max-w-[268px] shrink-0 flex-col overflow-hidden border-r lg:flex">
       <div className="flex items-center gap-3 px-5 pt-6 pb-5">
-        <div className="kova-sidebar-logo-mark" aria-hidden>
-          K
-        </div>
         <div className="flex-1 min-w-0">
-          <p className="kova-sidebar-brand font-heading font-bold text-[15px] leading-tight">Kova</p>
+          <p className="kova-sidebar-brand font-heading font-bold text-[15px] leading-tight lh-mark">
+            litt hunter
+            <span className="lh-mark__sq" aria-hidden="true" />
+          </p>
           <p className="kova-sidebar-brand-sub text-[11px] mt-0.5">Tu espacio de candidato</p>
         </div>
       </div>

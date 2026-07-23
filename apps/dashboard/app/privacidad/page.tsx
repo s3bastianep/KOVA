@@ -2,12 +2,12 @@ import { ArrowLeft } from 'lucide-react';
 import '../login/login.css';
 
 export const metadata = {
-  title: 'Política de privacidad | Kova',
+  title: 'Política de privacidad | Litt Hunter',
 };
 
 /**
  * Placeholder structure only — the copy below is generic and NOT reviewed legal text. Replace
- * every section with Kova's actual privacy policy before this page is shared with real users.
+ * every section with Litt Hunter's actual privacy policy before this page is shared with real users.
  * Linked from the registration form's data-consent checkbox.
  */
 export default function PrivacidadPage() {
@@ -17,8 +17,9 @@ export default function PrivacidadPage() {
 
       <header className="kv-login-nav">
         <div className="kv-login-nav-inner">
-          <a href="/" className="kv-login-logo">
-            kova<span className="kv-login-logo-dot">.</span>
+          <a href="/" className="kv-login-logo lh-mark">
+            litt hunter
+            <span className="lh-mark__sq" aria-hidden="true" />
           </a>
           <a href="/registro" className="kv-login-back">
             <ArrowLeft size={16} aria-hidden />
@@ -42,7 +43,7 @@ export default function PrivacidadPage() {
           }}
         >
           Contenido pendiente de revisión legal. Este texto es un borrador de estructura, no la
-          política definitiva de Kova.
+          política definitiva de Litt Hunter.
         </div>
 
         <h1 style={{ fontFamily: 'var(--font-manrope), Manrope, sans-serif', fontSize: '1.75rem', marginBottom: '0.5rem' }}>

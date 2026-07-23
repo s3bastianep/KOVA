@@ -48,7 +48,7 @@ export function GuiaIssueBlock({ id, num, title, paragraphs, solution }) {
         <p key={p.slice(0, 48)}>{p}</p>
       ))}
       <div className="kv-guia-solution">
-        <p className="kv-guia-solution-label font-mono">Cómo lo resuelve Kova</p>
+        <p className="kv-guia-solution-label font-mono">Cómo lo resuelve Litt Hunter</p>
         <p>{solution}</p>
       </div>
     </article>

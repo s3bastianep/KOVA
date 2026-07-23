@@ -25,14 +25,14 @@ const COPY = {
     ),
   },
   staff: {
-    eyebrow: 'Talent intelligence · Kova',
+    eyebrow: 'Talent intelligence · Litt Hunter',
     title: (
       <>
         El panel detrás del <span className="kv-login-accent">match</span> comercial
       </>
     ),
     lead: 'Vacantes, candidatos, evaluaciones y agenda en un solo lugar. Para equipos que contratan con criterio y evidencia.',
-    cardSub: 'Acceso para el equipo Kova.',
+    cardSub: 'Acceso para el equipo Litt Hunter.',
     submit: 'Entrar al panel',
     footer: null,
   },
@@ -49,7 +49,7 @@ export default function Login({ mode = 'candidate' }) {
 
   usePageMeta({
     title: mode === 'staff' ? 'Acceso interno' : 'Iniciar sesión',
-    description: 'Accede a tu cuenta Kova.',
+    description: 'Accede a tu cuenta Litt Hunter.',
     path: mode === 'staff' ? '/acceso' : '/login',
   });
 
@@ -74,7 +74,7 @@ export default function Login({ mode = 'candidate' }) {
 
       if (mode === 'candidate' && data.user.role !== 'CANDIDATE') {
         clearSession();
-        setError('Esta página es solo para candidatos. Si eres del equipo Kova, usa el acceso interno.');
+        setError('Esta página es solo para candidatos. Si eres del equipo Litt Hunter, usa el acceso interno.');
         return;
       }
 

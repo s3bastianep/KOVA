@@ -23,13 +23,13 @@ try {
       WHERE rn > 1
     )
   `;
-  console.log(`[kova] Dedupe agenda_requests: ${result} fila(s) eliminada(s).`);
+  console.log(`[litt-hunter] Dedupe agenda_requests: ${result} fila(s) eliminada(s).`);
 } catch (error) {
   const msg = error instanceof Error ? error.message : String(error);
   if (/does not exist|relation .* does not exist/i.test(msg)) {
-    console.log('[kova] agenda_requests aún no existe; se omite dedupe.');
+    console.log('[litt-hunter] agenda_requests aún no existe; se omite dedupe.');
   } else {
-    console.error('[kova] Dedupe agenda_requests falló:', msg);
+    console.error('[litt-hunter] Dedupe agenda_requests falló:', msg);
     process.exit(1);
   }
 } finally {

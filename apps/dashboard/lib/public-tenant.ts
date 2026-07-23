@@ -6,12 +6,15 @@ const DEFAULT_SLUG = 'kova';
 export async function getPublicTenantId(): Promise<string> {
   if (isMockMode()) return 'mock-tenant-001';
 
-  const slug = process.env.KOVA_PUBLIC_TENANT_SLUG ?? DEFAULT_SLUG;
+  const slug =
+    process.env.LITT_HUNTER_PUBLIC_TENANT_SLUG ??
+    process.env.KOVA_PUBLIC_TENANT_SLUG ??
+    DEFAULT_SLUG;
   const tenant = await prisma.tenant.upsert({
     where: { slug },
     update: { isActive: true },
     create: {
-      name: 'Kova Talent OS',
+      name: 'Litt Hunter Talent OS',
       slug,
       plan: 'enterprise',
       isActive: true,

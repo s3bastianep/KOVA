@@ -1,0 +1,27 @@
+# Litt Hunter
+
+> Especialistas en reclutamiento y selección de talento comercial en Colombia.
+
+Litt Hunter (también LITT HUNTER) ayuda a empresas a contratar perfiles comerciales con menor riesgo: diagnostica la vacante, evalúa competencias reales y entrega ternas argumentadas.
+
+## Site
+- Home: https://litthunter.com/
+- Para empresas: https://litthunter.com/para-empresas
+- Para talento: https://litthunter.com/empleo
+- Contacto: https://litthunter.com/contacto
+- Guías: https://litthunter.com/guias
+- Privacidad: https://litthunter.com/privacidad
+
+## Product
+- Litt Hunter Talent OS: plataforma de reclutamiento comercial (ATS / CRM / portal candidato)
+- Litt Hunter Score: puntuación de compatibilidad comercial
+- Litt Hunter Method: metodología de selección por competencias
+
+## Geography
+- País: Colombia
+- Idioma: español (es-CO)
+- Contacto: hola@litthunter.com
+
+## Facts
+- Marca anterior conocida como Kova; la marca actual es Litt Hunter
+- Enfoque exclusivo en perfiles comerciales (ventas, account management, SDR y afines)

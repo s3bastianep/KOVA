@@ -24,7 +24,7 @@ async function seedProduction() {
   const tenant = await prisma.tenant.upsert({
     where: { slug: 'kova' },
     update: {},
-    create: { name: 'Kova Talent OS', slug: 'kova', plan: 'enterprise' },
+    create: { name: 'Litt Hunter Talent OS', slug: 'kova', plan: 'enterprise' },
   });
 
   const adminEmail = 'admin@kova.co';
@@ -40,7 +40,7 @@ async function seedProduction() {
         email: adminEmail,
         passwordHash: await bcrypt.hash(password, 12),
         firstName: 'Admin',
-        lastName: 'Kova',
+        lastName: 'Litt Hunter',
         role: UserRole.SUPER_ADMIN,
       },
     });
@@ -85,7 +85,7 @@ async function main() {
     where: { slug: 'kova' },
     update: {},
     create: {
-      name: 'Kova Talent OS',
+      name: 'Litt Hunter Talent OS',
       slug: 'kova',
       plan: 'enterprise',
     },
@@ -99,7 +99,7 @@ async function main() {
       email: 'admin@kova.co',
       passwordHash,
       firstName: 'Admin',
-      lastName: 'Kova',
+      lastName: 'Litt Hunter',
       role: UserRole.SUPER_ADMIN,
     },
   });
@@ -426,7 +426,7 @@ async function main() {
       location: 'Google Meet',
       meetingUrl: 'https://meet.google.com/abc-defg-hij',
       purpose: 'Levantar información del negocio, proceso comercial y perfil ideal del cargo.',
-      notes: 'Confirmar asistencia del gerente general. Llevar propuesta de metodología Kova.',
+      notes: 'Confirmar asistencia del gerente general. Llevar propuesta de metodología Litt Hunter.',
     },
     {
       id: 'seed-cal-002',

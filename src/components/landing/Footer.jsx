@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="kv-wrap">
         <p className="kv-footer-meta">
           © {new Date().getFullYear()}{' '}
-          <Link to="/">Kova</Link>
+          <Link to="/">Litt Hunter</Link>
         </p>
       </div>
     </footer>

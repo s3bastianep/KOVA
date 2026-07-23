@@ -211,7 +211,7 @@ export default function BookingScheduler({ alternateContact = null, initialLead 
     e.preventDefault();
     setError('');
     if (apiReady === false) {
-      setError('El agendamiento en línea no está disponible. Escríbenos a contacto@kova.com.co.');
+      setError('El agendamiento en línea no está disponible. Escríbenos a hola@litthunter.com.');
       return;
     }
     if (!selectedDateKey || !selectedTime) {
@@ -283,7 +283,7 @@ export default function BookingScheduler({ alternateContact = null, initialLead 
       {apiReady === false && (
         <div className="kv-booking-alert">
           El agendamiento en línea no está disponible ahora. Escríbenos a{' '}
-          <a href="mailto:contacto@kova.com.co">contacto@kova.com.co</a> y te ayudamos a reservar.
+          <a href="mailto:hola@litthunter.com">hola@litthunter.com</a> y te ayudamos a reservar.
         </div>
       )}
 

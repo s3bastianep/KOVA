@@ -1,8 +1,8 @@
-# Kova Talent OS — Plataforma
+# Litt Hunter Talent OS — Plataforma
 
-> **HISTÓRICO / DESACTUALIZADO (2026-07):** el deploy real es **un solo servicio** en la raíz del repo (`npm run build` / `npm run start` → Next sirve landing + API + portal). No uses Root Directory `apps/dashboard` ni dos servicios `kova-web` + `kova-app`. Guía vigente: `README.md`.
+> **HISTÓRICO / DESACTUALIZADO (2026-07):** el deploy real es **un solo servicio** en la raíz del repo (`npm run build` / `npm run start` → Next sirve landing + API + portal). No uses Root Directory `apps/dashboard` ni dos servicios `web` + `app`. Guía vigente: `README.md`.
 
-Plataforma privada de reclutamiento comercial que vive junto a la página pública de Kova.
+Plataforma privada de reclutamiento comercial que vive junto a la página pública de Litt Hunter.
 Todo funciona en **Railway**, sin servicios externos.
 
 ## Arquitectura (simplificada)
@@ -10,7 +10,7 @@ Todo funciona en **Railway**, sin servicios externos.
 Una sola aplicación **Next.js** contiene el frontend (dashboard) **y** el backend (API + base de datos):
 
 ```
-KOVA/
+LITT HUNTER/
 ├── src/                     # Página pública (Vite) — servicio Railway existente
 ├── server/                  # Servidor Express de la landing
 └── apps/
@@ -29,8 +29,8 @@ No hay backend separado ni Supabase/Neon/Redis. La base de datos es **PostgreSQL
 
 | Servicio | Qué es | Root Directory |
 |----------|--------|----------------|
-| `kova-web` | Página pública (ya desplegada) | raíz del repo |
-| `kova-app` | Plataforma privada (Next.js + API) | `apps/dashboard` |
+| `web` | Página pública (ya desplegada) | raíz del repo |
+| `app` | Plataforma privada (Next.js + API) | `apps/dashboard` |
 | `Postgres` | Base de datos (plugin de Railway) | — |
 
 ## Desplegar en Railway (paso a paso)
@@ -51,9 +51,9 @@ No hay backend separado ni Supabase/Neon/Redis. La base de datos es **PostgreSQL
    - **start**: `npm run db:deploy && npm run start`
      (crea/actualiza las tablas con `prisma db push`, carga los datos iniciales y arranca Next.js).
 
-5. **Conectar la landing con el login**: en el servicio de la página pública (`kova-web`),
+5. **Conectar la landing con el login**: en el servicio de la página pública (`web`),
    agrega la variable `VITE_DASHBOARD_URL` con la URL pública del servicio `apps/dashboard` + `/login`
-   (ej. `https://kova-app-production.up.railway.app/login`) y vuelve a desplegar.
+   (ej. `https://app-production.up.railway.app/login`) y vuelve a desplegar.
 
 Con eso, el botón **Iniciar sesión** de la web pública abre la plataforma.
 

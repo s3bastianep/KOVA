@@ -2,7 +2,7 @@
 
 ## Project Context
 
-KOVA is a React + Vite landing page with a Next.js dashboard under `apps/dashboard`. Keep changes focused on the user's request and preserve existing project conventions.
+LITT HUNTER is a React + Vite landing page with a Next.js dashboard under `apps/dashboard`. Keep changes focused on the user's request and preserve existing project conventions.
 
 Start with `README.md` for local setup and Railway deployment.
 

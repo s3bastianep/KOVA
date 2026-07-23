@@ -17,7 +17,7 @@ const BASE = (process.env.SMOKE_BASE_URL || 'https://kova-production-958a.up.rai
 const TIMEOUT_MS = Number(process.env.SMOKE_TIMEOUT_MS || 90_000);
 
 const pages = [
-  ['/', 'Kova'],
+  ['/', 'Litt Hunter'],
   ['/para-empresas', 'empresas'],
   ['/empleo', 'empleo'],
   ['/contacto', 'contacto'],
@@ -124,7 +124,11 @@ async function main() {
       continue;
     }
     const lower = text.toLowerCase();
-    if (!lower.includes('kova') && !lower.includes(hint.toLowerCase())) {
+    if (
+      !lower.includes('litt hunter') &&
+      !lower.includes('litthunter') &&
+      !lower.includes(hint.toLowerCase())
+    ) {
       fail(`GET ${path}`, `HTML sin marcador esperado (${hint})`);
       continue;
     }

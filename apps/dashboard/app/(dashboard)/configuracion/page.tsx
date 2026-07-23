@@ -82,7 +82,7 @@ export default function ConfiguracionPage() {
         <div className="grid sm:grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-xs text-slate-400">Organización</p>
-            <p style={{ color: 'var(--kova-navy)' }}>Kova Talent OS</p>
+            <p style={{ color: 'var(--kova-navy)' }}>Litt Hunter Talent OS</p>
           </div>
           <div>
             <p className="text-xs text-slate-400">Plan</p>

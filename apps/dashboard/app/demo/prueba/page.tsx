@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { RiskJarGame } from '@/components/assessments/RiskJarGame';
 
 export const metadata = {
-  title: 'La jarra | Kova',
+  title: 'La jarra | Litt Hunter',
 };
 
 export default function DemoPruebaPage() {

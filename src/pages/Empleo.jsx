@@ -335,10 +335,11 @@ export default function Empleo() {
       <footer className="kh-footer">
         <div className="kh-footer__inner">
           <div className="kh-footer__top">
-            <a href="#top" className="kh-footer__brand">
-              kova<span>.</span>
+            <a href="#top" className="kh-footer__brand lh-mark">
+              litt hunter
+              <span className="lh-mark__sq" aria-hidden="true" />
             </a>
-            <p className="kh-footer__copy">© 2026 Kova</p>
+            <p className="kh-footer__copy">© 2026 Litt Hunter</p>
           </div>
         </div>
       </footer>

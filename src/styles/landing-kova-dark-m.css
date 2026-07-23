@@ -130,8 +130,16 @@
   letter-spacing: -0.06em;
   line-height: 1;
 }
-.kova-dark-m .kd-brand span {
-  color: var(--kd-lime);
+.kova-dark-m .kd-brand > span,
+.kova-dark-m .kd-brand .lh-mark__sq {
+  display: inline-block;
+  width: 0.28em;
+  height: 0.28em;
+  margin-left: 0.1em;
+  background: var(--kd-lime);
+  color: transparent;
+  font-size: 0;
+  border-radius: 0;
 }
 .kova-dark-m .kd-hero-content {
   position: relative;
@@ -1715,17 +1723,28 @@
   background: #fff;
 }
 .kova-dark-m .kd-footer {
-  padding: 0;
-  background: #0a0b0b;
-  border-top: 1px solid rgba(245, 245, 245, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px calc((100% - var(--kd-page)) / 2);
+  background: var(--kd-dark);
+  border-top: 1px solid var(--kd-border);
+}
+.kova-dark-m .kd-footer .kd-brand {
+  font-size: 20px;
+  letter-spacing: -0.04em;
+}
+.kova-dark-m .kd-footer,
+.kova-dark-m .kd-footer p {
+  color: var(--kd-muted);
+  font-size: 13px;
+}
+.kova-dark-m .kd-footer p {
+  margin: 0;
 }
 .kova-dark-m .kd-footer__inner {
-  width: var(--kd-page);
-  margin: 0 auto;
-  padding: 48px 0 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
+  display: none;
 }
 .kova-dark-m .kd-footer__row {
   display: flex;

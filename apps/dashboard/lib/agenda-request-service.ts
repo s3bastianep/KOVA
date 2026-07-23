@@ -247,7 +247,7 @@ export async function createAgendaRequest(input: {
     type: input.type?.trim() || 'Consultoría',
     scheduledAt,
     endAt: new Date(endAt),
-    purpose: input.purpose?.trim() || 'Consultoría comercial Kova - 30 min',
+    purpose: input.purpose?.trim() || 'Consultoría comercial Litt Hunter - 30 min',
     notes: input.notes?.trim() || null,
     status: 'REQUESTED',
     moveHistory: [],

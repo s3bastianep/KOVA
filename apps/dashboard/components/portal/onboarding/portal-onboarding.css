@@ -4171,25 +4171,29 @@ html.portal-onboarding-immersive .kova-topbar {
   margin-bottom: 1.25rem;
 }
 
-/* Match the plain-dot + "Kova" wordmark used on the landing page and /login — the onboarding
-   previously used a different pattern (a lettered "K" badge + "OVA"), which read as a different
-   logo when moving between sections. */
+/* Wordmark: litt hunter + cuadrado lime (igual que landing / login) */
 .ob-logo {
   display: inline-flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0;
   font-family: var(--font-manrope), Manrope, sans-serif;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 1.125rem;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
+  text-transform: none;
 }
 
 .ob-logo__mark {
+  display: none;
+}
+
+.ob-logo .lh-mark__sq {
   display: inline-block;
-  width: 1.35rem;
-  height: 1.35rem;
-  border-radius: 50%;
-  background: var(--kv-lime);
+  width: 0.28em;
+  height: 0.28em;
+  margin-left: 0.1em;
+  background: var(--kv-lime, #c5de4e);
+  border-radius: 0;
   flex-shrink: 0;
 }
 

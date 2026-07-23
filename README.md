@@ -1,6 +1,6 @@
-# KOVA
+# LITT HUNTER
 
-Landing page de Kova — React + Vite + API propia de agendamiento.
+Landing page de Litt Hunter — React + Vite + API propia de agendamiento.
 
 ## Desarrollo local
 
@@ -15,7 +15,7 @@ Abre **http://localhost:3000** — sirve el frontend (Vite) y la API de citas en
 
 Sin Calendly ni servicios externos. Flujo:
 
-1. El visitante elige **fecha y hora** en el calendario Kova
+1. El visitante elige **fecha y hora** en el calendario Litt Hunter
 2. Completa **nombre, correo, teléfono y empresa**
 3. La cita se guarda en **Postgres** (vía el dashboard Next.js) con `POST /api/bookings`
 
@@ -65,4 +65,4 @@ SMOKE_BASE_URL=https://tu-servicio.up.railway.app npm run smoke:prod
 
 Verifica HTTPS, `/api/health` (Postgres real, `mockMode=false`), páginas públicas, registro de candidato, login y una cita real.
 
-**Nota:** `kova.com.co` debe apuntar al mismo servicio de Railway (Custom Domain + DNS). Mientras el dominio siga en hosting viejo (WordPress), usa la URL `*.up.railway.app` para esta prueba.
+**Nota:** `litthunter.com` debe apuntar al servicio de Railway (Custom Domain + DNS). En Railway → Settings → Networking → Custom Domain, agrega `litthunter.com` y `www.litthunter.com`, y copia los registros DNS que te indique.

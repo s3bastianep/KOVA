@@ -112,12 +112,12 @@ export function Topbar() {
           <aside className="kova-sidebar absolute inset-y-0 left-0 w-[min(300px,88vw)] flex flex-col shadow-2xl kova-animate-in border-r">
             <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
               <div className="flex items-center gap-3">
-                <div className="kova-sidebar-logo-mark text-sm" aria-hidden>
-                  K
-                </div>
                 <div>
-                  <p className="kova-sidebar-brand font-heading font-bold text-sm">Kova Talent OS</p>
-                  <p className="kova-sidebar-brand-sub text-[10px]">Reclutamiento comercial</p>
+                  <p className="kova-sidebar-brand font-heading font-bold text-sm lh-mark">
+                    litt hunter
+                    <span className="lh-mark__sq" aria-hidden="true" />
+                  </p>
+                  <p className="kova-sidebar-brand-sub text-[10px]">Talent OS</p>
                 </div>
               </div>
               <button type="button" onClick={() => setMenuOpen(false)} aria-label="Cerrar menú" className="p-2 rounded-xl transition-colors" style={{ color: 'var(--kv-nav-muted)' }}>

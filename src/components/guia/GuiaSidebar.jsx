@@ -21,7 +21,7 @@ export default function GuiaSidebar({ currentPath }) {
           <Link to="/contacto" className="kv-guia-sidebar-cta">
             <span className="font-mono">Consulta comercial</span>
             <p className="font-display">Hablemos de tu vacante comercial</p>
-            <p>Un especialista de Kova revisa tu caso y te presenta una propuesta.</p>
+            <p>Un especialista de Litt Hunter revisa tu caso y te presenta una propuesta.</p>
           </Link>
         </div>
       </div>

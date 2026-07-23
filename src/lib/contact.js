@@ -1,5 +1,5 @@
 /** Shared public contact channels for the marketing site. */
-export const CONTACT_EMAIL = 'contacto@kova.com.co';
+export const CONTACT_EMAIL = 'hola@litthunter.com';
 export const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}`;
 export const CONTACT_BOOKING_PATH = '/contacto#agendar';
 
@@ -15,7 +15,7 @@ export function buildWhatsAppUrl(text = '') {
   return `${WHATSAPP_URL}?text=${encodeURIComponent(text)}`;
 }
 
-export function buildContactMailto({ subject = 'Hola Kova', body = '' } = {}) {
+export function buildContactMailto({ subject = 'Hola Litt Hunter', body = '' } = {}) {
   const params = new URLSearchParams();
   if (subject) params.set('subject', subject);
   if (body) params.set('body', body);

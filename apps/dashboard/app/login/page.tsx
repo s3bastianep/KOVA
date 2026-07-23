@@ -2,7 +2,7 @@ import { LoginForm } from './LoginForm';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Iniciar sesión | Kova',
+  title: 'Iniciar sesión | Litt Hunter',
   description: 'Accede a tu portal de candidato y postula a vacantes comerciales.',
 };
 

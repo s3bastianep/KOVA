@@ -32,7 +32,7 @@ export default function GuiaRotacionComercial() {
           multiplica el costo de cada error.
         </GuiaProse>
         <GuiaProse>
-          En Kova ayudamos a empresas a detectar esas señales débiles antes de contratar. Este artículo explica
+          En Litt Hunter ayudamos a empresas a detectar esas señales débiles antes de contratar. Este artículo explica
           por qué ocurre la rotación comercial y cómo evaluar con criterio especializado reduce el riesgo.
         </GuiaProse>
 
@@ -50,7 +50,7 @@ export default function GuiaRotacionComercial() {
           proceso de contratación.
         </GuiaProse>
         <GuiaProse>
-          Kova aborda este riesgo desde el origen: diagnosticando la vacante, evaluando competencias comerciales
+          Litt Hunter aborda este riesgo desde el origen: diagnosticando la vacante, evaluando competencias comerciales
           y entregando un informe comparativo antes de que firmes la oferta.
         </GuiaProse>
 
@@ -118,7 +118,7 @@ export default function GuiaRotacionComercial() {
 
         <GuiaNumberedItem num={1} title="Currículum e entrevista sobreestiman la capacidad">
           La hoja de vida y la entrevista sugieren competencia, pero no la demuestran en escenarios comerciales
-          reales. Kova evalúa habilidades demostradas, no solo lo que el candidato declara que puede hacer.
+          reales. Litt Hunter evalúa habilidades demostradas, no solo lo que el candidato declara que puede hacer.
         </GuiaNumberedItem>
         <GuiaNumberedItem num={2} title="Falta de evaluación específica para la vacante">
           Un hunter de prospección y un account manager requieren perfiles distintos. Aplicar el mismo filtro genérico
@@ -180,7 +180,7 @@ export default function GuiaRotacionComercial() {
         </GuiaNumberedItem>
 
         <GuiaCallout
-          title="Cómo Kova reduce el riesgo de rotación comercial"
+          title="Cómo Litt Hunter reduce el riesgo de rotación comercial"
           items={[
             'Definición del perfil antes de evaluar candidatos.',
             'Evaluación por competencias comerciales específicas del rol.',
@@ -196,7 +196,7 @@ export default function GuiaRotacionComercial() {
         </GuiaSectionTitle>
         <GuiaProse>
           La rotación comercial no es inevitable. Es, en gran medida, predecible cuando el proceso de selección
-          valida competencias antes de la oferta. Kova reemplaza señales débiles (buen discurso, CV llamativo,
+          valida competencias antes de la oferta. Litt Hunter reemplaza señales débiles (buen discurso, CV llamativo,
           intuición del entrevistador) por evaluación comercial estructurada.
         </GuiaProse>
         <GuiaProse>
@@ -205,8 +205,8 @@ export default function GuiaRotacionComercial() {
         </GuiaProse>
 
         <GuiaArticleCTA
-          title="Reduce la rotación comercial con evaluación especializada de Kova"
-          description="Contáctanos. Un especialista de Kova te orienta sobre cómo validar competencias antes de contratar y dejar de repetir el ciclo escasez-rotación-escasez."
+          title="Reduce la rotación comercial con evaluación especializada de Litt Hunter"
+          description="Contáctanos. Un especialista de Litt Hunter te orienta sobre cómo validar competencias antes de contratar y dejar de repetir el ciclo escasez-rotación-escasez."
           primaryLabel="Contáctanos"
           primaryTo="/contacto"
           secondaryLabel="Ver artículo sobre evaluación comercial"

@@ -182,8 +182,16 @@
   letter-spacing: -0.06em;
   line-height: 1;
 }
-.kova-dark .kd-brand span {
-  color: var(--kd-lime);
+.kova-dark .kd-brand > span,
+.kova-dark .kd-brand .lh-mark__sq {
+  display: inline-block;
+  width: 0.28em;
+  height: 0.28em;
+  margin-left: 0.1em;
+  background: var(--kd-lime);
+  color: transparent;
+  font-size: 0;
+  border-radius: 0;
 }
 .kova-dark .kd-hero-content {
   position: relative;

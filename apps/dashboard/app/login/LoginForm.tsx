@@ -19,7 +19,7 @@ const COPY: Record<
   }
 > = {
   candidate: {
-    eyebrow: 'Candidatos · Kova',
+    eyebrow: 'Candidatos · Litt Hunter',
     title: (
       <>
         Tu espacio para <span className="kv-login-accent">oportunidades</span> comerciales
@@ -35,14 +35,14 @@ const COPY: Record<
     ),
   },
   staff: {
-    eyebrow: 'Talent intelligence · Kova',
+    eyebrow: 'Talent intelligence · Litt Hunter',
     title: (
       <>
         El panel detrás del <span className="kv-login-accent">match</span> comercial
       </>
     ),
     lead: 'Vacantes, candidatos, evaluaciones y agenda en un solo lugar. Para equipos que contratan con criterio y evidencia.',
-    cardSub: 'Acceso para el equipo Kova.',
+    cardSub: 'Acceso para el equipo Litt Hunter.',
     submit: 'Entrar al panel',
     footer: null,
   },
@@ -66,7 +66,7 @@ export function LoginForm({ mode = 'candidate' }: { mode?: LoginMode }) {
 
       if (mode === 'candidate' && data.user.role !== 'CANDIDATE') {
         clearSession();
-        setError('Esta página es solo para candidatos. Si eres del equipo Kova, usa el acceso interno.');
+        setError('Esta página es solo para candidatos. Si eres del equipo Litt Hunter, usa el acceso interno.');
         return;
       }
 
@@ -92,8 +92,9 @@ export function LoginForm({ mode = 'candidate' }: { mode?: LoginMode }) {
 
       <header className="kv-login-nav">
         <div className="kv-login-nav-inner">
-          <a href="/" className="kv-login-logo">
-            kova<span className="kv-login-logo-dot">.</span>
+          <a href="/" className="kv-login-logo lh-mark">
+            litt hunter
+            <span className="lh-mark__sq" aria-hidden="true" />
           </a>
           <a href="/" className="kv-login-back">
             <ArrowLeft size={16} aria-hidden />

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Registro de candidatos | Kova',
+  title: 'Registro de candidatos | Litt Hunter',
   description:
     'Completa tu perfil comercial y te avisamos cuando haya una vacante que encaje contigo.',
 };

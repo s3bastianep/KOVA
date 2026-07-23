@@ -30,7 +30,7 @@ export default function GuiaContratarComercial() {
       </GuiaProse>
       <GuiaProse>
         Con presión por crecer el equipo comercial, elegir al perfil equivocado cuesta caro: rotación elevada,
-        pipeline estancado y meses perdidos. En Kova abordamos esto con metodología propia y especialistas en
+        pipeline estancado y meses perdidos. En Litt Hunter abordamos esto con metodología propia y especialistas en
         selección comercial: identificamos el talento ideal para tu vacante, sin pruebas genéricas de RH.
       </GuiaProse>
       <GuiaProse>
@@ -115,7 +115,7 @@ export default function GuiaContratarComercial() {
         específico del rol, no pruebas genéricas.
       </GuiaProse>
       <GuiaProse>
-        Kova aplica este enfoque con especialistas en selección comercial: diagnosticamos la vacante, evaluamos
+        Litt Hunter aplica este enfoque con especialistas en selección comercial: diagnosticamos la vacante, evaluamos
         competencias comerciales y entregamos un informe comparativo para que dirección comercial y talento humano
         decidan con el mismo criterio.
       </GuiaProse>
@@ -125,7 +125,7 @@ export default function GuiaContratarComercial() {
       </GuiaSectionTitle>
       <GuiaProse>
         Ya sea SDR, ejecutivo comercial, account manager o director comercial, estas capacidades son centrales en casi
-        toda vacante comercial. Kova las evalúa en función de lo que cada rol exige.
+        toda vacante comercial. Litt Hunter las evalúa en función de lo que cada rol exige.
       </GuiaProse>
 
       <GuiaSkillGrid items={SKILLS} />
@@ -144,7 +144,7 @@ export default function GuiaContratarComercial() {
         sino de comparar desempeño con criterio.
       </GuiaProse>
       <GuiaProse>
-        En Kova, el proceso cubre distintos perfiles comerciales (SDR, ejecutivo, account manager) con el mismo rigor
+        En Litt Hunter, el proceso cubre distintos perfiles comerciales (SDR, ejecutivo, account manager) con el mismo rigor
         metodológico: entender la vacante, definir competencias, evaluar candidatos y presentar una terna argumentada.
       </GuiaProse>
       <GuiaProse>
@@ -157,7 +157,7 @@ export default function GuiaContratarComercial() {
       <GuiaCtaBand
         eyebrow="Siguiente paso"
         title="Identifiquemos el talento comercial ideal para tu vacante"
-        description="Contáctanos. Un especialista de Kova revisa tu contexto comercial y te presenta una propuesta con perfil, alcance y cotización."
+        description="Contáctanos. Un especialista de Litt Hunter revisa tu contexto comercial y te presenta una propuesta con perfil, alcance y cotización."
         ctaLabel="Contáctanos"
         ctaTo="/contacto"
       />

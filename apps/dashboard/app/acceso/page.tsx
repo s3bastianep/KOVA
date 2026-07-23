@@ -2,8 +2,8 @@ import { LoginForm } from '../login/LoginForm';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Acceso equipo | Kova',
-  description: 'Acceso interno al panel comercial de Kova.',
+  title: 'Acceso equipo | Litt Hunter',
+  description: 'Acceso interno al panel comercial de Litt Hunter.',
   robots: { index: false, follow: false },
 };
 

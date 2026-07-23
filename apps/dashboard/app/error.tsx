@@ -35,7 +35,7 @@ export default function Error({
       }}
     >
       <p style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>
-        kova<span style={{ color: '#c5de4e' }}>.</span>
+        litt hunter<span className="lh-mark__sq" aria-hidden="true" />
       </p>
       <h1 style={{ fontSize: 20, fontWeight: 600, margin: 0 }}>Algo salió mal</h1>
       <p style={{ color: 'rgba(244, 246, 240, 0.6)', maxWidth: 420, margin: 0, fontSize: 14 }}>

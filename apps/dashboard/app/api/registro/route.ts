@@ -118,7 +118,7 @@ async function handlePOST(req: NextRequest) {
         return Response.json(
           {
             message:
-              'Este correo ya está registrado. Si es tuyo, inicia sesión o escríbenos a contacto@kova.com.co.',
+              'Este correo ya está registrado. Si es tuyo, inicia sesión o escríbenos a hola@litthunter.com.',
           },
           { status: 409 },
         );

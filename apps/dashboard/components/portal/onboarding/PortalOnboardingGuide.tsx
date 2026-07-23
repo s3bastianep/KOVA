@@ -5,7 +5,7 @@ import { ONBOARDING_JOURNEY_STEPS } from '@/lib/portal-onboarding-unified';
 import type { OnboardingStep } from '@/lib/portal-onboarding';
 
 /**
- * "Tu guía Kova": a persistent companion presence shown in the onboarding header on every step.
+ * "Tu guía Litt Hunter": a persistent companion presence shown in the onboarding header on every step.
  * It gives the candidate the felt sense of being accompanied and guided — a warm, first-person
  * message that adapts to where they are. The message advances with the actual step (not just the
  * broad journey phase) so it never repeats across several consecutive screens; an explicit
@@ -75,7 +75,7 @@ export function PortalOnboardingGuide({ journeyIndex, message, variant = 'bar' }
         <span className="ob-guide__mark" />
       </span>
       <div className="ob-guide__body">
-        <span className="ob-guide__name">Tu guía Kova</span>
+        <span className="ob-guide__name">Tu guía Litt Hunter</span>
         <p key={animKey} className="ob-guide__message">
           {text}
         </p>

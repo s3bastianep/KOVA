@@ -21,10 +21,10 @@ export default function GuiaIssuesSummary() {
         ))}
       </div>
 
-      <div className="kv-guia-summary-brand">
-        <div className="kv-guia-summary-logo">K</div>
-        <span className="font-display">Kova</span>
-      </div>
+        <div className="kv-guia-summary-brand lh-mark">
+          litt hunter
+          <span className="lh-mark__sq" aria-hidden="true" />
+        </div>
     </div>
   );
 }

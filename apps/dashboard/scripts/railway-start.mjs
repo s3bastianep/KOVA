@@ -17,19 +17,19 @@ function assertProductionEnv() {
   if (!process.env.DATABASE_URL?.trim()) missing.push('DATABASE_URL');
   if (!process.env.JWT_SECRET?.trim()) missing.push('JWT_SECRET');
   if (missing.length) {
-    console.error(`[kova] Faltan variables obligatorias en producción: ${missing.join(', ')}`);
+    console.error(`[litt-hunter] Faltan variables obligatorias en producción: ${missing.join(', ')}`);
     process.exit(1);
   }
 
   if (process.env.SEED_DEMO_DATA === 'true') {
-    console.error('[kova] SEED_DEMO_DATA=true está prohibido en producción. Quita la variable en Railway.');
+    console.error('[litt-hunter] SEED_DEMO_DATA=true está prohibido en producción. Quita la variable en Railway.');
     process.exit(1);
   }
 
   const jwtExpires = process.env.JWT_EXPIRES_IN?.trim();
   if (jwtExpires && /d$/i.test(jwtExpires)) {
     console.warn(
-      `[kova] JWT_EXPIRES_IN=${jwtExpires} es muy largo para access tokens en localStorage. Usa 1h o menos.`,
+      `[litt-hunter] JWT_EXPIRES_IN=${jwtExpires} es muy largo para access tokens en localStorage. Usa 1h o menos.`,
     );
   }
 }
@@ -63,17 +63,17 @@ function runCommand(command, args, timeoutMs = 120_000) {
 
 async function prepareSchema() {
   if (!process.env.DATABASE_URL) {
-    console.error('[kova] DATABASE_URL no está definida. Configúrala en Railway → Variables → Postgres.');
+    console.error('[litt-hunter] DATABASE_URL no está definida. Configúrala en Railway → Variables → Postgres.');
     if (process.env.NODE_ENV !== 'production') {
       process.env.USE_MOCK = 'true';
-      console.warn('[kova] Modo demo activado - login: consultor@kova.co / Kova2026!');
+      console.warn('[litt-hunter] Modo demo activado - login: consultor@kova.co / Kova2026!');
     }
     return;
   }
 
   for (let attempt = 1; attempt <= 3; attempt += 1) {
     try {
-      console.log(`[kova] Sincronizando esquema (intento ${attempt}/3)...`);
+      console.log(`[litt-hunter] Sincronizando esquema (intento ${attempt}/3)...`);
       // 1) Deduplicar cupos activos antes del UNIQUE (tenantId, slotKey).
       // 2) --accept-data-loss: Prisma lo exige al crear ese UNIQUE aunque ya no
       //    haya duplicados. No usamos migrate deploy todavía (sin historial).
@@ -82,7 +82,7 @@ async function prepareSchema() {
         await runCommand('node', ['scripts/dedupe-agenda-slots.mjs'], 30_000);
       } catch (dedupeError) {
         console.warn(
-          '[kova] Dedupe previo omitido/falló (se reintenta con db push):',
+          '[litt-hunter] Dedupe previo omitido/falló (se reintenta con db push):',
           dedupeError?.message ?? dedupeError,
         );
       }
@@ -93,10 +93,10 @@ async function prepareSchema() {
       );
       await runCommand('node', ['scripts/verify-schema.mjs'], 20_000);
       process.env.KOVA_SCHEMA_READY = 'true';
-      console.log('[kova] Esquema listo.');
+      console.log('[litt-hunter] Esquema listo.');
       return;
     } catch (error) {
-      console.error(`[kova] Preparación de esquema falló (${attempt}/3):`, error?.message ?? error);
+      console.error(`[litt-hunter] Preparación de esquema falló (${attempt}/3):`, error?.message ?? error);
       if (attempt < 3) await sleep(5000);
     }
   }
@@ -107,7 +107,7 @@ async function prepareSchema() {
 function runSeedInBackground() {
   if (!process.env.DATABASE_URL) return;
 
-  console.log('[kova] Cargando datos iniciales en segundo plano...');
+  console.log('[litt-hunter] Cargando datos iniciales en segundo plano...');
   const seedChild = spawn('npm', ['run', 'db:seed'], {
     cwd: dashboardDir,
     stdio: 'inherit',
@@ -116,17 +116,17 @@ function runSeedInBackground() {
   });
 
   seedChild.on('error', (error) => {
-    console.error('[kova] No se pudo iniciar db:seed:', error?.message ?? error);
+    console.error('[litt-hunter] No se pudo iniciar db:seed:', error?.message ?? error);
   });
 
   seedChild.on('exit', (code) => {
-    if (code === 0) console.log('[kova] Datos iniciales listos.');
-    else console.error(`[kova] db:seed terminó con código ${code ?? 'desconocido'}.`);
+    if (code === 0) console.log('[litt-hunter] Datos iniciales listos.');
+    else console.error(`[litt-hunter] db:seed terminó con código ${code ?? 'desconocido'}.`);
   });
 }
 
 function startNext() {
-  console.log(`[kova] Iniciando Next.js en 0.0.0.0:${port}`);
+  console.log(`[litt-hunter] Iniciando Next.js en 0.0.0.0:${port}`);
   const child = spawn('npx', ['next', 'start', '-H', '0.0.0.0', '-p', port], {
     cwd: dashboardDir,
     stdio: 'inherit',
@@ -135,7 +135,7 @@ function startNext() {
   });
 
   child.on('error', (error) => {
-    console.error('[kova] No se pudo iniciar Next.js:', error?.message ?? error);
+    console.error('[litt-hunter] No se pudo iniciar Next.js:', error?.message ?? error);
     process.exit(1);
   });
 
@@ -150,6 +150,6 @@ try {
   await prepareSchema();
   runSeedInBackground();
 } catch (error) {
-  console.error('[kova] No se pudo preparar el entorno:', error?.message ?? error);
+  console.error('[litt-hunter] No se pudo preparar el entorno:', error?.message ?? error);
   process.exit(1);
 }

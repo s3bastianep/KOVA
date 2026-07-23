@@ -3,7 +3,7 @@ import { Manrope } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 
-/** Tipografía única de marca en todo Kova (landing + dashboard + portal). */
+/** Tipografía única de marca en todo Litt Hunter (landing + dashboard + portal). */
 const manrope = Manrope({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700', '800'],
@@ -12,8 +12,22 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: 'Kova Talent OS',
-  description: 'Plataforma de reclutamiento comercial especializado',
+  title: {
+    default: 'Litt Hunter Talent OS',
+    template: '%s | Litt Hunter',
+  },
+  description:
+    'Litt Hunter Talent OS. Plataforma de reclutamiento comercial especializado en Colombia.',
+  applicationName: 'Litt Hunter Talent OS',
+  authors: [{ name: 'Litt Hunter' }],
+  robots: { index: false, follow: false },
+  icons: {
+    icon: [
+      { url: '/favicon.png', type: 'image/png' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [{ url: '/favicon.png' }],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

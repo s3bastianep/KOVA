@@ -23,26 +23,26 @@ const databaseUrl = (
 ).trim();
 
 if (!databaseUrl) {
-  console.log('[kova] Sin DATABASE_URL en build: se omite db:deploy.');
+  console.log('[litt-hunter] Sin DATABASE_URL en build: se omite db:deploy.');
   process.exit(0);
 }
 
 if (/\.railway\.internal\b/i.test(databaseUrl)) {
   console.log(
-    '[kova] DATABASE_URL usa red privada de Railway; db:deploy se ejecuta al arrancar el servicio.',
+    '[litt-hunter] DATABASE_URL usa red privada de Railway; db:deploy se ejecuta al arrancar el servicio.',
   );
   process.exit(0);
 }
 
 try {
-  console.log('[kova] Preparando base de datos durante el build...');
+  console.log('[litt-hunter] Preparando base de datos durante el build...');
   process.env.DATABASE_URL = databaseUrl;
   await run('node', ['scripts/dedupe-agenda-slots.mjs']).catch(() => {});
   await run('npx', ['prisma', 'db', 'push', '--skip-generate', '--accept-data-loss']);
   await run('npx', ['tsx', 'prisma/seed.ts']);
-  console.log('[kova] Base de datos lista para el deploy.');
+  console.log('[litt-hunter] Base de datos lista para el deploy.');
 } catch (error) {
-  console.warn('[kova] db:deploy en build no disponible:', error?.message ?? error);
-  console.warn('[kova] Se intentará de nuevo al arrancar el servicio.');
+  console.warn('[litt-hunter] db:deploy en build no disponible:', error?.message ?? error);
+  console.warn('[litt-hunter] Se intentará de nuevo al arrancar el servicio.');
   process.exit(0);
 }

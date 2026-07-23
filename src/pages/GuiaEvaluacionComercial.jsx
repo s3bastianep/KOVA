@@ -27,7 +27,7 @@ export default function GuiaEvaluacionComercial() {
           empresas están adoptando evaluación comercial especializada antes de tomar la decisión final.
         </GuiaProse>
         <GuiaProse>
-          En Kova diseñamos procesos de selección comercial basados en competencias: medimos lo que la vacante exige,
+          En Litt Hunter diseñamos procesos de selección comercial basados en competencias: medimos lo que la vacante exige,
           comparamos candidatos con el mismo criterio y entregamos un informe que facilita la decisión entre dirección
           comercial y talento humano.
         </GuiaProse>
@@ -48,7 +48,7 @@ export default function GuiaEvaluacionComercial() {
         </GuiaProse>
         <GuiaProse>
           La evaluación comercial especializada invierte la lógica: primero se define qué competencias exige la vacante,
-          luego se mide si el candidato las tiene. Kova aplica este enfoque para que la decisión se base en evidencia,
+          luego se mide si el candidato las tiene. Litt Hunter aplica este enfoque para que la decisión se base en evidencia,
           no en corazonada ni en un buen discurso de 45 minutos.
         </GuiaProse>
 
@@ -86,7 +86,7 @@ export default function GuiaEvaluacionComercial() {
         <GuiaDivider />
 
         <GuiaSectionTitle id="beneficios">
-          5 beneficios de la evaluación comercial con Kova
+          5 beneficios de la evaluación comercial con Litt Hunter
         </GuiaSectionTitle>
         <GuiaProse>
           Cuando la evaluación está diseñada para ventas y alineada a la vacante, el impacto en el negocio es directo:
@@ -97,7 +97,7 @@ export default function GuiaEvaluacionComercial() {
           talento humano trabajan con la misma información, no con impresiones distintas de la misma entrevista.
         </GuiaNumberedItem>
         <GuiaNumberedItem num={2} title="Decisiones de contratación más precisas">
-          Kova evalúa prospección, venta consultiva, manejo de objeciones y orientación al logro según lo que exige
+          Litt Hunter evalúa prospección, venta consultiva, manejo de objeciones y orientación al logro según lo que exige
           tu vacante. Contratas sabiendo quién tiene mayor probabilidad de desempeñarse, no quién mejor performó en
           una conversación de 30 minutos.
         </GuiaNumberedItem>
@@ -117,10 +117,10 @@ export default function GuiaEvaluacionComercial() {
         <GuiaDivider />
 
         <GuiaSectionTitle id="tipos-evaluacion">
-          Tipos de evaluación comercial que aplica Kova
+          Tipos de evaluación comercial que aplica Litt Hunter
         </GuiaSectionTitle>
         <GuiaProse>
-          No todas las evaluaciones sirven para comercial. Estas son las dimensiones que Kova integra según la vacante:
+          No todas las evaluaciones sirven para comercial. Estas son las dimensiones que Litt Hunter integra según la vacante:
         </GuiaProse>
 
         <GuiaNumberedItem num={1} title="Competencias comerciales específicas">
@@ -147,7 +147,7 @@ export default function GuiaEvaluacionComercial() {
         <GuiaDivider />
 
         <GuiaSectionTitle id="como-crear">
-          Cómo Kova diseña una evaluación comercial eficaz
+          Cómo Litt Hunter diseña una evaluación comercial eficaz
         </GuiaSectionTitle>
         <GuiaProse>
           Nuestra metodología sigue cinco pasos estructurados para que la evaluación tenga validez y utilidad real
@@ -181,7 +181,7 @@ export default function GuiaEvaluacionComercial() {
           ¿En qué etapa del proceso conviene evaluar comercialmente?
         </GuiaSectionTitle>
         <GuiaProse>
-          Kova recomienda aplicar la evaluación comercial en el momento que maximice precisión sin alargar innecesariamente
+          Litt Hunter recomienda aplicar la evaluación comercial en el momento que maximice precisión sin alargar innecesariamente
           el ciclo:
         </GuiaProse>
 
@@ -201,7 +201,7 @@ export default function GuiaEvaluacionComercial() {
         <GuiaDivider />
 
         <GuiaSectionTitle id="validez">
-          Cómo Kova garantiza validez en la evaluación comercial
+          Cómo Litt Hunter garantiza validez en la evaluación comercial
         </GuiaSectionTitle>
         <GuiaProse>
           Una evaluación solo genera confianza si mide lo que dice medir. Estos son los principios que aplicamos:
@@ -231,7 +231,7 @@ export default function GuiaEvaluacionComercial() {
         </GuiaSectionTitle>
 
         <GuiaNumberedItem num={1} title="Evalúa solo las competencias que la vacante exige">
-          Más preguntas no significa mejor evaluación. Kova concentra el proceso en lo que impacta el desempeño
+          Más preguntas no significa mejor evaluación. Litt Hunter concentra el proceso en lo que impacta el desempeño
           del rol, evitando ruido y fatiga evaluativa.
         </GuiaNumberedItem>
         <GuiaNumberedItem num={2} title="Usa escenarios del mundo real">
@@ -243,7 +243,7 @@ export default function GuiaEvaluacionComercial() {
           el mismo marco para todos.
         </GuiaNumberedItem>
         <GuiaNumberedItem num={4} title="Involucra a dirección comercial desde el inicio">
-          Talento humano y comercial deben alinear criterios desde el inicio. Kova facilita ese lenguaje común
+          Talento humano y comercial deben alinear criterios desde el inicio. Litt Hunter facilita ese lenguaje común
           antes de evaluar a nadie.
         </GuiaNumberedItem>
         <GuiaNumberedItem num={5} title="Documenta la decisión">
@@ -252,7 +252,7 @@ export default function GuiaEvaluacionComercial() {
         </GuiaNumberedItem>
 
         <GuiaCallout
-          title="Buenas prácticas de evaluación comercial · Kova"
+          title="Buenas prácticas de evaluación comercial · Litt Hunter"
           items={[
             'Define la vacante antes de abrir filtros de candidatos.',
             'No confíes en entrevistas solas para roles de venta.',
@@ -263,11 +263,11 @@ export default function GuiaEvaluacionComercial() {
         />
 
         <GuiaArticleCTA
-          title="Contrata comercial con confianza usando la evaluación de Kova"
-          description="Kova ayuda a empresas de todo tipo a evaluar candidatos comerciales con criterio especializado: definición del perfil, evaluación por competencias e informe comparativo para decidir con evidencia, no con intuición."
+          title="Contrata comercial con confianza usando la evaluación de Litt Hunter"
+          description="Litt Hunter ayuda a empresas de todo tipo a evaluar candidatos comerciales con criterio especializado: definición del perfil, evaluación por competencias e informe comparativo para decidir con evidencia, no con intuición."
           primaryLabel="Contáctanos"
           primaryTo="/contacto"
-          secondaryLabel="Ver cómo funciona Kova"
+          secondaryLabel="Ver cómo funciona Litt Hunter"
           secondaryTo="/#metodo"
         />
 

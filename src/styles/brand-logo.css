@@ -1,0 +1,44 @@
+/* Wordmark Litt Hunter: minúsculas + cuadrado lime */
+.lh-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  font-family: Manrope, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  text-transform: none;
+}
+
+.lh-mark__sq {
+  display: inline-block;
+  width: 0.28em;
+  height: 0.28em;
+  margin-left: 0.1em;
+  background: #c5de4e;
+  border-radius: 0;
+  flex-shrink: 0;
+  transform: translateY(0.02em);
+}
+
+/* Compat: puntos de logo antiguos → cuadrado */
+.kv-logo-dot,
+.kv-login-logo-dot,
+.kv-static-logo b,
+.kd-brand > span,
+.kh-footer__brand > span {
+  display: inline-block !important;
+  width: 0.28em !important;
+  height: 0.28em !important;
+  margin-left: 0.1em !important;
+  padding: 0 !important;
+  background: #c5de4e !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  border-radius: 0 !important;
+  overflow: hidden;
+  transform: translateY(0.02em);
+}

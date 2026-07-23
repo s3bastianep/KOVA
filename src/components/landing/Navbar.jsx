@@ -1,5 +1,6 @@
 import { useEffect, useId, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import BrandLogo from '@/components/BrandLogo';
 
 const MAIN_LINKS = [
   { to: '/para-empresas', label: 'PARA EMPRESAS' },
@@ -55,9 +56,7 @@ export default function Navbar() {
   return (
     <nav className="kova-navbar kv-nav" aria-label="Principal">
       <div className="kova-navbar-inner">
-        <Link to="/" className="kv-logo" onClick={() => setOpen(false)}>
-          kova<span className="kv-logo-dot">.</span>
-        </Link>
+        <BrandLogo onClick={() => setOpen(false)} />
 
         <div className="kv-navlinks" aria-label="Secciones">
           {MAIN_LINKS.map((item) =>

@@ -79,7 +79,7 @@ export const MOCK_DASHBOARD = {
       id: '3',
       description: 'Nuevo proceso: Ejecutivo Comercial B2B',
       createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-      user: { firstName: 'Admin', lastName: 'Kova' },
+      user: { firstName: 'Admin', lastName: 'Litt Hunter' },
     },
   ],
   alerts: [
@@ -593,7 +593,7 @@ export const MOCK_CALENDAR = [
     location: 'Google Meet',
     meetingUrl: 'https://meet.google.com/abc-defg-hij',
     purpose: 'Levantar información del negocio, proceso comercial y perfil ideal del cargo.',
-    notes: 'Confirmar asistencia del gerente general. Llevar propuesta de metodología Kova.',
+    notes: 'Confirmar asistencia del gerente general. Llevar propuesta de metodología Litt Hunter.',
   },
   {
     id: 'cal2',

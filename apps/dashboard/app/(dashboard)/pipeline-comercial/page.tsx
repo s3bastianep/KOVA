@@ -83,7 +83,7 @@ export default function PipelineComercialPage() {
         <div>
           <h1 className="font-heading text-xl font-bold" style={{ color: 'var(--kova-navy)' }}>Pipeline Comercial</h1>
           <p className="text-xs text-slate-500">
-            8 etapas del servicio Kova - el asesor decide cuándo avanzar o mantener al cliente en cada paso.
+            8 etapas del servicio Litt Hunter - el asesor decide cuándo avanzar o mantener al cliente en cada paso.
           </p>
         </div>
         <div className="flex gap-2">

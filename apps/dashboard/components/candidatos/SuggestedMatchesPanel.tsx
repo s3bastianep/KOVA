@@ -77,7 +77,7 @@ export function SuggestedMatchesPanel({ vacancyId }: { vacancyId: string }) {
               Candidatos sugeridos de la base de talento
             </p>
             <p className="text-xs text-slate-500 mt-0.5">
-              Solo visible para el equipo Kova · ordenados por ajuste al cargo
+              Solo visible para el equipo Litt Hunter · ordenados por ajuste al cargo
             </p>
           </div>
         </div>

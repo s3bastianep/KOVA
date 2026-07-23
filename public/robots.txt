@@ -7,4 +7,4 @@ Disallow: /login
 Disallow: /portal
 Disallow: /acceso
 
-Sitemap: https://kova.com.co/sitemap.xml
+Sitemap: https://litthunter.com/sitemap.xml

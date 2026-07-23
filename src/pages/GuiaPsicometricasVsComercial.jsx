@@ -31,7 +31,7 @@ export default function GuiaPsicometricasVsComercial() {
           están reemplazando métodos genéricos por evaluación comercial especializada.
         </GuiaProse>
         <GuiaProse>
-          En este artículo comparamos las pruebas psicométricas tradicionales con la evaluación comercial que aplica Kova,
+          En este artículo comparamos las pruebas psicométricas tradicionales con la evaluación comercial que aplica Litt Hunter,
           y explicamos cuál predice mejor el desempeño real en roles de venta.
         </GuiaProse>
 
@@ -87,9 +87,9 @@ export default function GuiaPsicometricasVsComercial() {
 
         <GuiaDivider />
 
-        <GuiaSectionTitle id="que-es-evaluacion-kova">¿Qué es la evaluación comercial de Kova?</GuiaSectionTitle>
+        <GuiaSectionTitle id="que-es-evaluacion-kova">¿Qué es la evaluación comercial de Litt Hunter?</GuiaSectionTitle>
         <GuiaProse>
-          La evaluación comercial de Kova mide competencias específicas del rol: venta consultiva, prospección,
+          La evaluación comercial de Litt Hunter mide competencias específicas del rol: venta consultiva, prospección,
           manejo de objeciones, orientación al logro y ajuste al contexto de la vacante. No pregunta quién eres
           en abstracto; evalúa si puedes desempeñar este rol comercial en esta empresa.
         </GuiaProse>
@@ -106,11 +106,11 @@ export default function GuiaPsicometricasVsComercial() {
         <GuiaDivider />
 
         <GuiaSectionTitle id="como-supera">
-          Cómo la evaluación comercial de Kova supera a las pruebas psicométricas
+          Cómo la evaluación comercial de Litt Hunter supera a las pruebas psicométricas
         </GuiaSectionTitle>
 
         <GuiaNumberedItem num={1} title="Fuerte validez predictiva para ventas">
-          Kova evalúa competencias directamente ligadas al desempeño comercial: prospectar, comunicar valor,
+          Litt Hunter evalúa competencias directamente ligadas al desempeño comercial: prospectar, comunicar valor,
           negociar y cerrar. Eso tiene mayor relación con resultados en el rol que un perfil de personalidad
           genérico aplicado a cualquier vacante.
         </GuiaNumberedItem>
@@ -165,7 +165,7 @@ export default function GuiaPsicometricasVsComercial() {
         </GuiaNumberedItem>
 
         <GuiaCallout
-          title="Lo que Kova evalúa vs. lo que no evalúa"
+          title="Lo que Litt Hunter evalúa vs. lo que no evalúa"
           items={[
             'Sí: prospección, venta consultiva, manejo de objeciones, orientación al logro y ajuste a la vacante.',
             'No: extroversión genérica, tipos de personalidad abstractos ni preguntas irrelevantes para el rol.',
@@ -176,21 +176,21 @@ export default function GuiaPsicometricasVsComercial() {
         <GuiaDivider />
 
         <GuiaSectionTitle id="conclusion">
-          Predice el desempeño comercial real con la evaluación de Kova
+          Predice el desempeño comercial real con la evaluación de Litt Hunter
         </GuiaSectionTitle>
         <GuiaProse>
           Las pruebas psicométricas pueden aportar datos generales sobre personalidad, pero no fueron diseñadas
           para predecir quién vende bien en tu mercado, con tu producto y tu tipo de cliente.
         </GuiaProse>
         <GuiaProse>
-          Kova se especializa en evaluación comercial por competencias: diagnosticamos la vacante, medimos
+          Litt Hunter se especializa en evaluación comercial por competencias: diagnosticamos la vacante, medimos
           habilidades relevantes, comparamos candidatos y entregamos la recomendación que necesitas para
           contratar con confianza. Menos corazonada, más criterio de experto.
         </GuiaProse>
 
         <GuiaArticleCTA
           title="Contrata comercial con evaluación que sí predice desempeño"
-          description="Contáctanos. Te mostramos cómo la metodología Kova reemplaza pruebas genéricas por evaluación especializada alineada a tu rol."
+          description="Contáctanos. Te mostramos cómo la metodología Litt Hunter reemplaza pruebas genéricas por evaluación especializada alineada a tu rol."
           primaryLabel="Contáctanos"
           primaryTo="/contacto"
           secondaryLabel="Leer artículo sobre evaluación comercial"

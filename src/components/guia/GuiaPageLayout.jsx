@@ -45,7 +45,7 @@ export default function GuiaPageLayout({
             <div className="kv-guia-author">
               <div className="kv-guia-author-avatar">K</div>
               <div>
-                <p className="kv-guia-author-name">Equipo Kova</p>
+                <p className="kv-guia-author-name">Equipo Litt Hunter</p>
                 <p className="kv-guia-author-role">Especialistas en áreas comerciales</p>
               </div>
             </div>

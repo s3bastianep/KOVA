@@ -22,7 +22,7 @@ export default function Registro() {
 
   usePageMeta({
     title: 'Registro de candidatos',
-    description: 'Crea tu perfil comercial en Kova.',
+    description: 'Crea tu perfil comercial en Litt Hunter.',
     path: '/registro',
   });
 
@@ -255,7 +255,7 @@ export default function Registro() {
                 rel="noopener noreferrer"
                 className="kv-login-inline-link"
               >
-                política de privacidad de Kova
+                política de privacidad de Litt Hunter
               </a>
             </label>
 

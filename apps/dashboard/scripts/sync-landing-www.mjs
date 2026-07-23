@@ -19,12 +19,12 @@ const target = path.join(__dirname, '../public/www');
 const forceBuild = process.argv.includes('--build');
 
 if (forceBuild || !fs.existsSync(path.join(dist, 'index.html'))) {
-  console.log('[kova] Building landing (Vite)...');
+  console.log('[litt-hunter] Building landing (Vite)...');
   execSync('npm run build:landing', { cwd: repoRoot, stdio: 'inherit' });
 }
 
 if (!fs.existsSync(path.join(dist, 'index.html'))) {
-  console.error('[kova] No hay dist/index.html — no se puede sincronizar /www.');
+  console.error('[litt-hunter] No hay dist/index.html — no se puede sincronizar /www.');
   process.exit(1);
 }
 
@@ -33,4 +33,4 @@ fs.rmSync(target, { recursive: true, force: true });
 fs.cpSync(dist, target, { recursive: true });
 // Keep gitignore exception alive
 fs.writeFileSync(path.join(target, '.gitkeep'), '');
-console.log('[kova] Landing sincronizada → apps/dashboard/public/www');
+console.log('[litt-hunter] Landing sincronizada → apps/dashboard/public/www');

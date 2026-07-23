@@ -22,7 +22,7 @@ export const GUIAS = [
   {
     path: GUIA_PSICOMETRICAS,
     title: 'Psicométricas vs. evaluación comercial',
-    excerpt: 'Por qué las pruebas genéricas no predicen desempeño en ventas y qué hace Kova diferente.',
+    excerpt: 'Por qué las pruebas genéricas no predicen desempeño en ventas y qué hace Litt Hunter diferente.',
     readTime: '16 min',
     image: '/images/guia-psicometricas-hero.png',
   },

@@ -38,9 +38,9 @@ export function PortalOnboardingChrome({
       <div className="portal-onboarding-viewport">
         <header className="ob-chrome">
           <div className="ob-chrome__top">
-            <div className="ob-logo" aria-label="Kova">
-              <span className="ob-logo__mark" aria-hidden />
-              <span className="ob-logo__text">Kova</span>
+            <div className="ob-logo lh-mark" aria-label="Litt Hunter">
+              <span className="ob-logo__text">litt hunter</span>
+              <span className="lh-mark__sq" aria-hidden="true" />
             </div>
             {onSaveExit ? (
               <button type="button" className="ob-chrome__exit" onClick={() => setConfirmingExit(true)}>

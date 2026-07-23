@@ -88,8 +88,9 @@ export function SignupForm() {
 
       <header className="kv-login-nav">
         <div className="kv-login-nav-inner">
-          <a href="/" className="kv-login-logo">
-            kova<span className="kv-login-logo-dot">.</span>
+          <a href="/" className="kv-login-logo lh-mark">
+            litt hunter
+            <span className="lh-mark__sq" aria-hidden="true" />
           </a>
           <a href="/" className="kv-login-back">
             <ArrowLeft size={16} aria-hidden />
@@ -100,7 +101,7 @@ export function SignupForm() {
 
       <div className="kv-login-stage">
         <aside className="kv-login-aside">
-          <p className="kv-login-eyebrow">Candidatos · Kova</p>
+          <p className="kv-login-eyebrow">Candidatos · Litt Hunter</p>
           <h1 className="kv-login-title">
             Tu espacio para <span className="kv-login-accent">oportunidades</span> comerciales
           </h1>
@@ -274,7 +275,7 @@ export function SignupForm() {
             />
             Acepto el tratamiento de mis datos personales según la{' '}
             <a href="/privacidad" target="_blank" rel="noopener noreferrer" className="kv-login-inline-link">
-              política de privacidad de Kova
+              política de privacidad de Litt Hunter
             </a>
           </label>
 

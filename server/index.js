@@ -117,7 +117,7 @@ async function start() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Kova ${isDev ? 'dev' : 'prod'} → http://localhost:${PORT}`);
+    console.log(`Litt Hunter ${isDev ? 'dev' : 'prod'} → http://localhost:${PORT}`);
   });
 }
 

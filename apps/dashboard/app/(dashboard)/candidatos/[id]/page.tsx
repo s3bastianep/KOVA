@@ -282,7 +282,7 @@ function CandidateReport({ c }: { c: Candidate }) {
       <div className="report-body p-6 lg:p-8 space-y-5" style={{ background: '#FBFBFD' }}>
         {/* ── KPIs ── */}
         <div id="sec-resumen" className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 print-block scroll-mt-24">
-          <KpiDonut label="Puntaje Kova" value={r.metrics.puntajeKova} caption={r.affinity} />
+          <KpiDonut label="Puntaje Litt Hunter" value={r.metrics.puntajeKova} caption={r.affinity} />
           <KpiCard icon={TrendingUp} label="Prob. de éxito" value={`${r.metrics.probExito}%`} caption="Probabilidad de desempeño exitoso" delta={r.deltas.probExito} />
           <KpiCard icon={SlidersHorizontal} label="Ajuste al modelo" value={`${r.metrics.ajusteModelo}%`} caption="Ajuste al perfil y cultura" delta={r.deltas.ajuste} />
           <KpiCard icon={Users} label="Retención estimada" value={`${r.metrics.retencion12m}%`} caption="Probabilidad de permanencia" delta={r.deltas.retencion} />
@@ -375,7 +375,7 @@ function CandidateReport({ c }: { c: Candidate }) {
         <div className="flex items-center justify-between text-[11px] text-slate-400 px-1">
           <span className="flex items-center gap-1.5">
             <span className="w-4 h-4 rounded flex items-center justify-center text-white text-[9px] font-bold" style={{ background: 'var(--kova-navy)' }}>K</span>
-            Kova Talent OS
+            Litt Hunter Talent OS
           </span>
           <span>Generado el {generatedAt}</span>
         </div>
