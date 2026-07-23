@@ -610,7 +610,7 @@ export default function HomeDarkMobile() {
       {/* 06 · CIERRE */}
       <section className="kd-final" id="contacto" aria-labelledby="kd-final-title">
         <div className="kd-final-shell" data-reveal>
-          <div className="kd-final-main">
+          <div className="kd-final-split">
             <div className="kd-final-copy">
               <p className="kd-final-kicker">Dos caminos. Un criterio.</p>
               <h2 id="kd-final-title">
@@ -618,27 +618,80 @@ export default function HomeDarkMobile() {
                 <br />
                 necesita el entorno <span>correcto</span>.
               </h2>
-            <p className="kd-final-lead">
-              Cuando una empresa encuentra a la persona adecuada y tú encuentras
-              dónde desarrollar tu potencial, ambos crecen.
-            </p>
+              <p className="kd-final-lead">
+                Cuando una empresa encuentra a la persona adecuada y un profesional encuentra
+                dónde desarrollar su potencial, ambos crecen.
+              </p>
             </div>
 
-            <figure className="kd-final-shot">
-              <img
-                src="/landing/people/final-talento-pro.jpg"
-                alt="Profesional comercial"
-                loading="lazy"
-              />
-            </figure>
+            <div className="kd-final-cards" aria-hidden>
+              <div className="kd-final-card kd-final-card--empresas">
+                <img
+                  className="kd-final-card__photo"
+                  src="/landing/people/kova-final-empresas.jpg"
+                  alt=""
+                  loading="lazy"
+                />
+                <span className="kd-final-card__chip">
+                  <svg viewBox="0 0 16 16" fill="none" aria-hidden>
+                    <circle cx="8" cy="5.2" r="2.4" stroke="currentColor" strokeWidth="1.4" />
+                    <path
+                      d="M3.2 13.2c.7-2.4 2.4-3.6 4.8-3.6s4.1 1.2 4.8 3.6"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  Empresas
+                </span>
+              </div>
 
-            <div className="kd-final-actions">
-              <Link className="kd-final-btn kd-final-btn--primary" to="/para-empresas">
-                Para empresas
-              </Link>
-              <Link className="kd-final-btn kd-final-btn--ghost" to="/empleo">
-                Para talento
-              </Link>
+              <div className="kd-final-card kd-final-card--talento">
+                <img
+                  className="kd-final-card__photo"
+                  src="/landing/people/kova-final-talento.jpg"
+                  alt=""
+                  loading="lazy"
+                />
+                <span className="kd-final-card__chip">
+                  <svg viewBox="0 0 16 16" fill="none" aria-hidden>
+                    <circle cx="8" cy="5.2" r="2.4" stroke="currentColor" strokeWidth="1.4" />
+                    <path
+                      d="M3.2 13.2c.7-2.4 2.4-3.6 4.8-3.6s4.1 1.2 4.8 3.6"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  Talento
+                </span>
+              </div>
+            </div>
+
+            <div className="kd-final-cta">
+              <div className="kd-final-actions">
+                <Link className="kd-btn kd-btn--lime" to="/para-empresas">
+                  Para empresas
+                </Link>
+                <Link className="kd-btn kd-btn--ink" to="/empleo">
+                  Para talento
+                </Link>
+              </div>
+              <p className="kd-final-note">
+                <span className="kd-final-note__check" aria-hidden>
+                  <svg viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="7.25" stroke="currentColor" strokeWidth="1.5" />
+                    <path
+                      d="M4.6 8.2l2.1 2.1 4.7-4.7"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+                Especialistas solo en perfiles comerciales.
+              </p>
             </div>
           </div>
         </div>
