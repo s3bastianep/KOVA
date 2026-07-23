@@ -3,15 +3,15 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import BrandLogo from '@/components/BrandLogo';
 
 const MAIN_LINKS = [
-  { to: '/para-empresas', label: 'PARA EMPRESAS' },
-  { to: '/empleo', label: 'PARA TALENTO' },
+  { to: '/para-empresas', label: 'Para empresas' },
+  { to: '/empleo', label: 'Para talento' },
   { to: '/guias', label: 'Blog' },
 ];
 
-const CONTACT_CTA = { to: '/para-empresas#contacto', label: 'EMPIEZA A CONTRATAR' };
+const CONTACT_CTA = { to: '/para-empresas#contacto', label: 'Contratar' };
 
 const LOGIN_LINK = { to: '/login', label: 'Ingresar' };
-const REGISTER_CTA = { to: '/registro', label: 'CREAR MI PERFIL' };
+const REGISTER_CTA = { to: '/registro', label: 'Crear perfil' };
 
 function scrollToContacto() {
   window.setTimeout(() => {
